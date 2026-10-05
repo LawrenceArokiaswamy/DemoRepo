@@ -184,7 +184,7 @@ function renderCaptions(t) {
   // post-drop system lines: label + masked word rise
   let sc = null; for (const c of sysClips) { const s = CU.VO[c]; if (t >= s - 0.08 && t < s + VO[c].dur + 0.85) sc = c; }
   if (t >= SC.end[0] - FRAME) sc = null;
-  if (sc !== sysKey) { sysKey = sc; sysT.innerHTML = sc ? VO[sc].words.map((w, i) => { let x = w.w.replace(/[.,]$/, '').replace(/^4$/, 'Four'); if (i === 0) x = x[0].toUpperCase() + x.slice(1); return `<span class="m"><span class="w">${x}</span></span>`; }).join(' ') + '.' : ''; }
+  if (sc !== sysKey) { sysKey = sc; sysT.innerHTML = sc ? VO[sc].words.map((w, i) => { let x = w.w.replace(/[.,]$/, '').replace(/^4$/, 'Four'); if (i === 0) x = x[0].toUpperCase() + x.slice(1); if (i === VO[sc].words.length - 1) x += '.'; return `<span class="m"><span class="w">${x}</span></span>`; }).join(' ') : ''; }
   if (sc) { const s0 = CU.VO[sc], end = s0 + VO[sc].dur + 0.85; const inP = ease.expoOut(clamp((t - s0 + 0.08) / 0.35)), outP = clamp((t - (end - 0.2)) / 0.2);
     sysEl.style.opacity = inP * (1 - outP); sysEl.style.transform = `translateY(${(1 - inP) * 20 - outP * 14}px)`;
     sysT.querySelectorAll('.w').forEach((s, k) => { const lt = t - (s0 + VO[sc].words[k].s); const p = ease.expoOut(clamp(lt / 0.32));
