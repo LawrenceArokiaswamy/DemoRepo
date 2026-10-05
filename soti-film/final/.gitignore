@@ -1,3 +1,5 @@
-# Large video masters are too big for GitHub (100 MB limit); the SHARE version is committed.
+# Large video masters are too big for GitHub (100 MB limit); shareable versions are committed.
 *.mp4
 !SOTI_Ward_Four_SHARE_1080p60.mp4
+!SOTI_Ward_Four_INSTAGRAM_9x16_1080p60.mp4
+!SOTI_Ward_Four_EMAIL_9x16_720p.mp4
