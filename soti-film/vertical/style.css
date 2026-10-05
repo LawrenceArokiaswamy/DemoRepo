@@ -102,10 +102,10 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#000;color:var(-
 .m-l{font-size:22px;color:var(--dim);font-weight:500}.m-v{font-family:var(--display);font-size:56px;font-weight:650;letter-spacing:-.03em;margin:4px 0 12px}
 .m-v small{font-size:28px;font-weight:500;color:var(--dim)}
 .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}.bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#0C74AA,#2FB7EA,#bfeaff)}
-.graph{margin:28px 0 8px}.g-l{font-size:22px;color:var(--dim);font-weight:500;margin-bottom:8px}
-#graph{width:848px;height:256px}
-.rows .row{display:flex;justify-content:space-between;font-size:28px;font-weight:500;padding:18px 4px;border-top:1px solid rgba(255,255,255,.09)}
-#rootcause{position:absolute;left:46px;right:46px;bottom:40px;height:120px;border-radius:30px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+.graph{margin:22px 0 4px}.g-l{font-size:22px;color:var(--dim);font-weight:500;margin-bottom:8px}
+#graph{width:848px;height:190px}
+.rows .row{display:flex;justify-content:space-between;font-size:26px;font-weight:500;padding:14px 4px;border-top:1px solid rgba(255,255,255,.09)}
+#rootcause{position:absolute;left:46px;right:46px;bottom:36px;height:112px;border-radius:30px;display:flex;flex-direction:column;justify-content:center;align-items:center;
   background:linear-gradient(180deg,rgba(255,69,58,.22),rgba(255,69,58,.08));box-shadow:inset 0 0 0 1.5px rgba(255,107,97,.6),0 0 60px rgba(255,69,58,.25);opacity:0}
 #rootcause span{font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#ff9b93}#rootcause b{font-family:var(--display);font-size:46px;font-weight:700;letter-spacing:-.03em}
 .sheen{position:absolute;top:-20%;bottom:-20%;width:240px;left:-300px;transform:skewX(-18deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)}
@@ -183,6 +183,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#000;color:var(-
 
 /* end lockup */
 #endlogo{inset:0;opacity:0}
+#endlogo>*{position:absolute}
 #logo-wrap{position:absolute;left:540px;top:820px;width:820px;margin-left:-410px;transform:translateY(-50%)}
 #logo-svg{width:100%;color:#fff}
 #logo-svg svg{display:block;width:100%;height:auto;fill:url(#logoGrad)}

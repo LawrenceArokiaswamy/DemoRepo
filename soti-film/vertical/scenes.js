@@ -248,13 +248,13 @@ export function makeBlackHole(aspect = 16 / 9) {
     ring1.userData.m.rotation.y = t * ring1.userData.speed; ring2.userData.m.rotation.y = t * ring2.userData.speed;
     let dim = 1;
     if (mode === 'end') { // quiet backdrop for the end type
-      const p = prog(t, 53.6, 60); dim = 0.42; ring1.visible = ring2.visible = false;
+      const p = prog(t, 53.6, 60); dim = 0.42; ring1.visible = ring2.visible = false; ring.visible = hole.visible = disk.visible = !P;
       const a = 0.4 + p * 0.25; const k = P ? 1.35 : 1; cam.position.set(Math.sin(a) * 15 * k, (9 - p * 2) * k, Math.cos(a) * 15 * k); cam.lookAt(0, -1, 0);
     } else if (mode === 'ticket') {
-      dim = 0.55; ring1.visible = ring2.visible = false; const p = prog(t, 39.5, 42.9);
+      dim = 0.55; ring1.visible = ring2.visible = false; ring.visible = hole.visible = disk.visible = true; const p = prog(t, 39.5, 42.9);
       cam.position.set(Math.sin(p * 0.5) * 4, 22, 6 + p * 2); cam.lookAt(0, -2, 0);
     } else {
-      ring1.visible = ring2.visible = true;
+      ring1.visible = ring2.visible = true; ring.visible = hole.visible = disk.visible = true;
       const p = prog(t, 18, 21.31); const e = ease.out(p);
       const a = -0.9 + e * 1.15 + p * 0.25; const r = (12.5 - e * 4.2) * (P ? 1.3 : 1); const y = (3.2 - e * 1.6) * (P ? 1.4 : 1);
       const B = 60 / 145; const ph = ((t - 18) % B) / B; const kick = Math.exp(-ph * 9) * 0.07 * (t >= 18 ? 1 : 0);
@@ -271,7 +271,7 @@ export function makeBlackHole(aspect = 16 / 9) {
 
 /* ================= DATA CONSTELLATION — the camera flies through every managed device ================= */
 export function makeConstellation(aspect = 16 / 9) {
-  const P = aspect < 1; const F = P ? 64 : 55;
+  const PT = aspect < 1; const F = PT ? 64 : 55;
   const scene = new THREE.Scene(); scene.add(skyDome('#030b18', '#000003', C.deep, 13));
   const cam = new THREE.PerspectiveCamera(F, aspect, 0.1, 900);
   const R = rng(99); const P = [], Cc = [], S = [], Ph = [], Rd = []; const centers = [];
@@ -302,7 +302,7 @@ export function makeConstellation(aspect = 16 / 9) {
       const p = prog(t, 21.31, 24.62); const f = ease.expoInOut(clamp(p / 0.62));
       const z = 70 - f * 316; const settle = ease.out(prog(t, 22.6, 24.62));
       const pos = new THREE.Vector3(Math.sin(p * 5) * 6 * (1 - settle), Math.cos(p * 4) * 3 * (1 - settle) + 1, z);
-      const orbit = settle * 0.7; const near = new THREE.Vector3(tv.x + Math.sin(orbit) * (P ? 19 : 15), tv.y + 2, tv.z + Math.cos(orbit) * (P ? 19 : 15));
+      const orbit = settle * 0.7; const near = new THREE.Vector3(tv.x + Math.sin(orbit) * (PT ? 19 : 15), tv.y + 2, tv.z + Math.cos(orbit) * (PT ? 19 : 15));
       cam.position.copy(pos).lerp(near, settle);
       const look = new THREE.Vector3(0, 0, z - 40).lerp(tv, clamp(settle * 1.4));
       cam.lookAt(look);
@@ -372,7 +372,7 @@ export function makeRoad(aspect = 16 / 9) {
 
 /* ================= GLASS SLABS with the proof points ================= */
 export function makeSlabs(claims, aspect = 16 / 9) {
-  const P = aspect < 1; const SW = P ? 4.6 : 7.2, SH = P ? 7.2 : 4.05, DIST = P ? 14.2 : 8.6, YO = P ? -0.6 : 0;
+  const P = aspect < 1; const SW = P ? 4.6 : 7.2, SH = P ? 7.2 : 4.05, DIST = P ? 18.5 : 8.6, YO = P ? -0.35 : 0;
   const scene = new THREE.Scene(); scene.add(skyDome('#05162a', '#000205', C.blue, 31));
   const cam = new THREE.PerspectiveCamera(P ? 44 : 40, aspect, 0.1, 900);
   const R = rng(41);
@@ -397,7 +397,7 @@ export function makeSlabs(claims, aspect = 16 / 9) {
     const geo = new THREE.BoxGeometry(SW, SH, 0.14); const glass = new THREE.Mesh(geo, glassMat()); g.add(glass);
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: new THREE.Color(0.9, 1.6, 2.1), transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending })); g.add(edges);
     const tex = textTexture(cl, P ? { w: 1152, h: 1800 } : { w: 2048, h: 1152 });
-    const txt = new THREE.Mesh(new THREE.PlaneGeometry(SW * 0.975, SH * 0.975), new THREE.MeshBasicMaterial({ map: tex, color: new THREE.Color(0.62, 0.66, 0.7), transparent: true, depthWrite: false })); txt.position.z = 0.08; g.add(txt);
+    const txt = new THREE.Mesh(new THREE.PlaneGeometry(SW * 0.975, SH * 0.975), new THREE.MeshBasicMaterial({ map: tex, color: P ? new THREE.Color(0.5, 0.53, 0.56) : new THREE.Color(0.62, 0.66, 0.7), transparent: true, depthWrite: false })); txt.position.z = 0.08; g.add(txt);
     g.position.set(i % 2 ? 1.4 : -1.4, (i % 2 ? -0.3 : 0.3), -i * 24); g.rotation.y = i % 2 ? -0.1 : 0.1; scene.add(g);
     return { g, glass };
   });
@@ -417,7 +417,7 @@ export function makeSlabs(claims, aspect = 16 / 9) {
     slabs.forEach((sl, j) => { sl.g.visible = Math.abs(j - idx) < 0.9; sl.glass.material.uniforms.uSweep.value = ((t - t0 - j * bar) / bar) * 2.2 - 0.4; sl.g.rotation.y = (j % 2 ? -0.1 : 0.1) + Math.sin(t * 0.8 + j) * 0.03; });
     bokeh.material.uniforms.uTime.value = t; bokeh.material.uniforms.uDim.value = mode === 'ba' ? 0.6 : 1;
   }
-  return { scene, cam, update, bloom: 0.5, threshold: 0.6 };
+  return { scene, cam, update, bloom: P ? 0.38 : 0.5, threshold: 0.6 };
 }
 
 /* ================= LOGO — every device becomes a point of light that flies into the SOTI mark ================= */
@@ -431,7 +431,7 @@ export function makeLogo(pathD, { W, H, cx, cy, width, start, lock }) {
     fragmentShader: `varying vec2 vU; uniform float uT;
       float h(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
       void main(){ vec2 p=vU-vec2(.5,.57); p.x*=.5625; float r=length(p);
-        vec3 c=vec3(.004,.02,.045)+vec3(.0,.22,.38)*exp(-r*r*9.)*.55+vec3(.0,.1,.2)*exp(-r*r*2.)*.3;
+        vec3 c=vec3(.002,.008,.018)+vec3(.0,.16,.3)*exp(-r*r*14.)*.32+vec3(.0,.06,.14)*exp(-r*r*3.)*.18;
         vec2 g=fract(vU*vec2(54.,96.))-.5; float dot=smoothstep(.06,.0,length(g))*.06*exp(-r*2.5);
         c+=vec3(.5,.8,1.)*dot; c+=(h(vU*900.+uT)-.5)*.012; gl_FragColor=vec4(c,1.); }` }));
   bg.position.z = -50; scene.add(bg);

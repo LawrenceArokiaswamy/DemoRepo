@@ -139,7 +139,8 @@ set('#ba', SC.online[0], { opacity: 0 });
 const lineRise = (sel, time) => fromTo(sel, time, { opacity: 1, yPercent: 105, filter: 'blur(6px)' }, { opacity: 1, yPercent: 0, filter: 'blur(0px)', duration: 0.42, ease: 'expo.out' });
 lineRise('.et.w1', EV.end_w1); lineRise('.et.w2', EV.end_w2); lineRise('.et.w3', EV.end_w3);
 fromTo('.et.w3', EV.end_w3 + 0.1, { backgroundPosition: '0 0' }, { backgroundPosition: '0 0', duration: 0.01 });
-at('.et', LOGO_START, { yPercent: -105, opacity: 0, filter: 'blur(8px)', duration: 0.32, ease: 'expo.in', stagger: 0.04 });
+at('.et', LOGO_START - 0.12, { yPercent: -105, filter: 'blur(8px)', duration: 0.26, ease: 'expo.in', stagger: 0.03 });
+set('.et', LOGO_START + 0.2, { opacity: 0 });
 
 /* ---------------- end lockup ---------------- */
 set('#endlogo', LOGO_START, { opacity: 1 });
@@ -183,7 +184,7 @@ function renderCaptions(t) {
   // post-drop system lines: label + masked word rise
   let sc = null; for (const c of sysClips) { const s = CU.VO[c]; if (t >= s - 0.08 && t < s + VO[c].dur + 0.85) sc = c; }
   if (t >= SC.end[0] - FRAME) sc = null;
-  if (sc !== sysKey) { sysKey = sc; sysT.innerHTML = sc ? VO[sc].words.map((w) => `<span class="m"><span class="w">${w.w.replace(/[.,]$/, '').replace(/^4$/, 'Four')}</span></span>`).join(' ') + '.' : ''; }
+  if (sc !== sysKey) { sysKey = sc; sysT.innerHTML = sc ? VO[sc].words.map((w, i) => { let x = w.w.replace(/[.,]$/, '').replace(/^4$/, 'Four'); if (i === 0) x = x[0].toUpperCase() + x.slice(1); return `<span class="m"><span class="w">${x}</span></span>`; }).join(' ') + '.' : ''; }
   if (sc) { const s0 = CU.VO[sc], end = s0 + VO[sc].dur + 0.85; const inP = ease.expoOut(clamp((t - s0 + 0.08) / 0.35)), outP = clamp((t - (end - 0.2)) / 0.2);
     sysEl.style.opacity = inP * (1 - outP); sysEl.style.transform = `translateY(${(1 - inP) * 20 - outP * 14}px)`;
     sysT.querySelectorAll('.w').forEach((s, k) => { const lt = t - (s0 + VO[sc].words[k].s); const p = ease.expoOut(clamp(lt / 0.32));
