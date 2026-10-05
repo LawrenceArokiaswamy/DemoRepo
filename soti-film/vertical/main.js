@@ -212,7 +212,8 @@ function renderHUD(t) {
 }
 
 /* ---------------- waveforms ---------------- */
-const cw = $('#callwave').getContext('2d'), orb = $('#orb').getContext('2d');
+const hidpi = (sel) => { const c = $(sel), d = Math.max(1, Math.min(2, window.devicePixelRatio || 1)), w = c.width, h = c.height; c.width = w * d; c.height = h * d; const x = c.getContext('2d'); x.scale(d, d); return x; };
+const cw = hidpi('#callwave'), orb = hidpi('#orb');
 const envAt = (clip, t) => { const e = VO[clip].env, i = Math.floor((t - CU.VO[clip]) * 60); return i >= 0 && i < e.length ? e[i] : 0; };
 function renderWaves(t) {
   if (t < 11.6) { cw.clearRect(0, 0, 760, 110); const bars = 56;
@@ -229,7 +230,7 @@ function renderWaves(t) {
 }
 
 /* ---------------- diagnostics graph ---------------- */
-const gctx = $('#graph').getContext('2d');
+const gctx = hidpi('#graph');
 function renderGraph(t) {
   if (t < SC.diag[0] || t > SC.remote[0]) return; const p = ease.out(prog(t, SC.diag[0] + 0.15, SC.diag[0] + 1.6));
   gctx.clearRect(0, 0, 860, 260);
@@ -285,7 +286,7 @@ function renderFX(t) {
 /* ---------------- Three.js ---------------- */
 let ready = false, renderer, composer, renderPass, bloom, fx, S = {};
 const finalShader = {
-  uniforms: { tDiffuse: { value: null }, uCA: { value: 0 }, uFrame: { value: 0 }, uGrain: { value: 0.05 }, uDim: { value: 1 } },
+  uniforms: { tDiffuse: { value: null }, uCA: { value: 0 }, uFrame: { value: 0 }, uGrain: { value: 0.018 }, uDim: { value: 1 } },
   vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
   fragmentShader: `uniform sampler2D tDiffuse; uniform float uCA,uFrame,uGrain,uDim; varying vec2 vUv;
     float rnd(vec2 c){ return fract(sin(dot(c,vec2(12.9898,78.233))+uFrame*.618)*43758.5453); }
@@ -316,11 +317,11 @@ async function init() {
   const maskSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 198.5 49'><path d='${pathD}' fill='black'/></svg>`;
   $('#logo-sheen').style.setProperty('--logo-mask', `url("data:image/svg+xml;utf8,${encodeURIComponent(maskSvg)}")`);
   renderer = new THREE.WebGLRenderer({ canvas: $('#gl'), antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); renderer.setPixelRatio(DPR); renderer.setSize(W, H, false); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   S = { hospital: makeHospital(ASPECT), blackhole: makeBlackHole(ASPECT), constellation: makeConstellation(ASPECT), road: makeRoad(ASPECT), slabs: makeSlabs(CLAIMS, ASPECT),
     logo: makeLogo(pathD, { W, H, cx: 540, cy: 820, width: 820, start: LOGO_START, lock: EV.logo + 0.42 }) };
   composer = new EffectComposer(renderer); renderPass = new RenderPass(S.hospital.scene, S.hospital.cam); composer.addPass(renderPass);
-  bloom = new UnrealBloomPass(new THREE.Vector2(540, 960), 1.2, 0.55, 0.12); composer.addPass(bloom);
+  bloom = new UnrealBloomPass(new THREE.Vector2(540 * DPR, 960 * DPR), 1.2, 0.55, 0.12); composer.addPass(bloom);
   fx = new ShaderPass(finalShader); composer.addPass(fx); composer.addPass(new OutputPass());
   for (const k in S) { S[k].update(0, ''); renderer.compile(S[k].scene, S[k].cam); }
   ready = true; tl.seek(clockObj.t + OFF, false); frame(clockObj.t + OFF); window.__resolveBuild && window.__resolveBuild();

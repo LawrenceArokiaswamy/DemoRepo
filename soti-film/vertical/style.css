@@ -31,7 +31,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#000;color:var(-
 #lightleak{inset:-200px;opacity:0;mix-blend-mode:screen;background:
   radial-gradient(40% 25% at 30% 20%,rgba(47,183,234,.35),transparent 70%),
   radial-gradient(35% 30% at 75% 80%,rgba(0,154,212,.28),transparent 70%)}
-#grain{inset:-80px;opacity:.12;mix-blend-mode:overlay;
+#grain{inset:-80px;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.6 -.3'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>");}
 #flash{inset:0;background:#fff;opacity:0}
 #flood{inset:0;background:radial-gradient(circle at 50% 50%,#bfeaff,#2FB7EA 30%,#009AD4 60%,#0C74AA);clip-path:circle(0% at 50% 50%)}

@@ -1,5 +1,7 @@
 // Real-3D scenes for the SOTI film. Every scene is a pure function of time: update(t) → no randomness at render time.
 import * as THREE from 'three';
+const DPR = Math.max(1, Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1));
+const DPRS = DPR.toFixed(2), LINEBOOST = (DPR > 1 ? 1.4 : 1).toFixed(2);
 
 export const C = {
   blue: new THREE.Color('#009AD4'), sky: new THREE.Color('#2FB7EA'), deep: new THREE.Color('#0C74AA'),
@@ -33,7 +35,7 @@ function revealLineMat({ color = C.sky, head = C.white, hot = C.red, fogFar = 60
       void main(){ if(vOrd>uProg) discard; float h=smoothstep(uProg-.035,uProg,vOrd)*step(uProg,.999);
         vec3 base=mix(uColor,uHot,vHot*uHotMix); float glow=1.+vHot*uHotMix*uHotPulse*2.5;
         vec3 c=mix(base*glow,uHead*3.,h); float fog=clamp(1.-vDepth/uFogFar,.08,1.);
-        gl_FragColor=vec4(c*uGain,uOpacity*fog*(.55+.45*vHot*uHotMix+.45*h)); }`,
+        gl_FragColor=vec4(c*uGain*${LINEBOOST},uOpacity*fog*(.55+.45*vHot*uHotMix+.45*h)); }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   });
 }
@@ -44,7 +46,7 @@ function pointsMat({ size = 3, opacity = 1 } = {}) {
       varying vec3 vC; varying float vA;
       void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv;
         float tw=.65+.35*sin(uTime*2.3+ph*6.283); vC=mix(color,vec3(1.,.24,.31),red*uRed); vA=tw;
-        gl_PointSize=uSize*sz*(1.+red*uRed*1.6)*(320./max(1.,-mv.z)); }`,
+        gl_PointSize=(uSize*sz*(1.+red*uRed*1.6)*(320./max(1.,-mv.z)))*${DPRS}; }`,
     fragmentShader: `varying vec3 vC; varying float vA; uniform float uOpacity,uDim;
       void main(){ vec2 p=gl_PointCoord-.5; float d=length(p); if(d>.5) discard; float a=smoothstep(.5,.0,d); a=a*a;
         gl_FragColor=vec4(vC*(1.+a*1.5)*uDim,a*vA*uOpacity); }`,
@@ -207,7 +209,7 @@ export function makeBlackHole(aspect = 16 / 9) {
         vec4 mv=modelViewMatrix*vec4(p,1.); vD=-mv.z; gl_Position=projectionMatrix*mv; }`,
     fragmentShader: `uniform vec3 uColor,uHot; uniform float uDim; varying float vR; varying float vD;
       void main(){ float k=exp(-vR*.13); vec3 c=mix(uColor*.55,uHot*1.8,k); float fog=clamp(1.-vD/70.,0.,1.);
-        gl_FragColor=vec4(c*uDim,(.25+.75*k)*fog*uDim); }`,
+        gl_FragColor=vec4(c*uDim*${LINEBOOST},(.25+.75*k)*fog*uDim); }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   });
   const grid = new THREE.LineSegments(gg, gmat); grid.position.y = -1.2; scene.add(grid);
@@ -222,7 +224,7 @@ export function makeBlackHole(aspect = 16 / 9) {
     uniforms: { uTime: { value: 0 }, uDim: { value: 1 } },
     vertexShader: `attribute vec3 color; attribute float sz; attribute float ph; uniform float uTime; varying vec3 vC;
       void main(){ float r=position.x; float a=position.y+uTime*2.6/pow(r,1.5); vec3 p=vec3(cos(a)*r,position.z,sin(a)*r);
-        vec4 mv=modelViewMatrix*vec4(p,1.); gl_Position=projectionMatrix*mv; vC=color; gl_PointSize=sz*(26./max(1.,-mv.z))*1.15; }`,
+        vec4 mv=modelViewMatrix*vec4(p,1.); gl_Position=projectionMatrix*mv; vC=color; gl_PointSize=(sz*(26./max(1.,-mv.z))*1.15)*${DPRS}; }`,
     fragmentShader: `varying vec3 vC; uniform float uDim; void main(){ float d=length(gl_PointCoord-.5); if(d>.5) discard; float a=pow(1.-d*2.,2.); gl_FragColor=vec4(vC*.55*uDim,a*.8*uDim); }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   });
@@ -462,7 +464,7 @@ export function makeLogo(pathD, { W, H, cx, cy, width, start, lock }) {
         vec3 p=mix(swirl, position, e); p.xy+= (1.-e)*vec2(sin(uT*3.+del*40.),cos(uT*2.6+del*31.))*18.;
         gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);
         float band=exp(-pow((position.x/540.-uSweep)*6.,2.));
-        vC=color*(1.+band*2.5+(1.-k)*.6); vA=.25+.75*k; gl_PointSize=sz*(1.+(1.-e)*1.4); }`,
+        vC=color*(1.+band*2.5+(1.-k)*.6); vA=.25+.75*k; gl_PointSize=(sz*(1.+(1.-e)*1.4))*${DPRS}; }`,
     fragmentShader: `varying vec3 vC; varying float vA; uniform float uFade; void main(){ float d=length(gl_PointCoord-.5); if(d>.5) discard; float a=pow(1.-d*2.,1.6); gl_FragColor=vec4(vC,a*vA*uFade); }` });
   scene.add(new THREE.Points(geo, mat));
   function update(t) {
