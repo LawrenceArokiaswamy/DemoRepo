@@ -12,11 +12,15 @@ const $ = (s) => document.querySelector(s);
 const FRAME = 1 / CU.FPS;
 
 /* ---------------- master timeline (registered synchronously) ---------------- */
+// `tl` holds every DOM tween at absolute film time. The registered master timeline seeks it, so a patch
+// render (window.T_OFFSET / window.T_DUR) can start mid-film and stay frame-identical to the full render.
+const OFF = window.T_OFFSET || 0, RDUR = window.T_DUR || CU.DUR;
 const tl = gsap.timeline({ paused: true });
 const clockObj = { t: 0 };
-tl.to(clockObj, { t: CU.DUR, duration: CU.DUR, ease: 'none', onUpdate: () => frame(clockObj.t) }, 0);
+const master = gsap.timeline({ paused: true });
+master.to(clockObj, { t: RDUR, duration: RDUR, ease: 'none', onUpdate: () => { const T = clockObj.t + OFF; tl.seek(T, false); frame(T); } }, 0);
 window.__timelines = window.__timelines || {};
-window.__timelines['main'] = tl;
+window.__timelines['main'] = master;
 
 /* ---------------- DOM helpers ---------------- */
 const at = (sel, time, vars) => tl.to(sel, { ...vars }, time);
@@ -167,6 +171,7 @@ function renderCaptions(t) {
   }
   // system lines (post-drop): typed per word with a prompt
   let sc = null; for (const c of sysClips) { const s = CU.VO[c]; if (t >= s - 0.05 && t < s + VO[c].dur + 0.9) sc = c; }
+  if (t >= SC.end[0] - FRAME) sc = null;
   if (sc !== sysKey) { sysKey = sc; sysEl.innerHTML = sc ? `<span class="pr">▍STELLA</span>` + VO[sc].words.map((w) => `<span class="w">${w.w.replace(/[.,]$/, '').toUpperCase().replace(/^4$/, 'FOUR')}</span>`).join('') : ''; }
   if (sc) VO[sc].words.forEach((w, k) => { const lt = t - (CU.VO[sc] + w.s); const s = sysEl.querySelectorAll('.w')[k]; if (!s) return;
     s.style.opacity = lt < 0 ? 0 : 1; s.style.transform = `translateY(${(1 - clamp(lt / 0.1)) * 14}px)`; s.style.textShadow = `0 0 ${24 + (1 - clamp(lt / 0.25)) * 40}px rgba(47,183,234,.95)`; });
@@ -223,8 +228,9 @@ function renderFlap(t) {
   if (t < SC.flap[0] - 0.1 || t > SC.lock[0] + 0.1) return;
   let n = 0, last = -9; tileOn.forEach((tt, k) => { const on = t >= tt; if (on) { n++; last = tt; } tileEls[k].classList.toggle('on', on); });
   const d = [Math.floor(n / 10), n % 10]; const fp = clamp((t - last) / 0.07);
-  [0, 1].forEach((i) => { numCells[i].querySelector('span').textContent = d[i]; const f = numCells[i].querySelector('.flip');
-    const changes = i === 1 || n % 10 === 0; f.style.transform = `rotateX(${changes ? -90 * fp : -90}deg)`; f.style.opacity = changes && fp < 1 ? 1 : 0; });
+  [0, 1].forEach((i) => { const sp = numCells[i].querySelector('span'); sp.textContent = d[i];
+    const changes = i === 1 || n % 10 === 0; const sq = changes && fp < 1 ? Math.abs(1 - 2 * fp) * 0.8 + 0.2 : 1;
+    sp.style.display = 'inline-block'; sp.style.transform = `scaleY(${sq})`; sp.style.filter = sq < 1 ? 'brightness(1.4)' : 'none'; });
   const target = t < EV.flap_full + 0.15 ? 'OFFLINE' : ' ONLINE'; const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   wordCells.forEach((c, i) => { const ts = EV.flap_full + 0.15 + i * 0.035; let ch = target[i];
     if (t >= EV.flap_full + 0.15 && t < ts + 0.22) ch = chars[(Math.floor(t * 60) * 7 + i * 13) % 26];
@@ -297,7 +303,7 @@ async function init() {
   fx = new ShaderPass(finalShader); composer.addPass(fx); composer.addPass(new OutputPass());
   // warm up every scene once so shader compilation does not happen mid-render
   for (const k in S) { S[k].update(0, ''); renderer.compile(S[k].scene, S[k].cam); }
-  ready = true; frame(clockObj.t); window.__resolveBuild && window.__resolveBuild();
+  ready = true; tl.seek(clockObj.t + OFF, false); frame(clockObj.t + OFF); window.__resolveBuild && window.__resolveBuild();
 }
 
 function pick(t) {
