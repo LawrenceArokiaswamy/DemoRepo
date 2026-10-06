@@ -1,0 +1,6 @@
+# Client footage and face stills stay local (privacy); only text/working files are committed.
+source/
+review/*.png
+renders/
+snapshots/
+*.mp4
