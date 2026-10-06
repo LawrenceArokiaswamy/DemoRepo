@@ -18,11 +18,10 @@
   /* ---------- B-roll cards (wrapper animates; the <video> is the timed clip) ---------- */
   const holder = $('#brolls');
   TL.broll.forEach((b, i) => {
-    const w = document.createElement('div'); w.className = 'bcard'; w.id = 'b' + i;
-    w.innerHTML = `<video class="clip" src="${window.PREVIEW?"proxy":"assets"}/broll/${b.src}${window.PREVIEW?".webm":".mp4"}" muted playsinline data-start="${b.t}" data-duration="${b.d}" data-media-start="${b.m}" data-track-index="${2 + (i % 4)}"></video>`;
-    holder.appendChild(w);
+    const w = document.getElementById('b' + i); const v = w.querySelector('video');
+    if (window.PREVIEW) v.src = `proxy/broll/${b.src}.webm`;
     fromTo(w, b.t, { opacity: 0, y: 50, scale: 0.9, rotation: i % 2 ? 1.5 : -1.5, filter: 'blur(12px)' }, { opacity: 1, y: 0, scale: 1, rotation: 0, filter: 'blur(0px)', duration: 0.5, ease: EASE });
-    fromTo(w.querySelector('video'), b.t, { scale: 1.12 }, { scale: 1.0, duration: b.d, ease: 'none' });   // gentle Ken Burns
+    fromTo(v, b.t, { scale: 1.12 }, { scale: 1.0, duration: b.d, ease: 'none' });   // gentle Ken Burns
     at(w, b.t + b.d - 0.25, { opacity: 0, scale: 0.94, y: -20, filter: 'blur(8px)', duration: 0.25, ease: 'power2.in' });
   });
 
@@ -116,7 +115,7 @@
   /* ---------- per-frame: punch-in zoom, background soften, captions ---------- */
   const marks = [0, ...TL.cuts, ...TL.tips].filter((x, i, a) => a.indexOf(x) === i).sort((a, b) => a - b);
   const overlays = [...TL.broll.map((b) => [b.t, b.t + b.d]), [TL.ceiling.t, TL.ceiling.out + 0.25], [TL.fixtures.t, TL.fixtures.out + 0.25],
-    [TL.allDone, TL.checklist - 0.1], [TL.checklist - 0.15, TL.broll[7].t], [TL.endcard, DUR]];
+    [TL.allDone, TL.checklist - 0.1], [TL.checklist - 0.15, TL.broll[7].t], [TL.endcard, DUR + 2]];
   const softAt = (t) => { let v = 0; for (const [a, b] of overlays) { const i = Math.min(1, Math.max(0, (t - a) / 0.3)), o = Math.min(1, Math.max(0, (b - t) / 0.3)); if (t >= a && t <= b) v = Math.max(v, Math.min(i, o)); } return v; };
   const arw = $('#aroll-wrap'), dim = $('#dim');
 
