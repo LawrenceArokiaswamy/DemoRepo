@@ -30,7 +30,7 @@ const glassIn = (s, t, d = 0.6) => fromTo(s, t, { opacity: 0, y: 50, scale: 0.88
 const glassOut = (s, t, d = 0.3) => at(s, t, { opacity: 0, y: -30, scale: 0.94, filter: 'blur(10px)', duration: d, ease: 'power2.in' });
 
 /* ---------- her: hero → presenter ---------- */
-set('#cut-wrap', 0, { scale: 1, x: 0, y: 0 });
+set('#cut-wrap', 0, { scale: 0.84, x: 0, y: 0 });
 at('#cut-wrap', PRES, { scale: 0.62, duration: 0.9, ease: 'expo.inOut' });
 /* cold open: two shock reactions, then her — "Don't / forget / to do THIS" */
 const HB = 0.62, HC = SWAP;
@@ -85,7 +85,7 @@ TL.icons.forEach((grp, gi) => grp.forEach((ic, k) => {
 /* ---------- floating B-roll screens (3D tilt, drift) ---------- */
 TL.broll.forEach((b, i) => {
   const el = document.getElementById('b' + i); if (!el) return;
-  if (i === 7) { set(el, 0, { display: 'none' }); return; }        // CTA uses the phone instead
+  if (i === 7 || i === 0) { set(el, 0, { display: 'none' }); return; }        // CTA uses the phone; walk-through title carries b0's moment
   const side = i % 2 ? -1 : 1;
   fromTo(el, b.t, { opacity: 0, rotationY: 38 * side, rotationX: 8, z: -500, x: 260 * side, filter: 'blur(16px)' },
     { opacity: 1, rotationY: 12 * side, rotationX: 2, z: 0, x: 0, filter: 'blur(0px)', duration: 0.7, ease: EASE });
