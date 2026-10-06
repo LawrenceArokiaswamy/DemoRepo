@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>Nest With Nayaki — Final Walk-Through</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
+<link rel="stylesheet" href="style.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="icons.js"></script>
+<script src="assets/words.js"></script>
+<script src="timeline.js"></script>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="75.8" data-width="1080" data-height="1920" data-fps="30">
+  <!-- her footage (pause-trimmed, colour-corrected) inside a zoom wrapper -->
+  <div id="aroll-wrap"><video id="aroll" class="clip" src="assets/aroll.mp4" muted playsinline data-start="0" data-duration="75.8" data-media-start="0" data-track-index="0"></video></div>
+  <div id="dim" class="clip" data-start="0" data-duration="75.8" data-track-index="1"></div>
+  <div id="brolls"></div>
+
+  <div id="ui" class="clip" data-start="0" data-duration="75.8" data-track-index="10">
+    <div id="topshade"></div><div id="botshade"></div>
+
+    <!-- hook -->
+    <div id="hook"><div class="h-line"><span class="h1">Don't close on a home</span></div><div class="h-line"><span class="h2">until you do <em>this.</em></span></div></div>
+    <div id="mia"><div class="chip" id="mia1"></div><div class="chip" id="mia2"></div></div>
+
+    <!-- walk-through title -->
+    <div id="walk" class="card"><div class="w-k">Step zero</div><div class="w-t">The final <em>walk-through</em></div></div>
+    <div id="days" class="chip big"></div>
+
+    <!-- 5-point tracker -->
+    <div id="tracker" class="card"></div>
+
+    <!-- tip lower-third -->
+    <div id="tip" class="card"><div class="t-num" id="t-num">01</div><div class="t-txt"><div class="t-k" id="t-k">Check #1</div><div class="t-t" id="t-t">Doors &amp; locks</div></div></div>
+
+    <!-- icon row -->
+    <div id="icons"></div>
+
+    <!-- tip 4: ceilings -->
+    <div id="ceil" class="card">
+      <svg viewBox="0 0 860 520" width="860" height="520">
+        <defs>
+          <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef6f2"/><stop offset="1" stop-color="#d9e8e2"/></linearGradient>
+          <radialGradient id="stain" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#b48a4a" stop-opacity=".55"/><stop offset=".6" stop-color="#c9a464" stop-opacity=".35"/><stop offset="1" stop-color="#c9a464" stop-opacity="0"/></radialGradient>
+          <clipPath id="lens"><circle id="lensc" cx="300" cy="200" r="92"/></clipPath>
+        </defs>
+        <polygon points="0,0 860,0 760,330 100,330" fill="url(#cg)"/>
+        <polygon points="100,330 760,330 860,520 0,520" fill="#f7fbf9"/>
+        <line x1="100" y1="330" x2="760" y2="330" stroke="#0A3D42" stroke-opacity=".18" stroke-width="3"/>
+        <g stroke="#0A3D42" stroke-opacity=".08" stroke-width="2">
+          <line x1="215" y1="0" x2="250" y2="330"/><line x1="430" y1="0" x2="430" y2="330"/><line x1="645" y1="0" x2="610" y2="330"/></g>
+        <g id="lamp"><line x1="430" y1="0" x2="430" y2="70" stroke="#0A3D42" stroke-width="4"/><path d="M380 70 h100 l-18 46 h-64z" fill="#0A3D42"/><ellipse cx="430" cy="118" rx="34" ry="8" fill="#FFD65A"/></g>
+        <g id="stainblob"><ellipse cx="610" cy="150" rx="96" ry="58" fill="url(#stain)"/><ellipse cx="616" cy="146" rx="52" ry="30" fill="none" stroke="#a5793a" stroke-opacity=".45" stroke-width="3" stroke-dasharray="7 9"/></g>
+        <g id="drip"><path d="M612 196 q8 16 0 24 q-8-8 0-24z" fill="#5fb3c9"/></g>
+        <g id="mag"><circle id="magc" cx="300" cy="200" r="92" fill="rgba(255,255,255,.18)" stroke="#0A3D42" stroke-width="10"/><line id="magh" x1="365" y1="265" x2="430" y2="330" stroke="#0A3D42" stroke-width="18" stroke-linecap="round"/></g>
+      </svg>
+      <div class="g-tag" id="lookup"><span class="ico" data-i="arrow-up"></span>Look up</div>
+      <div class="g-tag warn" id="stain-tag"><span class="ico" data-i="droplet"></span>Water stain?</div>
+      <div class="g-cap" id="ceil-cap">Anything different from your last visit?</div>
+    </div>
+
+    <!-- tip 5: fixtures & walls -->
+    <div id="fix" class="card">
+      <div class="fx-col" id="fx-thermo">
+        <div class="thermo"><svg viewBox="0 0 220 220" width="220" height="220">
+          <circle cx="110" cy="110" r="96" fill="#0B2F33"/><circle cx="110" cy="110" r="96" fill="none" stroke="#F5B800" stroke-width="6" stroke-dasharray="420 603" transform="rotate(130 110 110)" id="thermo-arc"/>
+          <text x="110" y="128" text-anchor="middle" font-family="Geist" font-weight="300" font-size="62" fill="#fff">21°</text>
+          <text x="110" y="160" text-anchor="middle" font-family="Geist" font-weight="500" font-size="16" fill="#9fd9cf" letter-spacing="2">HEAT</text></svg></div>
+        <div class="fx-l">Smart thermostat</div><div class="fx-q">Still there?</div>
+      </div>
+      <div class="fx-col" id="fx-wall">
+        <div class="wall"><div class="tv" id="tv"></div><i class="hole h1"></i><i class="hole h2"></i><i class="hole h3"></i><i class="hole h4"></i></div>
+        <div class="fx-l">Wall-mount holes</div><div class="fx-q">Patched?</div>
+      </div>
+      <div class="g-cap" id="fix-cap">Any major changes to the house?</div>
+    </div>
+
+    <!-- all done -->
+    <div id="done" class="card"><span class="ico big" data-i="circle-check-big"></span><div>All 5 checked.<br/><em>Ready to close.</em></div></div>
+
+    <!-- CTA -->
+    <div id="doc" class="card"><div class="doc-h"><span class="ico" data-i="clipboard-check"></span>Final Walk-Through Checklist</div>
+      <div class="doc-l"></div><div class="doc-l"></div><div class="doc-l"></div><div class="doc-l"></div><div class="doc-l"></div><div class="doc-l"></div></div>
+    <div id="dm"><div class="dm-ig"><span class="ico" data-i="instagram"></span></div><div class="dm-b"><div class="dm-k">DM me</div><div class="dm-w">CHECKLIST</div></div></div>
+
+    <!-- end card -->
+    <div id="end">
+      <div class="end-card card"><img src="assets/logo.png" alt="Nest With Nayaki" /></div>
+      <div class="end-n">Nayaki Penumarthy</div>
+      <div class="end-b">Realtor · Royal LePage Certified Realty</div>
+      <div class="end-h"><span class="ico" data-i="instagram"></span>@nest_with_nayaki</div>
+    </div>
+
+    <div id="caption"></div>
+  </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>

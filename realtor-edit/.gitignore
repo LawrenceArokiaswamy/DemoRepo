@@ -8,3 +8,10 @@ work/*.wav
 review/*.wav
 review/*.mp3
 work/ln.txt
+comp/proxy/
+comp/snapshots/
+comp/renders/
+comp/t_*.html
+work/
+*.mov
+*.webm
