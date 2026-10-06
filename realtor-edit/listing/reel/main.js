@@ -7,57 +7,72 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { makeMap } from './map.js';
 
-const DUR = 57.5, WHIP = 0.24;
+const DUR = 48.78, WHIP = 0.2, BEAT = 60 / 123;
+const bt = (b) => +(b * BEAT).toFixed(3);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
 const EASE = { eout: (x) => 1 - Math.pow(1 - x, 3), ein: (x) => x * x * x, eio: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
-  expo: (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x)), lin: (x) => x };
+  expo: (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x)), lin: (x) => x,
+  ramp: (x) => { const a = 1 - Math.pow(2, -12 * Math.min(x / 0.55, 1)); return 0.82 * a + 0.18 * Math.pow(x, 3); } };   // punch in fast, glide, accelerate out
 const $ = (s) => document.querySelector(s);
 const V3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
 
-/* ---------- shot list (times pinned to the voiceover) ---------- */
+/* ---------- shot list on the 123 BPM beat grid (b0,b1 in beats), pinned to the voiceover ---------- */
 const SANS = '900 SIZE "Inter Tight"', SERIF = 'italic 400 SIZE "Instrument Serif"';
+const D = (b0, b1, photo, near, far, o) => ({ kind: 'depth', t0: bt(b0), t1: bt(b1), photo, near, far, ease: 'ramp', ...o });
 const SHOTS = [
-  { kind: 'video', t0: 0, t1: 4.45, el: '#w1' },
-  { kind: 'depth', t0: 4.45, t1: 7.6, photo: '001', near: 7, far: 60, ease: 'expo', p0: [0, 0, 0], p1: [0, 0.5, -1.4], a0: [0.47, 0.52], a1: [0.47, 0.5], z0: 1.18, z1: 1.45,
-    t3: { lines: ['31 Carnegie'], font: SERIF, h: 0.95, uv: [0.47, 0.72], mul: 0.78, lift: 2.4, tin: 0.25 } },
-  { kind: 'depth', t0: 7.6, t1: 12.05, photo: '016', near: 1.2, far: 14, ease: 'eout', p0: [0, 0, 0.1], p1: [0.06, -0.08, -0.55], a0: [0.63, 0.55], a1: [0.63, 0.5], z0: 1.06, z1: 1.45,
-    t3: { lines: ['3,088', 'SQ FT'], font: SANS, h: 0.9, uv: [0.63, 0.76], floor: true, tin: 0.35 } },
-  { kind: 'reveal', t0: 12.05, t1: 15.45, photo: '026', after: '026s', near: 1.6, far: 9, ease: 'eio', p0: [-0.05, 0, 0], p1: [0.1, 0.05, -0.3], a0: [0.38, 0.5], a1: [0.46, 0.48], z0: 1.14, z1: 1.26, wipe: [0.75, 2.1] },
-  { kind: 'reveal', t0: 15.45, t1: 18.9, photo: '024', after: '024s', near: 1.8, far: 11, ease: 'eio', p0: [0, 0, 0], p1: [0.12, 0, -0.3], a0: [0.40, 0.5], a1: [0.48, 0.5], z0: 1.16, z1: 1.26, wipe: [0.6, 1.9] },
-  { kind: 'video', t0: 18.9, t1: 21.0, el: '#w2' },
-  { kind: 'depth', t0: 21.0, t1: 24.3, photo: '033', near: 1.6, far: 9, ease: 'eio', p0: [-0.15, 0, 0], p1: [0.2, 0, -0.4], a0: [0.5, 0.5], a1: [0.62, 0.5], z0: 1.1, z1: 1.3,
-    t3: { lines: ['KITCHEN'], font: SANS, h: 0.72, uv: [0.5, 0.515], mul: 0.84, lift: 0, rise: true, tin: 0.3 } },
-  { kind: 'depth', t0: 24.3, t1: 25.3, photo: '037', near: 0.8, far: 4, ease: 'eout', p0: [0, 0, 0], p1: [0, -0.02, -0.18], a0: [0.6, 0.55], a1: [0.6, 0.58], z0: 1.1, z1: 1.35 },
-  { kind: 'depth', t0: 25.3, t1: 27.05, photo: '042', near: 0.9, far: 4.5, ease: 'eout', p0: [0, 0, 0], p1: [0.05, 0, -0.25], a0: [0.62, 0.5], a1: [0.58, 0.5], z0: 1.08, z1: 1.32 },
-  { kind: 'video', t0: 27.05, t1: 30.0, el: '#w3' },
-  { kind: 'depth', t0: 30.0, t1: 32.75, photo: '053', near: 1.3, far: 8, ease: 'eout', p0: [0, 0, 0], p1: [0.05, -0.05, -0.45], a0: [0.52, 0.5], a1: [0.55, 0.5], z0: 1.08, z1: 1.36,
-    t3: { lines: ['SPA', 'ENSUITE'], font: SANS, h: 0.5, uv: [0.54, 0.78], floor: true, tin: 0.3 } },
-  { kind: 'reveal', t0: 32.75, t1: 35.3, photo: '056', after: '056s', near: 1.6, far: 9, ease: 'eio', p0: [0, 0, 0], p1: [0.1, 0, -0.25], a0: [0.5, 0.52], a1: [0.56, 0.52], z0: 1.12, z1: 1.24, wipe: [0.45, 1.6] },
-  { kind: 'depth', t0: 35.3, t1: 36.75, photo: '069', near: 1.0, far: 5, ease: 'eout', p0: [0, 0, 0], p1: [0.04, 0, -0.25], a0: [0.45, 0.55], a1: [0.45, 0.55], z0: 1.08, z1: 1.3 },
-  { kind: 'map', t0: 36.75, t1: 46.5 },
-  { kind: 'depth', t0: 46.5, t1: 48.6, photo: '009', near: 4, far: 40, ease: 'eout', p0: [0, 0, 0], p1: [0, 0.2, -1.2], a0: [0.5, 0.45], a1: [0.52, 0.42], z0: 1.1, z1: 1.32 },
-  { kind: 'depth', t0: 48.6, t1: 50.7, photo: '005', near: 3, far: 14, ease: 'expo', p0: [0, -0.1, 0], p1: [0, 0.25, -1.3], a0: [0.45, 0.6], a1: [0.45, 0.42], z0: 1.12, z1: 1.5 },
-  { kind: 'depth', t0: 50.7, t1: 57.5, photo: '001', near: 7, far: 60, ease: 'eout', p0: [0, 0.2, -0.3], p1: [0, 0.45, -0.9], a0: [0.47, 0.45], a1: [0.47, 0.42], z0: 1.2, z1: 1.3, end: true },
+  { kind: 'video', t0: 0, t1: bt(3), el: '#w1' },
+  D(3, 5, '016', 1.2, 14, { p0: [0, 0, 0.1], p1: [0.05, -0.05, -0.5], a0: [0.63, 0.52], a1: [0.63, 0.5], z0: 1.25, z1: 1.6, tr: 'zoom' }),
+  D(5, 8, '001', 7, 60, { p0: [0, 0, 0], p1: [0, 0.6, -1.6], a0: [0.47, 0.55], a1: [0.47, 0.5], z0: 1.12, z1: 1.5 }),
+  D(8, 11, '001', 7, 60, { p0: [0.4, 0.3, -0.6], p1: [-0.3, 0.5, -1.2], a0: [0.5, 0.5], a1: [0.44, 0.5], z0: 1.3, z1: 1.42, tr: 'flash',
+    t3: { lines: ['31 Carnegie'], font: SERIF, h: 0.95, uv: [0.47, 0.72], mul: 0.78, lift: 2.4, tin: 0.05 } }),
+  D(11, 14, '013', 1.2, 7, { p0: [0, 0, 0], p1: [-0.05, 0, -0.6], a0: [0.38, 0.47], a1: [0.35, 0.45], z0: 1.1, z1: 1.55, tr: 'zoom' }),
+  D(14, 17, '043', 1.0, 9, { p0: [0, -0.1, 0], p1: [0.05, 0.25, -0.3], a0: [0.72, 0.62], a1: [0.72, 0.36], z0: 1.15, z1: 1.35 }),
+  D(17, 20, '016', 1.2, 14, { p0: [0, 0, 0.1], p1: [0.06, -0.08, -0.55], a0: [0.63, 0.56], a1: [0.63, 0.5], z0: 1.04, z1: 1.4,
+    t3: { lines: ['3,088', 'SQ FT'], font: SANS, h: 0.9, uv: [0.63, 0.76], floor: true, tin: 0.1 } }),
+  D(20, 22, '020', 1.4, 11, { p0: [-0.1, 0, 0], p1: [0.15, 0, -0.4], a0: [0.42, 0.55], a1: [0.5, 0.52], z0: 1.12, z1: 1.35, tr: 'flash' }),
+  { kind: 'reveal', t0: bt(22), t1: bt(28), photo: '026', after: '026s', near: 1.6, far: 9, ease: 'eio', p0: [-0.05, 0, 0], p1: [0.1, 0.05, -0.35], a0: [0.38, 0.5], a1: [0.47, 0.48], z0: 1.14, z1: 1.3, wipe: [0.55, 1.6], tr: 'zoom' },
+  { kind: 'reveal', t0: bt(28), t1: bt(31), photo: '024', after: '024s', near: 1.8, far: 11, ease: 'eio', p0: [0, 0, 0], p1: [0.12, 0, -0.3], a0: [0.42, 0.5], a1: [0.48, 0.5], z0: 1.16, z1: 1.3, wipe: [0.15, 0.95] },
+  { kind: 'video', t0: bt(31), t1: bt(34), el: '#w2' },
+  D(34, 38, '033', 1.6, 9, { p0: [-0.15, 0, 0], p1: [0.2, 0, -0.45], a0: [0.5, 0.5], a1: [0.55, 0.5], z0: 1.12, z1: 1.34, tr: 'zoom',
+    t3: { lines: ['KITCHEN'], font: SANS, h: 0.72, uv: [0.5, 0.515], mul: 0.84, lift: 0, tin: 0.05 } }),
+  D(38, 40, '037', 0.8, 4, { p0: [0, 0, 0], p1: [0, -0.02, -0.2], a0: [0.6, 0.55], a1: [0.6, 0.58], z0: 1.15, z1: 1.45 }),
+  D(40, 41, '038', 1.2, 6, { p0: [0, 0, 0], p1: [0.1, 0, -0.25], a0: [0.38, 0.45], a1: [0.42, 0.45], z0: 1.15, z1: 1.35, tr: 'flash' }),
+  D(41, 44, '042', 0.9, 4.5, { p0: [0, 0, 0], p1: [0.05, 0, -0.3], a0: [0.62, 0.5], a1: [0.58, 0.5], z0: 1.08, z1: 1.38 }),
+  { kind: 'video', t0: bt(44), t1: bt(48), el: '#w3', tr: 'zoom' },
+  D(48, 50, '049', 1.0, 6, { p0: [0, 0, 0], p1: [0, -0.05, -0.3], a0: [0.5, 0.58], a1: [0.5, 0.6], z0: 1.15, z1: 1.45 }),
+  D(50, 52, '051', 1.0, 6, { p0: [0, 0, 0], p1: [-0.1, 0, -0.3], a0: [0.38, 0.5], a1: [0.34, 0.5], z0: 1.12, z1: 1.38, tr: 'flash' }),
+  D(52, 54, '053', 1.3, 8, { p0: [0, 0, 0], p1: [0.05, -0.05, -0.45], a0: [0.53, 0.5], a1: [0.55, 0.5], z0: 1.08, z1: 1.36,
+    t3: { lines: ['SPA', 'ENSUITE'], font: SANS, h: 0.5, uv: [0.54, 0.78], floor: true, tin: 0.05 } }),
+  { kind: 'reveal', t0: bt(54), t1: bt(58), photo: '056', after: '056s', near: 1.6, far: 9, ease: 'eio', p0: [0, 0, 0], p1: [0.1, 0, -0.28], a0: [0.5, 0.52], a1: [0.56, 0.52], z0: 1.12, z1: 1.26, wipe: [0.3, 1.2], tr: 'zoom' },
+  D(58, 59, '072', 1.2, 7, { p0: [0, 0, 0], p1: [0.05, 0, -0.3], a0: [0.47, 0.5], a1: [0.47, 0.5], z0: 1.15, z1: 1.4, tr: 'flash' }),
+  D(59, 61, '069', 1.0, 5, { p0: [0, 0, 0], p1: [0.04, 0, -0.28], a0: [0.45, 0.55], a1: [0.45, 0.55], z0: 1.1, z1: 1.36 }),
+  { kind: 'map', t0: bt(61), t1: bt(79), tr: 'zoom' },
+  D(79, 82, '009', 4, 40, { p0: [0, 0, 0], p1: [0, 0.25, -1.4], a0: [0.5, 0.45], a1: [0.52, 0.42], z0: 1.12, z1: 1.4, tr: 'zoom' }),
+  D(82, 86, '005', 3, 14, { p0: [0, -0.1, 0], p1: [0, 0.3, -1.6], a0: [0.45, 0.62], a1: [0.45, 0.42], z0: 1.12, z1: 1.6 }),
+  D(86, 100.5, '001', 7, 60, { ease: 'eout', p0: [0, 0.2, -0.3], p1: [0, 0.45, -0.9], a0: [0.47, 0.45], a1: [0.47, 0.42], z0: 1.2, z1: 1.3, end: true, tr: 'flash' }),
 ];
 
 /* ---------- big kinetic keywords (VO-synced) ---------- */
 const KW = [
-  { t: 2.0, d: 0.75, html: 'SPACE', cls: 'sans', size: 250, top: 620 },
-  { t: 2.75, d: 1.7, html: 'or <span class="g">location?</span>', cls: 'serif', size: 190, top: 860 },
-  { t: 5.95, d: 1.6, html: 'gives you <span class="g">both.</span>', cls: 'serif', size: 140, top: 360 },
-  { t: 10.2, d: 1.8, html: 'SEVEN OAKS · OAKVILLE', cls: 'small', size: 40, top: 270 },
-  { t: 12.25, d: 1.7, html: 'Soaring <span class="g">ceilings</span>', cls: 'serif', size: 140, top: 400 },
-  { t: 14.0, d: 1.35, html: '<span class="g">Hardwood</span> throughout', cls: 'serif', size: 125, top: 400 },
-  { t: 16.95, d: 1.9, html: 'built around <span class="g">the fire</span>', cls: 'serif', size: 125, top: 400 },
-  { t: 22.25, d: 2.0, html: 'big enough for<br/><span class="g">everyone\'s opinions</span>', cls: 'serif', size: 104, top: 330 },
-  { t: 24.35, d: 0.9, html: 'GAS COOKTOP', cls: 'small', size: 40, top: 300 },
-  { t: 25.15, d: 1.85, html: 'WALK-IN<br/><span class="g">PANTRY</span>', cls: 'sans', size: 150, top: 560 },
-  { t: 28.55, d: 1.45, html: 'Primary <span class="g">retreat</span>', cls: 'serif', size: 150, top: 380 },
-  { t: 32.95, d: 1.4, html: '<span class="g">4</span> BEDROOMS', cls: 'sans', size: 140, top: 400 },
-  { t: 34.4, d: 2.3, html: '2ND-FLOOR<br/><span class="g">LAUNDRY</span>', cls: 'sans', size: 120, top: 380 },
-  { t: 47.45, d: 1.15, html: 'Some homes<br/><span class="g">knock quietly</span>', cls: 'serif', size: 120, top: 380 },
-  { t: 49.0, d: 1.65, html: 'This one<br/><span class="g">won\'t wait.</span>', cls: 'serif', size: 150, top: 380 },
+  { t: 0.25, d: 1.2, html: 'Some homes<br/><span class="g">make you choose</span>', cls: 'serif', size: 120, top: 380 },
+  { t: 1.75, d: 0.7, html: 'SPACE', cls: 'sans', size: 260, top: 620 },
+  { t: 2.45, d: 1.4, html: 'or <span class="g">location?</span>', cls: 'serif', size: 190, top: 380 },
+  { t: 4.95, d: 1.75, html: 'gives you <span class="g">both.</span>', cls: 'serif', size: 140, top: 360 },
+  { t: 7.0, d: 1.6, html: 'OVER <span class="g">3,000</span><br/>SQ FT', cls: 'sans', size: 150, top: 380 },
+  { t: 9.05, d: 1.6, html: 'SEVEN OAKS · OAKVILLE', cls: 'small', size: 40, top: 270 },
+  { t: 10.7, d: 1.5, html: 'Soaring <span class="g">ceilings</span>', cls: 'serif', size: 140, top: 400 },
+  { t: 12.25, d: 1.35, html: '<span class="g">Hardwood</span> throughout', cls: 'serif', size: 125, top: 400 },
+  { t: 14.45, d: 1.6, html: 'built around <span class="g">the fire</span>', cls: 'serif', size: 125, top: 400 },
+  { t: 16.95, d: 1.55, html: 'big enough for<br/><span class="g">everyone\'s opinions</span>', cls: 'serif', size: 104, top: 330 },
+  { t: 18.55, d: 0.95, html: 'GAS COOKTOP', cls: 'small', size: 40, top: 300 },
+  { t: 19.6, d: 1.8, html: 'WALK-IN<br/><span class="g">PANTRY</span>', cls: 'sans', size: 150, top: 560 },
+  { t: 22.55, d: 0.9, html: 'Primary <span class="g">retreat</span>', cls: 'serif', size: 150, top: 380 },
+  { t: 24.3, d: 1.1, html: 'feels like <span class="g">a spa</span>', cls: 'serif', size: 140, top: 380 },
+  { t: 26.3, d: 1.25, html: '<span class="g">4</span> BEDROOMS', cls: 'sans', size: 140, top: 400 },
+  { t: 27.6, d: 2.1, html: '2ND-FLOOR<br/><span class="g">LAUNDRY</span>', cls: 'sans', size: 120, top: 380 },
+  { t: 39.1, d: 1.4, html: 'Some homes<br/><span class="g">knock quietly</span>', cls: 'serif', size: 120, top: 380 },
+  { t: 40.55, d: 1.4, html: 'This one<br/><span class="g">won\'t wait.</span>', cls: 'serif', size: 150, top: 380 },
 ];
 const kwEls = KW.map((k) => { const e = document.createElement('div'); e.className = 'k ' + k.cls; e.innerHTML = k.html; e.style.fontSize = k.size + 'px'; e.style.top = k.top + 'px'; e.style.lineHeight = '0.95'; $('#kw').appendChild(e); return e; });
 function renderKW(t) {
@@ -75,8 +90,8 @@ words.forEach((w, i) => { cur.push(w); const n = words[i + 1]; if (/[.,?]$/.test
 let capKey = -1;
 function renderCaptions(t) {
   const el = $('#cap'); let pi = -1; for (let i = 0; i < phrases.length; i++) if (t >= phrases[i][0].s - 0.05) pi = i;
-  const kwOn = KW.some((k) => t >= k.t - 0.05 && t <= k.t + k.d);
-  const ph = phrases[pi], live = ph && t <= ph[ph.length - 1].e + 0.3 && t < 50.7 && !kwOn;
+  const kwOn = KW.some((k) => t >= k.t - 0.05 && t <= k.t + k.d) || SHOTS.some((s) => s.t3 && t >= s.t0 && t < s.t1);
+  const ph = phrases[pi], live = ph && t <= ph[ph.length - 1].e + 0.3 && t < 41.95 && !kwOn;
   if (!live) { if (capKey !== -1) { el.innerHTML = ''; capKey = -1; } return; }
   if (pi !== capKey) { capKey = pi; el.innerHTML = ph.map((w) => `<span class="w${KEY.test(w.w.replace(/[.,?]+$/, '')) ? ' k' : ''}">${w.w.replace(/[,]$/, '')}</span>`).join(' '); }
   ph.forEach((w, j) => { const e = el.children[j]; if (!e) return; const lt = t - w.s, p = clamp((lt + 0.05) / 0.14);
@@ -155,19 +170,25 @@ const tmpP = new THREE.Vector3();
 function frame(t) {
   renderKW(t); renderCaptions(t);
   const si = SHOTS.findIndex((s) => t >= s.t0 && t < s.t1), S = SHOTS[si < 0 ? SHOTS.length - 1 : si];
-  const out = si < SHOTS.length - 1 ? EASE.ein(prog(t, S.t1 - WHIP, S.t1)) : 0, inn = si > 0 ? 1 - EASE.eout(prog(t, S.t0, S.t0 + WHIP)) : 0;
-  const yaw = -out * 0.3 + inn * 0.3, blur = Math.max(out, inn) * 0.055;
+  const N = SHOTS[si + 1], trIn = S.tr || 'whip', trOut = N ? N.tr || 'whip' : 'none';
+  const out = N ? EASE.ein(prog(t, S.t1 - WHIP, S.t1)) : 0, inn = si > 0 ? 1 - EASE.eout(prog(t, S.t0, S.t0 + WHIP)) : 0;
+  const yaw = (trOut === 'whip' ? -out * 0.3 : 0) + (trIn === 'whip' ? inn * 0.3 : 0);
+  const blur = Math.max(trOut === 'whip' ? out : 0, trIn === 'whip' ? inn : 0) * 0.055;
+  const zoomK = (trOut === 'zoom' ? out * 0.9 : 0) + (trIn === 'zoom' ? inn * -0.35 : 0);   // punch through the frame
+  const zblur = Math.max(trOut === 'zoom' ? out : 0, trIn === 'zoom' ? inn : 0);
+  // beat pulse: tiny fov kick + roll on every beat
+  const bph = (t % BEAT) / BEAT, kick = Math.exp(-bph * 7) * (t < 42 ? 1 : 0.3);
   // video shots: whip via CSS blur/translate
   for (const s of SHOTS) if (s.kind === 'video') { const e = $(s.el); const on = s === S; e.style.visibility = on ? 'visible' : 'hidden';
-    if (on) { e.style.transform = `translateX(${(yaw * -900).toFixed(1)}px) scale(${(1.04 + 0.02 * Math.max(out, inn)).toFixed(3)})`; e.style.filter = blur > 0.002 ? `blur(${(blur * 260).toFixed(1)}px)` : 'none'; } }
+    if (on) { e.style.transform = `translateX(${(yaw * -900).toFixed(1)}px) scale(${(1.04 + 0.012 * kick + Math.max(0, zoomK) * 0.8).toFixed(3)})`; const bb = blur * 260 + zblur * 10; e.style.filter = bb > 0.4 ? `blur(${bb.toFixed(1)}px)` : 'none'; } }
   // UI pieces
   const ba = S.kind === 'reveal' ? prog(t, S.t0 + 0.15, S.t0 + 0.4) * (1 - prog(t, S.t1 - 0.25, S.t1)) : 0, rev = S.kind === 'reveal' ? prog(t, S.t0 + S.wipe[1] - 0.35, S.t0 + S.wipe[1]) : 0;
   $('#ba').style.opacity = ba.toFixed(3); $('#b-be').style.opacity = (1 - rev).toFixed(3); $('#b-af').style.opacity = rev.toFixed(3);
   $('#vs').style.opacity = (S.kind === 'reveal' ? prog(t, S.t0 + S.wipe[0], S.t0 + S.wipe[0] + 0.3) * (1 - prog(t, S.t1 - 0.25, S.t1)) : 0).toFixed(3);
-  const ed = prog(t, 51.0, 51.8); $('#end').style.opacity = ed.toFixed(3);
-  $('#end .e-price').style.transform = `translateY(${(40 * (1 - EASE.eout(prog(t, 51.0, 51.9)))).toFixed(1)}px)`;
-  $('#end .e-card').style.transform = `translateY(${(80 * (1 - EASE.eout(prog(t, 51.6, 52.5)))).toFixed(1)}px)`; $('#end .e-card').style.opacity = prog(t, 51.6, 52.3).toFixed(3);
-  $('#flash').style.opacity = (SHOTS.reduce((m, s) => Math.max(m, t >= s.t0 && s.t0 > 0 ? Math.exp(-(t - s.t0) * 18) * 0.12 : 0), 0)).toFixed(3);
+  const ed = prog(t, 42.3, 43.0); $('#end').style.opacity = ed.toFixed(3);
+  $('#end .e-price').style.transform = `translateY(${(40 * (1 - EASE.eout(prog(t, 42.3, 43.1)))).toFixed(1)}px)`;
+  $('#end .e-card').style.transform = `translateY(${(80 * (1 - EASE.eout(prog(t, 42.9, 43.7)))).toFixed(1)}px)`; $('#end .e-card').style.opacity = prog(t, 42.9, 43.5).toFixed(3);
+  $('#flash').style.opacity = (SHOTS.reduce((m, s) => Math.max(m, t >= s.t0 && s.t0 > 0 ? Math.exp(-(t - s.t0) * 14) * (s.tr === 'flash' ? 0.85 : 0.1) : 0), 0)).toFixed(3);
   const mapOn = S.kind === 'map'; $('#map').style.opacity = mapOn ? 1 : 0;
   if (!ready) return;
   for (const s of SHOTS) if (s.g) s.g.visible = s === S;
@@ -176,16 +197,16 @@ function frame(t) {
   if (S.kind === 'depth' || S.kind === 'reveal') {
     const u = EASE[S.ease](prog(t, S.t0, S.t1)), lt = t - S.t0;
     tmpP.lerpVectors(V3(S.p0), V3(S.p1), u); cam.position.copy(tmpP);
-    cam.lookAt(S.P(S.a0[0] + (S.a1[0] - S.a0[0]) * u, S.a0[1] + (S.a1[1] - S.a0[1]) * u)); cam.rotateY(yaw);
-    cam.fov = S.vfov / (S.z0 + (S.z1 - S.z0) * u); cam.updateProjectionMatrix();
+    cam.lookAt(S.P(S.a0[0] + (S.a1[0] - S.a0[0]) * u, S.a0[1] + (S.a1[1] - S.a0[1]) * u)); cam.rotateY(yaw); cam.rotateZ(Math.sin(t * 23) * 0.004 * kick);
+    cam.fov = S.vfov / ((S.z0 + (S.z1 - S.z0) * u) * (1 + 0.018 * kick + Math.max(0, zoomK)) * (1 + Math.min(0, zoomK))); cam.updateProjectionMatrix();
     if (S.txt) { const k = EASE.eout(prog(lt, S.t3.tin, S.t3.tin + 0.6)); S.txt.material.opacity = k; S.txt.position.copy(S.base);
       if (S.t3.floor) S.txt.scale.set(k, k, 1); else { if (S.t3.rise) S.txt.position.y -= 0.5 * (1 - k); else S.txt.position.y -= 0.5 * (1 - k); S.txt.lookAt(cam.position.x * 0.3, S.txt.position.y, cam.position.z); } }
     if (S.kind === 'reveal') S.uP.value = 0.18 + 0.64 * EASE.eio(prog(lt, S.wipe[0], S.wipe[1]));
-    if (S.end) dark = 0.38 * prog(t, 50.9, 51.8);
-    $('#gl').style.filter = 'none'; post.uniforms.uBlur.value = blur; post.uniforms.uDark.value = dark; post.uniforms.uFrame.value = Math.floor(t * 30) % 997;
+    if (S.end) dark = 0.38 * prog(t, 42.2, 43.0);
+    $('#gl').style.filter = 'none'; post.uniforms.uBlur.value = blur + zblur * 0.012; post.uniforms.uDark.value = dark; post.uniforms.uFrame.value = Math.floor(t * 30) % 997;
     composer.render();
   } else if (mapOn) {
-    MAP.render(t - S.t0, S.t1 - S.t0, { yaw, blur });
+    MAP.render(t - S.t0, S.t1 - S.t0, { yaw, blur: blur + zblur * 0.01 });
   }
 }
 init();

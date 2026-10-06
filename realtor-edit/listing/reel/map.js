@@ -38,12 +38,12 @@ export function makeMap(THREE, renderer) {
   const ring = new THREE.Mesh(new THREE.RingGeometry(30, 36, 64), new THREE.MeshBasicMaterial({ color: 0xffd08a, transparent: true, opacity: 0, side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.y = 2; scene.add(ring);
   // amenity pins (local times match the VO words)
   const PINS = [
-    { t: 1.0, name: 'Parks & trails', x: -520, z: -380, c: '#7be0a0' },
-    { t: 2.0, name: 'Schools', x: 380, z: -620, c: '#9ec9ff' },
-    { t: 3.2, name: 'Oakville Trafalgar Hospital', x: -900, z: 520, c: '#ff8b8b' },
-    { t: 5.7, name: 'Hwy 403', x: 0, z: 640, c: '#ffb04a', road: H403 },
-    { t: 6.95, name: 'Hwy 407', x: 600, z: -820, c: '#6fc7ff', road: H407 },
-    { t: 8.3, name: 'QEW', x: 900, z: 1420, c: '#ff7a59', road: HQEW },
+    { t: 0.55, name: 'Parks & trails', x: -520, z: -380, c: '#7be0a0' },
+    { t: 1.5, name: 'Schools', x: 380, z: -620, c: '#9ec9ff' },
+    { t: 2.6, name: 'Oakville Trafalgar Hospital', x: -900, z: 520, c: '#ff8b8b' },
+    { t: 4.9, name: 'Hwy 403', x: 0, z: 640, c: '#ffb04a', road: H403 },
+    { t: 6.05, name: 'Hwy 407', x: 600, z: -820, c: '#6fc7ff', road: H407 },
+    { t: 7.3, name: 'QEW', x: 900, z: 1420, c: '#ff7a59', road: HQEW },
   ];
   const host = document.getElementById('map-t'); host.textContent = '';
   const title = document.createElement('div'); title.textContent = 'LOCATION'; title.style.cssText = 'position:absolute;left:0;right:0;top:0;text-align:center'; host.appendChild(title);
@@ -56,8 +56,8 @@ export function makeMap(THREE, renderer) {
   const v = new THREE.Vector3();
   function render(lt, dur, { yaw, blur }) {
     // drone path: high wide approach -> dive to the home -> slow orbit while pins appear -> pull out to show highways
-    const a = eio(clamp(lt / 2.2)), b = eout(clamp((lt - 3.9) / 3.6));
-    const ang = 0.6 + lt * 0.11, alt = 1500 - 1050 * a + 950 * b, dist = 1500 - 950 * a + 650 * b;
+    const a = eio(clamp(lt / 1.6)), b = eout(clamp((lt - 3.6) / 3.4));
+    const ang = 0.6 + lt * 0.16, alt = 1500 - 1050 * a + 950 * b, dist = 1500 - 950 * a + 650 * b;
     cam.position.set(Math.sin(ang) * dist, alt, Math.cos(ang) * dist); cam.lookAt(0, 0, 0); cam.rotateY(yaw); cam.updateProjectionMatrix();
     beam.material.opacity = 0.5 * clamp((lt - 0.6) / 0.6); ring.material.opacity = 0.9 * clamp((lt - 0.8) / 0.4); ring.scale.setScalar(1 + 0.25 * Math.sin(lt * 4));
     title.style.opacity = clamp(lt / 0.4) * (1 - clamp((lt - dur + 0.3) / 0.3));
