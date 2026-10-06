@@ -4,3 +4,7 @@ review/*.png
 renders/
 snapshots/
 *.mp4
+work/*.wav
+review/*.wav
+review/*.mp3
+work/ln.txt
