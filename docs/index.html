@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sandeep &amp; Priyanka</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Sandeep &amp; Priyanka · 27–28 January 2027 · Shelter Beach Resorts, Mahabalipuram. Play the games, seal your guesses, and see everything when the vault opens on 29 January.">
+<meta name="theme-color" content="#0b0a1a">
+<meta property="og:title" content="Sandeep ♥ Priyanka · 27–28 Jan 2027">
+<meta property="og:description" content="Scratch your invitation, play the wedding games, and wait for the vault to open on 29 January.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0a1a'/%3E%3Ctext x='32' y='44' font-family='Georgia' font-size='30' text-anchor='middle' fill='%23e8c987'%3ES%E2%99%A5P%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+Tamil:wght@500&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- ============ Player bar ============ -->
+<header class="hud" id="hud">
+  <a class="hud__mark" href="#top" aria-label="Back to top"><span>S</span><i data-ic="heart"></i><span>P</span></a>
+  <div class="hud__right" id="hudRight"></div>
+</header>
+
+<main id="top">
+
+<!-- ============ Hero ============ -->
+<section class="hero" id="hero">
+  <canvas class="hero__sky" id="sky" aria-hidden="true"></canvas>
+  <div class="hero__moon" aria-hidden="true"></div>
+  <div class="hero__inner wrap">
+    <p class="eyebrow reveal-up" style="--d:.1s">Chi. G. Sandeep Raaj &nbsp;·&nbsp; Sow. K. Priyanka</p>
+    <h1 class="names" aria-label="Sandeep and Priyanka">
+      <span class="names__one reveal-up" style="--d:.25s">Sandeep</span>
+      <span class="names__amp reveal-up" style="--d:.45s">&amp;</span>
+      <span class="names__two reveal-up" style="--d:.6s">Priyanka</span>
+    </h1>
+    <p class="tamil reveal-up" style="--d:.8s" lang="ta">சந்தீப் <span>❦</span> பிரியங்கா</p>
+    <p class="hero__when reveal-up" style="--d:.9s">27 &amp; 28 January 2027 <span class="dot"></span> Mahabalipuram, Chennai</p>
+
+    <div class="countdown reveal-up" style="--d:1.05s" id="countdown" aria-label="Countdown to the reception"></div>
+    <p class="countdown__label reveal-up" style="--d:1.1s">until the reception begins</p>
+
+    <div class="hero__cta reveal-up" style="--d:1.2s">
+      <a class="btn btn--gold" href="#invite"><i data-ic="sparkles"></i>Scratch your invitation</a>
+      <a class="btn btn--ghost" href="#vault"><i data-ic="lock"></i>The vault opens 29 Jan</a>
+    </div>
+    <p class="demo-chip" id="demoChip" hidden><i data-ic="info"></i>Preview mode: crowd activity on this page is sample data</p>
+  </div>
+  <svg class="hero__temple" viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="tg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1c1938"/><stop offset="1" stop-color="#0b0a1a"/></linearGradient>
+      <linearGradient id="wg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#16314a" stop-opacity=".9"/><stop offset="1" stop-color="#0b0a1a"/></linearGradient>
+    </defs>
+    <!-- Shore Temple silhouette: two stepped vimanas on the shore -->
+    <path fill="url(#tg)" d="M820 200 V176 h14 v-14 h10 v-16 h10 v-18 h9 v-18 h8 v-16 h7 v-14 h5 l4 -18 4 18 h5 v14 h7 v16 h8 v18 h9 v18 h10 v16 h10 v14 h14 V200 Z
+      M1000 200 V184 h10 v-10 h8 v-12 h7 v-12 h6 v-11 h5 l3 -12 3 12 h5 v11 h6 v12 h7 v12 h8 v10 h10 V200 Z
+      M780 200 h330 v12 H780 Z"/>
+    <path fill="#e8c987" opacity=".55" d="M906 92 l2 -8 2 8 z M1076 125 l1.5 -6 1.5 6 z"/>
+    <path class="wave wave--a" fill="url(#wg)" d="M0 214 C 120 200 240 228 360 214 S 600 200 720 214 960 228 1080 214 1320 200 1440 214 V260 H0 Z"/>
+    <path class="wave wave--b" fill="#0b0a1a" d="M0 232 C 160 220 320 244 480 232 S 800 220 960 232 1280 244 1440 232 V260 H0 Z"/>
+  </svg>
+</section>
+
+<!-- ============ Scratch-card invitation ============ -->
+<section class="section" id="invite">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker"><i data-ic="mail"></i>Your invitation</p>
+      <h2>Scratch the gold. <em>Something is hidden underneath.</em></h2>
+      <p class="lede">Every guest gets one card. Some hold coins, some hold titles, and a very few hold the Golden Jasmine.</p>
+    </header>
+    <div class="scratch-stage" id="scratchStage"></div>
+  </div>
+</section>
+
+<!-- ============ Events ============ -->
+<section class="section section--events" id="events">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker"><i data-ic="calendar"></i>Two days by the sea</p>
+      <h2>The celebrations</h2>
+    </header>
+    <div class="events" id="eventCards"></div>
+    <ol class="timeline" id="timeline" aria-label="Timeline"></ol>
+  </div>
+</section>
+
+<!-- ============ Games intro ============ -->
+<section class="section section--games" id="games">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker"><i data-ic="zap"></i>The games</p>
+      <h2>Play now. <em>Find out on the 29th.</em></h2>
+      <p class="lede">Every guess, bet and wish goes into the vault. Nobody sees the results until it opens, not even the couple.</p>
+    </header>
+    <nav class="game-nav" id="gameNav" aria-label="Games"></nav>
+  </div>
+</section>
+
+<!-- ============ Daily mystery box ============ -->
+<section class="section game" id="box">
+  <div class="wrap game__grid">
+    <div class="game__copy">
+      <p class="kicker"><i data-ic="gift"></i>Game 01 · Daily</p>
+      <h2>The Mystery Box</h2>
+      <p>A new box appears every day at midnight until the wedding. Open it for coins, XP, trivia and sealed teasers. Come back daily to grow your streak.</p>
+      <div class="streak" id="streak"></div>
+    </div>
+    <div class="box-stage" id="boxStage"></div>
+  </div>
+</section>
+
+<!-- ============ Love Stock Market ============ -->
+<section class="section game game--market" id="market">
+  <div class="wrap">
+    <div class="market-head">
+      <div>
+        <p class="kicker"><i data-ic="up"></i>Game 02 · Predictions</p>
+        <h2>The Love Stock Market</h2>
+        <p class="lede">You start with 1,000 Love Coins. Back what you think will happen at the wedding. Prices move as guests trade. Winning shares pay 1 coin each when the vault opens.</p>
+      </div>
+      <div class="portfolio" id="portfolio"></div>
+    </div>
+    <div class="markets" id="markets"></div>
+    <p class="fineprint">Play money only. Trading closes at the muhurtham on 28 January.</p>
+  </div>
+</section>
+
+<!-- ============ He Said / She Said ============ -->
+<section class="section game" id="hss">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker"><i data-ic="heart"></i>Game 03 · Who knows them best</p>
+      <h2>He Said, <em>She Said</em></h2>
+      <p class="lede">Sandeep and Priyanka have each answered these questions in secret. Guess what they said. You'll see whether you were right, and whether the two of them even agree, on the 29th.</p>
+    </header>
+    <div class="hss" id="hssStage"></div>
+  </div>
+</section>
+
+<!-- ============ Blessings & letters ============ -->
+<section class="section game" id="bless">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker"><i data-ic="mic"></i>Game 04 · Sealed words</p>
+      <h2>Blessings &amp; the time capsule</h2>
+      <p class="lede">Record a blessing in your own voice, or write a wish. Everything stays sealed until the vault opens.</p>
+    </header>
+    <div class="bless-grid">
+      <div class="panel recorder" id="recorder"></div>
+      <div class="panel capsule" id="capsule"></div>
+    </div>
+    <div class="letters" id="letters"></div>
+  </div>
+</section>
+
+<!-- ============ Vault ============ -->
+<section class="section section--vault" id="vault">
+  <div class="wrap vault-wrap">
+    <div class="vault-door" id="vaultDoor" aria-hidden="true">
+      <div class="vault-door__ring"></div>
+      <div class="vault-door__dial"><span></span></div>
+      <div class="vault-door__bolts"></div>
+    </div>
+    <div class="vault-copy">
+      <p class="kicker"><i data-ic="vault"></i>The vault</p>
+      <h2>Opens at midnight, <em>29 January</em></h2>
+      <div class="vault-count" id="vaultCount"></div>
+      <div class="pressure" id="pressure"></div>
+      <div class="vault-cta" id="vaultCta"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RSVP ============ -->
+<section class="section" id="rsvp">
+  <div class="wrap wrap--narrow">
+    <header class="sec-head">
+      <p class="kicker"><i data-ic="check"></i>RSVP</p>
+      <h2>Will you be there?</h2>
+    </header>
+    <form class="panel rsvp" id="rsvpForm" novalidate></form>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer__names">Sandeep <span>&amp;</span> Priyanka</p>
+    <p class="footer__tag" id="hashtag"></p>
+    <p class="footer__small">Shelter Beach Resorts · East Coast Road · Mahabalipuram</p>
+    <p class="footer__small"><a href="#couple" id="coupleLink">Couple portal</a></p>
+  </div>
+</footer>
+
+<div class="ticker" id="ticker" aria-live="off"><div class="ticker__dot"></div><div class="ticker__track" id="tickerTrack"></div></div>
+
+<!-- overlays -->
+<div class="sheet" id="sheet" hidden><div class="sheet__scrim" data-close></div><div class="sheet__panel" role="dialog" aria-modal="true" id="sheetPanel"></div></div>
+<div class="show" id="show" hidden></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/reveal.js"></script>
+</body>
+</html>
