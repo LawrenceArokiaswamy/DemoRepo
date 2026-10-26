@@ -1,0 +1,24 @@
+html,body{margin:0;width:1080px;height:1920px;background:#000;overflow:hidden}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;color:#fff;font-family:"Inter Tight",sans-serif}
+.vw{position:absolute;inset:0;overflow:hidden;transform-origin:50% 50%;visibility:hidden}
+.vw video{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover}
+#ui{position:absolute;inset:0;pointer-events:none}
+#ui>*{position:absolute}
+#grad{inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 16%,transparent 62%,rgba(0,0,0,.62) 100%)}
+#open{left:0;right:0;top:1290px;text-align:center}
+#open .o-k{font-weight:600;font-size:26px;letter-spacing:.62em;color:#e9d3ac;opacity:0}
+#open .o-t{margin-top:22px;font-family:"Instrument Serif";font-size:132px;line-height:1;letter-spacing:.01em;opacity:0;text-shadow:0 8px 40px rgba(0,0,0,.5)}
+#open .o-l{margin:30px auto 0;width:360px;height:2px;background:linear-gradient(90deg,transparent,#e9d3ac,transparent);transform:scaleX(0)}
+#open .o-s{margin-top:24px;font-weight:500;font-size:26px;letter-spacing:.5em;opacity:0}
+#lab{right:44px;bottom:70px;font-weight:500;font-size:20px;letter-spacing:.28em;color:rgba(255,255,255,.72);opacity:0}
+#end{left:0;right:0;top:1150px;text-align:center;opacity:0}
+#end .e-k{font-weight:600;font-size:24px;letter-spacing:.6em;color:#e9d3ac}
+#end .e-p{margin-top:14px;font-family:"Instrument Serif";font-size:150px;line-height:1;text-shadow:0 8px 40px rgba(0,0,0,.5)}
+#end .e-s{margin-top:18px;font-weight:600;font-size:28px;letter-spacing:.3em;display:flex;justify-content:center;align-items:center;gap:22px}
+#end .e-s i{width:6px;height:6px;border-radius:50%;background:#e9d3ac}
+#end .e-l{margin:36px auto 30px;width:300px;height:1px;background:linear-gradient(90deg,transparent,rgba(233,211,172,.9),transparent)}
+#end .e-n{font-family:"Instrument Serif";font-size:66px;line-height:1}
+#end .e-b{margin-top:12px;font-weight:600;font-size:20px;letter-spacing:.42em;color:rgba(255,255,255,.8)}
+#end .e-h{margin-top:16px;font-weight:600;font-size:26px;letter-spacing:.08em;color:#e9d3ac}
+#flash{inset:0;background:#fff;opacity:0}
+#enddim{left:0;right:0;top:0;bottom:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.72) 75%,rgba(0,0,0,.85) 100%);opacity:0}

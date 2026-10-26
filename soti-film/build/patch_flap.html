@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>SOTI — Ward Four</title>
+<script>
+  // Tell HyperFrames to wait until fonts + 3D textures are built before capturing frames.
+  window.__hf = window.__hf || {};
+  window.__hf.buildReady = window.__hf.buildReady || {};
+  window.__hf.buildReady.main = new Promise((r) => (window.__resolveBuild = r));
+</script>
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
+<link rel="stylesheet" href="style.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/vo/vo.js"></script>
+<script src="cues.js"></script>
+<script>window.T_OFFSET=34.5;window.T_DUR=3.5;</script>
+<script type="importmap">
+  { "imports": { "three": "./assets/lib/three/build/three.module.js", "three/addons/": "./assets/lib/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1920" data-height="1080" data-fps="60">
+  <canvas id="gl" class="clip" data-start="0" data-duration="3.5" data-track-index="0" width="1920" height="1080"></canvas>
+
+  <div id="ui" class="clip" data-start="0" data-duration="3.5" data-track-index="1">
+    <!-- texture layers -->
+    <div id="vignette"></div>
+    <div id="scan"></div>
+
+    <!-- ===== SCENE UI ===== -->
+    <!-- phone call card (0-11) -->
+    <div id="call" class="glass">
+      <div class="call-top"><span class="dot red"></span><span class="mono">INCOMING · WARD 4 NURSE STATION</span></div>
+      <div class="call-name">St. Mary's General · Night Shift</div>
+      <canvas id="callwave" width="560" height="90"></canvas>
+      <div class="call-meta mono"><span id="calltime">00:00</span><span>ENCRYPTED LINE</span></div>
+    </div>
+
+    <!-- Stella orb + card (11-18) -->
+    <div id="stella" class="glass">
+      <canvas id="orb" width="220" height="220"></canvas>
+      <div class="stella-txt"><div class="mono dim">SOTI ONE · AI ASSISTANT</div><div class="stella-name">Stella</div></div>
+    </div>
+
+    <!-- chips that pop on spoken words -->
+    <div id="chips"></div>
+
+    <!-- reticle for "Location identified" -->
+    <div id="reticle"><div class="r-ring"></div><div class="r-ring r2"></div><div class="r-cross"></div>
+      <div class="r-label glass"><span class="dot red"></span><span class="mono">LOCKED · WARD 4 · FLOOR 3 · 40 DEVICES</span></div></div>
+
+    <!-- diagnostics panel -->
+    <div id="diag" class="glass">
+      <div class="panel-h"><span class="mono">SOTI XSIGHT</span><span class="mono dim">DIAGNOSTIC INTELLIGENCE</span></div>
+      <div class="diag-grid">
+        <div class="metric"><div class="m-l mono">DEVICES</div><div class="m-v" id="m-dev">40</div><div class="bar"><i style="width:100%"></i></div></div>
+        <div class="metric"><div class="m-l mono">BATTERY AVG</div><div class="m-v">82%</div><div class="bar"><i style="width:82%"></i></div></div>
+        <div class="metric"><div class="m-l mono">SIGNAL</div><div class="m-v">−61 dBm</div><div class="bar"><i style="width:70%"></i></div></div>
+        <div class="metric"><div class="m-l mono">NETWORK</div><div class="m-v ok">ONLINE</div><div class="bar"><i style="width:100%"></i></div></div>
+      </div>
+      <div class="graph"><canvas id="graph" width="1040" height="210"></canvas><div class="g-l mono">APP CRASHES / MIN · LAST 30 MIN</div></div>
+      <div class="rows">
+        <div class="row"><span class="mono">MedScan</span><span class="mono">v4.2.1</span><span class="mono bad">CRASH LOOP ✕</span></div>
+        <div class="row"><span class="mono">Pushed</span><span class="mono">02:58</span><span class="mono dim">auto-update · all ward devices</span></div>
+      </div>
+      <div id="rootcause"><span class="mono">ROOT CAUSE</span><b>APP UPDATE 4.2.1</b></div>
+      <div class="scanbar"></div>
+    </div>
+
+    <!-- remote control: button morphs into device -->
+    <div id="remote">
+      <div id="rbtn" class="glass"><span class="rb-txt">CONNECT TO DEVICE</span>
+        <div id="dscreen">
+          <div class="ds-top mono"><span>SCN-0417</span><span id="ds-live">● LIVE · REMOTE CONTROL</span></div>
+          <div class="ds-app"><div class="ds-logo">MedScan</div>
+            <div id="ds-err"><div class="ds-x">!</div><div>MedScan has stopped</div><div class="mono dim small">v4.2.1 · exit code 139</div></div>
+            <div id="ds-fix"><div class="mono dim small">AVAILABLE VERSION</div><div class="ds-ver">4.2.0 · stable</div><div id="rollbtn">ROLL BACK ALL 40</div></div>
+          </div>
+          <div class="ds-draw"></div>
+        </div>
+      </div>
+      <div id="ripple"></div>
+    </div>
+    <div id="cursor"><svg viewBox="0 0 24 24" width="54" height="54"><path d="M3 2l17 9-7.5 1.8L9 21z" fill="#fff" stroke="#0a1622" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+
+    <!-- split flap -->
+    <div id="flap">
+      <div class="flap-row" id="flapnum"></div>
+      <div class="flap-row small" id="flapword"></div>
+      <div id="tiles"></div>
+    </div>
+
+    <!-- lockdown -->
+    <div id="lock">
+      <div id="lockdev" class="glass"><svg id="padlock" viewBox="0 0 120 150" width="190" height="238">
+        <path id="shackle" d="M30 70 V45 a30 30 0 0 1 60 0 V70" fill="none" stroke="#2FB7EA" stroke-width="12" stroke-linecap="round"/>
+        <rect x="14" y="66" width="92" height="76" rx="14" fill="rgba(47,183,234,.18)" stroke="#2FB7EA" stroke-width="6"/>
+        <circle cx="60" cy="100" r="10" fill="#2FB7EA"/><rect x="56" y="104" width="8" height="20" rx="3" fill="#2FB7EA"/></svg>
+        <div class="mono">KIOSK MODE</div><div class="lock-t">LOCKED DOWN</div></div>
+    </div>
+
+    <!-- incident ticket -->
+    <div id="ticket" class="glass">
+      <div class="panel-h"><span class="mono">INC-20931</span><span class="mono pri">PRIORITY 1</span></div>
+      <div class="t-title">Ward 4 · Medication scanners offline</div>
+      <div class="t-rows">
+        <div class="t-row"><span class="mono">03:07:12</span><span>Call received · Nurse station</span></div>
+        <div class="t-row"><span class="mono">03:07:31</span><span>Location identified · 40 devices</span></div>
+        <div class="t-row"><span class="mono">03:07:36</span><span>Root cause · MedScan 4.2.1</span></div>
+        <div class="t-row"><span class="mono">03:07:44</span><span>Rolled back to 4.2.0 · XTreme Hub</span></div>
+        <div class="t-row"><span class="mono">03:07:53</span><span>40 / 40 online · Lockdown restored</span></div>
+      </div>
+      <div id="stamp">RESOLVED</div>
+    </div>
+
+    <!-- before / after slider -->
+    <div id="ba" class="glass">
+      <div class="ba-pane" id="ba-before">
+        <svg viewBox="0 0 900 560" width="100%" height="100%">
+          <defs><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .84 0 0 0 .25 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+          <rect width="900" height="560" fill="#1a1712"/>
+          <rect x="260" y="40" width="380" height="490" rx="18" fill="#6b4a2b"/><rect x="380" y="22" width="140" height="44" rx="10" fill="#9aa0a6"/>
+          <rect x="285" y="80" width="330" height="430" fill="#efe9dc"/><rect x="285" y="80" width="330" height="430" filter="url(#paper)"/>
+          <g stroke="#2a3b6b" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85">
+            <path d="M310 130 q20 -8 40 0 t40 0 t40 2 t50 -3"/><path d="M310 170 q25 6 50 -2 t45 4 t60 -4"/>
+            <path d="M310 210 q18 -6 36 1 t40 -1 t30 3"/><path d="M310 250 q30 8 60 -1 t40 2 t55 -2 t20 1"/>
+            <path d="M310 290 q22 -5 44 2 t40 -2"/><path d="M310 330 q30 6 60 -2 t60 3 t30 -1"/>
+            <path d="M310 370 q20 -6 40 1 t50 -1 t40 3"/><path d="M310 410 q26 5 52 -1 t48 2"/>
+          </g>
+          <g stroke="#c0392b" stroke-width="4" stroke-linecap="round"><path d="M300 245 l200 10"/><path d="M420 320 l120 -20"/></g>
+          <circle cx="560" cy="440" r="46" fill="none" stroke="#8a5a2b" stroke-width="7" opacity=".35"/>
+          <text x="300" y="485" font-family="JetBrains Mono" font-size="20" fill="#c0392b">MISSED DOSE? 03:10</text>
+        </svg>
+        <div class="ba-tag mono right">BEFORE · PAPER</div>
+      </div>
+      <div class="ba-pane" id="ba-after">
+        <div class="snap">
+          <div class="snap-dev">
+            <div class="snap-h"><span>SOTI Snap</span><span class="mono small">MED ROUND · W4</span></div>
+            <div class="snap-f"><span class="mono small dim">PATIENT</span><b>Bed 12 · J. Alvarez</b></div>
+            <div class="snap-f"><span class="mono small dim">SCAN</span><b class="ok">✓ Wristband verified</b></div>
+            <div class="snap-f"><span class="mono small dim">MEDICATION</span><b class="ok">✓ Amoxicillin 500mg</b></div>
+            <div class="snap-f"><span class="mono small dim">TIME</span><b>03:08 · on schedule</b></div>
+            <div class="snap-b">SUBMIT ✓</div>
+          </div>
+        </div>
+        <div class="ba-tag mono">AFTER · SOTI SNAP</div>
+      </div>
+      <div id="ba-handle"><div class="h-line"></div><div class="h-knob">⟷</div></div>
+    </div>
+
+    <!-- end type -->
+    <div id="endtype">
+      <div class="et w1">NO TIME</div><div class="et w2">FOR</div><div class="et w3">DOWNTIME.</div>
+    </div>
+    <div id="endlogo">
+      <div id="logo-svg"></div>
+      <div id="tagline"><span>SOTI ONE Platform</span><i></i><span>Connecting Everything</span></div>
+      <div id="url" class="mono">soti.net</div>
+    </div>
+
+    <!-- ===== HUD ===== -->
+    <div id="hud">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="hud-tl mono"><span class="dot red blink" id="livedot"></span><span>LIVE</span><span id="clock">03:07:12</span></div>
+      <div class="hud-tc mono" id="hudlabel">ST. MARY'S GENERAL · NIGHT</div>
+      <div class="hud-tr mono"><span class="dim">SLA · P1</span><span id="sla">05:00.0</span></div>
+      <div class="hud-bl mono"><span id="hudstatus">STELLA · STANDBY</span></div>
+      <div class="hud-br mono"><span>43.5890° N · 79.6441° W</span></div>
+    </div>
+
+    <!-- captions -->
+    <div id="caption"></div>
+    <div id="sysline" class="mono"></div>
+    <div id="prodname"></div>
+
+    <!-- finishing -->
+    <div id="grain"></div>
+    <div id="flash"></div>
+    <div id="flood"></div>
+    <div id="iris"></div>
+  </div>
+</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>

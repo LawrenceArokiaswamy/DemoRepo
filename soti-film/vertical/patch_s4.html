@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>SOTI — Ward Four (9:16)</title>
+<script>
+  window.__hf = window.__hf || {};
+  window.__hf.buildReady = window.__hf.buildReady || {};
+  window.__hf.buildReady.main = new Promise((r) => (window.__resolveBuild = r));
+</script>
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
+<link rel="stylesheet" href="style.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/vo/vo.js"></script>
+<script src="cues.js"></script>
+<script>window.T_OFFSET=31.3667;window.T_DUR=1.0667;</script>
+<script type="importmap">
+  { "imports": { "three": "./assets/lib/three/build/three.module.js", "three/addons/": "./assets/lib/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="1.0667" data-width="1080" data-height="1920" data-fps="60">
+  <canvas id="gl" class="clip" data-start="0" data-duration="1.0667" data-track-index="0" width="1080" height="1920"></canvas>
+
+  <div id="ui" class="clip" data-start="0" data-duration="1.0667" data-track-index="1">
+    <div id="vignette"></div>
+    <div id="lightleak"></div>
+
+    <!-- eyebrow: product name per section -->
+    <div id="eyebrow"><span class="eb-dot"></span><span id="eb-text"></span></div>
+
+    <!-- incoming call (iOS-style live activity) -->
+    <div id="call" class="glass">
+      <div class="call-row">
+        <div class="avatar red"><svg viewBox="0 0 24 24" width="40" height="40"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.6a1 1 0 01-.25 1z" fill="#fff"/></svg></div>
+        <div class="call-id"><div class="call-k">Ward 4 · Nurse Station</div><div class="call-n">St. Mary's General</div></div>
+        <div class="call-t" id="calltime">0:00</div>
+      </div>
+      <canvas id="callwave" width="760" height="110"></canvas>
+    </div>
+
+    <!-- Stella -->
+    <div id="stella" class="glass">
+      <canvas id="orb" width="260" height="260"></canvas>
+      <div class="st-txt"><div class="st-k">SOTI ONE · AI Assistant</div><div class="st-n">Stella</div></div>
+    </div>
+
+    <div id="chips"></div>
+
+    <!-- reticle -->
+    <div id="reticle"><div class="r-ring"></div><div class="r-ring r2"></div><div class="r-tick t1"></div><div class="r-tick t2"></div><div class="r-tick t3"></div><div class="r-tick t4"></div>
+      <div class="r-label glass"><span class="live-dot red"></span><span>Ward 4 · Floor 3 · 40 devices</span></div></div>
+
+    <!-- diagnostics -->
+    <div id="diag" class="glass">
+      <div class="p-head"><span class="p-k">SOTI XSight</span><span class="p-s">Diagnostic Intelligence</span></div>
+      <div class="diag-grid">
+        <div class="metric"><div class="m-l">Devices</div><div class="m-v">40</div><div class="bar"><i style="width:100%"></i></div></div>
+        <div class="metric"><div class="m-l">Battery avg</div><div class="m-v">82<small>%</small></div><div class="bar"><i style="width:82%"></i></div></div>
+        <div class="metric"><div class="m-l">Signal</div><div class="m-v">−61<small> dBm</small></div><div class="bar"><i style="width:70%"></i></div></div>
+        <div class="metric"><div class="m-l">Network</div><div class="m-v ok">Online</div><div class="bar"><i style="width:100%"></i></div></div>
+      </div>
+      <div class="graph"><div class="g-l">App crashes / min</div><canvas id="graph" width="860" height="260"></canvas></div>
+      <div class="rows">
+        <div class="row"><span>MedScan 4.2.1</span><span class="bad">Crash loop</span></div>
+        <div class="row"><span>Auto-update pushed</span><span class="dim">02:58 · all ward devices</span></div>
+      </div>
+      <div id="rootcause"><span>Root cause</span><b>App update 4.2.1</b></div>
+      <div class="sheen"></div>
+    </div>
+
+    <!-- remote control -->
+    <div id="remote">
+      <div id="rbtn" class="glass"><span class="rb-txt">Connect to device</span>
+        <div id="dscreen">
+          <div class="ds-island"></div>
+          <div class="ds-top"><span>SCN-0417</span><span id="ds-live">● Live · Remote</span></div>
+          <div class="ds-app"><div class="ds-logo">MedScan</div>
+            <div id="ds-err"><div class="ds-x">!</div><div class="ds-et">MedScan has stopped</div><div class="ds-es">v4.2.1 · exit code 139</div></div>
+            <div id="ds-fix"><div class="ds-es">Available version</div><div class="ds-ver">4.2.0 stable</div><div id="rollbtn">Roll back all 40</div></div>
+          </div>
+        </div>
+      </div>
+      <div id="ripple"></div>
+    </div>
+    <div id="cursor"><svg viewBox="0 0 24 24" width="64" height="64"><path d="M4 2.5l15.5 8.6-6.9 1.7-3.6 6.4z" fill="#fff" stroke="rgba(0,0,0,.55)" stroke-width="1.1" stroke-linejoin="round"/></svg></div>
+
+    <!-- split flap -->
+    <div id="flap"><div class="flap-row" id="flapnum"></div><div class="flap-row small" id="flapword"></div><div id="tiles"></div></div>
+
+    <!-- lockdown -->
+    <div id="lock"><div id="lockdev" class="glass">
+      <svg id="padlock" viewBox="0 0 120 150" width="200" height="250">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfeaff"/><stop offset="1" stop-color="#2FB7EA"/></linearGradient></defs>
+        <path id="shackle" d="M30 70 V45 a30 30 0 0 1 60 0 V70" fill="none" stroke="url(#lg)" stroke-width="11" stroke-linecap="round"/>
+        <rect x="14" y="66" width="92" height="76" rx="18" fill="rgba(47,183,234,.16)" stroke="url(#lg)" stroke-width="5"/>
+        <circle cx="60" cy="100" r="9" fill="#bfeaff"/><rect x="56.5" y="104" width="7" height="18" rx="3.5" fill="#bfeaff"/></svg>
+      <div class="lk-k">Kiosk mode</div><div class="lk-t">Locked down.</div></div></div>
+
+    <!-- ticket -->
+    <div id="ticket" class="glass">
+      <div class="p-head"><span class="p-k">INC-20931</span><span class="pri">Priority 1</span></div>
+      <div class="t-title">Ward 4 · Medication scanners offline</div>
+      <div class="t-rows">
+        <div class="t-row"><span class="tm">03:07:12</span><span>Call received</span></div>
+        <div class="t-row"><span class="tm">03:07:31</span><span>Location identified</span></div>
+        <div class="t-row"><span class="tm">03:07:36</span><span>Root cause found</span></div>
+        <div class="t-row"><span class="tm">03:07:44</span><span>Rolled back · XTreme Hub</span></div>
+        <div class="t-row"><span class="tm">03:07:53</span><span>40 / 40 online</span></div>
+      </div>
+      <div id="stamp">Resolved</div>
+    </div>
+
+    <!-- before / after -->
+    <div id="ba" class="glass">
+      <div class="ba-pane" id="ba-before">
+        <svg viewBox="0 0 940 1000" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+          <defs><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .84 0 0 0 .25 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+            <radialGradient id="desk" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#2a241c"/><stop offset="1" stop-color="#0e0c09"/></radialGradient></defs>
+          <rect width="940" height="1000" fill="url(#desk)"/>
+          <g transform="translate(470 520) rotate(-4) translate(-230 -330)">
+            <rect x="0" y="20" width="460" height="640" rx="22" fill="#6b4a2b"/><rect x="150" y="0" width="160" height="50" rx="12" fill="#9aa0a6"/>
+            <rect x="30" y="70" width="400" height="560" fill="#efe9dc"/><rect x="30" y="70" width="400" height="560" filter="url(#paper)"/>
+            <g stroke="#2a3b6b" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".85">
+              <path d="M60 130 q22 -8 44 0 t44 0 t44 2 t60 -3"/><path d="M60 180 q28 6 56 -2 t50 4 t70 -4"/><path d="M60 230 q20 -6 40 1 t44 -1 t34 3"/>
+              <path d="M60 280 q34 8 68 -1 t44 2 t60 -2 t24 1"/><path d="M60 330 q24 -5 48 2 t44 -2"/><path d="M60 380 q34 6 68 -2 t66 3 t34 -1"/>
+              <path d="M60 430 q22 -6 44 1 t56 -1 t44 3"/><path d="M60 480 q28 5 56 -1 t54 2"/></g>
+            <g stroke="#d6453a" stroke-width="4.5" stroke-linecap="round"><path d="M50 275 l230 12"/><path d="M190 372 l140 -22"/></g>
+            <circle cx="350" cy="560" r="52" fill="none" stroke="#8a5a2b" stroke-width="8" opacity=".32"/>
+            <text x="60" y="600" font-family="JetBrains Mono" font-size="24" fill="#d6453a">MISSED DOSE? 03:10</text>
+          </g>
+        </svg>
+        <div class="ba-tag right">Before · Paper</div>
+      </div>
+      <div class="ba-pane" id="ba-after">
+        <div class="snap"><div class="snap-dev">
+          <div class="snap-h"><span>SOTI Snap</span><span class="snap-s">Med round · W4</span></div>
+          <div class="snap-f"><span>Patient</span><b>Bed 12 · J. Alvarez</b></div>
+          <div class="snap-f"><span>Scan</span><b class="ok">✓ Wristband verified</b></div>
+          <div class="snap-f"><span>Medication</span><b class="ok">✓ Amoxicillin 500 mg</b></div>
+          <div class="snap-f"><span>Time</span><b>03:08 · on schedule</b></div>
+          <div class="snap-b">Submit</div></div></div>
+        <div class="ba-tag">After · SOTI Snap</div>
+      </div>
+      <div id="ba-handle"><div class="h-line"></div><div class="h-knob"><svg viewBox="0 0 24 24" width="34" height="34"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+    </div>
+
+    <!-- end type -->
+    <div id="endtype"><div class="et-line"><span class="et w1">No time</span></div><div class="et-line"><span class="et w2">for</span></div><div class="et-line"><span class="et w3">downtime.</span></div></div>
+
+    <!-- end lockup -->
+    <div id="endlogo">
+      <div id="logo-wrap"><div id="logo-svg"></div><div id="logo-sheen"></div></div>
+      <div id="lock-line"></div>
+      <div id="tag-eyebrow"><span>SOTI ONE Platform</span></div>
+      <div id="tagline"></div>
+      <div id="url" class="glass">soti.net</div>
+    </div>
+
+    <!-- HUD: two quiet pills -->
+    <div id="hud">
+      <div class="pill glass" id="pill-live"><span class="live-dot red" id="livedot"></span><span id="clock">03:07:12</span></div>
+      <div class="pill glass" id="pill-sla"><span class="dim">SLA</span><span id="sla">5:00.0</span></div>
+    </div>
+
+    <div id="caption"></div>
+    <div id="sysline"><div class="sys-k"><span class="live-dot"></span>Stella</div><div class="sys-t" id="sys-t"></div></div>
+
+    <div id="grain"></div>
+    <div id="flash"></div>
+    <div id="flood"></div>
+    <div id="iris"></div>
+  </div>
+</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>

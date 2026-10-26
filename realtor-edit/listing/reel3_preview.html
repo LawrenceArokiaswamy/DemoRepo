@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<base href="reel3/" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>31 Carnegie Dr — listing film</title>
+<script>window.__hf=window.__hf||{};window.__hf.buildReady=window.__hf.buildReady||{};window.__hf.buildReady.main=new Promise(r=>window.__resolveBuild=r);</script>
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
+<link rel="stylesheet" href="style.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/words.js"></script>
+<script type="importmap">{ "imports": { "three": "./assets/lib/three/build/three.module.js", "three/addons/": "./assets/lib/three/examples/jsm/" } }</script>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="63.5" data-width="1080" data-height="1920" data-fps="30">
+  <canvas id="gl" class="clip" data-start="0" data-duration="63.5" data-track-index="0" width="1080" height="1920"></canvas>
+  <div class="vw" id="w1"><video id="v1" class="clip" src="assets/video/kl_001.webm" muted playsinline data-start="0" data-duration="4.6" data-media-start="0.2" data-track-index="1"></video></div>
+  <div class="vw" id="w2"><video id="v2" class="clip" src="assets/video/kl_024s.webm" muted playsinline data-start="21.3" data-duration="2.6" data-media-start="0.8" data-track-index="2"></video></div>
+  <div class="vw" id="w3"><video id="v3" class="clip" src="assets/video/kl_045.webm" muted playsinline data-start="30.9" data-duration="2.8" data-media-start="0.6" data-track-index="3"></video></div>
+  <div id="ui" class="clip" data-start="0" data-duration="63.5" data-track-index="10">
+    <div id="vig"></div>
+    <div id="badge"><span class="dot"></span>JUST LISTED</div>
+    <div id="title"><div id="t1"></div><div id="tline"></div><div id="t2">SEVEN OAKS · OAKVILLE</div></div>
+    <div id="kwbg"></div>
+    <div id="kw"></div>
+    <div id="ba"><span id="b-be">BEFORE</span><span id="b-af">AFTER</span></div>
+    <div id="vs">VIRTUALLY STAGED</div>
+    <div id="stats" class="glass">
+      <div class="st"><svg viewBox="0 0 48 48"><path d="M5 34V14M5 26h38v8M43 34v-8M9 26v-5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v5M23 26v-4a3 3 0 0 1 3-3h12a5 5 0 0 1 5 5v2"/></svg><b id="n1">0</b><i>BED</i></div>
+      <div class="st"><svg viewBox="0 0 48 48"><path d="M6 24h36v6a8 8 0 0 1-8 8H14a8 8 0 0 1-8-8zM12 38l-2 4M36 38l2 4M10 24V10a4 4 0 0 1 8 0v1M15 14h6"/></svg><b id="n2">0</b><i>BATH</i></div>
+      <div class="st"><svg viewBox="0 0 48 48"><path d="M6 6h36v36H6zM6 18h12M30 6v12M18 30h24M30 30v12"/></svg><b id="n3">0</b><i>SQ FT</i></div>
+    </div>
+    <div id="card" class="glass"><div class="c-k"></div><div class="c-t"></div></div>
+    <div id="chips"></div>
+    <div id="split"><div class="sp" id="sp1"><span>GAS COOKTOP</span></div><div class="sp" id="sp2"><span>BUILT-IN OVENS</span></div><div class="sp" id="sp3"><span>WALK-IN PANTRY</span></div></div>
+    <div id="map"><div id="map-t"></div></div>
+    <div id="end">
+      <div class="e-k">OFFERED AT</div>
+      <div class="e-price"><span id="price">C$0</span><i class="shine"></i></div>
+      <div class="e-addr">31 Carnegie Dr · Oakville</div>
+      <div class="e-specs"><span>4 BED</span><i></i><span>4 BATH</span><i></i><span>3,088 SQ FT</span></div>
+      <div class="e-card glass"><img src="assets/logo.png" alt="" /><div><div class="e-n">Nayaki Penumarthy</div><div class="e-b">Realtor · Royal LePage Certified Realty</div><div class="e-h">DM @nest_with_nayaki to book a tour</div></div></div>
+    </div>
+    <div id="cap"></div>
+    <canvas id="spark" width="1080" height="1920"></canvas>
+    <div id="bars"><i></i><i></i><i></i></div>
+    <div id="leak"></div>
+    <div id="flare"><i></i></div>
+    <div id="flash"></div>
+  </div>
+</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>
