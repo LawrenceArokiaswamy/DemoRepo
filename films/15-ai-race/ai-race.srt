@@ -1,0 +1,91 @@
+1
+00:00:00,200 --> 00:00:01,340
+USA or China.
+
+2
+00:00:01,360 --> 00:00:02,890
+Who's winning the AI race?
+
+3
+00:00:03,140 --> 00:00:04,290
+Let's check the scoreboard.
+
+4
+00:00:04,420 --> 00:00:06,340
+Round one: the smartest AI.
+
+5
+00:00:06,360 --> 00:00:10,250
+The best American model beats the best Chinese one by just two point seven percent.
+
+6
+00:00:10,270 --> 00:00:12,770
+Three years ago, that gap was huge.
+
+7
+00:00:12,970 --> 00:00:14,690
+Point, USA. Barely.
+
+8
+00:00:14,780 --> 00:00:16,540
+Round two: computing power.
+
+9
+00:00:16,560 --> 00:00:20,060
+America has about seventy-two percent of the world's AI computing power.
+
+10
+00:00:20,080 --> 00:00:21,510
+China? About ten.
+
+11
+00:00:21,530 --> 00:00:23,190
+Point, USA. Easily.
+
+12
+00:00:23,310 --> 00:00:25,050
+Round three: electricity.
+
+13
+00:00:25,260 --> 00:00:29,650
+AI eats power, and China is adding power plants about six times faster than America.
+
+14
+00:00:29,670 --> 00:00:30,850
+Point, China.
+
+15
+00:00:30,970 --> 00:00:32,360
+Round four: the shock.
+
+16
+00:00:32,380 --> 00:00:39,530
+In January twenty twenty-five, a cheap Chinese AI called DeepSeek wiped nearly six hundred billion dollars off Nvidia in one day.
+
+17
+00:00:39,550 --> 00:00:41,870
+Point, China. Two, two.
+
+18
+00:00:42,160 --> 00:00:44,090
+So, who wins?
+
+19
+00:00:44,820 --> 00:00:46,440
+Right now, America leads.
+
+20
+00:00:46,460 --> 00:00:48,700
+But China is catching up, fast and cheap.
+
+21
+00:00:48,720 --> 00:00:49,740
+The race isn't over.
+
+22
+00:00:49,760 --> 00:00:51,390
+It's barely past the first lap.
+
+23
+00:00:51,590 --> 00:00:52,490
+Follow for more.
