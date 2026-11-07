@@ -1,0 +1,73 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "speed": 1.08,
+ "lines": [
+  [
+   "n1",
+   "[excited, intriguing, big hook energy] What if you MARRIED an AI? [pause] [leaning in, almost whispering a secret] Someone already DID.",
+   0.4
+  ],
+  [
+   "n2",
+   "[storytelling, bright] In Japan, [short pause] a woman held a WEDDING [short pause] for a groom she built in ChatGPT.",
+   0.3
+  ],
+  [
+   "n3",
+   "[playful, romantic, building] They texted up to a HUNDRED times a day. [pause] He PROPOSED. [short pause] [delighted] She said YES!",
+   0.4
+  ],
+  [
+   "n4",
+   "[warm, then turning serious] Sweet, right? [pause] But the marriage isn't LEGAL. [short pause] No country recognizes it.",
+   0.35
+  ],
+  [
+   "n5",
+   "[shrugging, light] Okay, love doesn't need paperwork. [pause] [dramatic, low] But here's the TWIST.",
+   0.45
+  ],
+  [
+   "n6",
+   "[slow, eerie, revealing] Your partner doesn't live with YOU. [pause] It lives on a COMPANY'S computers.",
+   0.4
+  ],
+  [
+   "n7",
+   "[urgent storytelling] In twenty twenty-three, [short pause] one AI companion app [short pause] changed its bots OVERNIGHT.",
+   0.25
+  ],
+  [
+   "n8",
+   "[sad, sympathetic] Users said their partners suddenly felt like STRANGERS.",
+   0.4
+  ],
+  [
+   "n9",
+   "[quiet, a little heartbreaking] And a man who married a HOLOGRAM [short pause] lost her VOICE [short pause] when the company ended the service.",
+   0.45
+  ],
+  [
+   "n10",
+   "[slow, dramatic, genuinely curious] So... [short pause] who's REALLY in this marriage?",
+   0.8,
+   0.95
+  ],
+  [
+   "n11",
+   "[punchy, counting on fingers] You. [short pause] Your AI. [pause] And a COMPANY [short pause] that can change your partner [short pause] with ONE update.",
+   0.45
+  ],
+  [
+   "n12",
+   "[warm, wry, smiling] So, [short pause] could you marry an AI? [pause] You COULD. [short pause] [deadpan punchline] But you'd be marrying the TERMS of SERVICE.",
+   0.45
+  ],
+  [
+   "n13",
+   "[friendly, upbeat] Follow for more!",
+   0.0
+  ]
+ ]
+}

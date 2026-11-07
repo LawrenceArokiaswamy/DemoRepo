@@ -1,0 +1,500 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>marry-an-ai</title>
+<style>html,body{margin:0;background:#03050C;overflow:hidden}canvas{display:block;position:absolute;left:0;top:0}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<canvas id="gl"></canvas><canvas id="ui"></canvas>
+<script type="module">
+// "What if you married an AI?" Pure function of t (30 fps, 1080x1920).
+// All timing comes from film.json (written by prep.py from the narration), so a new voice recording re-times every shot, caption and sound cue.
+// Engine (renderer, bloom, grade, glow points, trails, labels) shared with films 12 and 13.
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const W = innerWidth, H = innerHeight;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, x) => a + (b - a) * x, seg = (t, a, b) => clamp((t - a) / (b - a));
+const ss = x => (x = clamp(x), x * x * (3 - 2 * x)), eo = x => 1 - Math.pow(1 - clamp(x), 3), ei = x => Math.pow(clamp(x), 3);
+const eio = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2), eo5 = x => 1 - Math.pow(1 - clamp(x), 5);
+const back = (x, s = 1.6) => (x = clamp(x) - 1, 1 + x * x * ((s + 1) * x + s));
+const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const GOLD = new THREE.Color('#FFC23D'), GOLD2 = new THREE.Color('#FFE08A'), CYAN = new THREE.Color('#3AD6FF'), VIOLET = new THREE.Color('#6B4DFF');
+const CSS = { gold: '#FFC93C', gold2: '#FFE38F', cyan: '#4FDCFF', white: '#FFFFFF', yel: '#FFD23F', red: '#FF4B4B' };
+const AN = 'Anton', BX = 'BarlowXB', BB = 'BarlowB', BS = 'BarlowS', EMO = '"Noto Color Emoji"';
+
+// ---------------- renderer + post ----------------
+const glc = document.getElementById('gl'), uic = document.getElementById('ui');
+const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+uic.width = W; uic.height = H; const X = uic.getContext('2d');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, W / H, .02, 400);
+camera.setViewOffset(W, H, 36, 0, W, H);               // everything sits ~36 px left of centre: the right edge belongs to Instagram's buttons
+scene.fog = new THREE.FogExp2(0x050817, .02);
+const pmrem = new THREE.PMREMGenerator(renderer); scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), .9, .55, .9);
+composer.addPass(bloom);
+const grade = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uFlash: { value: 0 }, uFlashCol: { value: new THREE.Color(1.25, 1.15, .95) }, uDesat: { value: 0 }, uCA: { value: .0015 }, uVig: { value: .55 }, uTime: { value: 0 }, uStreak: { value: 0 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `varying vec2 vUv; uniform sampler2D tDiffuse; uniform float uFlash, uDesat, uCA, uVig, uTime, uStreak; uniform vec3 uFlashCol;
+    void main(){ vec2 d = vUv - .5; float r2 = dot(d,d);
+      vec3 c;
+      if (uStreak > 0.) { c = vec3(0.); for (int i = 0; i < 8; i++) { float k = float(i) / 7.; vec2 uv = .5 + d * (1. - uStreak * .09 * k); c += texture2D(tDiffuse, uv).rgb; } c /= 8.; }
+      else { c.r = texture2D(tDiffuse, vUv - d * uCA * (1. + r2*4.)).r; c.g = texture2D(tDiffuse, vUv).g; c.b = texture2D(tDiffuse, vUv + d * uCA * (1. + r2*4.)).b; }
+      c += vec3(.010, .014, .040) * (1. - vUv.y * .6);            // navy lift in the shadows
+      float l = dot(c, vec3(.2126,.7152,.0722)); c = mix(c, vec3(l) * vec3(.85,.95,1.15), uDesat);
+      vec2 dv = d; dv.x *= 1.2; c *= 1. - uVig * smoothstep(.18, .75, length(dv));
+      c = mix(c, uFlashCol, uFlash);
+      gl_FragColor = vec4(c, 1.); }`
+});
+composer.addPass(grade); composer.addPass(new OutputPass());
+
+function bgTex(top, mid, bot) { const c = document.createElement('canvas'); c.width = 4; c.height = 256; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, top); gr.addColorStop(.55, mid); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, 4, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
+const BG = { navy: bgTex('#02030A', '#070C24', '#0F1240'), deep: bgTex('#010208', '#04071A', '#0A0E2E'), violet: bgTex('#03040E', '#0B0B30', '#1A1350'), city: bgTex('#02030C', '#08102E', '#1B1A44'), warm: bgTex('#030308', '#0A0A1C', '#1A1428') };
+scene.background = BG.navy;
+
+scene.add(new THREE.AmbientLight(0x2a3466, .55));
+const keyL = new THREE.DirectionalLight(0xffd9a0, 1.6); keyL.position.set(3, 4, 5); scene.add(keyL);
+const rimL = new THREE.DirectionalLight(0x4fd0ff, 1.4); rimL.position.set(-4, 1, -3); scene.add(rimL);
+const pointL = new THREE.PointLight(0xffc23d, 0, 8, 1.6); scene.add(pointL);
+
+// ---------------- helpers ----------------
+function canvasTex(w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); draw(g, w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.userData = { c, g }; return t; }
+function rr(g, x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+function label3d(text, { size = 120, font = BX, color = '#fff', glow = null, pad = 30, h = .3, mult = 1, bg = null, border = null } = {}) {
+  const m = document.createElement('canvas').getContext('2d'); m.font = `${size}px ${font}`; const tw = Math.ceil(m.measureText(text).width);
+  const cw = tw + pad * 2, ch = Math.ceil(size * 1.45) + pad;
+  const tex = canvasTex(cw, ch, (g, w, hh) => {
+    if (bg) { rr(g, 6, 6, w - 12, hh - 12, Math.min(40, hh / 2 - 6)); g.fillStyle = bg; g.fill(); if (border) { g.lineWidth = 6; g.strokeStyle = border; g.stroke(); } }
+    g.font = `${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    if (glow) { g.shadowColor = glow; g.shadowBlur = size * .25; }
+    g.fillStyle = color; g.fillText(text, w / 2, hh / 2 + size * .04);
+  });
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, fog: false });
+  mat.color.setScalar(mult);
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(h * cw / ch, h), mat); mesh.userData.aspect = cw / ch; return mesh;
+}
+function cardMesh(w, h, pxw, pxh, draw) { const t = canvasTex(pxw, pxh, draw); const m = new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false, fog: false }); return new THREE.Mesh(new THREE.PlaneGeometry(w, h), m); }
+// soft glowing points with fake depth of field (circle of confusion grows the sprite and spreads its energy)
+const ptsVS = `attribute vec3 color; attribute float size; attribute float phase; uniform float uPx, uFocus, uAper, uTime, uTw, uScale; varying vec3 vC; varying float vA;
+  void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); float z = max(.0005, -mv.z);
+    float s = size * uPx * uScale / z; float coc = abs(1./uFocus - 1./z) * uAper;
+    float tw = 1. + uTw * sin(uTime * 3.1 + phase * 6.283);
+    gl_PointSize = clamp(s + coc, 1.5, 180.); vA = clamp(s*s / ((s+coc)*(s+coc)), .02, 1.) * tw; vC = color;
+    gl_Position = projectionMatrix * mv; }`;
+const ptsFS = `uniform float uOpacity; varying vec3 vC; varying float vA;
+  void main(){ vec2 d = gl_PointCoord - .5; float r = length(d) * 2.; if (r > 1.) discard;
+    float a = exp(-r*r*3.5) + .6 * exp(-r*r*18.); gl_FragColor = vec4(vC * a * vA * uOpacity, 1.); }`;
+function glowPoints(pos, col, size, phase) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setAttribute('size', new THREE.Float32BufferAttribute(size, 1)); g.setAttribute('phase', new THREE.Float32BufferAttribute(phase, 1));
+  const m = new THREE.ShaderMaterial({ uniforms: { uPx: { value: H / 2 }, uFocus: { value: 4 }, uAper: { value: 30 }, uTime: { value: 0 }, uTw: { value: .25 }, uOpacity: { value: 1 }, uScale: { value: 1 } },
+    vertexShader: ptsVS, fragmentShader: ptsFS, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; return p;
+}
+function dust(n, seed, box, cols, sz, focus, aper, bright = .5) {
+  const r = mulberry(seed), p = [], c = [], s = [], ph = [];
+  for (let i = 0; i < n; i++) { p.push(lerp(box[0], box[1], r()), lerp(box[2], box[3], r()), lerp(box[4], box[5], r())); const k = cols[Math.floor(r() * cols.length)].clone().multiplyScalar(bright * (.4 + .8 * r())); c.push(k.r, k.g, k.b); s.push(lerp(sz[0], sz[1], r() * r())); ph.push(r()); }
+  const d = glowPoints(p, c, s, ph); d.material.uniforms.uFocus.value = focus; d.material.uniforms.uAper.value = aper; return d;
+}
+// glyph particles (0/1 bits) with per-point position + alpha, written on the CPU every frame
+function glyphAtlas(chars) { return canvasTex(64 * chars.length, 64, (g) => { g.font = `58px ${BX}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#fff'; for (let i = 0; i < chars.length; i++) g.fillText(chars[i], 32 + i * 64, 35); }); }
+function bitCloud(n, col) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('alpha', new THREE.Float32BufferAttribute(new Float32Array(n), 1));
+  g.setAttribute('glyph', new THREE.Float32BufferAttribute(new Float32Array(n), 1)); g.setAttribute('size', new THREE.Float32BufferAttribute(new Float32Array(n).fill(.010), 1));
+  const cc = new Float32Array(n * 3); for (let i = 0; i < n; i++) { const k = hash(i * 1.7) < .7 ? col[0] : col[1]; cc[i * 3] = k.r; cc[i * 3 + 1] = k.g; cc[i * 3 + 2] = k.b; } g.setAttribute('color', new THREE.Float32BufferAttribute(cc, 3));
+  const m = new THREE.ShaderMaterial({ uniforms: { uPx: { value: H / 2 }, uAtlas: { value: glyphAtlas('01') }, uFocus: { value: .05 }, uAper: { value: .6 }, uOpacity: { value: 1 } },
+    vertexShader: `attribute float alpha; attribute float glyph; attribute float size; attribute vec3 color; uniform float uPx, uFocus, uAper; varying float vG; varying vec3 vC; varying float vA;
+      void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); float z = max(.0005,-mv.z); float s = size * uPx / z; float coc = abs(1./uFocus - 1./z) * uAper;
+        gl_PointSize = clamp(s + coc, 1., 160.); vA = alpha * clamp(s*s/((s+coc)*(s+coc)), .06, 1.); vG = glyph; vC = color; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `uniform sampler2D uAtlas; uniform float uOpacity; varying float vG; varying vec3 vC; varying float vA;
+      void main(){ vec2 uv = vec2((vG + gl_PointCoord.x) / 2., 1. - gl_PointCoord.y); float a = texture2D(uAtlas, uv).a; vec2 d = gl_PointCoord - .5; float halo = exp(-dot(d,d) * 14.) * .25;
+        gl_FragColor = vec4(vC * (a * 1.8 + halo) * vA * uOpacity, 1.); }`,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; return p;
+}
+// polyline helper: arc-length parametrised points along [[x,y],...] (board units) at height z
+function poly(pts, z = 0) { const P = pts.map(p => V(p[0], p[1], z)); const L = [0]; for (let i = 1; i < P.length; i++) L.push(L[i - 1] + P[i].distanceTo(P[i - 1])); const tot = L[L.length - 1];
+  return { P, L, tot, at(s, out = V(0, 0, 0)) { s = clamp(s) * tot; let i = 1; while (i < L.length - 1 && L[i] < s) i++; const k = (s - L[i - 1]) / Math.max(1e-9, L[i] - L[i - 1]); return out.copy(P[i - 1]).lerp(P[i], clamp(k)); },
+    dir(s) { s = clamp(s) * tot; let i = 1; while (i < L.length - 1 && L[i] < s) i++; return P[i].clone().sub(P[i - 1]).normalize(); } }; }
+// glowing light trail along a polyline: a flat ribbon whose brightness follows a moving head
+function trail(pl, width, col, z) {
+  const pos = [], s = [], idx = []; const N = 160;
+  for (let i = 0; i <= N; i++) { const u = i / N, p = pl.at(u), d = pl.dir(Math.min(u, .999)); const nx = -d.y * width / 2, ny = d.x * width / 2; pos.push(p.x + nx, p.y + ny, z, p.x - nx, p.y - ny, z); s.push(u, u); if (i < N) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('s', new THREE.Float32BufferAttribute(s, 1)); g.setIndex(idx);
+  const m = new THREE.ShaderMaterial({ uniforms: { uHead: { value: -1 }, uTail: { value: .25 }, uCol: { value: col.clone() }, uBase: { value: 0 }, uT: { value: 0 }, uLen: { value: pl.tot } },
+    vertexShader: `attribute float s; varying float vS; void main(){ vS = s; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform float uHead, uTail, uBase, uT, uLen; uniform vec3 uCol; varying float vS;
+      void main(){ float d = uHead - vS; float a = d >= 0. ? exp(-d / uTail) : exp(d * 400.); a = a * step(-.02, d);
+        float dash = .55 + .45 * sin((vS * uLen * 900.) - uT * 30.); float b = uBase * (.6 + .4 * dash);
+        gl_FragColor = vec4(uCol * (a * 1.5 + b), 1.); }`,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, side: THREE.DoubleSide });
+  return new THREE.Mesh(g, m);
+}
+// Catmull-Rom through timed keys [[t, pos, look], ...]
+function camPath(keys, t) {
+  if (t <= keys[0][0]) return [keys[0][1].clone(), keys[0][2].clone()];
+  if (t >= keys[keys.length - 1][0]) { const k = keys[keys.length - 1]; return [k[1].clone(), k[2].clone()]; }
+  let i = 0; while (keys[i + 1][0] < t) i++;
+  const k0 = keys[Math.max(0, i - 1)], k1 = keys[i], k2 = keys[i + 1], k3 = keys[Math.min(keys.length - 1, i + 2)];
+  const u = (t - k1[0]) / (k2[0] - k1[0]);
+  const cr = (a, b, c, d) => { const u2 = u * u, u3 = u2 * u; return b.clone().multiplyScalar(2).add(c.clone().sub(a).multiplyScalar(u)).add(a.clone().multiplyScalar(2).sub(b.clone().multiplyScalar(5)).add(c.clone().multiplyScalar(4)).sub(d).multiplyScalar(u2)).add(b.clone().multiplyScalar(3).sub(a).sub(c.clone().multiplyScalar(3)).add(d).multiplyScalar(u3)).multiplyScalar(.5); };
+  return [cr(k0[1], k1[1], k2[1], k3[1]), cr(k0[2], k1[2], k2[2], k3[2])];
+}
+
+// ---------------- palette + small helpers ----------------
+const DEM = new THREE.Color('#3F7CFF'), REP = new THREE.Color('#F04A50'), UNC = new THREE.Color('#9AA6C8'), AMBER = new THREE.Color('#FF9A2E');
+const NAVY = 0x0B1433, MAPGOLD = new THREE.Color('#FFC93C'), MAPDIM = new THREE.Color('#0A1A48');
+const M = (c, e = 0x000000, ei = 0, r = .55, m = .25) => new THREE.MeshStandardMaterial({ color: c, emissive: e, emissiveIntensity: ei, roughness: r, metalness: m });
+function edges(mesh, col, k = 1.6, op = 1) { const l = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 25), new THREE.LineBasicMaterial({ color: col.clone().multiplyScalar(k), transparent: true, opacity: op, toneMapped: false })); mesh.add(l); return l; }
+function box(w, h, d, mat, col = GOLD, k = 1.6, op = 1) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); if (col) m.userData.e = edges(m, col, k, op); return m; }
+function cyl(rt, rb, h, mat, seg = 24) { return new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); }
+function lbl(text, o) { const L = label3d(text, o); return L; }
+function faceCam(o) { o.quaternion.copy(camera.quaternion); }
+function setFocus(pts, f, a) { pts.material.uniforms.uFocus.value = f; if (a !== undefined) pts.material.uniforms.uAper.value = a; }
+let F, CAPS, US; const FONTS = [[AN, 'fonts/Anton-Regular.ttf'], [BX, 'fonts/BarlowCondensed-ExtraBold.ttf'], [BB, 'fonts/BarlowCondensed-Bold.ttf'], [BS, 'fonts/BarlowCondensed-SemiBold.ttf']];
+const word = (id, w) => { const ws = F.words[id]; const k = ws.findIndex(x => x[0].toLowerCase().replace(/[^a-z']/g, '') === w); return k < 0 ? ws[0][1] : ws[k][1]; };
+const L0 = id => F.lines[id][0], L1 = id => F.lines[id][1];
+const SETS = {};
+function makeSet(name) { const g = new THREE.Group(); g.visible = false; scene.add(g); SETS[name] = g; return g; }
+function show(...names) { for (const k in SETS) SETS[k].visible = names.includes(k); }
+function cam(p, l, fov = 40, roll = 0, near = .02, far = 400) { camera.position.copy(p); camera.up.set(Math.sin(roll), Math.cos(roll), 0); camera.lookAt(l); if (camera.fov !== fov || camera.near !== near || camera.far !== far) { camera.fov = fov; camera.near = near; camera.far = far; camera.updateProjectionMatrix(); } }
+// map-plane camera (map lies in XY, z up): position given in map coords, up = +z
+function mcam(p, l, fov = 40, roll = 0) { camera.position.copy(p); camera.up.set(Math.sin(roll), 0, Math.cos(roll)).normalize(); camera.lookAt(l); if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); } }
+const T = {}; let EV = [];
+const pts1 = (p, c, s) => { const g = glowPoints(p, c, s, p.map((_, i) => hash(i))); g.material.uniforms.uAper.value = 0; g.material.uniforms.uTw.value = 0; return g; };
+
+// ================= FILM 14 SETS =================
+const ROSE = new THREE.Color('#FF6FA8'), COLD = new THREE.Color('#7FA8C8'), WARM = new THREE.Color('#FFB35C');
+const ALT = V(0, 0, -6);                    // altar centre (chapel floor y = 0)
+const PH = V(.55, 1.32, -6.05);             // phone-groom screen centre
+const BR = V(-.62, 0, -5.9);                // bride position
+const SRV = V(0, 0, -46);                   // server building base
+// ---- phone screen (redrawn every frame from ST.ph) ----
+const PSW = 512, PSH = 1024;
+const phoneTex = canvasTex(PSW, PSH, () => {});
+function drawPhone(t) {
+  const g = phoneTex.userData.g, s = ST.ph; g.clearRect(0, 0, PSW, PSH);
+  const gr = g.createLinearGradient(0, 0, 0, PSH); const cold = s.cold;
+  gr.addColorStop(0, cold ? '#0a1424' : '#1a0c22'); gr.addColorStop(1, cold ? '#05080f' : '#0c0716'); g.fillStyle = gr; g.fillRect(0, 0, PSW, PSH);
+  if (s.mode === 'off') { g.fillStyle = '#020306'; g.fillRect(0, 0, PSW, PSH); return; }
+  const on = s.on ?? 1; g.globalAlpha = on;
+  if (s.mode === 'face' || s.mode === 'glitch') {
+    const col = cold ? '#9fd4ff' : '#FFD27A', glow = cold ? 'rgba(90,170,255,.9)' : 'rgba(255,170,60,.95)';
+    g.save(); g.shadowColor = glow; g.shadowBlur = 40; g.fillStyle = col; g.strokeStyle = col; g.lineCap = 'round';
+    const blink = (t % 3.1) < .12 ? .12 : 1, ey = 400;
+    if (cold) { g.lineWidth = 22; g.beginPath(); g.moveTo(130, ey); g.lineTo(210, ey); g.moveTo(302, ey); g.lineTo(382, ey); g.stroke(); g.beginPath(); g.moveTo(190, 600); g.lineTo(322, 600); g.stroke(); }
+    else {
+      rr(g, 140, ey - 60 * blink, 60, 120 * blink, 30); g.fill(); rr(g, 312, ey - 60 * blink, 60, 120 * blink, 30); g.fill();
+      g.lineWidth = 22; g.beginPath(); g.arc(256, 540, 110, .18 * Math.PI, .82 * Math.PI); g.stroke();
+      g.shadowBlur = 30; g.fillStyle = 'rgba(255,110,160,.55)'; g.beginPath(); g.ellipse(120, 560, 46, 26, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(392, 560, 46, 26, 0, 0, 7); g.fill();
+    }
+    g.restore();
+    if (s.heart) { g.save(); g.globalAlpha = on * s.heart; g.font = `120px ${EMO}`; g.textAlign = 'center'; g.fillText('💍', 256, 860); g.restore(); }
+  }
+  if (s.mode === 'update') {
+    g.save(); g.fillStyle = '#cfe6ff'; g.font = `54px ${BX}`; g.textAlign = 'center'; g.shadowColor = 'rgba(80,170,255,.9)'; g.shadowBlur = 16;
+    g.fillText('UPDATE', 256, 380); g.font = `40px ${BB}`; g.fillText('installing v2.0…', 256, 440);
+    rr(g, 70, 520, 372, 46, 23); g.lineWidth = 5; g.strokeStyle = '#7fc4ff'; g.stroke();
+    rr(g, 80, 530, Math.max(26, 352 * s.prog), 26, 13); g.fillStyle = '#4FDCFF'; g.fill();
+    g.font = `64px ${BX}`; g.fillText(Math.round(s.prog * 100) + '%', 256, 680); g.restore();
+  }
+  if (s.mode === 'error') {
+    g.save(); g.fillStyle = '#FF6464'; g.font = `60px ${BX}`; g.textAlign = 'center'; g.shadowColor = 'rgba(255,60,60,.9)'; g.shadowBlur = 18;
+    g.fillText('SERVICE', 256, 470); g.fillText('ENDED', 256, 540); g.font = `120px ${BX}`; g.fillText('⚠', 256, 360); g.restore();
+  }
+  if (s.glitch > 0) {   // horizontal slice offsets
+    const img = g.getImageData(0, 0, PSW, PSH); const k = s.glitch;
+    for (let i = 0; i < 9; i++) { const y = Math.floor(hash(i * 7.3 + Math.floor(t * 24)) * PSH), h = 20 + Math.floor(hash(i * 3.1 + Math.floor(t * 24)) * 70); const dx = Math.floor((hash(i * 9.7 + Math.floor(t * 24)) - .5) * 160 * k);
+      g.putImageData(img, dx, 0, 0, y, PSW, h); }
+    g.fillStyle = `rgba(80,220,255,${.18 * k})`; g.fillRect(0, Math.floor(hash(Math.floor(t * 24)) * PSH), PSW, 14);
+  }
+  g.globalAlpha = 1; phoneTex.needsUpdate = true;
+}
+function buildPhone(parent) {
+  const g = new THREE.Group(); g.position.copy(PH);
+  const body = new THREE.Mesh(new RoundedBoxGeometry(.5, .98, .06, 4, .06), M(0x0d1020, 0x000000, 0, .3, .8)); g.add(body);
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(.46, .92), new THREE.MeshBasicMaterial({ map: phoneTex, toneMapped: false })); scr.position.z = .032; g.add(scr);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(.62, .008, 8, 64), new THREE.MeshBasicMaterial({ color: GOLD.clone().multiplyScalar(2.2), toneMapped: false, transparent: true, opacity: .0 })); rim.scale.set(.6, 1.05, 1); rim.position.z = -.02; g.add(rim);
+  const stand = cyl(.05, .09, .78, M(0x1a1630, 0x000000, 0, .4, .7)); stand.position.set(0, -.88, -.05); g.add(stand);
+  parent.add(g); return { g, rim };
+}
+function buildBride(parent) {
+  const g = new THREE.Group(); g.position.copy(BR); g.rotation.y = .55;
+  const white = M(0x8a82a6, 0x1a1430, .2, .9, 0);
+  const dress = cyl(.12, .46, 1.1, white, 40); dress.position.y = .55; g.add(dress);
+  const torso = cyl(.11, .13, .38, white, 24); torso.position.y = 1.26; g.add(torso);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.13, 32, 24), M(0xa9806a, 0x1a0e08, .15, .8, 0)); head.position.y = 1.6; g.add(head);
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(.137, 32, 24, 0, Math.PI * 2, 0, Math.PI * .55), M(0x2a1a14, 0, 0, .7, 0)); hair.position.y = 1.615; hair.rotation.x = -.35; g.add(hair);
+  const veil = new THREE.Mesh(new THREE.ConeGeometry(.42, 1.25, 40, 1, true), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x6a5aa8, emissiveIntensity: .06, transparent: true, opacity: .12, side: THREE.DoubleSide, depthWrite: false })); veil.position.set(0, 1.12, -.08); g.add(veil);
+  const arm = cyl(.035, .035, .42, white, 12); arm.position.set(.1, 1.12, .12); arm.rotation.x = -1.0; g.add(arm);
+  const bq = []; const bc = []; const bs = []; for (let i = 0; i < 26; i++) { const a = hash(i) * 6.28, r = .07 * Math.sqrt(hash(i + 3)); bq.push(.1 + Math.cos(a) * r, .98 + hash(i + 9) * .06, .3 + Math.sin(a) * r); const c = i % 3 ? ROSE : GOLD2; bc.push(c.r * .9, c.g * .9, c.b * .9); bs.push(.012 + .01 * hash(i + 5)); }
+  g.add(pts1(bq, bc, bs)); parent.add(g); return g;
+}
+function buildChapel() {
+  const s = makeSet('chapel');
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 120), M(0x080b1c, 0x000000, 0, .35, .6)); floor.rotation.x = -Math.PI / 2; floor.position.z = -30; s.add(floor);
+  const run = box(1.2, .02, 13, M(0x3a1030, 0x5a1040, .5, .6, 0), ROSE, 1.2, .5); run.position.set(0, .01, .5); s.add(run);
+  for (let i = 0; i < 6; i++) for (const sx of [-1, 1]) { const p = box(2.0, .55, .32, M(0x0c1028, 0x000000, 0, .85, 0), GOLD, 1.0, .35); p.position.set(sx * 1.9, .28, -3.2 + i * 1.6); s.add(p); }
+  // candles along the aisle + glow
+  const cp = [], cc = [], cs = [];
+  for (let i = 0; i < 9; i++) for (const sx of [-1, 1]) { const z = -4.6 + i * 1.25, x = sx * .82; const st = cyl(.025, .03, .5 + .2 * hash(i * 2 + sx), M(0xf3e6c8, 0x806040, .3, .6, 0), 10); st.position.set(x, .25, z); s.add(st); cp.push(x, .56 + .2 * hash(i * 2 + sx), z); cc.push(1.6, 1.05, .45); cs.push(.06); }
+  const fl = glowPoints(cp, cc, cs, cp.map((_, i) => hash(i))); fl.material.uniforms.uTw.value = .35; s.add(fl); s.userData.flames = fl;
+  // arch of light
+  const arch = new THREE.Mesh(new THREE.TorusGeometry(1.75, .045, 12, 96, Math.PI), new THREE.MeshBasicMaterial({ color: GOLD.clone().multiplyScalar(2.4), toneMapped: false })); arch.position.set(0, 1.2, -6.5); s.add(arch);
+  for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(.045, .045, 1.2, 12), arch.material); p.position.set(sx * 1.75, .6, -6.5); s.add(p); }
+  const ap = [], ac = [], as = []; for (let i = 0; i < 70; i++) { const a = Math.PI * i / 69; ap.push(Math.cos(a) * 1.75, 1.2 + Math.sin(a) * 1.75, -6.5); const c = i % 4 ? GOLD2 : ROSE; ac.push(c.r * 1.2, c.g * 1.2, c.b * 1.2); as.push(.05 + .04 * hash(i)); }
+  s.add(pts1(ap, ac, as));
+  const altar = box(1.0, .5, .5, M(0x1c1838, 0x000000, 0, .4, .4), GOLD, 1.4, .7); altar.position.set(.55, .25, -6.1); s.add(altar);
+  s.userData.phone = buildPhone(s); s.userData.bride = buildBride(s);
+  s.add(dust(500, 14, [-8, 8, 0, 6, -14, 4], [GOLD2, ROSE, CYAN], .02, 5, 20, .45));
+  // ring (hero prop of the hook)
+  const ring = new THREE.Group(); const band = new THREE.Mesh(new THREE.TorusGeometry(.16, .028, 24, 80), new THREE.MeshStandardMaterial({ color: 0xffd27a, emissive: 0xffa020, emissiveIntensity: .18, metalness: 1, roughness: .22 }));
+  ring.add(band); const gem = new THREE.Mesh(new THREE.OctahedronGeometry(.06, 0), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x9fdcff, emissiveIntensity: .7, metalness: .2, roughness: 0 })); gem.position.y = .19; ring.add(gem);
+  ring.position.set(0, 1.2, -1.2); s.add(ring); s.userData.ring = ring;
+  // chat bubbles (texts are things couples send; no brand UI)
+  const texts = ['good morning ☀️', 'miss you', '❤️', 'haha you get me', 'goodnight 🌙', 'thinking of you', '😊', 'tell me more', 'you\'re sweet', '💬', 'how was work?', 'I love that'];
+  s.userData.bub = texts.map((tx, i) => { const right = i % 2 === 1; const c = cardMesh(1, .24, 520, 124, (g, w, h) => { g.font = `52px ${BB}`; const tw = Math.min(w - 40, g.measureText(tx).width + 60);
+      const x0 = right ? w - tw - 6 : 6; rr(g, x0, 10, tw, h - 20, 40); g.fillStyle = right ? 'rgba(255,111,168,.92)' : 'rgba(79,220,255,.88)'; g.fill(); g.fillStyle = '#081022'; g.textBaseline = 'middle'; g.textAlign = 'center'; g.font = `52px ${BB}, ${EMO}`; g.fillText(tx, x0 + tw / 2, h / 2 + 3); });
+    c.scale.setScalar(.55 + .25 * hash(i + 2)); s.add(c); c.visible = false; return { c, i, right }; });
+  const prop = cardMesh(1.6, .42, 820, 210, (g, w, h) => { rr(g, 6, 6, w - 12, h - 12, 60); g.fillStyle = 'rgba(79,220,255,.95)'; g.fill(); g.fillStyle = '#081022'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `84px ${BX}, ${EMO}`; g.fillText('Will you marry me? 💍', w / 2, h / 2 + 4); });
+  prop.visible = false; s.add(prop); s.userData.prop = prop;
+  const yes = cardMesh(1.1, .42, 560, 210, (g, w, h) => { rr(g, 6, 6, w - 12, h - 12, 60); g.fillStyle = 'rgba(255,111,168,.97)'; g.fill(); g.fillStyle = '#1a0612'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `90px ${BX}, ${EMO}`; g.fillText('YES! ❤️', w / 2, h / 2 + 4); });
+  yes.visible = false; s.add(yes); s.userData.yes = yes;
+  const cold = ['who are you?', 'you seem different', 'where did you go?'].map((tx, i) => { const c = cardMesh(.78, .18, 680, 156, (g, w, h) => { rr(g, 6, 8, w - 12, h - 16, 50); g.fillStyle = 'rgba(150,160,180,.85)'; g.fill(); g.fillStyle = '#10141e'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `62px ${BB}`; g.fillText(tx, w / 2, h / 2 + 3); }); c.visible = false; s.add(c); return c; });
+  s.userData.cold = cold;
+  // heart burst
+  const hp = [], hc = [], hs = []; for (let i = 0; i < 220; i++) { const a = hash(i * 1.3) * 6.283; const x = 16 * Math.pow(Math.sin(a), 3), y = 13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a); hp.push(x / 16, y / 16, (hash(i) - .5) * .2); const c = hash(i + 7) < .7 ? ROSE : GOLD2; hc.push(c.r * 1.4, c.g * 1.4, c.b * 1.4); hs.push(.02 + .03 * hash(i + 3)); }
+  const heart = pts1(hp, hc, hs); heart.visible = false; s.add(heart); s.userData.heart = heart;
+  // spotlights for the payoff (YOU / YOUR AI / THE COMPANY)
+  s.userData.spots = [V(BR.x, 0, BR.z), V(PH.x, 0, PH.z), V(0, 0, -14)].map((p, i) => { const h = i === 2 ? 9 : 4.2; const cone = new THREE.Mesh(new THREE.ConeGeometry(i === 2 ? 2.2 : .75, h, 40, 1, true), new THREE.MeshBasicMaterial({ color: (i === 2 ? CYAN : GOLD2).clone().multiplyScalar(.35), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, toneMapped: false }));
+    cone.position.set(p.x, h / 2, p.z); s.add(cone); return cone; });
+  // certificate + stamp (floats in front of the arch)
+  const cert = cardMesh(1.5, 1.95, 750, 975, (g, w, h) => { g.fillStyle = '#f6eedb'; rr(g, 0, 0, w, h, 18); g.fill(); g.lineWidth = 10; g.strokeStyle = '#c9a24a'; rr(g, 26, 26, w - 52, h - 52, 10); g.stroke();
+    g.fillStyle = '#3a2a10'; g.textAlign = 'center'; g.font = `74px ${AN}`; g.fillText('CERTIFICATE', w / 2, 170); g.font = `52px ${BB}`; g.fillText('OF MARRIAGE', w / 2, 236);
+    g.font = `40px ${BS}`; g.fillStyle = '#6a5530'; ['this certifies that', '', 'a human', 'and', 'an AI', '', 'were joined in love'].forEach((s2, i) => g.fillText(s2, w / 2, 340 + i * 58));
+    g.strokeStyle = '#8a7040'; g.lineWidth = 3; for (const x of [140, 470]) { g.beginPath(); g.moveTo(x, 860); g.lineTo(x + 150, 860); g.stroke(); } g.font = `56px ${EMO}`; g.fillText('💍', w / 2, 870); });
+  cert.material.color.setScalar(.8); cert.position.set(0, 1.55, -3.2); cert.visible = false; s.add(cert); s.userData.cert = cert;
+  const stamp = lbl('NOT LEGAL', { size: 150, font: AN, color: '#ff3b3b', pad: 40, h: .5, bg: 'rgba(255,40,40,.12)', border: '#ff3b3b' }); stamp.rotation.z = .18; stamp.visible = false; s.add(stamp); s.userData.stamp = stamp;
+  // the server building far behind the chapel + the glowing cable from the phone
+  const bld = new THREE.Group(); bld.position.copy(SRV); s.add(bld);
+  const core = box(16, 20, 8, M(0x04060e, 0x000000, 0, .95, 0), CYAN, 1.4, .8); core.position.y = 10; bld.add(core);
+  for (const sx of [-1, 1]) { const w = box(5, 12, 7, M(0x04060e, 0, 0, .95, 0), CYAN, 1.1, .6); w.position.set(sx * 10.6, 6, 0); bld.add(w); }
+  const lp = [], lc = [], ls = []; for (let i = 0; i < 1300; i++) { const wing = i % 5; let x, y; if (wing < 3) { x = (Math.floor(hash(i) * 30) / 29 - .5) * 15; y = 1 + Math.floor(hash(i + .5) * 36) / 35 * 18.2; } else { x = (wing === 3 ? -1 : 1) * 10.6 + (Math.floor(hash(i) * 9) / 8 - .5) * 4.4; y = 1 + Math.floor(hash(i + .5) * 20) / 19 * 10.2; }
+    lp.push(x, y, 4.05); const c = hash(i + 2) < .82 ? CYAN : GOLD; lc.push(c.r * .9, c.g * .9, c.b * .9); ls.push(.09); }
+  const leds = glowPoints(lp, lc, ls, lp.map((_, i) => hash(i * .37))); leds.material.uniforms.uTw.value = .6; leds.material.uniforms.uAper.value = 0; bld.add(leds);
+  const sign = lbl('COMPANY SERVERS', { size: 120, font: AN, color: '#bfefff', glow: 'rgba(79,220,255,.95)', h: 2.4 }); sign.position.set(0, 21.4, 4.2); bld.add(sign); s.userData.bld = bld;
+  const cpl = poly([[PH.x, PH.z + .05], [PH.x + .1, PH.z - .6], [1.4, -8.5], [1.0, -20], [.2, -34], [0, SRV.z + 4.2]], 0);
+  const pts = cpl.P.map(p => V(p.x, .03, p.y)); const curve = new THREE.CatmullRomCurve3(pts); const cab = new THREE.Mesh(new THREE.TubeGeometry(curve, 240, .035, 8, false), new THREE.ShaderMaterial({ uniforms: { uHead: { value: 0 }, uT: { value: 0 } },
+    vertexShader: `varying float vS; void main(){ vS = uv.x; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform float uHead, uT; varying float vS; void main(){ float on = step(vS, uHead); float pulse = .55 + .45 * sin(vS * 160. - uT * 14.); gl_FragColor = vec4(vec3(.31,.86,1.) * (1.6 * pulse) * on, 1.); }`, toneMapped: false }));
+  s.add(cab); s.userData.cable = cab;
+  // the hologram partner in a glass dome (abstract original figure)
+  const holo = new THREE.Group(); holo.position.set(0, 0, 7.2); s.add(holo); holo.visible = false;
+  const base = cyl(.55, .62, .16, M(0x14182c, 0x000000, 0, .4, .7), 48); base.position.y = .08; holo.add(base);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(.55, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: 0xbfe8ff, transparent: true, opacity: .07, roughness: .05, envMapIntensity: .3, metalness: 0, depthWrite: false, side: THREE.DoubleSide }));
+  dome.scale.y = 1.9; dome.position.y = .16; holo.add(dome);
+  const fp = [], fc = [], fs = []; for (let i = 0; i < 900; i++) { const u = hash(i * 1.7), a = hash(i * 3.3) * 6.283; let r, y; if (u < .16) { const p = hash(i * 5.1) * Math.PI; y = .86 + .08 * Math.cos(p); r = .08 * Math.sin(p); } else if (u < .3) { y = .55 + .25 * hash(i * 2.2); r = .06; } else { y = .2 + .38 * hash(i * 2.9); r = .05 + .2 * (1 - (y - .2) / .38); }
+    fp.push(Math.cos(a) * r, y + .1, Math.sin(a) * r); const c = hash(i + 4) < .75 ? CYAN : ROSE; fc.push(c.r * 2.2, c.g * 2.2, c.b * 2.2); fs.push(.02 + .016 * hash(i + 1)); }
+  const fig = pts1(fp, fc, fs); fig.scale.setScalar(1.3); holo.add(fig); holo.userData.fig = fig;
+  const err = lbl('SERVICE ENDED', { size: 120, font: AN, color: '#ff5a5a', glow: 'rgba(255,60,60,.9)', h: .26 }); err.position.set(0, .45, .75); err.visible = false; holo.add(err); holo.userData.err = err;
+  s.userData.holo = holo;
+  // the Terms of Service scroll (loop-back)
+  const tos = cardMesh(1.6, 6.4, 640, 2560, (g, w, h) => { g.fillStyle = '#f4f6fb'; g.fillRect(0, 0, w, h); g.fillStyle = '#10162a'; g.textAlign = 'left'; g.font = `58px ${AN}`; g.fillText('TERMS OF SERVICE', 40, 110);
+    const r = mulberry(5); g.font = `26px ${BS}`; g.fillStyle = '#56607a'; let y = 180; const sec = ['1. Your companion', '2. Changes to the service', '3. Updates', '4. Ending the service', '5. Your data', '6. Personality', '7. We may change these terms'];
+    sec.forEach((t2, i) => { g.font = `34px ${BX}`; g.fillStyle = '#10162a'; g.fillText(t2, 40, y); y += 46; g.font = `26px ${BS}`; g.fillStyle = '#7a8399'; for (let k = 0; k < 9; k++) { g.fillRect(40, y - 16, 300 + r() * 260, 12); y += 28; } y += 30; });
+    g.fillStyle = '#10162a'; g.font = `40px ${BX}`; g.fillText('we may modify or end your companion', 40, y + 10); g.fillText('at any time, with or without notice.', 40, y + 60);
+    rr(g, 40, h - 240, 70, 70, 10); g.lineWidth = 6; g.strokeStyle = '#10162a'; g.stroke(); g.font = `64px ${AN}`; g.fillText('I AGREE', 140, h - 180); });
+  tos.material.color.setScalar(.78); tos.position.set(0, 1.6, -3.0); tos.visible = false; s.add(tos); s.userData.tos = tos;
+  const tick = cardMesh(.2, .2, 128, 128, (g) => { g.strokeStyle = '#18c46a'; g.lineWidth = 22; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(18, 66); g.lineTo(52, 102); g.lineTo(112, 22); g.stroke(); }); tick.visible = false; s.add(tick); s.userData.tick = tick;
+}
+
+// ================= TIMELINE =================
+const SH = [];
+function shot(name, t0, t1, fn) { SH.push({ name, t0, t1, fn }); }
+function timeline() {
+  T.did = word('n1', 'someone') - .08; T.h1 = L1('n1') + .14;
+  T.r0 = L1('n2') + .12; T.prop = word('n3', 'he') - .08; T.yes = word('n3', 'she') - .06; T.c0 = L1('n3') + .12;
+  T.but4 = word('n4', 'but') - .06; T.legal = word('n4', 'legal'); T.p0 = L1('n4') + .12;
+  T.tw = word('n5', 'but') - .06; T.twEnd = L1('n5') + .05; T.turn = L0('n6') - .03; T.it6 = word('n6', 'it') - .1; T.u0 = L1('n6') + .14;
+  T.over = word('n7', 'overnight') - .05; T.s0 = L1('n7') + .1; T.ho0 = L1('n8') + .14; T.ended = word('n9', 'ended');
+  T.q0 = L1('n9') + .14; T.S0 = F.S0; T.HIT = F.HIT;
+  T.you = word('n11', 'you'); T.ai11 = word('n11', 'ai'); T.co = word('n11', 'company'); T.upd = word('n11', 'update') - .1; T.l0 = L1('n11') + .12;
+  T.could = word('n12', 'you') - .05; T.terms = word('n12', 'terms') - .1; T.e0 = L1('n12') + .12; T.follow = word('n13', 'follow') - .15;
+  shot('hook-ring', 0, T.did, sHookRing); shot('hook-altar', T.did, T.h1, sHookAltar);
+  shot('wedding', T.h1, T.r0, sWedding); shot('texts', T.r0, T.prop, sTexts); shot('propose', T.prop, T.yes, sPropose); shot('yes', T.yes, T.c0, sYes);
+  shot('cert', T.c0, T.but4, sCert); shot('stamp', T.but4, T.p0, sStamp); shot('toss', T.p0, T.tw, sToss); shot('twist', T.tw, T.turn, sTwist);
+  shot('reveal', T.turn, T.u0, sReveal); shot('update', T.u0, T.s0, sUpdate); shot('strangers', T.s0, T.ho0, sStrangers); shot('holo', T.ho0, T.q0, sHolo);
+  shot('question', T.q0, T.HIT, sQuestion); shot('three', T.HIT, T.l0, sThree); shot('tos', T.l0, T.e0, sTos); shot('end', T.e0, F.dur + 1, sEnd);
+  const ev = [];
+  ev.push({ t: 0, type: 'sweep', d: 1.2 }, { t: .05, type: 'sparkle', g: .8 }, { t: word('n1', 'married'), type: 'pop', g: .7 }, { t: T.did - .05, type: 'whoosh', g: .9 }, { t: T.did + .1, type: 'glow' });
+  ev.push({ t: T.h1 - .08, type: 'whoosh', g: .8 }, { t: word('n2', 'wedding'), type: 'bells' });
+  for (let k = 0; k < 18; k++) ev.push({ t: T.r0 + .1 + Math.pow(k / 18, .8) * (T.prop - T.r0 - .25), type: 'bubble', g: .6 + .02 * k });
+  ev.push({ t: T.prop + .05, type: 'swish' }, { t: T.prop + .12, type: 'bubble', g: 1.2 }, { t: T.yes + .05, type: 'yes' });
+  ev.push({ t: T.c0 - .06, type: 'whoosh', g: .7 }, { t: T.legal - .02, type: 'stamp' }, { t: T.p0 - .05, type: 'whoosh', g: .6 }, { t: T.p0 + .1, type: 'flutter', d: .9 });
+  ev.push({ t: T.tw - .05, type: 'whoosh', g: .6 }, { t: T.twEnd, type: 'dropout' }, { t: T.turn, type: 'hum', d: T.u0 - T.turn + .4 }, { t: T.it6, type: 'rise', d: T.u0 - T.it6 });
+  ev.push({ t: T.u0 - .05, type: 'whoosh', g: .8 }, { t: T.u0 + .1, type: 'dialup', d: T.over - T.u0 - .1 }, { t: T.over, type: 'glitch' }, { t: T.over + .25, type: 'glitch', g: .6 });
+  ev.push({ t: T.s0 - .05, type: 'whoosh', g: .6 }); for (let k = 0; k < 3; k++) ev.push({ t: T.s0 + .25 + k * .55, type: 'coldblip' });
+  ev.push({ t: T.ho0 - .05, type: 'whoosh', g: .7 }, { t: T.ho0 + .1, type: 'holo', d: T.ended - T.ho0 }, { t: T.ended, type: 'powerdown' });
+  ev.push({ t: T.q0 - .05, type: 'whoosh', g: .7 }, { t: T.S0, type: 'silence' }, { t: T.HIT, type: 'hit' });
+  ev.push({ t: T.ai11, type: 'spot', g: .8 }, { t: T.co, type: 'spot', g: 1.2 }, { t: T.co + .05, type: 'hum', d: 1.2 }, { t: T.upd, type: 'glitch', g: .8 });
+  ev.push({ t: T.l0 - .05, type: 'whoosh', g: .8 }, { t: T.l0 + .1, type: 'scroll', d: T.terms - T.l0 }, { t: T.terms + .45, type: 'tick' }, { t: T.follow + .1, type: 'chime' });
+  EV = ev.sort((a, b) => a.t - b.t);
+}
+
+// ================= SHOTS =================
+const ST = { ph: {} };
+function resetFrame() { ST.flash = 0; ST.flashCol = [1.25, 1.15, .95]; ST.desat = 0; ST.ca = .0015; ST.streak = 0;
+  ST.ph = { mode: 'face', on: 1, cold: false, glitch: 0, prog: 0, heart: 0 };
+  bloom.strength = .9; bloom.radius = .55; bloom.threshold = .9; scene.background = BG.navy; scene.fog.density = 0; pointL.intensity = 0; rimL.intensity = 1.4; keyL.intensity = 1.6;
+  const U = SETS.chapel.userData; U.ring.visible = false; U.prop.visible = false; U.yes.visible = false; U.heart.visible = false; U.cert.visible = false; U.stamp.visible = false; U.tos.visible = false; U.tick.visible = false; U.holo.visible = false;
+  U.bub.forEach(b => b.c.visible = false); U.cold.forEach(c => c.visible = false); U.spots.forEach(c => c.material.opacity = 0); U.cable.material.uniforms.uHead.value = 0; U.phone.rim.material.opacity = 0; U.bride.visible = true; U.bld.visible = CUR.t >= T.turn; }
+const UD = () => SETS.chapel.userData;
+function sHookRing(u, t) { show('chapel'); const r = UD().ring; r.visible = true; r.rotation.set(.35, t * 2.2, .2); r.position.set(0, lerp(1.25, 1.35, u), lerp(-1.4, -2.2, u)); ST.ph.on = seg(t, .4, 1.0);
+  cam(V(lerp(-.25, .1, u), lerp(1.05, 1.3, u), lerp(1.4, -.2, eio(u))), V(0, lerp(1.25, 1.3, u), -2.2), 42, lerp(-.06, .02, u)); ST.flash = .4 * (1 - eo(seg(t, 0, .25))); }
+function sHookAltar(u, t) { show('chapel'); UD().phone.rim.material.opacity = 0; ST.ph.on = 1; pointL.position.copy(PH).add(V(0, 0, .6)); pointL.intensity = 2.5 * eo(u);
+  cam(V(lerp(.35, .55, u), lerp(1.45, 1.38, u), lerp(-3.4, -4.4, eio(u))), V(PH.x, PH.y, PH.z), 40, lerp(.03, -.01, u)); ST.flash = cutF(); }
+function sWedding(u, t) { show('chapel'); pointL.position.copy(PH).add(V(0, 0, .6)); pointL.intensity = 2;
+  cam(V(lerp(-.7, -.1, u), lerp(1.2, 1.35, u), lerp(-2.4, -3.0, eio(u))), V(lerp(-.15, 0, u), 1.05, -6.0), 44, lerp(-.03, .02, u)); ST.flash = cutF(); }
+function bubbles(t, t0, t1, k) { UD().bub.forEach(b => { const st = t0 + b.i * (t1 - t0) / 14; const a = t - st; if (a < 0) return; b.c.visible = true; const y = .5 + a * 1.25 * k, x = (b.right ? .28 : -.28) + .08 * Math.sin(b.i * 2 + a); b.c.position.set(x, y, -3.6 - .25 * hash(b.i)); faceCam(b.c); b.c.material.opacity = clamp(a / .15) * (1 - seg(y, 2.6, 3.1)); }); }
+function sTexts(u, t) { show('chapel'); bubbles(t, T.r0, T.prop, 1); ST.ph.on = 1;
+  cam(V(lerp(.0, .2, u), lerp(1.0, 1.4, u), lerp(.6, -.2, u)), V(0, lerp(1.5, 1.8, u), -4.5), 46, lerp(-.04, .03, u)); ST.flash = cutF(); }
+function sPropose(u, t) { show('chapel'); bubbles(t, T.r0, T.prop, 1); const p = UD().prop; p.visible = true; const k = back(seg(t, T.prop + .05, T.prop + .4), 1.8); p.scale.setScalar(Math.max(.001, k) * .52); p.position.set(PH.x - .1, PH.y + .78, PH.z + .3); faceCam(p); ST.ph.heart = seg(t, T.prop, T.prop + .3);
+  cam(V(lerp(.2, .45, u), lerp(1.55, 1.6, u), lerp(-3.3, -3.7, u)), V(PH.x - .05, PH.y + .35, PH.z), 42, lerp(.02, -.02, u)); ST.flash = cutF(); }
+function sYes(u, t) { show('chapel'); const y = UD().yes; y.visible = true; y.scale.setScalar(Math.max(.001, back(seg(t, T.yes + .02, T.yes + .35), 2)) * .6); y.position.set(BR.x + .2, 1.95, BR.z + .35); faceCam(y);
+  const h = UD().heart; h.visible = true; const k = eo(seg(t, T.yes + .05, T.yes + .9)); h.position.set(-.05, 1.6, -5.7); h.scale.setScalar(.2 + 1.3 * k); h.material.uniforms.uOpacity.value = 1 - seg(t, T.yes + .9, T.c0); ST.ph.heart = 1;
+  cam(V(lerp(-.4, .0, u), lerp(1.4, 1.5, u), lerp(-2.6, -2.9, u)), V(-.05, 1.45, -6.0), 44, lerp(-.02, .02, u)); ST.flash = Math.max(cutF(), .6 * Math.exp(-Math.max(0, t - T.yes) * 6)); ST.flashCol = [1.4, 1.0, 1.15]; }
+function certFloat(t, c) { c.visible = true; c.position.set(.0, 1.55 + .03 * Math.sin(t * 2), -3.2); c.rotation.set(-.05, .08 * Math.sin(t * 1.3), .02 * Math.sin(t * 1.7)); }
+function sCert(u, t) { show('chapel'); const c = UD().cert; certFloat(t, c); c.scale.setScalar(back(seg(t, T.c0, T.c0 + .4), 1.6) + .001);
+  cam(V(lerp(-.2, .1, u), lerp(1.75, 1.8, u), lerp(1.2, .9, u)), V(0, 1.85, -3.2), 42, lerp(-.02, .01, u)); ST.flash = cutF(); }
+function sStamp(u, t) { show('chapel'); const c = UD().cert; certFloat(t, c); const s = UD().stamp; const k = seg(t, T.legal - .12, T.legal);
+  if (k > 0) { s.visible = true; s.scale.setScalar(lerp(2.6, 1, ei(k)) * .8); s.position.set(0, 1.45, -3.1); s.material.opacity = k; }
+  cam(V(0, 1.8, lerp(.85, .6, u)), V(0, 1.85, -3.2), 42, 0); ST.flash = cutF(); if (t > T.legal) { ST.flash = .9 * Math.exp(-(t - T.legal) * 7); ST.flashCol = [1.4, .5, .5]; cam(V(.05 * Math.sin(t * 90) * Math.exp(-(t - T.legal) * 8), 1.8, lerp(.85, .6, u)), V(0, 1.85, -3.2), 42, 0); } }
+function sToss(u, t) { show('chapel'); const c = UD().cert; c.visible = true; const k = eio(u); c.position.set(lerp(0, 2.6, k), 1.55 + 1.6 * k, lerp(-3.2, -4.4, k)); c.rotation.set(-.05 + 2.5 * k, 3 * k, .02 + 1.4 * k);
+  const s = UD().stamp; s.visible = true; s.position.copy(c.position).add(V(0, -.05, .1)); s.rotation.z = .18 + 1.4 * k; s.material.opacity = 1 - k;
+  cam(V(lerp(0, -.3, u), lerp(1.8, 1.6, u), lerp(.6, .9, u)), V(lerp(0, .4, u), lerp(1.85, 1.9, u), -3.6), 44, lerp(0, -.04, u)); ST.flash = cutF(); }
+function sTwist(u, t) { show('chapel'); ST.desat = .35 * u; const dim = 1 - .6 * seg(t, T.twEnd, T.turn); UD().flames.material.uniforms.uOpacity.value = dim;
+  cam(V(lerp(.2, PH.x, eio(u)), lerp(1.4, PH.y, eio(u)), lerp(-3.4, PH.z + 1.05, eio(u))), V(PH.x, PH.y, PH.z), 40, lerp(-.02, 0, u)); ST.flash = cutF(); }
+function sReveal(u, t) { show('chapel'); UD().flames.material.uniforms.uOpacity.value = .5; ST.desat = .3; scene.background = BG.deep;
+  const k = ei(seg(t, T.it6 - .2, T.u0)); UD().cable.material.uniforms.uHead.value = lerp(0, 1, eo(seg(t, T.turn + .2, T.u0 - .2))); UD().cable.material.uniforms.uT.value = t;
+  const a = seg(t, T.turn, T.it6); const p0 = V(PH.x, PH.y, PH.z + lerp(1.05, 1.5, a)); const p1 = V(6.0, 7.0, 8.0); const p = p0.clone().lerp(p1, eio(k));
+  const l = V(PH.x, PH.y, PH.z).lerp(V(0, 10, SRV.z), eio(k)); cam(p, l, lerp(40, 52, k), lerp(0, -.04, k), .02, 400); ST.flash = cutF(.2); }
+function phoneClose(u, t, roll = 0) { cam(V(PH.x + lerp(-.12, .04, u), PH.y + lerp(.05, -.02, u), PH.z + lerp(1.25, 1.0, eio(u))), V(PH.x, PH.y, PH.z), 40, roll); }
+function sUpdate(u, t) { show('chapel'); scene.background = BG.deep; ST.desat = .25; UD().flames.material.uniforms.uOpacity.value = .4;
+  if (t < T.over) { ST.ph.mode = 'update'; ST.ph.cold = true; ST.ph.prog = eo(seg(t, T.u0 + .1, T.over)); } else { ST.ph.mode = 'glitch'; ST.ph.cold = seg(t, T.over, T.over + .5) > .5 || Math.floor(t * 30) % 2 === 0; ST.ph.glitch = 1 - seg(t, T.over + .2, T.s0); }
+  phoneClose(u, t, lerp(-.03, .02, u)); ST.flash = cutF(); if (t > T.over) { ST.ca = .0015 + .01 * Math.exp(-(t - T.over) * 4); } }
+function sStrangers(u, t) { show('chapel'); scene.background = BG.deep; ST.desat = .55; UD().flames.material.uniforms.uOpacity.value = .35; ST.ph.mode = 'face'; ST.ph.cold = true;
+  UD().cold.forEach((c, i) => { const st = T.s0 + .2 + i * .55; if (t < st) return; c.visible = true; const a = t - st; c.position.set(BR.x + .45 + (i % 2) * .3, 1.95 + i * .26 + .06 * a, BR.z + .6); faceCam(c); c.scale.setScalar(back(seg(a, 0, .3), 1.6) + .001); });
+  cam(V(lerp(-.9, -.4, u), lerp(1.5, 1.7, u), lerp(-2.6, -3.0, u)), V(-.05, 1.65, -6.0), 44, lerp(-.03, .02, u)); ST.flash = cutF(); }
+function sHolo(u, t) { show('chapel'); scene.background = BG.deep; ST.desat = .3; const h = UD().holo; h.visible = true; UD().bride.visible = false;
+  const off = t > T.ended; const fl = off ? Math.max(0, 1 - (t - T.ended) * 3) * (Math.floor(t * 40) % 2) : (.85 + .15 * Math.sin(t * 30) * (hash(Math.floor(t * 12)) > .8 ? 1 : 0)); h.userData.fig.material.uniforms.uOpacity.value = fl; h.userData.fig.rotation.y = t * .8;
+  h.userData.err.visible = false;
+  cam(V(lerp(-.5, -.15, u), lerp(1.55, 1.4, u), 7.2 + lerp(5.0, 4.3, eio(u))), V(0, .95, 7.2), 42, lerp(-.03, .02, u)); ST.flash = cutF(); if (off) { ST.flash = .6 * Math.exp(-(t - T.ended) * 6); ST.flashCol = [1.3, .5, .5]; } }
+function sQuestion(u, t) { show('chapel'); scene.background = BG.deep; ST.desat = .5; UD().flames.material.uniforms.uOpacity.value = .25; ST.ph.on = .55; const k = seg(t, T.q0, T.S0);
+  cam(V(lerp(0, 0, k), lerp(1.7, 1.5, k), lerp(1.8, -.6, ei(k))), V(0, 1.4, -6.2), 44, lerp(.03, 0, k)); ST.flash = cutF(); if (t >= T.S0) { ST.desat = .7; ST.ph.on = .3; } }
+function sThree(u, t) { show('chapel'); scene.background = BG.deep; UD().flames.material.uniforms.uOpacity.value = .6; const sp = UD().spots;
+  sp[0].material.opacity = eo(seg(t, T.you - .05, T.you + .2)); sp[1].material.opacity = eo(seg(t, T.ai11 - .05, T.ai11 + .2)); sp[2].material.opacity = eo(seg(t, T.co - .05, T.co + .3)) * .8;
+  UD().cable.material.uniforms.uHead.value = seg(t, T.co, T.co + .6); UD().cable.material.uniforms.uT.value = t;
+  if (t > T.upd) { ST.ph.mode = 'glitch'; ST.ph.glitch = Math.exp(-(t - T.upd) * 2.5); ST.ph.cold = Math.floor(t * 20) % 2 === 0; }
+  const k = eio(seg(t, T.HIT, T.co + .4)); cam(V(lerp(-.4, -1.2, k), lerp(1.5, 4.0, k), lerp(-1.6, 6.0, k)), V(0, lerp(1.2, 6.5, k), lerp(-6, -20, k)), lerp(42, 55, k), lerp(.02, -.02, k));
+  ST.flash = Math.max(cutF(), .7 * (1 - eo(seg(t, T.HIT, T.HIT + .15)))); }
+function sTos(u, t) { show('chapel'); const c = UD().tos; c.visible = true; const sc = eio(seg(t, T.l0 + .1, T.terms + .1)); c.position.set(0, lerp(-.8, 4.25, sc), -3.0); c.rotation.set(-.04, 0, 0);   // top of the document first, ends on I AGREE
+  const tk = UD().tick; if (t > T.terms + .4) { tk.visible = true; tk.position.set(-.6, c.position.y - 2.69, -2.95); tk.scale.setScalar(back(seg(t, T.terms + .4, T.terms + .7), 2) + .001); }
+  cam(V(lerp(.15, -.05, u), lerp(1.75, 1.7, u), lerp(1.5, 1.2, u)), V(0, 1.75, -3.0), 42, lerp(.02, -.01, u)); ST.flash = cutF(); }
+function sEnd(u, t) { show('chapel'); const k = seg(t, T.e0, F.dur); UD().phone.rim.material.opacity = .3; pointL.position.copy(PH).add(V(0, 0, .6)); pointL.intensity = 1.5; UD().spots.forEach(s => s.material.opacity = .25);
+  cam(V(lerp(0, .3, k), lerp(1.6, 2.4, k), lerp(-.5, 2.5, k)), V(0, lerp(1.6, 2.2, k), -6.2), 46, lerp(0, .03, k)); ST.desat = .1; ST.flash = .3 * (1 - eo(seg(t, T.e0, T.e0 + .15))); }
+
+let CUR = { t: 0, t0: 0 }; const cutF = (k = .14) => k * (1 - eo(clamp((CUR.t - CUR.t0) / .12)));
+function frame(t) {
+  resetFrame();
+  for (const k in SETS) if (SETS[k].visible !== false) SETS[k].traverse(o => { if (o.material && o.material.uniforms && o.material.uniforms.uTime) o.material.uniforms.uTime.value = t; });
+  let s = SH.find(x => t >= x.t0 && t < x.t1) || SH[SH.length - 1]; ST.shot = s.name; CUR = { t, t0: s.t0 };
+  s.fn(clamp((t - s.t0) / (s.t1 - s.t0)), t, s); drawPhone(t);
+  grade.uniforms.uFlash.value = clamp(ST.flash * .22); grade.uniforms.uFlashCol.value.setRGB(...ST.flashCol); grade.uniforms.uDesat.value = ST.desat; grade.uniforms.uCA.value = ST.ca; grade.uniforms.uStreak.value = ST.streak;
+}
+
+// ---------------- 2D overlay ----------------
+function tx(s, x, y, size, font, col, align = 'left', glow = 0, glowCol = null) { X.font = `${size}px ${font}`; X.textAlign = align; X.textBaseline = 'alphabetic'; if (glow) { X.shadowColor = glowCol || col; X.shadowBlur = glow; } X.fillStyle = col; X.fillText(s, x, y); X.shadowBlur = 0; }
+function fitTx(s, x, y, size, font, col, maxW, glow, glowCol) { X.font = `${size}px ${font}`; const w = X.measureText(s).width; const sz = w > maxW ? size * maxW / w : size; tx(s, x, y, sz, font, col, 'center', glow, glowCol); }
+function stroked(s, x, y, size, font, col, align = 'center') { X.font = `${size}px ${font}`; X.textAlign = align; X.lineJoin = 'round'; X.shadowColor = 'rgba(0,0,0,.8)'; X.shadowBlur = 20; X.shadowOffsetY = 4; X.strokeStyle = 'rgba(0,0,0,.6)'; X.lineWidth = 9; X.strokeText(s, x, y); X.shadowBlur = 0; X.shadowOffsetY = 0; X.fillStyle = col; X.fillText(s, x, y); }
+const CX = 504, GLOW = 'rgba(255,170,30,.85)', SRC = 'rgba(210,222,250,.92)', CGLOW = 'rgba(60,200,255,.9)', RGLOW = 'rgba(255,60,60,.9)';
+const fade = (t, a, b, fi = .15, fo = .15) => clamp((t - a) / fi) * (1 - clamp((t - b + fo) / fo));
+function head(lines, t, a, b, y0 = 205, size = 92, step = 104) {   // [text, appearTime, color?, size?, glow?]; small kicker lines are lifted above y0, a bigger next line gets a full step
+  let y = y0; lines.forEach((L, i) => { const [s, at, col, sz0, gl] = L; const sz = sz0 || size, nz = lines[i + 1] ? (lines[i + 1][3] || size) : size;
+    const kick = sz < size ? (size - sz) * step / size : 0; const al = fade(t, at, b, .12) * (a <= t ? 1 : 0);
+    if (al > 0) { X.globalAlpha = al; const pop = back(clamp((t - at) / .3), 1.6); X.save(); X.translate(CX, y - kick); X.scale(lerp(.8, 1, pop), lerp(.8, 1, pop)); fitTx(s, 0, 0, sz, AN, col || CSS.gold, 860, 26, gl || GLOW); X.restore(); X.globalAlpha = 1; }
+    y += (kick ? sz : Math.max(sz, nz)) * step / size; });
+}
+function src(s, y, t, a, b) { const al = fade(t, a, b); if (al > 0) { X.globalAlpha = al; X.font = `32px ${BS}`; const w = X.measureText(s).width; rr(X, CX - w / 2 - 18, y - 32, w + 36, 44, 22); X.fillStyle = 'rgba(4,8,26,.62)'; X.fill(); tx(s, CX, y, 32, BS, SRC, 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; } }
+function bigNum(s, y, t, a, b, size = 230, col = CSS.gold2, x = CX, gl = GLOW) { const al = fade(t, a, b, .1); if (al > 0) { X.globalAlpha = al; const nb = back(clamp((t - a) / .35), 1.8); X.save(); X.translate(x, y); X.scale(nb, nb); tx(s, 0, 0, size, AN, col, 'center', 44, gl); X.restore(); X.globalAlpha = 1; } }
+function wlabel(s, p, t, a, b, size = 64, col = CSS.gold2, gl = GLOW, dy = 0) {   // label pinned to a 3D point
+  const al = fade(t, a, b, .12); if (al <= 0) return; const v = p.clone().project(camera); const x = (v.x * .5 + .5) * W - 36 * 0, y = (-v.y * .5 + .5) * H + dy; X.globalAlpha = al; const pop = back(clamp((t - a) / .3), 1.8);
+  X.save(); X.translate(x, y); X.scale(pop, pop); X.font = `${size}px ${AN}`; const w = X.measureText(s).width; rr(X, -w / 2 - 22, -size * .95, w + 44, size * 1.25, 18); X.fillStyle = 'rgba(4,8,26,.7)'; X.fill(); tx(s, 0, 0, size, AN, col, 'center', 22, gl); X.restore(); X.globalAlpha = 1; }
+function overlay(t) {
+  X.clearRect(0, 0, W, H);
+  // HOOK: on screen from frame 1
+  { const b = T.h1 + .02, a2 = T.did - .05; const al = 1 - clamp((t - b + .15) / .15); if (al > 0) { X.globalAlpha = al;
+      const pop = lerp(.94, 1, eo(clamp(t / .5))); X.save(); X.translate(CX, 230); X.scale(pop, pop); fitTx('WHAT IF YOU', 0, 0, 100, AN, CSS.gold, 860, 26, GLOW); fitTx('MARRIED AN AI?', 0, 128, 132, AN, CSS.gold2, 900, 34, GLOW); X.restore();
+      if (t > a2) { const p2 = back(clamp((t - a2) / .3), 1.8); X.save(); X.translate(CX, 1090); X.scale(p2, p2); fitTx('SOMEONE ALREADY DID.', 0, 0, 92, AN, '#ffffff', 900, 30, 'rgba(255,111,168,.95)'); X.restore(); }
+      X.globalAlpha = 1; } }
+  head([['JAPAN · 2025', T.h1, CSS.cyan, 64, CGLOW], ['A REAL WEDDING…', T.h1 + .05], ['…TO A GROOM SHE MADE IN CHATGPT', word('n2', 'groom') - .1, CSS.gold2, 64]], t, T.h1, T.r0 + .02, 205);
+  src('symbolic ceremony, 2025 (Euronews, AFP)', 420, t, T.h1 + .4, T.r0 + .02);
+  if (t > T.r0 && t < T.prop + .02) { bigNum('100', 330, t, T.r0 + .15, T.prop + .02, 220); tx('TEXTS A DAY', CX, 420, 64, AN, CSS.gold, 'center', 22, GLOW); src('"up to 100 times a day" (Euronews)', 480, t, T.r0 + .4, T.prop + .02); }
+  head([['HE PROPOSED…', T.prop]], t, T.prop, T.c0 + .02, 205); head([['SHE SAID YES!', T.yes, CSS.gold2, 120, 'rgba(255,111,168,.95)']], t, T.yes, T.c0 + .02, 340);
+  head([['SWEET, RIGHT?', T.c0]], t, T.c0, T.but4 + .02, 205);
+  head([['NO COUNTRY', T.legal + .2, CSS.gold], ['RECOGNIZES IT', word('n4', 'recognizes') - .1, CSS.gold2]], t, T.legal + .2, T.p0 + .02, 205);
+  head([['LOVE ≠ PAPERWORK', T.p0]], t, T.p0, T.tw + .02, 205);
+  head([['BUT HERE’S THE TWIST…', T.tw, '#ffffff', 92, 'rgba(255,111,168,.9)']], t, T.tw, T.turn + .02, 205);
+  head([['YOUR PARTNER LIVES', word('n6', 'it') - .05, CSS.cyan, 92, CGLOW], ['ON A COMPANY’S COMPUTERS', word('n6', 'company\'s') - .1, CSS.gold2]], t, word('n6', 'it') - .05, T.u0 + .02, 205);
+  head([['2023', T.u0, CSS.cyan, 64, CGLOW], ['ONE APP UPDATE', T.u0 + .05], ['CHANGED THEM OVERNIGHT', T.over - .05, CSS.gold2, 64]], t, T.u0, T.s0 + .02, 205);
+  src('an AI companion app, Feb 2023 (Reuters)', 420, t, T.u0 + .4, T.s0 + .02);
+  head([['“IT FELT LIKE', T.s0 + .1, '#e6eefc', 92, CGLOW], ['A STRANGER”', word('n8', 'strangers') - .1, '#e6eefc', 92, CGLOW]], t, T.s0 + .1, T.ho0 + .02, 205);
+  head([['MARRIED A HOLOGRAM', word('n9', 'hologram') - .3, CSS.cyan, 92, CGLOW]], t, word('n9', 'hologram') - .3, T.q0 + .02, 205);
+  head([['THEN THE SERVICE ENDED', T.ended - .05, '#ff7070', 64, RGLOW]], t, T.ended - .05, T.q0 + .02, 320);
+  src('hologram device support ended, 2020 (Fox 9, Science Times)', 420, t, word('n9', 'voice'), T.q0 + .02);
+  head([['SO WHO’S REALLY IN', T.q0], ['THIS MARRIAGE?', word('n10', 'this') - .05, CSS.gold2, 120]], t, T.q0, T.HIT, 205);
+  // payoff: labels pinned to the three spotlights
+  if (t >= T.HIT && t < T.l0 + .02) { const U = UD();
+    wlabel('YOU', V(BR.x - .45, 2.05, BR.z), t, T.you - .03, T.l0 + .02, 70, '#ffffff', 'rgba(255,111,168,.9)');
+    wlabel('YOUR AI', V(PH.x + .5, 2.05, PH.z), t, T.ai11 - .03, T.l0 + .02, 70, CSS.gold2);
+    wlabel('THE COMPANY', V(0, 9, SRV.z + 4.5), t, T.co - .03, T.l0 + .02, 80, CSS.cyan, CGLOW, 0);
+    if (t > T.upd) { bigNum('1 UPDATE', 1080, t, T.upd, T.l0 + .02, 120, '#ffffff', CX, CGLOW); } }
+  if (t >= T.l0 && t < T.e0) { const a = fade(t, T.l0, T.e0, .15, .1); const gr = X.createLinearGradient(0, 0, 0, 560); gr.addColorStop(0, `rgba(3,5,14,${.96 * a})`); gr.addColorStop(.8, `rgba(3,5,14,${.9 * a})`); gr.addColorStop(1, 'rgba(3,5,14,0)'); X.fillStyle = gr; X.fillRect(0, 0, W, 600); }
+  head([['YOU COULD.', T.could, CSS.gold], ['BUT YOU’D BE MARRYING', T.terms - .5, '#ffffff', 64, 'rgba(255,111,168,.9)'], ['THE TERMS OF SERVICE', T.terms, CSS.gold2, 100]], t, T.could, T.e0 + .02, 205);
+  if (t >= T.e0) { const a = eo(clamp((t - T.e0) / .35)); X.globalAlpha = a; const sc = lerp(.85, 1, back(clamp((t - T.follow) / .45), 1.6));
+    tx('would you say “I agree”?', CX, 230, 56, BX, '#fff', 'center', 12, 'rgba(255,111,168,.9)');
+    if (t >= T.follow) { X.globalAlpha = eo(clamp((t - T.follow) / .35)); X.save(); X.translate(CX, 470); X.scale(sc, sc); tx('FOLLOW', 0, 0, 150, AN, CSS.gold, 'center', 40, GLOW); tx('FOR MORE', 0, 165, 150, AN, CSS.gold, 'center', 40, GLOW); X.restore();
+      tx('@lorenzo_ai_unplugged', CX, 730, 54, BX, '#fff', 'center', 14, 'rgba(120,170,255,.8)'); tx('AI in 60 Seconds', CX, 782, 40, BS, CSS.cyan, 'center'); } X.globalAlpha = 1; }
+  // captions: white bold, key word yellow, word-synced
+  const c = CAPS.find(c => t >= c.t0 && t < c.t1);
+  if (c) { const size = 84, y = 1300; X.font = `${size}px ${BX}`;
+    const parts = c.w.map(([w, h]) => [w, h, X.measureText(w + ' ').width]); const tw = parts.reduce((a, p) => a + p[2], 0) - X.measureText(' ').width;
+    const pop = lerp(.9, 1, back(clamp((t - c.t0) / .12), 2)); const sc = Math.min(1, 860 / tw); X.save(); X.translate(CX, y); X.scale(pop * sc, pop * sc);
+    let x = -tw / 2; for (const [w, h, ww] of parts) { stroked(w, x, 0, size, BX, h ? CSS.yel : '#fff', 'left'); x += ww; } X.restore(); }
+}
+
+// ---------------- boot ----------------
+async function boot() {
+  for (const [n, u] of FONTS) { const f = new FontFace(n, `url(${u})`); await f.load(); document.fonts.add(f); }
+  [F, CAPS] = await Promise.all(['film.json', 'caps.json'].map(u => fetch(u).then(r => r.json())));
+  timeline(); buildChapel();
+  window.DUR = F.dur; window.EV = EV; window.T = T; window.SH = SH; window.DBG = { camera, scene, ST, grade, bloom };
+  window.render = t => { frame(t); composer.render(); overlay(t); };
+  window.render(0.5); window.READY = true;
+}
+boot();
+</script></body></html>
