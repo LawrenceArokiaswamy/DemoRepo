@@ -1,0 +1,99 @@
+1
+00:00:00,260 --> 00:00:03,530
+ChatGPT gets about two and a half billion questions a day.
+
+2
+00:00:03,640 --> 00:00:04,770
+Let's follow just one.
+
+3
+00:00:05,000 --> 00:00:06,630
+So, can I eat pizza for breakfast?
+
+4
+00:00:06,680 --> 00:00:07,170
+Send!
+
+5
+00:00:07,680 --> 00:00:09,350
+Your words become ones and zeros.
+
+6
+00:00:09,550 --> 00:00:11,040
+The phone's brain packs them up,
+
+7
+00:00:11,100 --> 00:00:12,590
+and the antenna fires them out!
+
+8
+00:00:12,810 --> 00:00:16,160
+Zap! To a tower, down a cable of light, into a building full of computers.
+
+9
+00:00:16,640 --> 00:00:18,350
+Computers only understand numbers,
+
+10
+00:00:18,450 --> 00:00:21,920
+so your question gets chopped into little LEGO bricks, each with a number.
+
+11
+00:00:22,110 --> 00:00:23,820
+Then, it reads all the words together.
+
+12
+00:00:23,910 --> 00:00:25,050
+Pizza, plus breakfast...
+
+13
+00:00:25,070 --> 00:00:26,250
+a map to a pizza shop?
+
+14
+00:00:26,270 --> 00:00:27,520
+Nope! A food question.
+
+15
+00:00:27,910 --> 00:00:30,100
+Here's the surprise: it doesn't look the answer up.
+
+16
+00:00:30,210 --> 00:00:33,860
+It writes one word at a time, always guessing the most likely next word.
+
+17
+00:00:34,030 --> 00:00:35,460
+Like: twinkle, twinkle, little...
+
+18
+00:00:35,830 --> 00:00:38,740
+Star! It learned that by reading a gigantic pile of text.
+
+19
+00:00:39,030 --> 00:00:40,760
+Then, the answer zooms all the way back!
+
+20
+00:00:40,850 --> 00:00:43,040
+Technically, yes! Just maybe add some fruit.
+
+21
+00:00:43,220 --> 00:00:44,670
+All of that, in about two seconds.
+
+22
+00:00:45,320 --> 00:00:46,500
+It just did that for you...
+
+23
+00:00:46,520 --> 00:00:48,910
+and about two and a half billion more times today.
+
+24
+00:00:49,120 --> 00:00:50,970
+And it has never once tasted a pizza.
+
+25
+00:00:51,370 --> 00:00:52,280
+Follow for more.

@@ -1,0 +1,1079 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>one-question</title>
+<style>html,body{margin:0;background:#03050C;overflow:hidden}canvas{display:block;position:absolute;left:0;top:0}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<canvas id="gl"></canvas><canvas id="ui"></canvas>
+<script type="module">
+// "One question": follow ONE ChatGPT question from a thumb on a phone, into the phone, over the air, through a fibre cable,
+// into a data centre, and back. Pure function of t (30 fps, 1080x1920). All timing comes from film.json (written by prep.py
+// from the narration), so a new voice recording re-times every shot, caption and sound event.
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const W = innerWidth, H = innerHeight;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, x) => a + (b - a) * x, seg = (t, a, b) => clamp((t - a) / (b - a));
+const ss = x => (x = clamp(x), x * x * (3 - 2 * x)), eo = x => 1 - Math.pow(1 - clamp(x), 3), ei = x => Math.pow(clamp(x), 3);
+const eio = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2), eo5 = x => 1 - Math.pow(1 - clamp(x), 5);
+const back = (x, s = 1.6) => (x = clamp(x) - 1, 1 + x * x * ((s + 1) * x + s));
+const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const GOLD = new THREE.Color('#FFC23D'), GOLD2 = new THREE.Color('#FFE08A'), CYAN = new THREE.Color('#3AD6FF'), VIOLET = new THREE.Color('#6B4DFF');
+const CSS = { gold: '#FFC93C', gold2: '#FFE38F', cyan: '#4FDCFF', white: '#FFFFFF', yel: '#FFD23F', red: '#FF4B4B' };
+const AN = 'Anton', BX = 'BarlowXB', BB = 'BarlowB', BS = 'BarlowS', EMO = '"Noto Color Emoji"';
+
+// ---------------- renderer + post ----------------
+const glc = document.getElementById('gl'), uic = document.getElementById('ui');
+const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+uic.width = W; uic.height = H; const X = uic.getContext('2d');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, W / H, .02, 400);
+camera.setViewOffset(W, H, 36, 0, W, H);               // everything sits ~36 px left of centre: the right edge belongs to Instagram's buttons
+scene.fog = new THREE.FogExp2(0x050817, .02);
+const pmrem = new THREE.PMREMGenerator(renderer); scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), .9, .55, .9);
+composer.addPass(bloom);
+const grade = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uFlash: { value: 0 }, uFlashCol: { value: new THREE.Color(1.25, 1.15, .95) }, uDesat: { value: 0 }, uCA: { value: .0015 }, uVig: { value: .55 }, uTime: { value: 0 }, uStreak: { value: 0 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `varying vec2 vUv; uniform sampler2D tDiffuse; uniform float uFlash, uDesat, uCA, uVig, uTime, uStreak; uniform vec3 uFlashCol;
+    void main(){ vec2 d = vUv - .5; float r2 = dot(d,d);
+      vec3 c;
+      if (uStreak > 0.) { c = vec3(0.); for (int i = 0; i < 8; i++) { float k = float(i) / 7.; vec2 uv = .5 + d * (1. - uStreak * .09 * k); c += texture2D(tDiffuse, uv).rgb; } c /= 8.; }
+      else { c.r = texture2D(tDiffuse, vUv - d * uCA * (1. + r2*4.)).r; c.g = texture2D(tDiffuse, vUv).g; c.b = texture2D(tDiffuse, vUv + d * uCA * (1. + r2*4.)).b; }
+      c += vec3(.010, .014, .040) * (1. - vUv.y * .6);            // navy lift in the shadows
+      float l = dot(c, vec3(.2126,.7152,.0722)); c = mix(c, vec3(l) * vec3(.85,.95,1.15), uDesat);
+      vec2 dv = d; dv.x *= 1.2; c *= 1. - uVig * smoothstep(.18, .75, length(dv));
+      c = mix(c, uFlashCol, uFlash);
+      gl_FragColor = vec4(c, 1.); }`
+});
+composer.addPass(grade); composer.addPass(new OutputPass());
+
+function bgTex(top, mid, bot) { const c = document.createElement('canvas'); c.width = 4; c.height = 256; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, top); gr.addColorStop(.55, mid); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, 4, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
+const BG = { navy: bgTex('#02030A', '#070C24', '#0F1240'), deep: bgTex('#010208', '#04071A', '#0A0E2E'), violet: bgTex('#03040E', '#0B0B30', '#1A1350'), city: bgTex('#02030C', '#08102E', '#1B1A44'), warm: bgTex('#030308', '#0A0A1C', '#1A1428') };
+scene.background = BG.navy;
+
+scene.add(new THREE.AmbientLight(0x2a3466, .55));
+const keyL = new THREE.DirectionalLight(0xffd9a0, 1.6); keyL.position.set(3, 4, 5); scene.add(keyL);
+const rimL = new THREE.DirectionalLight(0x4fd0ff, 1.4); rimL.position.set(-4, 1, -3); scene.add(rimL);
+const pointL = new THREE.PointLight(0xffc23d, 0, 8, 1.6); scene.add(pointL);
+
+// ---------------- helpers ----------------
+function canvasTex(w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); draw(g, w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.userData = { c, g }; return t; }
+function rr(g, x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+function label3d(text, { size = 120, font = BX, color = '#fff', glow = null, pad = 30, h = .3, mult = 1, bg = null, border = null } = {}) {
+  const m = document.createElement('canvas').getContext('2d'); m.font = `${size}px ${font}`; const tw = Math.ceil(m.measureText(text).width);
+  const cw = tw + pad * 2, ch = Math.ceil(size * 1.45) + pad;
+  const tex = canvasTex(cw, ch, (g, w, hh) => {
+    if (bg) { rr(g, 6, 6, w - 12, hh - 12, Math.min(40, hh / 2 - 6)); g.fillStyle = bg; g.fill(); if (border) { g.lineWidth = 6; g.strokeStyle = border; g.stroke(); } }
+    g.font = `${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    if (glow) { g.shadowColor = glow; g.shadowBlur = size * .25; }
+    g.fillStyle = color; g.fillText(text, w / 2, hh / 2 + size * .04);
+  });
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, fog: false });
+  mat.color.setScalar(mult);
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(h * cw / ch, h), mat); mesh.userData.aspect = cw / ch; return mesh;
+}
+function cardMesh(w, h, pxw, pxh, draw) { const t = canvasTex(pxw, pxh, draw); const m = new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false, fog: false }); return new THREE.Mesh(new THREE.PlaneGeometry(w, h), m); }
+// soft glowing points with fake depth of field (circle of confusion grows the sprite and spreads its energy)
+const ptsVS = `attribute vec3 color; attribute float size; attribute float phase; uniform float uPx, uFocus, uAper, uTime, uTw, uScale; varying vec3 vC; varying float vA;
+  void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); float z = max(.0005, -mv.z);
+    float s = size * uPx * uScale / z; float coc = abs(1./uFocus - 1./z) * uAper;
+    float tw = 1. + uTw * sin(uTime * 3.1 + phase * 6.283);
+    gl_PointSize = clamp(s + coc, 1.5, 180.); vA = clamp(s*s / ((s+coc)*(s+coc)), .02, 1.) * tw; vC = color;
+    gl_Position = projectionMatrix * mv; }`;
+const ptsFS = `uniform float uOpacity; varying vec3 vC; varying float vA;
+  void main(){ vec2 d = gl_PointCoord - .5; float r = length(d) * 2.; if (r > 1.) discard;
+    float a = exp(-r*r*3.5) + .6 * exp(-r*r*18.); gl_FragColor = vec4(vC * a * vA * uOpacity, 1.); }`;
+function glowPoints(pos, col, size, phase) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setAttribute('size', new THREE.Float32BufferAttribute(size, 1)); g.setAttribute('phase', new THREE.Float32BufferAttribute(phase, 1));
+  const m = new THREE.ShaderMaterial({ uniforms: { uPx: { value: H / 2 }, uFocus: { value: 4 }, uAper: { value: 30 }, uTime: { value: 0 }, uTw: { value: .25 }, uOpacity: { value: 1 }, uScale: { value: 1 } },
+    vertexShader: ptsVS, fragmentShader: ptsFS, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; return p;
+}
+function dust(n, seed, box, cols, sz, focus, aper, bright = .5) {
+  const r = mulberry(seed), p = [], c = [], s = [], ph = [];
+  for (let i = 0; i < n; i++) { p.push(lerp(box[0], box[1], r()), lerp(box[2], box[3], r()), lerp(box[4], box[5], r())); const k = cols[Math.floor(r() * cols.length)].clone().multiplyScalar(bright * (.4 + .8 * r())); c.push(k.r, k.g, k.b); s.push(lerp(sz[0], sz[1], r() * r())); ph.push(r()); }
+  const d = glowPoints(p, c, s, ph); d.material.uniforms.uFocus.value = focus; d.material.uniforms.uAper.value = aper; return d;
+}
+// glyph particles (0/1 bits) with per-point position + alpha, written on the CPU every frame
+function glyphAtlas(chars) { return canvasTex(64 * chars.length, 64, (g) => { g.font = `58px ${BX}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#fff'; for (let i = 0; i < chars.length; i++) g.fillText(chars[i], 32 + i * 64, 35); }); }
+function bitCloud(n, col) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('alpha', new THREE.Float32BufferAttribute(new Float32Array(n), 1));
+  g.setAttribute('glyph', new THREE.Float32BufferAttribute(new Float32Array(n), 1)); g.setAttribute('size', new THREE.Float32BufferAttribute(new Float32Array(n).fill(.010), 1));
+  const cc = new Float32Array(n * 3); for (let i = 0; i < n; i++) { const k = hash(i * 1.7) < .7 ? col[0] : col[1]; cc[i * 3] = k.r; cc[i * 3 + 1] = k.g; cc[i * 3 + 2] = k.b; } g.setAttribute('color', new THREE.Float32BufferAttribute(cc, 3));
+  const m = new THREE.ShaderMaterial({ uniforms: { uPx: { value: H / 2 }, uAtlas: { value: glyphAtlas('01') }, uFocus: { value: .05 }, uAper: { value: .6 }, uOpacity: { value: 1 } },
+    vertexShader: `attribute float alpha; attribute float glyph; attribute float size; attribute vec3 color; uniform float uPx, uFocus, uAper; varying float vG; varying vec3 vC; varying float vA;
+      void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); float z = max(.0005,-mv.z); float s = size * uPx / z; float coc = abs(1./uFocus - 1./z) * uAper;
+        gl_PointSize = clamp(s + coc, 1., 160.); vA = alpha * clamp(s*s/((s+coc)*(s+coc)), .06, 1.); vG = glyph; vC = color; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `uniform sampler2D uAtlas; uniform float uOpacity; varying float vG; varying vec3 vC; varying float vA;
+      void main(){ vec2 uv = vec2((vG + gl_PointCoord.x) / 2., 1. - gl_PointCoord.y); float a = texture2D(uAtlas, uv).a; vec2 d = gl_PointCoord - .5; float halo = exp(-dot(d,d) * 14.) * .25;
+        gl_FragColor = vec4(vC * (a * 1.8 + halo) * vA * uOpacity, 1.); }`,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; return p;
+}
+// polyline helper: arc-length parametrised points along [[x,y],...] (board units) at height z
+function poly(pts, z = 0) { const P = pts.map(p => V(p[0], p[1], z)); const L = [0]; for (let i = 1; i < P.length; i++) L.push(L[i - 1] + P[i].distanceTo(P[i - 1])); const tot = L[L.length - 1];
+  return { P, L, tot, at(s, out = V(0, 0, 0)) { s = clamp(s) * tot; let i = 1; while (i < L.length - 1 && L[i] < s) i++; const k = (s - L[i - 1]) / Math.max(1e-9, L[i] - L[i - 1]); return out.copy(P[i - 1]).lerp(P[i], clamp(k)); },
+    dir(s) { s = clamp(s) * tot; let i = 1; while (i < L.length - 1 && L[i] < s) i++; return P[i].clone().sub(P[i - 1]).normalize(); } }; }
+// glowing light trail along a polyline: a flat ribbon whose brightness follows a moving head
+function trail(pl, width, col, z) {
+  const pos = [], s = [], idx = []; const N = 160;
+  for (let i = 0; i <= N; i++) { const u = i / N, p = pl.at(u), d = pl.dir(Math.min(u, .999)); const nx = -d.y * width / 2, ny = d.x * width / 2; pos.push(p.x + nx, p.y + ny, z, p.x - nx, p.y - ny, z); s.push(u, u); if (i < N) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('s', new THREE.Float32BufferAttribute(s, 1)); g.setIndex(idx);
+  const m = new THREE.ShaderMaterial({ uniforms: { uHead: { value: -1 }, uTail: { value: .25 }, uCol: { value: col.clone() }, uBase: { value: 0 }, uT: { value: 0 }, uLen: { value: pl.tot } },
+    vertexShader: `attribute float s; varying float vS; void main(){ vS = s; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform float uHead, uTail, uBase, uT, uLen; uniform vec3 uCol; varying float vS;
+      void main(){ float d = uHead - vS; float a = d >= 0. ? exp(-d / uTail) : exp(d * 400.); a = a * step(-.02, d);
+        float dash = .55 + .45 * sin((vS * uLen * 900.) - uT * 30.); float b = uBase * (.6 + .4 * dash);
+        gl_FragColor = vec4(uCol * (a * 1.5 + b), 1.); }`,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, side: THREE.DoubleSide });
+  return new THREE.Mesh(g, m);
+}
+// Catmull-Rom through timed keys [[t, pos, look], ...]
+function camPath(keys, t) {
+  if (t <= keys[0][0]) return [keys[0][1].clone(), keys[0][2].clone()];
+  if (t >= keys[keys.length - 1][0]) { const k = keys[keys.length - 1]; return [k[1].clone(), k[2].clone()]; }
+  let i = 0; while (keys[i + 1][0] < t) i++;
+  const k0 = keys[Math.max(0, i - 1)], k1 = keys[i], k2 = keys[i + 1], k3 = keys[Math.min(keys.length - 1, i + 2)];
+  const u = (t - k1[0]) / (k2[0] - k1[0]);
+  const cr = (a, b, c, d) => { const u2 = u * u, u3 = u2 * u; return b.clone().multiplyScalar(2).add(c.clone().sub(a).multiplyScalar(u)).add(a.clone().multiplyScalar(2).sub(b.clone().multiplyScalar(5)).add(c.clone().multiplyScalar(4)).sub(d).multiplyScalar(u2)).add(b.clone().multiplyScalar(3).sub(a).sub(c.clone().multiplyScalar(3)).add(d).multiplyScalar(u3)).multiplyScalar(.5); };
+  return [cr(k0[1], k1[1], k2[1], k3[1]), cr(k0[2], k1[2], k2[2], k3[2])];
+}
+
+// ---------------- data ----------------
+let F, CAPS, GEO; const FONTS = [[AN, 'fonts/Anton-Regular.ttf'], [BX, 'fonts/BarlowCondensed-ExtraBold.ttf'], [BB, 'fonts/BarlowCondensed-Bold.ttf'], [BS, 'fonts/BarlowCondensed-SemiBold.ttf']];
+const QUESTION = 'Can I eat pizza for breakfast?';
+const QTOK = [['Can', 8475], ['I', 357], ['eat', 11237], ['pizza', 27941], ['for', 395], ['breakfast', 16356], ['?', 30]];   // GPT-4o word list (o200k_base)
+const REPLY = ['Technically,', 'yes!', '🍕', 'Just', 'maybe', 'add', 'some', 'fruit.'];
+const word = (id, w) => { const ws = F.words[id]; const k = ws.findIndex(x => x[0].toLowerCase().replace(/[^a-z']/g, '') === w); return k < 0 ? ws[0][1] : ws[k][1]; };
+const L0 = id => F.lines[id][0], L1 = id => F.lines[id][1];
+
+const SETS = {};
+function makeSet(name, parent = scene) { const g = new THREE.Group(); g.visible = false; parent.add(g); SETS[name] = g; return g; }
+
+// ================= PHONE =================
+const SW = 1280, SH_ = 2680, SCR_W = .93, SCR_H = 1.947, SCR_Z = .0466;
+const s2l = (px, py) => V(SCR_W * (px / SW - .5), SCR_H * (.5 - py / SH_), SCR_Z);   // screen canvas px -> phone-local
+let phone, screenTex, screenMat, thumb, thumbShadow, sheen;
+const KB = { y0: 1690, rowH: 208, keyW: 116 };
+const ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+function keyPos(ch) {   // canvas px centre of the key for a character
+  ch = ch.toLowerCase();
+  if (ch === ' ') return [SW / 2 - 40, KB.y0 + 120 + 3 * KB.rowH + 88];
+  if (ch === '?') return [SW - 150, KB.y0 + 120 + 3 * KB.rowH + 88];
+  for (let r = 0; r < 3; r++) { const k = ROWS[r].indexOf(ch); if (k >= 0) { const off = (SW - ROWS[r].length * KB.keyW) / 2; return [off + k * KB.keyW + KB.keyW / 2, KB.y0 + 120 + r * KB.rowH + 88]; } }
+  return [SW / 2, KB.y0 + 400];
+}
+const INPUT_Y = 1520, SEND = [SW - 124, INPUT_Y + 76];
+function buildPhone() {
+  const g = makeSet('phone');
+  const body = new THREE.Mesh(new RoundedBoxGeometry(1.0, 2.06, .09, 8, .12), new THREE.MeshStandardMaterial({ color: 0x2a2f3a, metalness: .92, roughness: .26, envMapIntensity: 1.2 }));
+  g.add(body); g.userData.ext = [body];
+  const band = new THREE.Mesh(new RoundedBoxGeometry(1.008, 2.068, .05, 8, .122), new THREE.MeshStandardMaterial({ color: 0x8c8f99, metalness: 1, roughness: .2, envMapIntensity: 1.6 }));
+  g.add(band); g.userData.ext.push(band);
+  for (const [y, h] of [[.55, .16], [.32, .1], [.18, .1]]) { const b = new THREE.Mesh(new RoundedBoxGeometry(.02, h, .03, 2, .008), band.material); b.position.set(y > .5 ? .505 : -.505, y, 0); g.add(b); g.userData.ext.push(b); }
+  const bezel = new THREE.Mesh(new RoundedBoxGeometry(.975, 2.035, .004, 6, .11), new THREE.MeshBasicMaterial({ color: 0x010102 })); bezel.position.z = .0425; g.add(bezel); g.userData.ext.push(bezel);
+  screenTex = canvasTex(SW, SH_, () => {});
+  screenMat = new THREE.ShaderMaterial({ uniforms: { uTex: { value: screenTex }, uPix: { value: 0 }, uB: { value: .82 } },
+    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform sampler2D uTex; uniform float uPix, uB; varying vec2 vUv;
+      void main(){ vec2 n = vec2(640., 1340.); vec2 cell = floor(vUv * n) + .5; vec3 tx = texture2D(uTex, mix(vUv, cell / n, uPix)).rgb; tx = pow(tx, vec3(2.2));
+        vec2 f = fract(vUv * n); float sx = f.x * 3.; vec3 m = vec3(step(sx, 1.), step(1., sx) * step(sx, 2.), step(2., sx));
+        float gap = smoothstep(.0, .12, f.y) * smoothstep(1., .88, f.y) * smoothstep(.0, .06, fract(sx)) * smoothstep(1., .94, fract(sx));
+        vec3 sub = (tx * 2.6 + .015) * m * gap;
+        gl_FragColor = vec4(mix(tx, sub, uPix) * uB, 1.); }` });
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(SCR_W, SCR_H), screenMat); scr.position.z = SCR_Z; g.add(scr); g.userData.ext.push(scr);
+  sheen = new THREE.Mesh(new THREE.PlaneGeometry(SCR_W, SCR_H), new THREE.MeshBasicMaterial({ map: canvasTex(256, 512, (c, w, h) => { const gr = c.createLinearGradient(0, h * .2, w, h * .55); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(.45, 'rgba(255,255,255,.0)'); gr.addColorStop(.5, 'rgba(200,225,255,.5)'); gr.addColorStop(.62, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, w, h); }), transparent: true, opacity: .07, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+  sheen.position.z = SCR_Z + .0004; g.add(sheen);
+  // the thumb (no face, no person: just a thumb tapping keys)
+  thumb = new THREE.Group(); g.add(thumb);
+  const skin = new THREE.MeshStandardMaterial({ color: 0xb07658, roughness: .72, metalness: 0, emissive: 0x0c0402, envMapIntensity: .18 });
+  const tm = new THREE.Mesh(new THREE.CapsuleGeometry(.072, .5, 10, 24), skin); tm.position.y = -.322 + .01; tm.scale.set(1, 1, .64); thumb.add(tm);
+  const knuckle = new THREE.Mesh(new THREE.TorusGeometry(.066, .004, 6, 24, Math.PI * .8), new THREE.MeshStandardMaterial({ color: 0xa8705a, roughness: .7 })); knuckle.position.set(0, -.21, .044); knuckle.rotation.set(-.2, 0, Math.PI * .1); thumb.add(knuckle);
+  const nail = new THREE.Mesh(new THREE.SphereGeometry(.05, 24, 12), new THREE.MeshStandardMaterial({ color: 0xd8a896, roughness: .45, metalness: 0, envMapIntensity: .25 }));
+  nail.scale.set(.95, 1.25, .25); nail.position.set(0, -.07, .041); thumb.add(nail);
+  thumbShadow = new THREE.Mesh(new THREE.PlaneGeometry(.26, .6), new THREE.MeshBasicMaterial({ map: canvasTex(128, 256, (c, w, h) => { const gr = c.createRadialGradient(w / 2, h * .3, 4, w / 2, h * .45, w * .9); gr.addColorStop(0, 'rgba(0,0,0,.75)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gr; c.fillRect(0, 0, w, h); }), transparent: true, depthWrite: false, toneMapped: false }));
+  thumbShadow.position.z = SCR_Z + .0006; g.add(thumbShadow);
+  phone = g;
+}
+// chat UI on the phone screen (generic chat app, "ChatGPT" as plain text, no logo)
+function drawScreen(st) {
+  const g = screenTex.userData.g, w = SW, h = SH_;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#16171B'; g.fillRect(0, 0, w, h);
+  // status bar + island
+  g.fillStyle = '#fff'; g.font = `600 44px ${BB}`; g.textAlign = 'left'; g.fillText('9:41', 110, 104);
+  rr(g, w / 2 - 170, 38, 340, 96, 48); g.fillStyle = '#000'; g.fill();
+  g.fillStyle = '#fff'; for (let i = 0; i < 4; i++) g.fillRect(w - 250 + i * 18, 100 - 10 - i * 7, 11, 10 + i * 7); rr(g, w - 160, 72, 70, 34, 9); g.lineWidth = 3; g.strokeStyle = '#fff'; g.stroke(); g.fillRect(w - 154, 78, 50, 22);
+  // header
+  g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.moveTo(80, 230); g.lineTo(140, 230); g.moveTo(80, 256); g.lineTo(122, 256); g.stroke();
+  g.fillStyle = '#fff'; g.font = `600 58px ${BB}`; g.textAlign = 'center'; g.fillText('ChatGPT', w / 2, 262);
+  g.beginPath(); g.arc(w - 110, 240, 30, 0, 7); g.lineWidth = 6; g.stroke(); g.beginPath(); g.moveTo(w - 110, 222); g.lineTo(w - 110, 258); g.moveTo(w - 128, 240); g.lineTo(w - 92, 240); g.stroke();
+  const kb = st.keyboard ?? 1; const inputY = lerp(2410, INPUT_Y, eio(kb));
+  // empty state
+  if (!st.sent) { g.globalAlpha = .85 * (1 - clamp(st.typedN / 3)); g.fillStyle = '#ECECF1'; g.font = `600 70px ${BB}`; g.fillText('What can I help with?', w / 2, 900); g.globalAlpha = 1; }
+  // user bubble
+  if (st.sent > 0) {
+    const a = eo(st.sent), y = lerp(inputY, 420, a);
+    g.font = `80px ${BB}`; const tw = g.measureText(QUESTION).width;
+    rr(g, w - 80 - tw - 96, y, tw + 96, 150, 75); g.fillStyle = '#303139'; g.fill();
+    g.globalAlpha = st.bubbleText ?? 1; g.fillStyle = '#fff'; g.textAlign = 'right'; g.fillText(QUESTION, w - 128, y + 102); g.globalAlpha = 1;
+  }
+  // thinking dot / streamed reply
+  if (st.reply > 0) {
+    let x = 90, y = 830, lh = 120; g.textAlign = 'left';
+    for (let i = 0; i < REPLY.length; i++) {
+      const a = clamp(st.reply - i); if (a <= 0) break;
+      const wd = REPLY[i], emo = wd === '🍕'; g.font = emo ? `92px ${EMO}` : `98px ${BB}`; const ww = g.measureText(wd).width + 26;
+      if (x + ww > w - 80) { x = 90; y += lh; }
+      g.globalAlpha = a; g.fillStyle = '#F2F2F4'; g.fillText(wd, x, y + (1 - eo(a)) * 18); g.globalAlpha = 1; x += ww;
+    }
+    if (st.reply < REPLY.length) { g.beginPath(); g.arc(x + 20, y - 28, 22, 0, 7); g.fillStyle = '#fff'; g.fill(); }
+  } else if (st.sent > .7 && st.thinking) { g.beginPath(); g.arc(110, 790, 24 + 6 * Math.sin(st.t * 9), 0, 7); g.fillStyle = '#fff'; g.fill(); }
+  // input bar
+  rr(g, 50, inputY, w - 100, 152, 76); g.fillStyle = '#2A2B32'; g.fill(); g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.12)'; g.stroke();
+  g.strokeStyle = 'rgba(255,255,255,.7)'; g.lineWidth = 6; g.beginPath(); g.moveTo(120, inputY + 76); g.lineTo(160, inputY + 76); g.moveTo(140, inputY + 56); g.lineTo(140, inputY + 96); g.stroke();
+  g.textAlign = 'left'; g.font = `76px ${BB}`;
+  const typed = st.sent > 0 ? '' : QUESTION.slice(0, st.typedN);
+  if (typed) { g.fillStyle = '#fff'; g.fillText(typed, 196, inputY + 102); if (Math.sin(st.t * 12) > -.3) g.fillRect(200 + g.measureText(typed).width, inputY + 40, 5, 76); }
+  else { g.fillStyle = 'rgba(255,255,255,.4)'; g.fillText('Ask anything', 196, inputY + 102); }
+  // send button
+  const [bx, byy] = [SEND[0], inputY + 76], pr = st.press || 0, sc = 1 - .2 * Math.sin(Math.PI * clamp(pr));
+  if (st.ring > 0 && st.ring < 1) { g.beginPath(); g.arc(bx, byy, 60 + 260 * eo(st.ring), 0, 7); g.lineWidth = 18 * (1 - st.ring); g.strokeStyle = `rgba(255,201,60,${1 - st.ring})`; g.stroke(); }
+  g.beginPath(); g.arc(bx, byy, 56 * sc, 0, 7); g.fillStyle = st.ring > 0 && st.ring < 1 ? CSS.gold : (typed ? '#fff' : 'rgba(255,255,255,.25)'); g.fill();
+  g.strokeStyle = '#111'; g.lineWidth = 10 * sc; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(bx, byy + 24 * sc); g.lineTo(bx, byy - 24 * sc); g.moveTo(bx - 21 * sc, byy - 5 * sc); g.lineTo(bx, byy - 26 * sc); g.lineTo(bx + 21 * sc, byy - 5 * sc); g.stroke();
+  // keyboard
+  if (kb > 0) {
+    const ky = KB.y0 + (1 - eio(kb)) * 1000; g.fillStyle = '#1F2026'; g.fillRect(0, ky, w, h - ky);
+    g.font = `68px ${BB}`; g.textAlign = 'center';
+    const key = (x, y, ww, hh, label, hot) => { rr(g, x - ww / 2 + 7, y - hh / 2, ww - 14, hh, 16); g.fillStyle = hot ? '#7A7D8C' : '#3F414B'; g.fill(); g.fillStyle = '#F4F4F6'; g.fillText(label, x, y + 24); };
+    const hotCh = st.hot;
+    ROWS.forEach((row, ri) => { const off = (w - row.length * KB.keyW) / 2; for (let k = 0; k < row.length; k++) key(off + k * KB.keyW + KB.keyW / 2, ky + 120 + ri * KB.rowH + 88 - 88 + 88, KB.keyW, 168, st.caps && ri === 0 && false ? row[k].toUpperCase() : row[k], hotCh === row[k]); });
+    const yb = ky + 120 + 3 * KB.rowH + 88;
+    key(130, yb, 200, 168, '123', false); key(SW / 2 - 40, yb, 640, 168, 'space', hotCh === ' '); key(SW - 150, yb, 220, 168, '.?', hotCh === '?');
+    key(110, ky + 120 + 2 * KB.rowH + 88, 160, 168, '⇧', hotCh === 'C');
+    // key pop-up bubble, like a real keyboard
+    if (st.hot && st.hot !== ' ' && st.hotA > 0) {
+      const [px, py] = keyPos(st.hot); g.globalAlpha = st.hotA; rr(g, px - 78, py - 330, 156, 220, 30); g.fillStyle = '#8A8D9C'; g.fill(); g.fillStyle = '#fff'; g.font = `110px ${BB}`; g.fillText(st.hot === 'C' ? 'C' : st.hot, px, py - 180); g.globalAlpha = 1;
+    }
+  }
+  // home indicator
+  rr(g, w / 2 - 190, h - 40, 380, 14, 7); g.fillStyle = 'rgba(255,255,255,.75)'; g.fill();
+  screenTex.needsUpdate = true;
+}
+// typing schedule: one tap per character, a little uneven like a real thumb
+let TAPS = [];
+function typingTimes() {
+  const a = F.TYPE0, b = F.TYPE1, n = QUESTION.length; const r = mulberry(12); const gaps = []; for (let i = 0; i < n; i++) gaps.push(.7 + .6 * r() + (QUESTION[i] === ' ' ? .3 : 0));
+  const tot = gaps.reduce((x, y) => x + y, 0); let t = a; TAPS = gaps.map(gp => { const tt = t; t += gp / tot * (b - a); return tt; });
+}
+
+// ================= INSIDE THE PHONE =================
+// board units = phone-local units; the board lies at z = 0 under the display layers
+const CHIP = { x: 0, y: .16, s: .12 };
+const IN_PATHS = [
+  [[-.34, .70], [-.34, .50], [-.22, .38], [-.07, .38], [-.07, .28]], [[-.18, .74], [-.18, .48], [-.035, .34], [-.035, .28]],
+  [[.02, .76], [.02, .45], [.0, .43], [0, .28]], [[.20, .72], [.20, .50], [.035, .335], [.035, .28]],
+  [[.38, .66], [.38, .46], [.24, .32], [.24, .2], [.12, .2]], [[-.40, .58], [-.40, .30], [-.30, .2], [-.12, .2]]];
+const OUT_PATHS = [
+  [[-.06, .04], [-.06, -.18], [-.16, -.28], [-.16, -.62], [-.04, -.74], [-.04, -.80]],
+  [[0, .04], [0, -.80]],
+  [[.06, .04], [.06, -.22], [.17, -.33], [.17, -.60], [.04, -.73], [.04, -.80]]];
+const ANT = { x: 0, y: -.86 }; const BZ = -.25;
+let inner, IP = [], OP = [], inTrails = [], outTrails = [], chipTop, bits, fallBits, letters = [], packets = [], rings = [], layers = [], antGlow;
+function boardTextures() {
+  const PW = 2048, PH = 4096, X0 = -.46, X1 = .46, Y0 = -.99, Y1 = .99;
+  const px = (x, y) => [(x - X0) / (X1 - X0) * PW, (Y1 - y) / (Y1 - Y0) * PH];
+  const r = mulberry(77);
+  const draw = (g, glowOnly) => {
+    if (!glowOnly) { const gr = g.createLinearGradient(0, 0, PW, PH); gr.addColorStop(0, '#0B1E26'); gr.addColorStop(.5, '#08161F'); gr.addColorStop(1, '#0B1A24'); g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
+      for (let i = 0; i < 9000; i++) { g.fillStyle = `rgba(120,200,220,${.02 + .03 * r()})`; g.fillRect(r() * PW, r() * PH, 2, 2); } }
+    else { g.fillStyle = '#000'; g.fillRect(0, 0, PW, PH); }
+    const copper = glowOnly ? '#fff' : 'rgba(150,118,62,.42)';
+    g.lineCap = 'round'; g.lineJoin = 'round';
+    // background routing: buses with 45-degree bends
+    const rr2 = mulberry(5);
+    for (let k = 0; k < 120; k++) {
+      let x = lerp(X0, X1, rr2()), y = lerp(Y0, Y1, rr2()); const n = 2 + Math.floor(rr2() * 4), lanes = 1 + Math.floor(rr2() * 6), dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]];
+      let d = Math.floor(rr2() * 8); const pts = [[x, y]];
+      for (let i = 0; i < n; i++) { const L = .04 + .18 * rr2(); const [dx, dy] = dirs[d]; const nn = Math.hypot(dx, dy); x += dx / nn * L; y += dy / nn * L; pts.push([x, y]); d = (d + (rr2() < .5 ? 1 : 7)) % 8; }
+      const wdt = glowOnly ? 3 : 3 + rr2() * 3;
+      for (let l = 0; l < lanes; l++) { const o = (l - lanes / 2) * .006; g.beginPath(); pts.forEach(([a, b], i) => { const [u, v] = px(a + o, b + o); i ? g.lineTo(u, v) : g.moveTo(u, v); }); g.strokeStyle = glowOnly ? `rgba(255,255,255,${.05 + .06 * rr2()})` : copper; g.lineWidth = wdt; g.stroke(); }
+      const [u, v] = px(...pts[pts.length - 1]); g.beginPath(); g.arc(u, v, 7, 0, 7); g.fillStyle = glowOnly ? 'rgba(255,255,255,.3)' : 'rgba(210,170,90,.8)'; g.fill(); if (!glowOnly) { g.beginPath(); g.arc(u, v, 3, 0, 7); g.fillStyle = '#05090c'; g.fill(); }
+    }
+    // hero traces (brighter)
+    for (const P of [...IN_PATHS, ...OUT_PATHS]) { g.beginPath(); P.forEach(([a, b], i) => { const [u, v] = px(a, b); i ? g.lineTo(u, v) : g.moveTo(u, v); }); g.strokeStyle = glowOnly ? 'rgba(255,255,255,.55)' : 'rgba(222,176,90,.9)'; g.lineWidth = 9; g.stroke(); }
+    // chip pad ring
+    const [cx, cy] = px(CHIP.x, CHIP.y), cs = CHIP.s / (X1 - X0) * PW;
+    for (let side = 0; side < 4; side++) for (let i = 0; i < 26; i++) { const k = (i + .5) / 26 * 2 - 1; const ox = side < 2 ? k * cs * 1.05 : (side === 2 ? -1 : 1) * cs * 1.18, oy = side < 2 ? (side === 0 ? -1 : 1) * cs * 1.18 : k * cs * 1.05;
+      g.fillStyle = glowOnly ? 'rgba(255,255,255,.5)' : 'rgba(225,185,100,.9)'; g.fillRect(cx + ox - 6, cy + oy - 6, 12, 12); }
+    // antenna meander
+    g.beginPath(); let first = true; for (let i = 0; i <= 14; i++) { const x = -.36 + i * .72 / 14; for (const y of (i % 2 ? [-.84, -.95] : [-.95, -.84])) { const [u, v] = px(x, y); first ? g.moveTo(u, v) : g.lineTo(u, v); first = false; } }
+    g.strokeStyle = glowOnly ? 'rgba(255,255,255,.8)' : 'rgba(230,185,95,.95)'; g.lineWidth = 16; g.stroke();
+    if (!glowOnly) { // silkscreen outlines + reference marks (no logos)
+      g.strokeStyle = 'rgba(220,230,235,.32)'; g.lineWidth = 3; g.font = `28px ${BS}`; g.fillStyle = 'rgba(220,230,235,.4)';
+      for (let i = 0; i < 70; i++) { const x = lerp(X0 + .03, X1 - .08, r()), y = lerp(Y0 + .05, Y1 - .05, r()); const [u, v] = px(x, y); g.strokeRect(u, v, 40 + 60 * r(), 26 + 30 * r()); if (r() < .6) g.fillText((r() < .5 ? 'C' : 'R') + Math.floor(r() * 90 + 1), u, v - 8); }
+      g.strokeRect(cx - cs * 1.35, cy - cs * 1.35, cs * 2.7, cs * 2.7);
+    }
+  };
+  const map = canvasTex(PW, PH, (g) => draw(g, false)), em = canvasTex(PW, PH, (g) => draw(g, true));
+  return { map, em };
+}
+function chipTex() {
+  return canvasTex(1024, 1024, (g, w) => {
+    g.fillStyle = '#000'; g.fillRect(0, 0, w, w); const r = mulberry(9);
+    const blk = (x, y, ww, hh, kind) => {
+      if (kind === 'core') { g.strokeStyle = 'rgba(255,200,90,.95)'; g.lineWidth = 4; g.strokeRect(x, y, ww, hh); for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) { g.fillStyle = `rgba(255,${170 + 60 * r() | 0},70,${.25 + .6 * r()})`; g.fillRect(x + 8 + i * (ww - 16) / 6, y + 8 + j * (hh - 16) / 6, (ww - 16) / 6 - 5, (hh - 16) / 6 - 5); } }
+      else if (kind === 'cache') { for (let i = 0; i < hh; i += 7) { g.fillStyle = `rgba(80,210,255,${.25 + .35 * r()})`; g.fillRect(x, y + i, ww, 4); } g.strokeStyle = 'rgba(80,210,255,.8)'; g.lineWidth = 3; g.strokeRect(x, y, ww, hh); }
+      else { for (let k = 0; k < 40; k++) { g.fillStyle = `rgba(180,140,255,${.2 + .5 * r()})`; g.fillRect(x + r() * ww, y + r() * hh, 6 + 20 * r(), 6 + 20 * r()); } g.strokeStyle = 'rgba(170,140,255,.7)'; g.lineWidth = 3; g.strokeRect(x, y, ww, hh); }
+    };
+    blk(90, 90, 250, 250, 'core'); blk(380, 90, 250, 250, 'core'); blk(90, 380, 250, 250, 'core'); blk(380, 380, 250, 250, 'core');
+    blk(670, 90, 260, 540, 'cache'); blk(90, 670, 840, 120, 'cache'); blk(90, 820, 400, 110, 'x'); blk(530, 820, 400, 110, 'x');
+    g.strokeStyle = 'rgba(255,215,130,.9)'; g.lineWidth = 6; g.strokeRect(40, 40, w - 80, w - 80);
+  });
+}
+function buildInner() {
+  const g = makeSet('inner', phone); inner = g;
+  const { map, em } = boardTextures();
+  const board = new THREE.Mesh(new THREE.PlaneGeometry(.92, 1.98), new THREE.MeshStandardMaterial({ map, emissiveMap: em, emissive: new THREE.Color(1, .62, .22), emissiveIntensity: .2, roughness: .55, metalness: .25, envMapIntensity: .04 }));
+  g.add(board); g.userData.board = board;
+  // components (SMD parts and smaller chips), kept off the hero traces
+  const r = mulberry(31), near = (x, y) => [...IN_PATHS, ...OUT_PATHS].some(P => P.some(([a, b], i) => { if (!i) return false; const [c, d] = P[i - 1]; const t = clamp(((x - c) * (a - c) + (y - d) * (b - d)) / Math.max(1e-6, (a - c) ** 2 + (b - d) ** 2)); return Math.hypot(x - (c + t * (a - c)), y - (d + t * (b - d))) < .03; }));
+  const part = new THREE.InstancedMesh(new RoundedBoxGeometry(1, 1, 1, 2, .12), new THREE.MeshStandardMaterial({ roughness: .5, metalness: .3, envMapIntensity: .12 }), 520);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), c = new THREE.Color(); let k = 0;
+  while (k < 520) {
+    const x = lerp(-.44, .44, r()), y = lerp(-.8, .95, r()); if (Math.abs(x - CHIP.x) < .2 && Math.abs(y - CHIP.y) < .2) continue; if (near(x, y)) continue;
+    const big = r() < .06, sx = big ? .05 + .04 * r() : .010 + .008 * r(), sy = big ? .05 + .04 * r() : .005 + .003 * r(), sz = big ? .006 : .004 + .002 * r();
+    q.setFromAxisAngle(V(0, 0, 1), r() < .5 ? 0 : Math.PI / 2); m4.compose(V(x, y, sz / 2), q, V(sx, sy, sz)); part.setMatrixAt(k, m4);
+    const tone = big ? [.03, .035, .04] : r() < .5 ? [.42, .3, .2] : r() < .5 ? [.1, .1, .11] : [.6, .55, .45]; c.setRGB(...tone); part.setColorAt(k, c); k++;
+  }
+  g.add(part);
+  // main chip ("the phone's brain")
+  const pkg = new THREE.Mesh(new RoundedBoxGeometry(CHIP.s * 2.2, CHIP.s * 2.2, .008, 3, .004), new THREE.MeshStandardMaterial({ color: 0x0d2a24, roughness: .4, metalness: .4 })); pkg.position.set(CHIP.x, CHIP.y, .004); g.add(pkg);
+  const lid = new THREE.Mesh(new RoundedBoxGeometry(CHIP.s * 1.8, CHIP.s * 1.8, .006, 3, .003), new THREE.MeshStandardMaterial({ color: 0x15171c, roughness: .25, metalness: .8, envMapIntensity: .15 })); lid.position.set(CHIP.x, CHIP.y, .011); g.add(lid);
+  chipTop = new THREE.Mesh(new THREE.PlaneGeometry(CHIP.s * 1.6, CHIP.s * 1.6), new THREE.ShaderMaterial({ uniforms: { uTex: { value: chipTex() }, uOn: { value: 0 }, uT: { value: 0 } }, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform sampler2D uTex; uniform float uOn, uT; varying vec2 vUv; void main(){ vec3 c = pow(texture2D(uTex, vUv).rgb, vec3(2.2));
+      float wave = .55 + .45 * sin((vUv.x + vUv.y) * 14. - uT * 9.); float d = length(vUv - .5); float ring = smoothstep(.08, 0., abs(d - fract(uT * .8) * .75));
+      gl_FragColor = vec4(c * (.05 + uOn * (.75 * wave + .9 * ring)) + vec3(1., .7, .3) * uOn * .02, 1.); }` }));
+  chipTop.position.set(CHIP.x, CHIP.y, .0142); g.add(chipTop);
+  const chipLight = new THREE.PointLight(0xffb84a, 0, .5, 2); chipLight.position.set(CHIP.x, CHIP.y, .05); g.add(chipLight); g.userData.chipLight = chipLight;
+  // antenna module + glow
+  const mod = new THREE.Mesh(new RoundedBoxGeometry(.11, .05, .008, 2, .003), new THREE.MeshStandardMaterial({ color: 0x1a1c22, metalness: .8, roughness: .3 })); mod.position.set(ANT.x, ANT.y + .05, .004); g.add(mod);
+  antGlow = glowPoints([ANT.x, ANT.y, .006, ANT.x - .2, ANT.y, .004, ANT.x + .2, ANT.y, .004], [1, 2, 2.6, .6, 1.4, 2, .6, 1.4, 2], [.03, .02, .02], [0, .3, .6]); antGlow.material.uniforms.uTw.value = 0; antGlow.material.uniforms.uAper.value = .3; g.add(antGlow);
+  // light trails along the hero traces
+  IP = IN_PATHS.map(p => poly(p)); OP = OUT_PATHS.map(p => poly(p));
+  inTrails = IP.map(pl => { const m = trail(pl, .005, new THREE.Color(.25, .65, 1.0), .0015); g.add(m); return m; });
+  outTrails = OP.map(pl => { const m = trail(pl, .005, new THREE.Color(.9, .6, .2), .0016); g.add(m); return m; });
+  // display layers the camera dives through: touch grid, pixel matrix, backlight diffuser
+  const layerMat = (kind, col) => new THREE.ShaderMaterial({ uniforms: { uOp: { value: 0 }, uCol: { value: col }, uT: { value: 0 } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform float uOp, uT; uniform vec3 uCol; varying vec2 vUv;
+      float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+      void main(){ vec2 p = vUv; float a = 0.;
+        ${kind === 0 ? `vec2 g = abs(fract(p * vec2(60., 128.)) - .5); a = smoothstep(.47, .5, max(g.x, g.y)) * .9;` : ''}
+        ${kind === 1 ? `vec2 n = vec2(640., 1340.); vec2 f = fract(p * n); float sx = f.x * 3.; vec3 m = vec3(step(sx,1.), step(1.,sx)*step(sx,2.), step(2.,sx)); float on = h(floor(p * n)) * .7 + .3; gl_FragColor = vec4(m * on * smoothstep(0.,.15,f.y) * smoothstep(1.,.85,f.y) * uOp, 1.); return;` : ''}
+        ${kind === 2 ? `a = step(.93, h(floor(p * vec2(300., 620.)) + 3.1)) * 1.2;` : ''}
+        gl_FragColor = vec4(uCol * a * uOp, 1.); }` });
+  [[.0440, 0, new THREE.Color(.3, .8, 1.4)], [.0405, 1, null], [.0368, 2, new THREE.Color(.7, .8, 1.2)]].forEach(([z, kind, col]) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(.93, 1.947), layerMat(kind, col || new THREE.Color(1, 1, 1))); m.position.z = z; g.add(m); layers.push(m); });
+  // bits: 0/1 glyphs streaming over the board
+  bits = bitCloud(900, [new THREE.Color(.5, 1.25, 1.9), new THREE.Color(2, 1.5, .5)]); g.add(bits);
+  fallBits = bitCloud(600, [new THREE.Color(.6, 1.3, 2.0), new THREE.Color(2, 1.6, .7)]); fallBits.geometry.attributes.size.array.fill(.02); g.add(fallBits);
+  // packets: little glowing parcels the chip sends to the antenna
+  for (let i = 0; i < 6; i++) { const pk = new THREE.Mesh(new RoundedBoxGeometry(.016, .016, .01, 2, .003), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.5, 1.05, .4), toneMapped: false })); pk.visible = false; g.add(pk); packets.push(pk); }
+  const pkGlow = glowPoints(new Array(18).fill(0), new Array(6).fill(0).flatMap(() => [1.6, 1.1, .35]), new Array(6).fill(.02), new Array(6).fill(0)); pkGlow.material.uniforms.uTw.value = 0; pkGlow.material.uniforms.uAper.value = .2; g.add(pkGlow); g.userData.pkGlow = pkGlow;
+  // radio rings from the antenna
+  for (let i = 0; i < 6; i++) { const rg = new THREE.Mesh(new THREE.RingGeometry(.96, 1, 96), new THREE.MeshBasicMaterial({ color: new THREE.Color(.5, 1.6, 2.4), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, side: THREE.DoubleSide })); rg.position.set(ANT.x, ANT.y, .008); rg.visible = false; g.add(rg); rings.push(rg); }
+  // bokeh motes floating above the board (fake depth of field)
+  const d1 = dust(900, 41, [-.45, .45, -.95, .95, .004, .3], [CYAN, GOLD, new THREE.Color(.6, .7, 1)], [.0008, .003], .2, 1.2, .55); g.add(d1); g.userData.dust = d1;
+  const boardG = new THREE.Group(); boardG.position.z = BZ;
+  for (const ch of [...g.children]) if (!layers.includes(ch) && ch !== fallBits) boardG.add(ch);
+  g.add(boardG); g.userData.boardG = boardG;
+}
+
+// ================= HOOK + PAYOFF GLOBE =================
+let globe, sparks;
+function ll(lat, lon, r = 1) { const a = lat * Math.PI / 180, b = lon * Math.PI / 180; return V(r * Math.cos(a) * Math.sin(b), r * Math.sin(a), r * Math.cos(a) * Math.cos(b)); }
+function pip(x, y, poly) { let ins = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) ins = !ins; } return ins; }
+const ME = { lat: 43.65, lon: -79.38 };   // the one question starts here (illustrative)
+function buildGlobe() {
+  const g = makeSet('globe'); globe = new THREE.Group(); g.add(globe);
+  const sph = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), new THREE.ShaderMaterial({ uniforms: {},
+    vertexShader: `varying vec3 vN; varying vec3 vV; void main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position,1.); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `varying vec3 vN; varying vec3 vV; void main(){ float f = 1. - max(dot(vN, vV), 0.); vec3 c = mix(vec3(.012,.02,.06), vec3(.05,.09,.26), pow(f, 2.)) + vec3(.1,.35,.8) * pow(f, 5.) * .8; gl_FragColor = vec4(c, 1.); }` }));
+  globe.add(sph);
+  const atm = new THREE.Mesh(new THREE.SphereGeometry(1.12, 64, 48), new THREE.ShaderMaterial({ side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    vertexShader: `varying vec3 vN; varying vec3 vV; void main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position,1.); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `varying vec3 vN; varying vec3 vV; void main(){ float f = pow(clamp(1. - abs(dot(vN, vV)), 0., 1.), 3.5); gl_FragColor = vec4(vec3(.25,.6,1.4) * f * 1.4, 1.); }` }));
+  g.add(atm); g.userData.atm = atm;
+  const p = [], c = [], s = [], ph = []; const bb = GEO.land.map(poly => { let x0 = 999, x1 = -999, y0 = 999, y1 = -999; for (const [x, y] of poly) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } return [x0, x1, y0, y1]; });
+  const r = mulberry(5);
+  for (let lat = -58; lat <= 80; lat += .9) { const step = .9 / Math.max(.25, Math.cos(lat * Math.PI / 180)); for (let lon = -180; lon < 180; lon += step) {
+    let ins = false; for (let k = 0; k < GEO.land.length && !ins; k++) { const b = bb[k]; if (lon < b[0] || lon > b[1] || lat < b[2] || lat > b[3]) continue; ins = pip(lon, lat, GEO.land[k]); }
+    if (!ins) continue; const q = ll(lat, lon, 1.002); p.push(q.x, q.y, q.z); const k = .8 + .3 * r(); c.push(.3 * k, .55 * k, 1.2 * k); s.push(.009); ph.push(r()); } }
+  const cities = [];
+  for (const [lon, lat, pop] of GEO.places) { const q = ll(lat, lon, 1.004); const w = clamp(Math.log10(Math.max(pop, 1e4)) - 4, 0, 3.2) / 3.2; p.push(q.x, q.y, q.z); c.push(2.4 * (.4 + w), 1.6 * (.4 + w), .5 * (.4 + w)); s.push(.006 + .014 * w); ph.push(r()); cities.push([lat, lon, w]); }
+  const pts = glowPoints(p, c, s, ph); pts.material.uniforms.uTw.value = .1; pts.material.uniforms.uAper.value = 0; globe.add(pts);
+  // questions rising from every city: billions of them a day (each spark stands for many)
+  const N = 5000, sp = [], sc = [], ss_ = [], sph2 = [], sdir = [];
+  for (let i = 0; i < N; i++) { const [lat, lon, w] = cities[Math.floor(r() * cities.length)]; const q = ll(lat + (r() - .5) * 2, lon + (r() - .5) * 2, 1.004); sp.push(q.x, q.y, q.z); const k = r() < .65 ? GOLD2 : CYAN; sc.push(k.r * 1.5, k.g * 1.5, k.b * 1.5); ss_.push(.006 + .01 * r()); sph2.push(r()); }
+  const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); gg.setAttribute('color', new THREE.Float32BufferAttribute(sc, 3)); gg.setAttribute('size', new THREE.Float32BufferAttribute(ss_, 1)); gg.setAttribute('phase', new THREE.Float32BufferAttribute(sph2, 1));
+  sparks = new THREE.Points(gg, new THREE.ShaderMaterial({ uniforms: { uPx: { value: H / 2 }, uT: { value: 0 }, uOpacity: { value: 1 } }, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true,
+    vertexShader: `attribute vec3 color; attribute float size; attribute float phase; uniform float uPx, uT; varying vec3 vC; varying float vA;
+      void main(){ float life = fract(uT * .32 + phase); vec3 p = position * (1. + life * .32); vec4 mv = modelViewMatrix * vec4(p,1.); float z = max(.05,-mv.z);
+        gl_PointSize = clamp(size * uPx / z, 1.5, 40.); vA = sin(3.14159 * life); vC = color; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `uniform float uOpacity; varying vec3 vC; varying float vA; void main(){ vec2 d = gl_PointCoord - .5; float r = length(d) * 2.; if (r > 1.) discard; float a = exp(-r*r*4.) + .5 * exp(-r*r*20.); gl_FragColor = vec4(vC * a * vA * uOpacity, 1.); }` }));
+  sparks.frustumCulled = false; globe.add(sparks);
+  // "ours": one gold spark rising from Toronto, with a ring
+  const me = ll(ME.lat, ME.lon, 1.006); g.userData.me = me;
+  const mine = glowPoints([me.x, me.y, me.z], [3, 2.2, .8], [.03], [0]); mine.material.uniforms.uTw.value = 0; mine.material.uniforms.uAper.value = 0; globe.add(mine); g.userData.mine = mine;
+  const ring = new THREE.Mesh(new THREE.RingGeometry(.9, 1, 64), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 1.7, .5), transparent: true, opacity: 0, depthWrite: false, toneMapped: false, side: THREE.DoubleSide })); globe.add(ring); g.userData.ring = ring;
+  const stars = dust(1500, 3, [-30, 30, -30, 30, -40, -12], [new THREE.Color(.7, .8, 1), GOLD2], [.02, .05], 20, 0, .5); g.add(stars);
+  // the pizza (it has never tasted one)
+  const pz = cardMesh(.5, .5, 512, 512, (c, w) => { c.font = `400px ${EMO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('🍕', w / 2, w / 2 + 30); }); pz.visible = false; g.add(pz); g.userData.pizza = pz;
+}
+
+// ================= CITY: radio to the tower =================
+let city, tower, cityPacket, cityRings = [], beacons;
+const TOWER = V(3, 0, -14), TOWER_TOP = V(3, 7.6, -14);
+function buildCity() {
+  const g = makeSet('city'); city = g;
+  const r = mulberry(17);
+  const groundT = canvasTex(1024, 1024, (c, w) => { c.fillStyle = '#04060E'; c.fillRect(0, 0, w, w); for (let i = 0; i < 9; i++) { c.fillStyle = 'rgba(255,190,90,.35)'; c.fillRect(i * w / 8 - 3, 0, 6, w); c.fillRect(0, i * w / 8 - 3, w, 6); } for (let i = 0; i < 2000; i++) { c.fillStyle = `rgba(255,200,120,${.1 * r()})`; c.fillRect(r() * w, r() * w, 2, 2); } });
+  groundT.wrapS = groundT.wrapT = THREE.RepeatWrapping; groundT.repeat.set(10, 10);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ map: groundT, toneMapped: false })); ground.rotation.x = -Math.PI / 2; ground.material.color.setScalar(.9); g.add(ground);
+  const NB = 420; const bm = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1).translate(0, .5, 0), new THREE.ShaderMaterial({ uniforms: { uT: { value: 0 } }, fog: false,
+    vertexShader: `varying vec3 vW; varying vec3 vN; varying float vS; varying float vZ; void main(){ vec4 w = modelMatrix * instanceMatrix * vec4(position,1.); vW = w.xyz; vN = normal; vS = fract(sin(dot(instanceMatrix[3].xz, vec2(12.9,78.2))) * 437.5); vec4 mv = viewMatrix * w; vZ = -mv.z; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `varying vec3 vW; varying vec3 vN; varying float vS; varying float vZ; float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+      void main(){ vec3 c = vec3(.012,.016,.04); if (abs(vN.y) < .5) { float u = abs(vN.x) > .5 ? vW.z : vW.x; vec2 cell = vec2(floor(u / .32), floor(vW.y / .36)); vec2 f = vec2(fract(u / .32), fract(vW.y / .36));
+          float win = step(.2, f.x) * step(f.x, .8) * step(.25, f.y) * step(f.y, .75); float on = step(.58, h(cell + vS * 31.)); vec3 wc = mix(vec3(1.4,.95,.45), vec3(.55,.8,1.4), step(.7, h(cell * 1.3 + vS)));
+          c += wc * win * on * (.6 + .6 * h(cell + 7.)); }
+        c = mix(vec3(.02,.03,.08), c, exp(-vZ * .018)); gl_FragColor = vec4(c, 1.); }` }), NB);
+  const m4 = new THREE.Matrix4(); let k = 0;
+  while (k < NB) { const x = (r() - .5) * 90, z = 16 - r() * 90; if (Math.abs(x) < 2.2 && z > -60) continue; if (Math.hypot(x - TOWER.x, z - TOWER.z) < 3) continue; const hgt = .8 + Math.pow(r(), 2.2) * (Math.abs(x) < 10 ? 6 : 14); m4.compose(V(x, 0, z), new THREE.Quaternion(), V(1 + 1.5 * r(), hgt, 1 + 1.5 * r())); bm.setMatrixAt(k++, m4); }
+  g.add(bm);
+  // the cell tower: tapering lattice, panel antennas, red beacons
+  tower = new THREE.Group(); tower.position.copy(TOWER); g.add(tower);
+  const tm = new THREE.MeshStandardMaterial({ color: 0x8890a0, metalness: .8, roughness: .35, envMapIntensity: 1.2 });
+  const lp = []; const leg = (a) => { const b0 = V(Math.cos(a) * .7, 0, Math.sin(a) * .7), b1 = V(Math.cos(a) * .12, 7.3, Math.sin(a) * .12); return [b0, b1]; };
+  const legs = [0, 2.094, 4.189].map(a => leg(a + .3));
+  for (const [a, b] of legs) { const cyl = new THREE.Mesh(new THREE.CylinderGeometry(.03, .045, a.distanceTo(b), 6), tm); cyl.position.copy(a).lerp(b, .5); cyl.quaternion.setFromUnitVectors(V(0, 1, 0), b.clone().sub(a).normalize()); tower.add(cyl); }
+  for (let i = 0; i < 14; i++) for (let j = 0; j < 3; j++) { const u0 = i / 14, u1 = (i + 1) / 14; const A = legs[j][0].clone().lerp(legs[j][1], u0), B = legs[(j + 1) % 3][0].clone().lerp(legs[(j + 1) % 3][1], u1), C = legs[(j + 1) % 3][0].clone().lerp(legs[(j + 1) % 3][1], u0); lp.push(A, B, A, C); }
+  tower.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(lp), new THREE.LineBasicMaterial({ color: 0x6a7488 })));
+  for (let i = 0; i < 3; i++) { const a = i * 2.094 + .3; const pn = new THREE.Mesh(new THREE.BoxGeometry(.22, .9, .08), new THREE.MeshStandardMaterial({ color: 0xd8dce4, metalness: .2, roughness: .5 })); pn.position.set(Math.cos(a) * .32, 7.1, Math.sin(a) * .32); pn.rotation.y = -a + Math.PI / 2; tower.add(pn); }
+  beacons = glowPoints([0, 7.75, 0, 0, 4, .2], [3, .25, .2, 2.4, .2, .15], [.18, .12], [0, .5]); beacons.material.uniforms.uTw.value = 0; beacons.material.uniforms.uAper.value = 0; tower.add(beacons);
+  const tl = new THREE.PointLight(0x7fd8ff, 0, 12, 1.5); tl.position.set(0, 7.5, 1); tower.add(tl); g.userData.tl = tl;
+  cityPacket = glowPoints([0, 0, 0, 0, 0, 0], [3, 2.2, .8, .8, 2, 3], [.25, .7], [0, 0]); cityPacket.material.uniforms.uTw.value = 0; cityPacket.material.uniforms.uAper.value = 0; g.add(cityPacket);
+  for (let i = 0; i < 5; i++) { const rg = new THREE.Mesh(new THREE.TorusGeometry(1, .012, 6, 80), new THREE.MeshBasicMaterial({ color: new THREE.Color(.5, 1.6, 2.6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })); g.add(rg); cityRings.push(rg); }
+  const lights = dust(900, 22, [-45, 45, .2, 3, -75, 16], [GOLD, new THREE.Color(1, .6, .3), CYAN], [.05, .14], 10, 6, .8); g.add(lights); g.userData.lights = lights;
+  const sky = dust(500, 23, [-60, 60, 12, 40, -90, -20], [new THREE.Color(.7, .8, 1)], [.04, .08], 30, 0, .4); g.add(sky);
+}
+const PH_START = () => V(.1, 1.0, 12.5);
+function cityPacketPos(u) { const a = PH_START(), b = TOWER_TOP.clone(); const m = a.clone().lerp(b, .5).add(V(0, 2.2, 0)); const p = a.clone().multiplyScalar((1 - u) * (1 - u)).add(m.multiplyScalar(2 * u * (1 - u))).add(b.multiplyScalar(u * u)); return p; }
+
+// ================= FIBRE CABLE under the city =================
+let cable, cableHead, cablePulses;
+const CAB = { len: 420 };
+const cabX = z => Math.sin(z * .045) * 1.6 + Math.sin(z * .013) * 3;
+function buildCable() {
+  const g = makeSet('cable');
+  const pts = []; for (let z = 10; z >= -CAB.len; z -= 2) pts.push(V(cabX(z), 0, z));
+  const curve = new THREE.CatmullRomCurve3(pts); g.userData.curve = curve;
+  cable = new THREE.Mesh(new THREE.TubeGeometry(curve, 1400, .32, 20, false), new THREE.ShaderMaterial({ uniforms: { uHead: { value: 0 }, uT: { value: 0 } },
+    vertexShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vW; void main(){ vUv = uv; vN = normalize(normalMatrix * normal); vec4 w = modelMatrix * vec4(position,1.); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+    fragmentShader: `uniform float uHead, uT; varying vec2 vUv; varying vec3 vN; varying vec3 vW;
+      void main(){ float rib = .5 + .5 * sin(vUv.x * 1400. * 6.283 / 1.); float shade = .35 + .65 * max(0., vN.y * .7 + .5);
+        float dz = vW.z - uHead; float near = exp(-abs(dz) * .35) * (dz > 0. ? 1. : .4); float behind = dz > 0. ? exp(-dz * .05) : 0.;
+        vec3 base = vec3(.10,.12,.28) * shade * (.6 + .4 * rib);
+        vec3 c = base + vec3(.9,.55,.18) * near * (.3 + .7 * rib) * shade + vec3(.25,.4,1.) * behind * .3 * rib;
+        float pulses = smoothstep(.97, 1., sin(vW.z * .35 + uT * 40.)) * .8; c += vec3(.5,.8,1.4) * pulses * shade * .5;
+        gl_FragColor = vec4(c, 1.); }` }));
+  g.add(cable);
+  cableHead = glowPoints([0, 0, 0, 0, 0, 0, 0, 0, 0], [4, 3, 1.2, 2, 1.4, .5, 1, .6, .2], [.6, 1.6, 3.2], [0, 0, 0]); cableHead.material.uniforms.uTw.value = 0; cableHead.material.uniforms.uAper.value = 0; cableHead.material.depthTest = false; g.add(cableHead);
+  const groundT = canvasTex(512, 512, (c, w) => { c.fillStyle = '#060814'; c.fillRect(0, 0, w, w); const r = mulberry(4); for (let i = 0; i < 6000; i++) { const b = r(); c.fillStyle = `rgba(${90 + 60 * b | 0},${100 + 50 * b | 0},${170 + 60 * b | 0},${.05 + .12 * r()})`; c.fillRect(r() * w, r() * w, 2 + 2 * r(), 2 + 2 * r()); } });
+  groundT.wrapS = groundT.wrapT = THREE.RepeatWrapping; groundT.repeat.set(20, 200);
+  const gr = new THREE.Mesh(new THREE.PlaneGeometry(60, 600), new THREE.MeshBasicMaterial({ map: groundT })); gr.rotation.x = -Math.PI / 2; gr.position.set(0, -.34, -200); g.add(gr);
+  // the city above: a ceiling of street lights seen through the ground
+  const ceil = dust(3000, 9, [-30, 30, 7, 9, -440, 20], [GOLD, new THREE.Color(1, .55, .25), CYAN], [.08, .22], 10, 22, .9); g.add(ceil); g.userData.ceil = ceil;
+  const motes = dust(1800, 10, [-6, 6, -.2, 4, -440, 20], [new THREE.Color(.5, .7, 1.2), GOLD2], [.01, .03], 4, 12, .5); g.add(motes); g.userData.motes = motes;
+  // other pulses in the fibre
+  cablePulses = glowPoints(new Array(36).fill(0), new Array(12).fill(0).flatMap(() => [.6, 1.2, 2.2]), new Array(12).fill(.35), new Array(12).fill(0).map((_, i) => i / 12)); cablePulses.material.uniforms.uTw.value = 0; cablePulses.material.uniforms.uAper.value = 0; g.add(cablePulses);
+}
+
+// ================= DATA CENTRE =================
+let leds, racks;
+const WORK = V(0, 1.35, -10);
+function buildDC() {
+  const g = makeSet('dc');
+  const NR = 34, rackGeo = new RoundedBoxGeometry(.9, 2.4, 1.0, 2, .03);
+  racks = new THREE.InstancedMesh(rackGeo, new THREE.MeshStandardMaterial({ color: 0x0c0f1a, metalness: .75, roughness: .4, envMapIntensity: .6 }), NR * 6);
+  const m = new THREE.Matrix4(); let k = 0; const ledPos = [];
+  for (let side = -1; side <= 1; side += 2) for (let row = 0; row < 3; row++) for (let i = 0; i < NR; i++) {
+    const x = side * (1.25 + row * 2.6), z = 2 - i * 1.02; m.makeTranslation(x, 1.2, z); racks.setMatrixAt(k++, m);
+    if (row === 0) for (let j = 0; j < 10; j++) ledPos.push([x - side * .46, .25 + j * .22, z, side, i, j]);
+    if (row === 1) for (let j = 0; j < 10; j += 2) ledPos.push([x - side * .46, .25 + j * .22, z, side, i + 3, j]);
+  }
+  g.add(racks);
+  leds = new THREE.InstancedMesh(new THREE.BoxGeometry(.012, .045, .82), new THREE.MeshBasicMaterial({ toneMapped: false }), ledPos.length);
+  ledPos.forEach(([x, y, z], i) => { m.makeTranslation(x, y, z); leds.setMatrixAt(i, m); leds.setColorAt(i, new THREE.Color(0, 0, 0)); });
+  leds.userData.pos = ledPos; g.add(leds);
+  const floorT = canvasTex(512, 512, (c, w) => { c.fillStyle = '#05070f'; c.fillRect(0, 0, w, w); c.strokeStyle = 'rgba(80,140,255,.35)'; c.lineWidth = 3; for (let i = 0; i <= 4; i++) { c.beginPath(); c.moveTo(i * 128, 0); c.lineTo(i * 128, w); c.stroke(); c.beginPath(); c.moveTo(0, i * 128); c.lineTo(w, i * 128); c.stroke(); } for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { c.fillStyle = 'rgba(60,90,160,.25)'; c.fillRect(i * 64 + 20, j * 64 + 20, 24, 24); } });
+  floorT.wrapS = floorT.wrapT = THREE.RepeatWrapping; floorT.repeat.set(14, 40);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 44), new THREE.MeshStandardMaterial({ map: floorT, metalness: .7, roughness: .3, envMapIntensity: .5 })); floor.rotation.x = -Math.PI / 2; floor.position.z = -15; g.add(floor);
+  for (let i = 0; i < 18; i++) { const b = new THREE.Mesh(new THREE.BoxGeometry(.06, .03, 1.4), new THREE.MeshBasicMaterial({ color: new THREE.Color(.5, .8, 1.6), toneMapped: false })); b.position.set(0, 3.2, 1 - i * 2); g.add(b); }
+  const d = dust(900, 8, [-3, 3, 0, 3.2, -34, 3], [new THREE.Color(.5, .7, 1), GOLD2], [.006, .016], 2.5, 14, .7); g.add(d); g.userData.dust = d;
+  const zip = glowPoints([0, 0, 0, 0, 0, 0], [3, 2.2, .8, 1.2, .9, .3], [.06, .2], [0, 0]); zip.material.uniforms.uTw.value = 0; zip.material.uniforms.uAper.value = 2; g.add(zip); g.userData.zip = zip;
+  const zipLine = new THREE.Mesh(new THREE.CylinderGeometry(.006, .006, 1, 6), new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 2.1, .7), toneMapped: false, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); g.add(zipLine); g.userData.zipLine = zipLine;
+}
+
+// ================= WORK AREA (inside the data centre) =================
+let qText, bricks = [], links = [], mapCard, nopeStamp, foodCard, lookCard, answerWords = [], plusSign, twCard, bars = [], starWord;
+const BRICK_COLS = ['#E8443A', '#3A8DFF', '#FFC23D', '#FF8A2A', '#3ACB6E', '#B072FF', '#2FD3E0'];
+function buildWork() {
+  const g = makeSet('work'); g.position.copy(WORK);
+  qText = label3d(QUESTION, { size: 120, font: BX, color: '#fff', glow: 'rgba(140,190,255,.7)', h: .36, mult: .9 }); g.add(qText);
+  // LEGO-style bricks, one per piece of the question, each with its number
+  QTOK.forEach(([w, id], i) => {
+    const wd = Math.max(.2, .06 + .05 * w.length) , col = new THREE.Color(BRICK_COLS[i]);
+    const b = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({ color: col, roughness: .3, metalness: .0, emissive: col.clone().multiplyScalar(.06), envMapIntensity: .8 });
+    const body = new THREE.Mesh(new RoundedBoxGeometry(wd, .2, .16, 3, .018), mat); b.add(body);
+    const ns = Math.max(1, Math.round(wd / .08)); for (let s = 0; s < ns; s++) for (let r2 = 0; r2 < 2; r2++) { const st = new THREE.Mesh(new THREE.CylinderGeometry(.022, .022, .03, 20), mat); st.position.set((s - (ns - 1) / 2) * (wd / ns), .115, (r2 - .5) * .07); b.add(st); }
+    const lb = label3d(w, { size: 110, font: BX, color: '#fff', glow: 'rgba(0,0,0,1)', h: .12, mult: 1.0, pad: 14 }); lb.position.z = .081; b.add(lb);
+    const num = label3d(String(id), { size: 100, font: BX, color: CSS.gold2, glow: CSS.gold, h: .11, mult: 1.3, bg: 'rgba(30,22,4,.9)', border: CSS.gold, pad: 22 }); num.position.set(0, .25, .05); b.add(num);
+    b.userData = { wd, body, num, lb, mat, col }; g.add(b); bricks.push(b);
+  });
+  // "reads all the words together": glowing threads between every pair of bricks
+  for (let i = 0; i < QTOK.length; i++) for (let j = i + 1; j < QTOK.length; j++) {
+    const key = (i === 3 && j === 5) ? 2 : (i === 3 || j === 5 || i === 2) ? 1 : 0;
+    const mat = new THREE.MeshBasicMaterial({ color: key === 2 ? new THREE.Color(3, 2.1, .6) : new THREE.Color(.4, 1.2, 2.2), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+    const tb = new THREE.Mesh(new THREE.BufferGeometry(), mat); g.add(tb); links.push({ i, j, key, tb, d: hash(i * 7 + j) });
+  }
+  plusSign = label3d('+', { size: 200, font: AN, color: CSS.gold, glow: CSS.gold, h: .2, mult: 1.4 }); g.add(plusSign);
+  // the funny wrong guess: a pizza-shop map
+  mapCard = cardMesh(.78, .56, 780, 560, (c, w, h) => {
+    rr(c, 6, 6, w - 12, h - 12, 40); c.fillStyle = '#1B2333'; c.fill(); c.save(); c.clip();
+    c.fillStyle = '#243049'; for (let i = 0; i < 12; i++) c.fillRect(i * 80 + 10, 0, 50, h);
+    c.strokeStyle = '#E9EDF5'; c.lineWidth = 18; c.beginPath(); c.moveTo(0, 150); c.lineTo(w, 210); c.moveTo(0, 380); c.lineTo(w, 330); c.moveTo(250, 0); c.lineTo(300, h); c.moveTo(560, 0); c.lineTo(520, h); c.stroke();
+    c.strokeStyle = '#3AA0FF'; c.lineWidth = 36; c.beginPath(); c.moveTo(0, 480); c.bezierCurveTo(200, 430, 500, 560, w, 470); c.stroke();
+    c.strokeStyle = '#FFC23D'; c.lineWidth = 12; c.setLineDash([22, 16]); c.beginPath(); c.moveTo(120, 470); c.lineTo(290, 360); c.lineTo(420, 230); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#FF4B4B'; c.beginPath(); c.arc(420, 170, 62, Math.PI, 0); c.lineTo(420, 290); c.closePath(); c.fill(); c.font = `70px ${EMO}`; c.textAlign = 'center'; c.fillText('🍕', 420, 196);
+    c.restore(); c.fillStyle = 'rgba(10,14,24,.85)'; rr(c, 30, 30, 430, 90, 26); c.fill(); c.fillStyle = '#fff'; c.font = `64px ${BX}`; c.textAlign = 'left'; c.fillText('Pizza shop', 58, 98); c.fillStyle = '#9fb3d8'; c.font = `48px ${BB}`; c.fillText('0.4 km', 330, 96);
+    rr(c, 6, 6, w - 12, h - 12, 40); c.lineWidth = 6; c.strokeStyle = 'rgba(255,255,255,.35)'; c.stroke();
+  }); g.add(mapCard);
+  nopeStamp = cardMesh(.7, .3, 700, 300, (c, w, h) => { c.translate(w / 2, h / 2); c.rotate(-.16); rr(c, -300, -110, 600, 220, 30); c.lineWidth = 22; c.strokeStyle = '#FF3B3B'; c.stroke(); c.fillStyle = '#FF3B3B'; c.font = `170px ${AN}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('NOPE!', 0, 10); });
+  nopeStamp.material.color.setScalar(1.3); g.add(nopeStamp);
+  foodCard = cardMesh(.86, .34, 860, 340, (c, w, h) => { rr(c, 8, 8, w - 16, h - 16, 50); c.fillStyle = 'rgba(30,22,4,.92)'; c.fill(); c.lineWidth = 10; c.strokeStyle = CSS.gold; c.shadowColor = CSS.gold; c.shadowBlur = 30; c.stroke(); c.shadowBlur = 0;
+    c.font = `120px ${EMO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('🍕', 120, 178); c.fillText('🍳', 250, 178); c.fillStyle = CSS.gold2; c.font = `118px ${AN}`; c.textAlign = 'left'; c.fillText('FOOD', 350, 120); c.fillText('QUESTION', 350, 240);
+    c.fillStyle = '#3ACB6E'; c.font = `130px ${BX}`; c.fillText('✓', 760, 190); });
+  foodCard.material.color.setScalar(1.25); g.add(foodCard);
+  // "it doesn't look the answer up": a look-up card that gets struck out and dissolves
+  const lt = canvasTex(900, 300, (c, w, h) => { rr(c, 10, 10, w - 20, h - 20, 40); c.fillStyle = 'rgba(16,20,36,.95)'; c.fill(); c.lineWidth = 5; c.strokeStyle = 'rgba(120,170,255,.6)'; c.stroke();
+    c.strokeStyle = '#cfe0ff'; c.lineWidth = 12; c.beginPath(); c.arc(110, 150, 42, 0, 7); c.stroke(); c.beginPath(); c.moveTo(140, 180); c.lineTo(175, 215); c.stroke();
+    c.font = `76px ${BB}`; c.fillStyle = '#E6ECFF'; c.textBaseline = 'middle'; c.fillText('look up the answer…', 210, 152); });
+  lookCard = new THREE.Mesh(new THREE.PlaneGeometry(1.2, .4), new THREE.ShaderMaterial({ uniforms: { uTex: { value: lt }, uDis: { value: 0 }, uStrike: { value: 0 }, uOp: { value: 1 } }, transparent: true, depthWrite: false,
+    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+    fragmentShader: `uniform sampler2D uTex; uniform float uDis, uStrike, uOp; varying vec2 vUv; float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+      void main(){ vec4 c = texture2D(uTex, vUv); c.rgb = pow(c.rgb, vec3(2.2)); float n = h(floor(vUv * vec2(90., 30.))); if (n < uDis * 1.15 - vUv.x * .15) discard;
+        float edge = smoothstep(.0, .06, n - (uDis * 1.15 - vUv.x * .15)); c.rgb += vec3(2.4,1.6,.4) * (1. - edge) * step(.01, uDis);
+        float sy = abs(vUv.y - .5 - (vUv.x - .5) * .18); float st = step(sy, .028) * step(vUv.x, uStrike); c.rgb = mix(c.rgb, vec3(2.0,.3,.22), st); c.a = max(c.a, st);
+        gl_FragColor = vec4(c.rgb, c.a * uOp); }` }));
+  g.add(lookCard);
+  // the answer, written one word at a time
+  REPLY.forEach(w => { const emo = w === '🍕'; const l = label3d(w, { size: 110, font: emo ? EMO : BX, color: emo ? '#fff' : CSS.gold2, glow: emo ? null : CSS.gold, h: .15, mult: emo ? 1 : 1.25, bg: 'rgba(40,28,4,.85)', border: CSS.gold, pad: 24 }); l.visible = false; g.add(l); answerWords.push(l); });
+  // twinkle, twinkle, little ___ : illustrative guesses
+  twCard = cardMesh(1.5, .3, 1500, 300, (c, w, h) => { c.font = `140px ${BX}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.shadowColor = 'rgba(120,170,255,.9)'; c.shadowBlur = 24; c.fillText('Twinkle, twinkle, little', w / 2 - 110, h / 2); c.shadowBlur = 0; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillRect(w - 230, h / 2 + 50, 190, 10); });
+  twCard.material.color.setScalar(1.15); g.add(twCard);
+  starWord = label3d('star', { size: 150, font: BX, color: CSS.gold2, glow: CSS.gold, h: .24, mult: 1.5 }); g.add(starWord);
+  const GU = [['star', 96, ''], ['car', 2, ''], ['pizza', 1, '🍕']];
+  GU.forEach(([w, pc, e], i) => {
+    const grp = new THREE.Group(); g.add(grp);
+    const track = new THREE.Mesh(new THREE.BoxGeometry(1.0, .13, .02), new THREE.MeshBasicMaterial({ color: new THREE.Color(.05, .07, .16), toneMapped: false })); track.geometry.translate(.5, 0, -.03); grp.add(track);
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(1, .13, .05), new THREE.MeshBasicMaterial({ color: new THREE.Color(.25, .6, 1.3), toneMapped: false })); bar.geometry.translate(.5, 0, 0); grp.add(bar);
+    const l = label3d(w, { size: 100, color: '#fff', h: .13, pad: 10 }); l.geometry.translate(-l.userData.aspect * .065 - .03, 0, 0); grp.add(l);
+    const q = label3d(pc + '%', { size: 90, color: CSS.cyan, h: .11, pad: 10 }); q.geometry.translate(q.userData.aspect * .055 + .03, 0, 0); grp.add(q);
+    if (e) { const em = label3d(e, { size: 90, font: EMO, color: '#fff', h: .12, pad: 6 }); grp.add(em); grp.userData.em = em; }
+    grp.userData = { ...grp.userData, bar, q, pc, l }; bars.push(grp);
+  });
+  const ill = label3d('illustrative guesses', { size: 70, color: 'rgba(170,190,230,.85)', h: .07 }); g.add(ill); g.userData.ill = ill;
+  const sparkle = glowPoints(new Array(120).fill(0), new Array(40).fill(0).flatMap((_, i) => i % 3 ? [2.4, 1.8, .6] : [1, 1.6, 2.4]), new Array(40).fill(0).map((_, i) => .01 + .02 * hash(i)), new Array(40).fill(0).map((_, i) => hash(i + 3))); sparkle.material.uniforms.uAper.value = 0; g.add(sparkle); g.userData.sparkle = sparkle;
+}
+function linkGeom(L, P) { const a = P[L.i], b = P[L.j]; const h = .12 + .07 * (L.j - L.i); const curve = new THREE.QuadraticBezierCurve3(a, a.clone().lerp(b, .5).add(V(0, h, .05)), b); L.tb.geometry.dispose(); L.tb.geometry = new THREE.TubeGeometry(curve, 32, L.key === 2 ? .007 : .003, 5, false); L.curve = curve; }
+
+// ================= MOUNTAIN OF TEXT =================
+let mtn;
+function buildMtn() {
+  const m = makeSet('mtn'); const r = mulberry(55);
+  const words = 'the of and to in is that it for on with as was at by from this be have or not are an they which one you had but we his her all there can been if more when will would who so no what up out about into than them only could new some time these two may first then do any like my now over such our me even most made after also did many before must through back years where much your way well down should because each just those people how too little good very make world still own see work long get here between both life being under never day same another know while last might great old year off come since against go came right used take three pizza star breakfast fruit twinkle'.split(' ');
+  const tt = canvasTex(2048, 1024, (cx, w, h) => { cx.fillStyle = '#000'; cx.fillRect(0, 0, w, h); cx.font = `34px ${BB}`; cx.textBaseline = 'top'; for (let y = 0; y < h; y += 42) { let x = -r() * 200; while (x < w) { const wd = words[Math.floor(r() * words.length)] + ' '; const ww = cx.measureText(wd).width; cx.fillStyle = `rgba(255,${190 + 60 * r() | 0},${90 + 80 * r() | 0},${.45 + .55 * r()})`; cx.fillText(wd, x, y); x += ww; } } });
+  tt.wrapS = tt.wrapT = THREE.RepeatWrapping;
+  mtn = new THREE.Mesh(new THREE.PlaneGeometry(60, 60, 220, 220), new THREE.ShaderMaterial({ uniforms: { uTex: { value: tt }, uT: { value: 0 }, uGain: { value: 1 } },
+    vertexShader: `varying vec2 vUv; varying float vH; varying float vZ; float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+      float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f); return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
+      float fbm(vec2 p){ float a = 0., s = .5; for (int i = 0; i < 5; i++){ a += s * n2(p); p *= 2.03; s *= .5; } return a; }
+      void main(){ vUv = uv; vec3 p = position; float e = fbm(uv * 6.); e = pow(e, 2.2) * 9.; float ridge = 1. - abs(n2(uv * 9.) * 2. - 1.); e += ridge * ridge * 1.2; p.z = e; vH = e;
+        vec4 mv = modelViewMatrix * vec4(p,1.); vZ = -mv.z; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `uniform sampler2D uTex; uniform float uT, uGain; varying vec2 vUv; varying float vH; varying float vZ;
+      void main(){ vec3 t = texture2D(uTex, vUv * vec2(5., 10.) + vec2(0., uT * .01)).rgb; float k = smoothstep(.3, 3.5, vH);
+        vec3 c = t * mix(vec3(.25,.4,1.2) * .7, vec3(2.2,1.5,.6), k) * (0.45 + 1.6 * k) ; c += vec3(.03,.04,.12);
+        c = mix(vec3(.10,.07,.16), c, exp(-vZ * .05)) * uGain; gl_FragColor = vec4(c, 1.); }` }));
+  mtn.rotation.x = -Math.PI / 2; m.add(mtn);
+  const fly = dust(800, 12, [-20, 20, 1, 12, -30, 20], [GOLD2, new THREE.Color(.6, .7, 1.2)], [.03, .08], 6, 10, .6); m.add(fly);
+}
+
+// ---------------- timeline (anchored to the narration) ----------------
+let T = {}, EV = [];
+function timeline() {
+  // typing: starts as the phone settles, ends just before "Send!"
+  T.phone = L1('n2') - .05; T.send = word('n3', 'send') + .02;
+  F.TYPE0 = T.phone + .25; F.TYPE1 = T.send - .32; typingTimes();
+  T.dive0 = T.send + .08; T.glass = T.send + 1.05; T.board = word('n4', 'zeros') - .1; T.brain = word('n5', 'brain'); T.packs = word('n5', 'packs');
+  T.fire = word('n6', 'out'); T.zap = L0('n7') - .08; T.tower = word('n7', 'tower') + .05; T.cable = word('n7', 'cable') - .12; T.building = word('n7', 'building') - .12;
+  T.dcEnd = L0('n9') - .2; T.chop = word('n9', 'chopped'); T.number = word('n9', 'number'); T.together = L0('n10'); T.pizza = word('n11', 'pizza'); T.plus = word('n11', 'plus');
+  T.map = word('n11', 'map') - .1; T.nope = word('n11', 'nope'); T.food = word('n11', 'food') - .05; T.surprise = word('n12', 'surprise'); T.look = word('n12', 'look'); T.up = word('n12', 'up');
+  T.writes = word('n13', 'writes'); T.tw = L0('n14') - .1; T.star = word('n15', 'star'); T.learned = word('n15', 'learned') - .15; T.back0 = L0('n16') - .05;
+  T.ret0 = word('n16', 'zooms') - .1; T.ret1 = L0('n17') + .3; T.stop = word('n18', 'seconds') + .1; T.S0 = F.S0; T.HIT = F.HIT; T.never = word('n20', 'never'); T.follow = word('n21', 'follow') - .15;
+  // answer words in the data centre (n13: the first three slowly; the rest finish fast at the start of n16)
+  const a = word('n13', 'one'), b = word('n13', 'guessing');
+  T.pick = [a + .05, lerp(a, b, .45), b - .05];
+  for (let i = 3; i < REPLY.length; i++) T.pick.push(T.back0 + .02 + (i - 3) * .07);
+  // reply words on the phone, in sync with the voice reading them
+  const rw = F.words.n17.map(x => x[1]); T.reply = [rw[0], rw[1], rw[1] + .22, rw[2], rw[3], rw[4], rw[5], rw[6]];
+  // sound events for the mixer (exported by events.mjs)
+  const ev = [];
+  ev.push({ t: .0, type: 'shimmer', d: .5 }, { t: word('n2', 'one') - .1, type: 'ping' }, { t: word('n2', 'one') + .05, type: 'whoosh', g: 1 }, { t: T.phone - .05, type: 'shimmer', d: .6 });
+  TAPS.forEach((t, i) => ev.push({ t, type: QUESTION[i] === ' ' ? 'space' : 'key', g: .8 + .4 * hash(i) }));
+  ev.push({ t: T.send, type: 'send' }, { t: T.dive0 + .1, type: 'dive', d: T.glass - T.dive0 + .1 }, { t: T.glass, type: 'glass' });
+  [.25, .45, .65].forEach(k => ev.push({ t: T.glass + k, type: 'layer', g: .7 }));
+  ev.push({ t: word('n4', 'ones') - .05, type: 'bits', d: T.brain - word('n4', 'ones') + .3 }, { t: T.brain, type: 'power' });
+  for (let i = 0; i < 6; i++) ev.push({ t: T.packs + .15 + i * .14, type: 'zip', g: .7 });
+  ev.push({ t: T.fire - .05, type: 'radio' }, { t: T.zap, type: 'zap' }, { t: T.tower, type: 'ping' }, { t: T.cable, type: 'lightzip', d: T.building - T.cable }, { t: T.building, type: 'whoosh', g: .9 }, { t: T.building + .2, type: 'hum', d: T.HIT - T.building });
+  ev.push({ t: T.building + .9, type: 'zap' });
+  QTOK.forEach((_, i) => ev.push({ t: T.chop + .05 + i * .09, type: 'snap', g: .8 }));
+  QTOK.forEach((_, i) => ev.push({ t: T.number - .15 + i * .07, type: 'flip', g: .6 }));
+  for (let k = 0; k < 10; k++) ev.push({ t: T.together + .25 + k * .1, type: 'thread', g: .4 + .04 * k });
+  ev.push({ t: T.plus, type: 'pop', g: .8 }, { t: T.map, type: 'boing' }, { t: T.nope, type: 'nope' }, { t: T.food, type: 'ding' });
+  ev.push({ t: T.surprise - .1, type: 'whoosh', g: .7 }, { t: T.look + .05, type: 'strike' }, { t: T.up + .1, type: 'shatter' });
+  T.pick.forEach((t, i) => ev.push({ t, type: i < 3 ? 'pick' : 'tick', g: i < 3 ? .8 : .5 }));
+  ev.push({ t: T.tw - .05, type: 'whoosh', g: .6 }); [0, 1, 2].forEach(i => ev.push({ t: T.tw + .5 + i * .12, type: 'bar', g: .6 }));
+  ev.push({ t: T.star, type: 'star' }, { t: T.learned, type: 'whoosh', g: 1 }, { t: T.back0 - .1, type: 'whoosh', g: .8 });
+  [0, .3, .62, .95, 1.3].forEach((k, i) => ev.push({ t: lerp(T.ret0, T.ret1, k / 1.6), type: 'rush', g: 1 - i * .08 }));
+  T.reply.forEach((t, i) => ev.push({ t, type: 'blip', g: .8 }));
+  ev.push({ t: T.stop, type: 'stop' }, { t: T.S0, type: 'silence' }, { t: T.HIT, type: 'hit' }, { t: word('n19', 'billion'), type: 'shimmer', d: 1.6 }, { t: T.never + .25, type: 'pop', g: 1 }, { t: T.follow + .1, type: 'chime' });
+  EV = ev.sort((a, b) => a.t - b.t);
+}
+// illustrative clock (ms since SEND): stages, not measurements
+function msAt(t) {
+  if (t < T.send) return 0;
+  const K = [[T.send, 0], [T.brain, 3], [T.fire, 6], [T.tower, 9], [T.building, 30], [T.chop, 45], [T.writes, 180], [T.learned, 600], [T.back0, 1300], [T.ret1, 1500], [T.stop - .1, 1900]];
+  for (let i = 0; i < K.length - 1; i++) if (t < K[i + 1][0]) return lerp(K[i][1], K[i + 1][1], (t - K[i][0]) / (K[i + 1][0] - K[i][0]));
+  return 1900;
+}
+function show(...names) { for (const k in SETS) if (k !== 'inner') SETS[k].visible = names.includes(k); SETS.inner.visible = names.includes('inner'); }
+function cam(p, l, fov = 40, roll = 0, near = .02, far = 400) { camera.position.copy(p); camera.up.set(Math.sin(roll), Math.cos(roll), 0); camera.lookAt(l); if (camera.fov !== fov || camera.near !== near || camera.far !== far) { camera.fov = fov; camera.near = near; camera.far = far; camera.updateProjectionMatrix(); } }
+function setFocus(pts, f, a) { pts.material.uniforms.uFocus.value = f; if (a !== undefined) pts.material.uniforms.uAper.value = a; }
+
+// ---------------- per-frame state ----------------
+const ST = {};
+const tmp = V(0, 0, 0);
+function resetFrame(t) {
+  rimL.intensity = 1.4; ST.flash = 0; ST.flashCol = [1.25, 1.15, .95]; ST.desat = 0; ST.ca = .0015; ST.streak = 0; ST.tag = null;
+  bloom.strength = .9; bloom.radius = .55; bloom.threshold = .9; scene.background = BG.navy; scene.fog.density = .02; scene.fog.color.set(0x050817); pointL.intensity = 0;
+  phone.position.set(0, 0, 0); phone.rotation.set(0, 0, 0); thumb.visible = false; thumbShadow.visible = false; screenMat.uniforms.uPix.value = 0; screenMat.uniforms.uB.value = .95; phone.userData.ext.forEach(m => m.visible = true);
+}
+function screenState(t) {
+  const n = TAPS.filter(x => t >= x).length; let hot = null, hotA = 0;
+  for (let i = TAPS.length - 1; i >= 0; i--) if (t >= TAPS[i]) { if (t - TAPS[i] < .14) { hot = QUESTION[i] === 'C' ? 'C' : QUESTION[i].toLowerCase(); hotA = 1 - (t - TAPS[i]) / .14; } break; }
+  const st = { t, typedN: n, hot, hotA, sent: 0, reply: 0, keyboard: 1, thinking: true };
+  if (t >= T.send) { st.press = clamp((t - T.send + .1) / .3); st.ring = clamp((t - T.send) / .6); st.sent = clamp((t - T.send - .05) / .4); st.keyboard = 1 - clamp((t - T.send - .1) / .5); }
+  return st;
+}
+// --- the thumb: tip glides key to key and dips on every tap
+function placeThumb(t, sendT) {
+  thumb.visible = true; thumbShadow.visible = true;
+  const targets = TAPS.map((tt, i) => [tt, keyPos(QUESTION[i])]); targets.push([sendT, SEND.slice()]);
+  let px, py, dip = 0;
+  if (t <= targets[0][0]) { const k = eo(seg(t, targets[0][0] - .45, targets[0][0])); [px, py] = [lerp(SW + 200, targets[0][1][0], k), lerp(SH_ + 300, targets[0][1][1], k)]; }
+  else { let i = 0; while (i < targets.length - 1 && targets[i + 1][0] <= t) i++;
+    const [ta, A] = targets[i], nx = targets[i + 1]; dip = Math.exp(-Math.pow((t - ta) / .045, 2));
+    if (!nx) { const k = eio(seg(t, ta + .12, ta + .7)); px = lerp(A[0], SW + 250, k); py = lerp(A[1], SH_ + 500, k); }
+    else { const k = eio(seg(t, ta + .03, nx[0] - .02)); px = lerp(A[0], nx[1][0], k); py = lerp(A[1], nx[1][1], k); dip = Math.max(dip, Math.exp(-Math.pow((t - nx[0]) / .045, 2))); } }
+  const tip = s2l(px, py + 30); const hover = .045 - .036 * dip;
+  thumb.position.set(tip.x, tip.y, SCR_Z + hover);
+  const base = V(.95, -1.5, .25); const d = tip.clone().sub(base); thumb.rotation.set(0, 0, 0); thumb.rotateZ(Math.atan2(-d.x, d.y)); thumb.rotateX(-.55 - .1 * dip);
+  thumbShadow.position.set(tip.x + .04, tip.y - .16, SCR_Z + .0006); thumbShadow.rotation.z = Math.atan2(-d.x, d.y); thumbShadow.material.opacity = .55 + .4 * dip;
+}
+
+// --- leg: inside the phone (used forward on the way out, reversed on the way back)
+function innerKeys() {
+  const L = (x, y, z) => V(x, y, z);
+  return [
+    [T.send, L(.1, -.3, 1.75), L(0, -.2, .0)],
+    [T.send + .4, L(.05, .2, 1.45), L(.05, .3, .046)],
+    [T.send + .8, L(.12, .52, .45), L(.15, .57, .046)],
+    [T.glass, L(.12, .585, .047), L(.13, .59, .0)],
+    [T.glass + .5, L(.09, .56, .03), L(.03, .5, -.25)],
+    [T.board, L(.02, .56, -.03), L(-.02, .36, -.25)],
+    [T.brain - .1, L(.07, .40, -.06), L(0, .17, -.245)],
+    [T.packs + .4, L(.09, .22, -.09), L(0, .07, -.246)],
+    [L0('n6'), L(.05, .06, -.17), L(0, -.25, -.248)],
+    [T.fire, L(.03, -.56, -.16), L(0, -.86, -.246)],
+    [T.zap, L(.0, -.80, .12), L(0, -.86, -.25)]];
+}
+function letterPos(i, tt, tb0, tbreak) {
+  const L = letters[i], a = seg(tt, tb0, tbreak + .45); const sp = ss(a);
+  return V(L.p.x + (L.p.x - .2) * .6 * sp + Math.sin(i * 2.1 + tt * 3) * .003 * a, L.p.y - .05 * sp * (1 + hash(i)) + (hash(i * 7) - .5) * .04 * sp, .022 - .2 * sp - .02 * hash(i * 3) * a);
+}
+function innerUpdate(t, dir = 1, tt = t) {
+  // tt = time on the outbound clock (for the reversed return trip it runs backwards)
+  inner.visible = true; scene.background = BG.deep;
+  const u = SETS.inner.userData;
+  const [p, l] = camPath(innerKeys(), tt);
+  const camZ = p.z; const inside = camZ < SCR_Z || tt > T.board;
+  phone.userData.ext.forEach(m => m.visible = !inside);
+  cam(phone.localToWorld(p.clone()), phone.localToWorld(l.clone()), inside ? 52 : 40, .04 * Math.sin(tt * 1.3), inside ? .0015 : .01, 30);
+  scene.fog.density = inside ? lerp(1, 3.2, clamp((SCR_Z - camZ) / .05)) : .02; scene.fog.color.set(0x040a14);
+  const dS = p.distanceTo(V(l.x, l.y, SCR_Z)); screenMat.uniforms.uPix.value = clamp((.28 - Math.abs(camZ - SCR_Z) * 4) / .2);
+  // layers: brighten as the camera nears each one, flash as it passes through
+  layers.forEach((m, i) => { const dz = Math.abs(camZ - m.position.z); m.material.uniforms.uOp.value = (camZ < SCR_Z + .01 ? 1 : 0) * clamp(1 - dz / .012) * (i === 1 ? .9 : .7) * (dz < .0008 ? .2 : 1); m.material.uniforms.uT.value = tt; m.visible = camZ > m.position.z - .0008 && camZ < SCR_Z + .02 && tt < T.board; });
+  // letters: from the bubble, falling with us, then breaking into bits
+  const tb0 = T.glass - .05, tbreak = word('n4', 'ones') - .05;
+  letters.forEach((L, i) => { const vis = tt > tb0 && tt < tbreak + .35 + i * .008; L.m.visible = vis && dir > 0;
+    if (!L.m.visible) return; L.m.position.copy(letterPos(i, tt, tb0, tbreak));
+    L.m.quaternion.copy(camera.quaternion); const br = clamp((tt - tbreak - i * .008) / .3); L.m.material.opacity = 1 - br; L.m.scale.setScalar(1 + .6 * br); });
+  // bits: burst from the letters, then race along the traces into the chip
+  const fp = fallBits.geometry.attributes.position, fa = fallBits.geometry.attributes.alpha, fg = fallBits.geometry.attributes.glyph;
+  for (let i = 0; i < 600; i++) { const li = i % letters.length, L = letters[li]; const pi = i % IP.length; const st = tbreak + (li * .008) + hash(i) * .25; const k = seg(tt, st, st + .9 + .4 * hash(i * 7));
+    const from = letterPos(li, st, tb0, tbreak); const to = IP[pi].at(0, tmp).clone(); to.z = .002 + BZ; const mid = from.clone().lerp(to, .5).add(V((hash(i * 3) - .5) * .06, (hash(i * 5) - .5) * .06, .004));
+    const e = eio(k); const q = from.clone().multiplyScalar((1 - e) * (1 - e)).add(mid.multiplyScalar(2 * e * (1 - e))).add(to.multiplyScalar(e * e));
+    fp.setXYZ(i, q.x, q.y, q.z); fa.setX(i, (tt > st && k < 1 ? 1 : 0) * dir > 0 ? (tt > st && k < 1 ? clamp(k * 6) : 0) : 0); fg.setX(i, Math.floor(hash(i + Math.floor(tt * 10)) * 2)); }
+  fp.needsUpdate = fa.needsUpdate = fg.needsUpdate = true; fallBits.material.uniforms.uFocus.value = Math.max(.01, camera.position.distanceTo(phone.localToWorld(V(l.x, l.y, l.z))));
+  const bp = bits.geometry.attributes.position, ba = bits.geometry.attributes.alpha, bg = bits.geometry.attributes.glyph;
+  const sIn = tbreak + .35, sOut = T.packs + .1;
+  for (let i = 0; i < 900; i++) {
+    let q, al = 0;
+    if (i < 540) { const pi = i % IP.length, off = hash(i * 1.3); const k = ((tt - sIn) / 1.1 + off) % 1; al = tt > sIn + off * .6 && tt < T.packs + .25 - off * .2 ? clamp(Math.min(k, 1 - k) * 12) : 0; q = IP[pi].at(clamp(k), tmp).clone(); }
+    else { const pi = i % OP.length, off = hash(i * 1.9); const k = ((tt - sOut) / .7 + off) % 1; al = tt > sOut + off * .4 && tt < T.fire + .1 - off * .2 ? clamp(Math.min(k, 1 - k) * 12) : 0; q = OP[pi].at(clamp(k), tmp).clone(); }
+    const j = (hash(i * 9.1) - .5) * .006; bp.setXYZ(i, q.x + j, q.y + (hash(i * 4.4) - .5) * .004, .002 + hash(i * 2.2) * .003); ba.setX(i, al); bg.setX(i, Math.floor(hash(i + Math.floor(tt * 12)) * 2));
+  }
+  if (location.search.includes('allbits')) for (let i = 0; i < 900; i++) ba.setX(i, 1);
+  bp.needsUpdate = ba.needsUpdate = bg.needsUpdate = true; bits.material.uniforms.uFocus.value = Math.max(.01, p.distanceTo(l)) ; bits.material.uniforms.uAper.value = .5;
+  inTrails.forEach((m, k) => { const h = (tt - sIn - k * .05) / 1.0; m.material.uniforms.uHead.value = h * 1.2; m.material.uniforms.uTail.value = .3; m.material.uniforms.uBase.value = .1 * clamp((tt - sIn) / .4); m.material.uniforms.uT.value = tt; });
+  outTrails.forEach((m, k) => { const h = (tt - sOut - k * .08) / (T.fire - sOut); m.material.uniforms.uHead.value = h * 1.15; m.material.uniforms.uTail.value = .22; m.material.uniforms.uBase.value = .15 * clamp((tt - sOut) / .3); m.material.uniforms.uT.value = tt; });
+  // chip power-up
+  const on = clamp((tt - T.brain + .05) / .25); chipTop.material.uniforms.uOn.value = on * (1 + .3 * Math.exp(-Math.max(0, tt - T.brain) * 4)); chipTop.material.uniforms.uT.value = tt; u.chipLight.intensity = on * (.002 + .003 * Math.exp(-Math.max(0, tt - T.brain) * 3));
+  u.board.material.emissiveIntensity = .18 + .3 * on;
+  // packets
+  const pg = u.pkGlow.geometry.attributes.position;
+  packets.forEach((pk, i) => { const pi = i % 3, st = sOut + .1 + Math.floor(i / 3) * .3 + pi * .06; const k = (tt - st) / (T.fire - st + .02); pk.visible = k > 0 && k < 1; const q = OP[pi].at(clamp(eio(k)), tmp).clone(); q.z = .007; pk.position.copy(q); pk.rotation.z = tt * 3 + i; pg.setXYZ(i, q.x, q.y, q.z + .002); if (!pk.visible) pg.setXYZ(i, 0, 0, -9); });
+  pg.needsUpdate = true;
+  antGlow.material.uniforms.uOpacity.value = clamp((tt - T.fire + .2) / .15) * (1 + 1.5 * Math.exp(-Math.max(0, tt - T.fire) * 5));
+  rings.forEach((rg, i) => { const k = (tt - T.fire - i * .12) / .8; rg.visible = k > 0 && k < 1; const sc = .02 + 1.0 * eo(k) + i * .02; rg.scale.setScalar(sc); rg.material.opacity = (1 - k) * .9; });
+  setFocus(u.dust, Math.max(.02, p.distanceTo(l) * .8), 1.4);
+  ST.tag = inside ? (tt < T.board ? ['Inside your phone', 'through the screen'] : tt < L0('n6') ? ['Main chip', 'the phone’s brain'] : ['Antenna', 'radio out']) : null;
+  if (Math.abs(camZ - SCR_Z) < .003) { ST.flash = .25 * (1 - Math.abs(camZ - SCR_Z) / .003); ST.flashCol = [.7, 1.0, 1.3]; }
+  return p;
+}
+// --- leg: city (radio to the tower, then down to the street)
+function cityUpdate(t, dir = 1, tt = t) {
+  show('city'); scene.background = BG.city; scene.fog.density = .012; scene.fog.color.set(0x070c22);
+  const a = T.zap, b = T.tower, c = T.cable;
+  const u = seg(tt, a, b), v = seg(tt, b, c);
+  const keys = [[a, V(-.4, 1.2, 15.5), V(1.0, 3.2, 0)], [lerp(a, b, .6), V(.2, 2.6, 6), V(2.6, 6.4, -12)], [b, V(.9, 5.2, -4.5), V(3, 7.4, -14)], [lerp(b, c, .55), V(-.6, 4.6, -7.5), V(3, 3.4, -14)], [c, V(.6, 1.8, -9.6), V(3, -.4, -14)]];
+  const [p, l] = camPath(keys, tt); cam(p, l, 52, .05 * Math.sin(tt * 2) + (1 - u) * .1, .05, 300);
+  let pk; if (tt < b) pk = cityPacketPos(eio(u)); else pk = TOWER_TOP.clone().lerp(TOWER.clone().add(V(0, .1, 0)), ei(v));
+  const pa = cityPacket.geometry.attributes.position; pa.setXYZ(0, pk.x, pk.y, pk.z); pa.setXYZ(1, pk.x, pk.y, pk.z); pa.needsUpdate = true;
+  cityRings.forEach((rg, i) => { const k = ((tt - a) * 1.6 + i / 5) % 1; const q = cityPacketPos(clamp(eio(u) - .12 * (1 - k))); rg.position.copy(q); rg.lookAt(TOWER_TOP); rg.scale.setScalar(.2 + 1.6 * k); rg.material.opacity = tt < b ? (1 - k) * .8 : (1 - k) * .8 * (1 - v); });
+  beacons.material.uniforms.uOpacity.value = .6 + .4 * Math.sin(tt * 6) + 2 * Math.exp(-Math.max(0, tt - b) * 4) * (tt > b ? 1 : 0); city.userData.tl.intensity = tt > b ? 6 * Math.exp(-(tt - b) * 2.5) : 0;
+  setFocus(city.userData.lights, p.distanceTo(l), 5);
+  ST.tag = ['Cell tower', 'radio waves, at the speed of light'];
+}
+// --- leg: fibre cable (light racing under the city)
+function cableUpdate(t, dir = 1, tt = t) {
+  show('cable'); scene.background = BG.deep; scene.fog.density = .03; scene.fog.color.set(0x050a1c);
+  const u = seg(tt, T.cable, T.building); const zH = 6 - 260 * u - 30 * u * u; const curve = SETS.cable.userData.curve;
+  const head = V(cabX(zH), 0, zH);
+  const pa = cableHead.geometry.attributes.position; for (let i = 0; i < 3; i++) pa.setXYZ(i, head.x, head.y + .02, head.z); pa.needsUpdate = true;
+  cable.material.uniforms.uHead.value = zH; cable.material.uniforms.uT.value = tt;
+  const cp = cablePulses.geometry.attributes.position; for (let i = 0; i < 12; i++) { const z = zH + 20 - ((tt * 120 + i * 37) % 300); cp.setXYZ(i, cabX(z), .01, z); } cp.needsUpdate = true;
+  const back_ = dir > 0 ? 1 : -1;
+  const cp_ = V(cabX(zH + 3.8 * back_) + 1.1, .75 + .15 * Math.sin(tt * 3), zH + 3.8 * back_), lk = V(cabX(zH - 8 * back_), .1, zH - 8 * back_);
+  if (tt < T.cable + .25 && dir > 0) { const k = eo(seg(tt, T.cable, T.cable + .25)); cp_.y += (1 - k) * 5; }
+  cam(cp_, lk, 58, -.08 + .04 * Math.sin(tt * 2), .05, 300);
+  setFocus(SETS.cable.userData.ceil, 8, 26); setFocus(SETS.cable.userData.motes, 3, 12); ST.streak = .5;
+  ST.tag = ['Fibre cable', 'flashes of light inside glass'];
+}
+// --- leg: data centre (rise through the floor, glide down the aisle)
+function dcLeds(t, t0) {
+  const P = leds.userData.pos, c = new THREE.Color();
+  P.forEach(([x, y, z, side, i, j], k) => { const arr = t0 + i * .05 + (side > 0 ? .03 : 0); const on = clamp((t - arr) / .18); const fl = .7 + .3 * Math.sin(t * (9 + hash(k) * 14) + k), gold = hash(k * 3.3) < .25;
+    const dim = 1 - .6 * clamp((t - T.chop + .5) / 1); if (on <= 0) c.setRGB(.02, .04, .08); else if (gold) c.setRGB(2.8 * on * fl * dim, 1.9 * on * fl * dim, .5 * on * fl * dim); else c.setRGB(.25 * on * fl * dim, 1.1 * on * fl * dim, 2.0 * on * fl * dim); leds.setColorAt(k, c); });
+  leds.instanceColor.needsUpdate = true;
+}
+function dcUpdate(t, dir = 1, tt = t) {
+  show('dc', 'work'); scene.background = BG.deep; scene.fog.density = .07; scene.fog.color.set(0x050817); bloom.strength = 1.05;
+  dcLeds(tt, T.building);
+  const keys = [[T.building, V(.15, -.6, 1.6), V(.1, 1.0, -4)], [T.building + .6, V(-.2, 1.3, .8), V(.1, 1.5, -8)], [L0('n8') + .2, V(.25, 1.6, -3.4), V(0, 1.6, -10)], [T.dcEnd, V(-.15, 1.6, -4.9), V(0, 1.55, -10)]];
+  const [p, l] = camPath(keys, tt); cam(p, l, 54, .03 * Math.sin(tt), .02, 200);
+  const z = SETS.dc.userData.zip, za = z.geometry.attributes.position; const k = seg(tt, T.building + .05, T.building + .9);
+  const zp = V(lerp(.1, -.78, eio(k)), lerp(-.2, 1.5, eo(k)), lerp(.6, -5.2, eio(k))); za.setXYZ(0, zp.x, zp.y, zp.z); za.setXYZ(1, zp.x, zp.y, zp.z); za.needsUpdate = true; z.material.uniforms.uOpacity.value = k > 0 && k < 1 ? 1 : 0;
+  setFocus(SETS.dc.userData.dust, 2.5, 14);
+  ST.tag = ['Data centre', 'rooms full of computers'];
+}
+
+// --- the work area (bricks, threads, cards, answer, twinkle) — always inside the data centre
+function workUpdate(t) {
+  const g = SETS.work; const P = []; const n = QTOK.length;
+  // brick layout: a row that later bends into an arc
+  const chop = seg(t, T.chop - .1, T.chop + .5);
+  let x = 0; const gap = .025, ws = bricks.map(b => b.userData.wd), tot = ws.reduce((a, b) => a + b, 0) + gap * (n - 1);
+  bricks.forEach((b, i) => {
+    const cx = -tot / 2 + x + ws[i] / 2; x += ws[i] + gap;
+    const lift = (i === 3 || i === 5) ? eo(seg(t, T.pizza - .1, T.pizza + .3)) * (1 - eo(seg(t, T.surprise - .2, T.surprise + .3))) : 0;
+    const sp = eo(clamp((chop - i * .06) / .6));
+    const y = .0 + .12 * lift + .015 * Math.sin(t * 2 + i), z = .12 * lift;
+    b.position.set(lerp(cx * .7, cx * 1.08, sp), lerp(.45, y, sp), z); b.scale.setScalar(1.12 * lerp(.2, 1, back(clamp((chop - i * .06) / .5), 1.6)) * Math.max(.001, 1 - ei(seg(t, T.tw - .3, T.tw))));
+    b.rotation.set(.1 * Math.sin(t * 1.3 + i) * (1 - sp * .5), (1 - sp) * 1.4 + .12 * Math.sin(t * .9 + i), .04 * Math.sin(t * 1.7 + i));
+    b.visible = chop > i * .06 && t < T.learned + .2;
+    const nb = back(seg(t, T.number - .15 + i * .07, T.number + .25 + i * .07), 1.8); b.userData.num.scale.setScalar(Math.max(.001, nb)); b.userData.num.visible = nb > .01;
+    const hl = lift; b.userData.mat.emissive.copy(b.userData.col).multiplyScalar(.06 + .6 * hl);
+    P.push(b.position.clone().add(V(0, .2, 0)));
+  });
+  qText.visible = t < T.chop + .1; qText.position.set(0, .45 + .015 * Math.sin(t * 1.5), 0); qText.material.opacity = clamp((t - T.building - .8) / .4) * (1 - chop * 3);
+  // threads between all words
+  const tg = seg(t, T.together + .1, T.together + 1.2), focus = seg(t, T.pizza - .1, T.pizza + .4), off = seg(t, T.surprise - .2, T.surprise + .2);
+  links.forEach((L, k) => { if (L.tb.visible = tg > 0 && off < 1) { linkGeom(L, P); let op = clamp(tg * 10 - k * .45) * (L.key === 2 ? 1 : L.key ? .75 : .5) * (.75 + .25 * Math.sin(t * 7 + k)); if (L.key !== 2) op *= lerp(1, .25, focus); else op *= 1 + 1.4 * focus; L.tb.material.opacity = op * (1 - off); } });
+  plusSign.visible = focus > 0 && off < 1; plusSign.position.copy(P[3].clone().lerp(P[5], .5).add(V(0, .12, .1))); plusSign.scale.setScalar(Math.max(.001, back(focus, 2) * (1 - off))); plusSign.quaternion.identity();
+  // map card -> NOPE -> food card
+  const mp = back(seg(t, T.map, T.map + .3), 1.8), fall = ei(seg(t, T.nope + .3, T.nope + .8));
+  mapCard.visible = t > T.map && t < T.nope + .8; mapCard.position.set(.05 + .6 * fall, 1.25 - 2.0 * fall, .1); mapCard.rotation.set(0, 0, -.06 + .9 * fall); mapCard.scale.setScalar(Math.max(.001, mp) * 1.8);
+  const ns = seg(t, T.nope - .05, T.nope + .1); nopeStamp.visible = ns > 0 && t < T.nope + .8; nopeStamp.position.set(.05 + .6 * fall, 1.25 - 2.0 * fall, .12); nopeStamp.rotation.z = .9 * fall; nopeStamp.scale.setScalar(lerp(2.2, 1, eo(ns)) * 1.8); nopeStamp.material.opacity = clamp(ns * 3);
+  const fc = back(seg(t, T.food, T.food + .3), 1.7), fo = seg(t, T.surprise - .2, T.surprise + .1);
+  foodCard.visible = fc > 0 && fo < 1; foodCard.position.set(0, 1.2, .1); foodCard.scale.setScalar(Math.max(.001, fc * (1 - fo)) * 1.6);
+  // look-up card: struck out and dissolved
+  const la = back(seg(t, T.surprise - .05, T.surprise + .3), 1.6);
+  lookCard.visible = t > T.surprise - .05 && t < T.up + .9; lookCard.position.set(0, 1.2, .12); lookCard.scale.setScalar(Math.max(.001, la) * 1.4); lookCard.material.uniforms.uStrike.value = clamp((t - T.look) / .3); lookCard.material.uniforms.uDis.value = clamp((t - T.up - .05) / .6);
+  // answer words: picked one at a time, stacked above the bricks
+  const slots = []; { let xx = 0, row = 0; const wd = answerWords.map(l => l.userData.aspect * .15 * 1.4); const maxW = 1.8; wd.forEach(w => { if (xx + w > maxW) { xx = 0; row++; } slots.push([xx + w / 2, row]); xx += w + .02; }); }
+  const hideAns = t > T.tw - .15 && t < T.back0 - .1;
+  answerWords.forEach((l, i) => { const tp = T.pick[i]; if (t < tp || hideAns || t > T.ret0 + .25) { l.visible = false; return; } l.visible = true; const a = eo(seg(t, tp, tp + (i < 3 ? .35 : .18)));
+    const [sx, row] = slots[i]; const from = V(lerp(-.5, .5, hash(i)), -.18, .3); const to = V(-.9 + sx, 1.3 - row * .27, .05);
+    l.position.copy(from.lerp(to, a)); l.scale.setScalar(1.4 * (1 + .5 * (1 - a))); if (t > T.ret0) { const z = eo(seg(t, T.ret0, T.ret0 + .25)); l.position.lerp(V(0, .6, 3.5), z); } });
+  // twinkle card + bars
+  const tw = seg(t, T.tw, T.tw + .35), twOff = seg(t, T.learned - .05, T.learned + .3);
+  twCard.visible = tw > 0 && twOff < 1; twCard.position.set(-.12, 1.3, .05); twCard.scale.setScalar(Math.max(.001, back(tw, 1.4) * (1 - twOff)) * 1.1);
+  const sw = seg(t, T.star, T.star + .25); starWord.visible = sw > 0 && twOff < 1; starWord.position.set(.6, 1.32 + .02 * Math.sin(t * 5), .08); starWord.scale.setScalar(Math.max(.001, lerp(2.2, 1, eo(sw)) * (1 - twOff)) * 1.25);
+  bars.forEach((gr, i) => { const grow = eo(seg(t, T.tw + .45 + i * .12, T.tw + 1.1 + i * .12)); gr.visible = tw > 0 && twOff < 1 && t > T.tw + .3; gr.position.set(-.55, .95 - i * .24, .02);
+    gr.userData.bar.scale.x = Math.max(.002, gr.userData.pc / 100 * .9 * grow); gr.userData.q.position.x = gr.userData.bar.scale.x + .02; const win = i === 0 && t > T.star;
+    gr.userData.bar.material.color.setRGB(win ? 2.4 : .25, win ? 1.7 : .6, win ? .4 : 1.3); if (gr.userData.em) gr.userData.em.position.set(-.33, 0, 0); gr.scale.setScalar((1 - twOff) * 1.35); });
+  g.userData.ill.visible = tw > 0 && twOff < 1 && t > T.tw + .3; g.userData.ill.position.set(.1, .3, 0); g.userData.ill.scale.setScalar(1.4);
+  const spk = g.userData.sparkle, sa = spk.geometry.attributes.position; const sk = seg(t, T.star, T.star + 1.0);
+  for (let i = 0; i < 40; i++) { const a = hash(i) * 6.283, r = .05 + .5 * eo(sk) * (.4 + hash(i * 3)); sa.setXYZ(i, .68 + Math.cos(a) * r, 1.32 + Math.sin(a) * r * .7, .1); } sa.needsUpdate = true; spk.material.uniforms.uOpacity.value = sk > 0 && sk < 1 ? (1 - sk) * 1.5 : 0;
+}
+function workCam(t) {
+  const W0 = WORK;
+  const k = (x, y, z, ly) => [V(x, y, z), V(0, ly, -10)];
+  const keys = [[T.dcEnd, ...k(-0.15, 1.6, -4.9, 1.55)], [T.chop + .3, ...k(0.25, 1.65, -5.85, 1.55)], [T.together + .5, ...k(-0.3, 1.7, -5.95, 1.57)],
+    [T.map + .2, ...k(0.2, 1.8, -6.0, 1.65)], [T.nope + .5, ...k(-0.1, 1.8, -5.95, 1.65)], [T.surprise + .4, ...k(0.2, 1.8, -6.05, 1.65)],
+    [T.writes + .5, ...k(-0.2, 1.85, -6.0, 1.68)], [T.tw + .4, ...k(0.12, 1.85, -6.0, 1.68)], [T.star + .3, ...k(-0.05, 1.85, -6.15, 1.7)], [T.learned, ...k(0.05, 1.95, -5.75, 1.7)]].map(x => [x[0], x[1], x[2]]);
+  const [p, l] = camPath(keys, t); cam(p, l, 47, .03 * Math.sin(t * .8), .02, 200);
+}
+
+// ---------------- frame ----------------
+function frame(t) {
+  resetFrame(t);
+  for (const k in SETS) SETS[k].traverse(o => { if (o.material && o.material.uniforms && o.material.uniforms.uTime) o.material.uniforms.uTime.value = t; });
+  let st = null;
+  const oneT = word('n2', 'one');
+  if (t < T.phone) {
+    // HOOK: the night Earth, questions rising from every city; then we dive at one of them
+    show('globe'); scene.background = BG.navy; scene.fog.density = 0;
+    sparks.material.uniforms.uT.value = t; globe.rotation.set(.25, -.35 + .03 * t, 0); globe.updateMatrixWorld();
+    const me = globe.localToWorld(SETS.globe.userData.me.clone()); const dv = seg(t, oneT - .2, T.phone);
+    const p0 = V(.0, -.55 - .05 * t, 3.4 - .12 * t), l0 = V(0, -.15 - .02 * t, 0);
+    const pD = me.clone().add(me.clone().normalize().multiplyScalar(.04)), lD = me.clone().multiplyScalar(.9);
+    cam(p0.clone().lerp(pD, ei(dv)), l0.clone().lerp(lD, eio(dv)), lerp(40, 30, dv), lerp(0, .2, dv), .002, 200);
+    SETS.globe.userData.atm.visible = camera.position.length() > 1.25;
+    const ring = SETS.globe.userData.ring; ring.position.copy(SETS.globe.userData.me); ring.lookAt(0, 0, 0); ring.scale.setScalar(.03 * (1 + .3 * Math.sin(t * 8)) * (1 - dv * .5)); ring.material.opacity = seg(t, oneT - .45, oneT - .2);
+    SETS.globe.userData.mine.material.uniforms.uOpacity.value = .5 + 2 * seg(t, oneT - .45, oneT) ;
+    SETS.globe.userData.pizza.visible = false;
+    ST.flash = .9 * ei(seg(t, T.phone - .22, T.phone)); ST.flashCol = [1.3, 1.2, 1.0];
+  } else if (t < T.dive0) {
+    // PHONE: the thumb types the question, letter by letter, then taps SEND
+    show('phone'); scene.background = BG.navy; scene.fog.density = 0;
+    st = screenState(t); placeThumb(t, T.send);
+    const u = seg(t, T.phone, T.send);
+    const keys = [[T.phone, V(.05, .05, 1.2), V(0, .02, .046)], [T.phone + .45, V(.35, -.25, 3.1), V(0, -.06, 0)], [lerp(T.phone, T.send, .65), V(.2, -.4, 2.3), V(0, -.22, 0)], [T.send, V(.1, -.3, 1.75), V(0, -.2, .0)]];
+    const [p, l] = camPath(keys, t); phone.rotation.set(-.06 * (1 - u), .1 * (1 - u), .02 * (1 - u)); phone.updateMatrixWorld();
+    cam(phone.localToWorld(p), phone.localToWorld(l), 40, lerp(.06, 0, u), .01, 50);
+    ST.flash = .9 * (1 - eo(seg(t, T.phone, T.phone + .3))); ST.flashCol = [1.3, 1.2, 1.0];
+    if (t > T.send) { ST.flash = .15 * Math.exp(-(t - T.send) * 14); bloom.strength = 1.2; }
+    sheen.material.opacity = .06 + .04 * Math.sin(t * .7); bloom.threshold = 1.0; bloom.strength = .55; rimL.intensity = .5;
+    ST.tag = null;
+  } else if (t < T.zap) {
+    // THE DIVE: one continuous move through the glass, the display layers, onto the circuit board, to the antenna
+    show('phone', 'inner'); st = screenState(t); st.bubbleText = 1 - seg(t, T.glass - .1, T.glass + .05);
+    phone.updateMatrixWorld(); innerUpdate(t);
+    if (t > T.fire) { const k = seg(t, T.zap - .15, T.zap); ST.flash = .8 * ei(k); ST.flashCol = [.6, 1.1, 1.5]; }
+  } else if (t < T.cable) { cityUpdate(t); ST.flash = .8 * (1 - eo(seg(t, T.zap, T.zap + .18))); ST.flashCol = [.6, 1.1, 1.5]; if (t > T.cable - .1) { ST.flash = ei(seg(t, T.cable - .1, T.cable)) * .75; ST.flashCol = [1.4, 1.0, .5]; } }
+  else if (t < T.building) { cableUpdate(t); if (t < T.cable + .12) { ST.flash = .75 * (1 - eo(seg(t, T.cable, T.cable + .12))); ST.flashCol = [1.4, 1.0, .5]; } if (t > T.building - .12) { ST.flash = ei(seg(t, T.building - .12, T.building)) * .8; ST.flashCol = [1.4, 1.0, .5]; } }
+  else if (t < T.dcEnd) { dcUpdate(t); workUpdate(t); if (t < T.building + .15) { ST.flash = .8 * (1 - eo(seg(t, T.building, T.building + .15))); ST.flashCol = [1.4, 1.0, .5]; } }
+  else if (t < T.learned + .25) {
+    show('dc', 'work'); scene.background = BG.deep; scene.fog.density = .07; bloom.strength = .6; bloom.threshold = 1.0; dcLeds(t, T.building); workCam(t); workUpdate(t); setFocus(SETS.dc.userData.dust, 2, 16);
+    ST.tag = t < T.together ? ['Step 1', 'words become numbers'] : t < T.surprise - .1 ? ['Step 2', 'read every word together'] : ['Step 3', 'write the answer, word by word'];
+    if (t > T.learned + .1) { ST.flash = ei(seg(t, T.learned + .1, T.learned + .25)) * .7; ST.flashCol = [1.4, 1.1, .6]; }
+  } else if (t < T.back0) {
+    // what it learned from: a gigantic pile of text
+    show('mtn'); scene.background = BG.warm; scene.fog.density = 0; bloom.strength = 1.1; const u = seg(t, T.learned + .25, T.back0);
+    cam(V(lerp(-1.5, 1.5, u), lerp(6.5, 4.6, u), lerp(16, 3, u)), V(lerp(-1, 1.2, u), lerp(2.6, 2.2, u), lerp(4, -8, u)), 52, lerp(-.06, .04, u), .05, 300);
+    mtn.material.uniforms.uT.value = t; mtn.material.uniforms.uGain.value = 1;
+    ST.flash = .7 * (1 - eo(seg(t, T.learned + .25, T.learned + .38))); ST.flashCol = [1.4, 1.1, .6];
+    if (t > T.back0 - .15) { ST.flash = ei(seg(t, T.back0 - .15, T.back0)) * .8; }
+    ST.tag = ['How it learned', 'from a gigantic pile of text'];
+  } else if (t < T.ret0) {
+    // the answer finishes, packs up, and launches
+    show('dc', 'work'); scene.background = BG.deep; scene.fog.density = .07; dcLeds(t, T.building); workUpdate(t);
+    const u = seg(t, T.back0, T.ret0); cam(V(lerp(.15, 0, u), lerp(1.95, 1.85, u), lerp(-5.4, -5.9, u)), V(0, 1.8, -10), 52, 0, .02, 200);
+    ST.flash = .8 * (1 - eo(seg(t, T.back0, T.back0 + .2))); ST.flashCol = [1.4, 1.1, .6];
+    ST.tag = ['Answer ready', 'now it races back'];
+  } else if (t < T.ret1) {
+    // FAST RETURN: data centre -> cable -> tower -> antenna -> chip -> out of the screen
+    const R = seg(t, T.ret0, T.ret1); ST.streak = 1;
+    const leg = (k0, k1) => seg(R, k0, k1);
+    if (R < .18) { const k = leg(0, .18); show('dc'); dcLeds(t, T.building); const p = V(0, lerp(1.5, -.4, ei(k)), lerp(-8.5, .5, k)); cam(p, p.clone().add(V(0, -.4 * k, 3)), 60, .1 * k, .02, 200); scene.background = BG.deep; scene.fog.density = .07; }
+    else if (R < .36) { const k = leg(.18, .36); cableUpdate(t, -1, lerp(T.building, T.cable + .1, k)); }
+    else if (R < .56) { const k = leg(.36, .56); cityUpdate(t, -1, lerp(T.cable, T.zap + .05, eio(k))); }
+    else if (R < .82) { const k = leg(.56, .82); show('phone', 'inner'); phone.updateMatrixWorld(); st = { t, typedN: 0, sent: 1, reply: 0, keyboard: 0, thinking: true }; innerUpdate(t, -1, lerp(T.fire, T.glass - .3, eio(k))); }
+    else { const k = leg(.82, 1); show('phone'); phone.updateMatrixWorld(); st = { t, typedN: 0, sent: 1, reply: clamp((t - T.reply[0]) * 4), keyboard: 0, thinking: true }; const [p, l] = camPath(innerKeys(), lerp(T.glass - .3, T.send, eo(k)));
+      const pe = V(-.03, .35, 2.5), le = V(0, .35, .0); cam(phone.localToWorld(p.lerp(pe, eo(k))), phone.localToWorld(l.lerp(le, eo(k))), 40, 0, .005, 50); screenMat.uniforms.uPix.value = clamp(1 - k * 3); }
+    const edges = [0, .18, .36, .56, .82, 1]; for (const e of edges.slice(1, -1)) { const d = Math.abs(R - e) * (T.ret1 - T.ret0); if (d < .06) { ST.flash = Math.max(ST.flash, .7 * (1 - d / .06)); ST.flashCol = [1.2, 1.15, 1.0]; } }
+  } else if (t < T.HIT) {
+    // back on the phone: the reply streams in word by word, the clock stops; then silence
+    show('phone'); phone.updateMatrixWorld();
+    const n = T.reply.filter(x => t >= x).length; const last = n ? T.reply[n - 1] : t; st = { t, typedN: 0, sent: 1, reply: Math.min(REPLY.length, n - 1 + clamp((t - last) / .12)), keyboard: 0, thinking: true };
+    const u = seg(t, T.ret1, T.HIT);
+    const p = V(-.03, .35, 2.5).lerp(V(-.08, .36, 2.75), eio(u)), l = V(0, .35, 0).lerp(V(0, .34, 0), eio(u)); bloom.threshold = 1.0; bloom.strength = .55;
+    phone.rotation.set(0, -.12 * eio(u), 0); phone.updateMatrixWorld();
+    cam(phone.localToWorld(p), phone.localToWorld(l), 40, -.02 * u, .005, 50);
+    if (t > T.stop) { ST.flash = .12 * Math.exp(-(t - T.stop) * 10); }
+    if (t > T.S0) ST.desat = .25 * seg(t, T.S0, T.S0 + .2);
+  } else {
+    // PAYOFF: pull back from the phone to the whole planet again, 2.5 billion questions; the pizza gag; follow
+    const u = seg(t, T.HIT, T.HIT + 2.4);
+    if (u < .45) {
+      show('phone'); phone.updateMatrixWorld(); st = { t, typedN: 0, sent: 1, reply: REPLY.length, keyboard: 0 };
+      const k = u / .45; phone.rotation.set(0, -.12 + .2 * k, .1 * k); phone.updateMatrixWorld();
+      cam(phone.localToWorld(V(-.08, .36, 2.75 + 9 * ei(k))), phone.localToWorld(V(0, .34, 0)), 40, -.02, .01, 80); bloom.threshold = 1.0; bloom.strength = .55;
+      ST.flash = Math.max(.1 * Math.exp(-(t - T.HIT) * 9), .7 * ei(seg(k, .9, 1))); ST.flashCol = [1.1, 1.05, 1.0];
+    } else {
+      show('globe'); scene.background = BG.navy; scene.fog.density = 0; sparks.material.uniforms.uT.value = t; globe.rotation.set(.25, -.35 + .03 * t, 0); globe.updateMatrixWorld();
+      const me = globe.localToWorld(SETS.globe.userData.me.clone()); const k = eo(seg(t, T.HIT + 1.08, F.dur));
+      const pS = me.clone().add(me.clone().normalize().multiplyScalar(.05)), pE = V(.15, -.5, 3.9);
+      cam(pS.clone().lerp(pE, eo(seg(t, T.HIT + 1.08, T.HIT + 3.2))), me.clone().multiplyScalar(.9).lerp(V(0, .05, 0), eio(seg(t, T.HIT + 1.08, T.HIT + 2.6))), lerp(30, 42, k), .15 * (1 - k), .002, 200);
+      const ring = SETS.globe.userData.ring; ring.position.copy(SETS.globe.userData.me); ring.lookAt(0, 0, 0); ring.scale.setScalar(.03 * (1 + .3 * Math.sin(t * 8))); ring.material.opacity = seg(t, T.HIT + 1.3, T.HIT + 1.7);
+      SETS.globe.userData.mine.material.uniforms.uOpacity.value = 2.2; SETS.globe.userData.atm.visible = camera.position.length() > 1.25;
+      ST.flash = .7 * (1 - eo(seg(t, T.HIT + 1.08, T.HIT + 1.2))); ST.flashCol = [1.1, 1.05, 1.0];
+      // the pizza it never tasted
+      const pz = SETS.globe.userData.pizza, pk = seg(t, T.never - .1, T.never + .35); pz.visible = pk > 0;
+      if (pz.visible) { const fw = camera.getWorldDirection(V(0, 0, 0)); const right = V(1, 0, 0).applyQuaternion(camera.quaternion), up = V(0, 1, 0).applyQuaternion(camera.quaternion);
+        pz.position.copy(camera.position).add(fw.multiplyScalar(2.2)).add(right.multiplyScalar(-.05)).add(up.multiplyScalar(.02 + .02 * Math.sin(t * 2))); pz.quaternion.copy(camera.quaternion); pz.rotateZ(.3 * Math.sin(t * 1.5)); pz.scale.setScalar(.75 * Math.max(.001, back(pk, 2) * (1 - seg(t, T.follow - .1, T.follow + .3)))); }
+    }
+  }
+  if (st && SETS.phone.visible) drawScreen(st);
+  const dbg = new URLSearchParams(location.search).get('cam'); if (dbg) { const v = dbg.split(',').map(Number); cam(phone.localToWorld(V(v[0], v[1], v[2])), phone.localToWorld(V(v[3], v[4], v[5])), 50, 0, .001, 30); scene.fog.density = 0; phone.userData.ext.forEach(m => m.visible = false); }
+  grade.uniforms.uFlash.value = clamp(ST.flash * .65); grade.uniforms.uFlashCol.value.setRGB(...ST.flashCol); grade.uniforms.uDesat.value = ST.desat; grade.uniforms.uCA.value = ST.ca; grade.uniforms.uStreak.value = ST.streak;
+}
+
+// ---------------- 2D overlay (headline, clock, tags, captions, cards) ----------------
+function tx(s, x, y, size, font, col, align = 'left', glow = 0, glowCol = null) { X.font = `${size}px ${font}`; X.textAlign = align; X.textBaseline = 'alphabetic'; if (glow) { X.shadowColor = glowCol || col; X.shadowBlur = glow; } X.fillStyle = col; X.fillText(s, x, y); X.shadowBlur = 0; }
+function fitTx(s, x, y, size, font, col, maxW, glow, glowCol) { X.font = `${size}px ${font}`; const w = X.measureText(s).width; const sz = w > maxW ? size * maxW / w : size; tx(s, x, y, sz, font, col, 'center', glow, glowCol); }
+function stroked(s, x, y, size, font, col, align = 'center') { X.font = `${size}px ${font}`; X.textAlign = align; X.lineJoin = 'round'; X.shadowColor = 'rgba(0,0,0,.8)'; X.shadowBlur = 20; X.shadowOffsetY = 4; X.strokeStyle = 'rgba(0,0,0,.6)'; X.lineWidth = 9; X.strokeText(s, x, y); X.shadowBlur = 0; X.shadowOffsetY = 0; X.fillStyle = col; X.fillText(s, x, y); }
+const CX = 504;   // optical centre for text (right edge reserved for Instagram's buttons)
+function overlay(t) {
+  X.clearRect(0, 0, W, H);
+  const GLOW = 'rgba(255,170,30,.85)';
+  // hook headline
+  const ha = clamp(t / .2) * (1 - clamp((t - (L0('n2') - .2)) / .2));
+  if (ha > 0) {
+    X.globalAlpha = ha; const pop = back(clamp(t / .35), 1.5); X.save(); X.translate(CX, 330); X.scale(pop, pop); X.translate(-CX, -330);
+    fitTx('EVERY DAY, PEOPLE ASK', CX, 205, 92, AN, CSS.gold, 860, 26, GLOW);
+    fitTx('CHATGPT ABOUT', CX, 310, 92, AN, CSS.gold, 860, 26, GLOW);
+    const nb = back(clamp((t - .25) / .4), 1.6); X.save(); X.translate(CX, 470); X.scale(nb, nb); fitTx('2.5 BILLION', 0, 0, 178, AN, CSS.gold2, 860, 40, GLOW); X.restore();
+    fitTx('QUESTIONS', CX, 580, 92, AN, CSS.gold, 860, 26, GLOW);
+    X.restore(); X.globalAlpha = ha * clamp((t - .6) / .3);
+    tx('per OpenAI (latest public figure, July 2025)', CX, 632, 34, BS, 'rgba(210,222,250,.9)', 'center', 8, 'rgba(0,0,0,.9)');
+    X.globalAlpha = 1;
+  }
+  // "let's follow just one"
+  const fa = clamp((t - L0('n2')) / .2) * (1 - clamp((t - T.phone + .1) / .15));
+  if (fa > 0) { X.globalAlpha = fa; fitTx('LET’S FOLLOW JUST ONE', CX, 300, 96, AN, CSS.gold, 860, 26, GLOW); X.globalAlpha = 1; }
+  // millisecond clock (cyan, top right of the safe area), from SEND to the end of the reply
+  if (t >= T.send - .1 && t < T.HIT + .5) {
+    const ms = Math.round(msAt(t)); const a = clamp((t - T.send + .1) / .15) * (1 - clamp((t - T.HIT - .2) / .3)); X.globalAlpha = a;
+    const stopped = t >= T.stop; const pulse = stopped ? Math.exp(-(t - T.stop) * 5) : t > T.send ? Math.exp(-(t - T.send) * 6) : 0;
+    const str = ms.toLocaleString('en-US').padStart(3, '0');
+    tx(str, 850, 196, 128 * (1 + .14 * pulse), BX, CSS.cyan, 'right', 30, 'rgba(60,200,255,.9)'); tx('ms', 860, 196, 46, BX, CSS.cyan, 'left', 14, 'rgba(60,200,255,.9)');
+    tx(stopped ? 'about 2 seconds, start to finish' : 'since you tapped send', 900, 240, 32, BS, 'rgba(170,225,255,.9)', 'right', 6, 'rgba(0,0,0,.8)');
+    tx('illustrative timing', 900, 276, 26, BS, 'rgba(170,200,235,.7)', 'right', 6, 'rgba(0,0,0,.8)');
+    X.globalAlpha = 1;
+  }
+  // location tags (left, like the reference's "Pacific Ocean / depth 4,000 m")
+  if (ST.tag) { const [a, b] = ST.tag; tx(a, 60, 1172, 46, BX, '#fff', 'left', 10, 'rgba(0,0,0,.85)'); tx(b, 60, 1208, 32, BB, CSS.cyan, 'left', 8, 'rgba(0,0,0,.85)'); }
+  // light in fibre: the reference's big gold number
+  if (t > T.cable + .1 && t < T.building) { const a = clamp((t - T.cable - .1) / .15) * (1 - clamp((t - T.building + .12) / .1)); X.globalAlpha = a;
+    tx('200,000', 700, 400, 150, AN, CSS.gold, 'right', 36, GLOW); tx('km/s', 712, 400, 52, BX, CSS.gold, 'left', 14, GLOW); tx('about how fast light moves in glass fibre', CX, 456, 34, BS, 'rgba(225,230,250,.92)', 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; }
+  // real numbers label for the bricks
+  if (t > T.number && t < T.together + .2) { const a = clamp((t - T.number) / .25) * (1 - clamp((t - T.together) / .2)); X.globalAlpha = a; tx('real numbers from the GPT-4o word list', CX, 1135, 34, BS, 'rgba(225,230,250,.9)', 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; }
+  // training-data source line
+  if (t > T.learned + .3 && t < T.back0) { const a = clamp((t - T.learned - .3) / .25) * (1 - clamp((t - T.back0 + .15) / .15)); X.globalAlpha = a; tx('public web pages, licensed text and more (per OpenAI)', CX, 1135, 32, BS, 'rgba(235,230,215,.92)', 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; }
+  // payoff headline + pizza counter
+  const pa = clamp((t - word('n19', 'and') + .05) / .25) * (1 - clamp((t - T.never + .4) / .2));
+  if (pa > 0) { X.globalAlpha = pa; fitTx('…AND ABOUT', CX, 230, 92, AN, CSS.gold, 860, 26, GLOW); const nb = back(clamp((t - word('n19', 'two') + .05) / .35), 1.6); X.save(); X.translate(CX, 395); X.scale(nb, nb); fitTx('2.5 BILLION', 0, 0, 178, AN, CSS.gold2, 860, 40, GLOW); X.restore(); fitTx('MORE TIMES TODAY', CX, 505, 92, AN, CSS.gold, 860, 26, GLOW); tx('per OpenAI', CX, 555, 32, BS, 'rgba(210,222,250,.9)', 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; }
+  const pc = clamp((t - T.never + .15) / .2) * (1 - clamp((t - T.follow + .1) / .2));
+  if (pc > 0) { X.globalAlpha = pc; fitTx('PIZZAS TASTED', CX, 230, 96, AN, CSS.gold, 860, 26, GLOW); const pop = back(clamp((t - word('n20', 'pizza') + .1) / .3), 2); X.save(); X.translate(CX, 500); X.scale(pop, pop); tx('0', 0, 0, 220, AN, CSS.cyan, 'center', 40, 'rgba(60,200,255,.9)'); X.restore(); X.globalAlpha = 1; }
+  // end card
+  if (t >= T.follow) { const a = eo(clamp((t - T.follow) / .35)); X.globalAlpha = a; const sc = lerp(.85, 1, back(clamp((t - T.follow) / .45), 1.6));
+    X.save(); X.translate(CX, 330); X.scale(sc, sc); tx('FOLLOW', 0, 0, 160, AN, CSS.gold, 'center', 40, GLOW); tx('FOR MORE', 0, 185, 160, AN, CSS.gold, 'center', 40, GLOW); X.restore();
+    tx('@lorenzo_ai_unplugged', CX, 610, 54, BX, '#fff', 'center', 14, 'rgba(120,170,255,.8)'); tx('AI in 60 Seconds', CX, 662, 40, BS, CSS.cyan, 'center'); X.globalAlpha = 1; }
+  // captions: white bold, key word yellow, word-synced
+  const c = CAPS.find(c => t >= c.t0 && t < c.t1);
+  if (c) {
+    const size = 84, y = 1300; X.font = `${size}px ${BX}`;
+    const parts = c.w.map(([w, h]) => [w, h, X.measureText(w + ' ').width]); const tw = parts.reduce((a, p) => a + p[2], 0) - X.measureText(' ').width;
+    const pop = lerp(.9, 1, back(clamp((t - c.t0) / .12), 2)); const sc = Math.min(1, 860 / tw); X.save(); X.translate(CX, y); X.scale(pop * sc, pop * sc);
+    let x = -tw / 2; for (const [w, h, ww] of parts) { stroked(w, x, 0, size, BX, h ? CSS.yel : '#fff', 'left'); x += ww; }
+    X.restore();
+  }
+}
+
+// ---------------- boot ----------------
+async function boot() {
+  for (const [n, u] of FONTS) { const f = new FontFace(n, `url(${u})`); await f.load(); document.fonts.add(f); }
+  try { await document.fonts.load(`80px ${EMO}`, '🍕🍳'); } catch (e) {}
+  [F, CAPS, GEO] = await Promise.all(['film.json', 'caps.json', 'data/geo.json'].map(u => fetch(u).then(r => r.json())));
+  timeline();
+  buildPhone(); buildInner(); buildGlobe(); buildCity(); buildCable(); buildDC(); buildWork(); buildMtn();
+  // the question's letters as 3D glyphs, laid out exactly where the sent bubble's text sits on the screen
+  { const m = document.createElement('canvas').getContext('2d'); m.font = `80px ${BB}`; const tw = m.measureText(QUESTION).width; let x = SW - 128 - tw;
+    for (const ch of QUESTION) { const w = m.measureText(ch).width; if (ch !== ' ') { const L = label3d(ch, { size: 120, font: BB, color: '#fff', glow: 'rgba(120,200,255,.8)', h: .04, mult: .95, pad: 16 }); L.visible = false; inner.add(L); letters.push({ m: L, p: s2l(x + w / 2, 420 + 75) }); } x += w; } }
+  window.DUR = F.dur; window.EV = EV; window.T = T; window.DBG = { bits: () => bits, fallBits: () => fallBits, camera, phone, grade, bloom, scene };
+  window.render = t => { frame(t); composer.render(); overlay(t); };
+  window.render(0.5); window.READY = true;
+}
+boot();
+</script></body></html>

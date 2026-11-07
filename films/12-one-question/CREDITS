@@ -1,0 +1,16 @@
+one-question: credits and licences
+
+Picture: original code (three.js, MIT licence, https://threejs.org) rendered frame by frame in headless Chromium on this machine. No stock footage, no generated video, no paid services, no logos.
+Map data: Natural Earth (public domain, https://www.naturalearthdata.com): ne_110m_land (land polygons, no borders) and ne_50m_populated_places_simple (city lights), via github.com/nvkelso/natural-earth-vector.
+Brick numbers: o200k_base vocabulary (GPT-4o tokenizer) via the Hugging Face port Xenova/gpt-4o (tokenizer.json), used only to compute the seven numbers shown on screen.
+Emoji (pizza, egg): Noto Color Emoji (Google, SIL Open Font License 1.1), system font.
+
+Fonts (SIL Open Font License 1.1, files and licences in fonts/):
+  Anton (Vernon Adams), https://github.com/google/fonts/tree/main/ofl/anton
+  Barlow Condensed (Jeremy Tribby), https://github.com/google/fonts/tree/main/ofl/barlowcondensed
+
+Scratch voice (placeholder, to be replaced by the client's recording or Fish Audio): Kokoro-82M via kokoro-onnx, voice am_puck (Apache-2.0, https://huggingface.co/hexgrad/Kokoro-82M).
+Speech check and word timestamps: faster-whisper (MIT) with OpenAI Whisper base.en / small.en weights (MIT).
+
+Music and sound effects: original, synthesised in numpy/scipy for this film (no samples).
+Production toolkit: Lemo-Opuscar film library (LIB=/root/lemo-opuscar; see its LICENSE).
