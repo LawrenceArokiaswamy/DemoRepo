@@ -1,0 +1,1 @@
+[clear, explaining] It writes ONE word at a time, [short pause] always guessing the most likely NEXT word.

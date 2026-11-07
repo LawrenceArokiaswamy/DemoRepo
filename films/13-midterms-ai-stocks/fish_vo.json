@@ -1,0 +1,79 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "gap_default": 0.32,
+ "lines": [
+  [
+   "n1",
+   "[excited, punchy news-anchor energy] America just VOTED. [short pause] AI stocks just FELL. [pause] [curious, rising] Connected?",
+   0.45
+  ],
+  [
+   "n2",
+   "[neutral, clear, matter-of-fact] Tuesday, Democrats won the House and Senate, [short pause] AP says, [short pause] with a few races still counting.",
+   0.35
+  ],
+  [
+   "n3",
+   "[serious, with weight] Thursday, [short pause] the Nasdaq fell FIVE and a HALF percent.",
+   0.45
+  ],
+  [
+   "n4",
+   "[energetic explainer, leaning in] So why? [pause] Reason ONE: [short pause] AI lives in giant computer warehouses, [short pause] called DATA centers.",
+   0.22
+  ],
+  [
+   "n5",
+   "[explaining, building momentum] Investors fear the election could SLOW building them. [short pause] FEWER data centers, [short pause] fewer CHIPS sold.",
+   0.4
+  ],
+  [
+   "n6",
+   "[lighter, warm, almost smiling] Like a BRICK maker, hearing the town might stop new HOUSES.",
+   0.42
+  ],
+  [
+   "n7",
+   "[energetic, turning the page] Reason TWO: [short pause] big tech is spending HUGE sums on AI, and profits look slower.",
+   0.22
+  ],
+  [
+   "n8",
+   "[lighter, warm, playful] Like a LEMONADE stand that's worth LESS once sales slow down.",
+   0.42
+  ],
+  [
+   "n9",
+   "[energetic, turning the page] Reason THREE: [short pause] worry about higher INTEREST rates. [short pause] SAFE savings pay more, so some money leaves RISKY stocks.",
+   0.22
+  ],
+  [
+   "n10",
+   "[playful, smiling] Like kids leaving the CANDY line when the ice-cream TRUCK shows up!",
+   0.5
+  ],
+  [
+   "n11",
+   "[slow, dramatic, genuinely curious] So... [short pause] did the ELECTION cause it?",
+   0.75,
+   0.95
+  ],
+  [
+   "n12",
+   "[confident verdict, clear P] Partly. [short pause] It was Thursday's SPARK. [short pause] But the slide started BEFORE anyone voted.",
+   0.45
+  ],
+  [
+   "n13",
+   "[warm, wrapping up] Connected? [short pause] Yes. [short pause] But not the WHOLE story.",
+   0.45
+  ],
+  [
+   "n14",
+   "[friendly, upbeat] Follow for more!",
+   0.0
+  ]
+ ],
+ "speed": 1.07
+}

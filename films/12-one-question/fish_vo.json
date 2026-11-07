@@ -1,0 +1,113 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "speed": 1.15,
+ "lines": [
+  [
+   "n1",
+   "[excited, amazed, high energy] ChatGPT gets about TWO and a HALF BILLION questions [short pause] a DAY.",
+   0.25
+  ],
+  [
+   "n2",
+   "[dropping to a playful secret] Let's follow... [short pause] just ONE.",
+   0.35
+  ],
+  [
+   "n3",
+   "[curious, like typing it yourself] So, [short pause] can I eat PIZZA for BREAKFAST? [pause] [cheerful, clearly] SEND!",
+   0.55
+  ],
+  [
+   "n4",
+   "[a bit hushed, sneaking inside] Your words become [short pause] ONES and ZEROS.",
+   0.25
+  ],
+  [
+   "n5",
+   "[curious, building] The phone's BRAIN [short pause] packs them up,",
+   0.18
+  ],
+  [
+   "n6",
+   "[excited] and the ANTENNA [short pause] fires them OUT!",
+   0.4
+  ],
+  [
+   "n7",
+   "[fast, racing, thrilled] Zap! [short pause] To a TOWER, [short pause] down a cable of LIGHT, [short pause] into a building full of COMPUTERS.",
+   0.38
+  ],
+  [
+   "n8",
+   "[fun teacher mode] Computers only understand NUMBERS,",
+   0.12
+  ],
+  [
+   "n9",
+   "[playful, smiling] so your question gets CHOPPED into little LEGO bricks, [short pause] each with a NUMBER.",
+   0.3
+  ],
+  [
+   "n10",
+   "[curious] Then, [short pause] it reads ALL the words TOGETHER.",
+   0.25
+  ],
+  [
+   "n11",
+   "[thinking out loud] Pizza, [short pause] plus breakfast... [pause] [silly] a map to a pizza shop? [pause] [laughing] Nope! [short pause] A FOOD question.",
+   0.4
+  ],
+  [
+   "n12",
+   "[slower, building suspense] Here's the SURPRISE: [pause] it DOESN'T look the answer up.",
+   0.22
+  ],
+  [
+   "n13",
+   "[clear, explaining] It writes ONE word at a time, [short pause] always guessing the most likely NEXT word.",
+   0.25
+  ],
+  [
+   "n14",
+   "[playful, sing-song] Like: [short pause] twinkle, twinkle, little...",
+   0.65
+  ],
+  [
+   "n15",
+   "[triumphant] Star! [pause] [amazed] It learned that by reading a GIGANTIC pile of TEXT.",
+   0.3
+  ],
+  [
+   "n16",
+   "[fast, excited] Then, [short pause] the answer ZOOMS all the way BACK!",
+   0.3
+  ],
+  [
+   "n17",
+   "[friendly, playful reply] Technically, YES! [pause] Just maybe add some FRUIT.",
+   0.32
+  ],
+  [
+   "n18",
+   "[satisfied, impressed] All of that, [short pause] in about TWO SECONDS.",
+   0.8
+  ],
+  [
+   "n19",
+   "[slower, warm, a little amazed] It just did that FOR YOU... [short pause] and about two and a half BILLION more times TODAY.",
+   0.38,
+   1.04
+  ],
+  [
+   "n20",
+   "[deadpan, dry] And it has NEVER once tasted a pizza.",
+   0.42
+  ],
+  [
+   "n21",
+   "[warm, casual] Follow for more.",
+   0.0
+  ]
+ ]
+}

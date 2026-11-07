@@ -1,7 +1,8 @@
 # VO script: "America just voted. AI stocks just fell. Connected?"
 
 For: Lorenzo • AI in 60 Seconds (@lorenzo_ai_unplugged). 14 lines, about 150 spoken words (number words such as "five and a half" count individually; about 140 without them). About 47 s of speech, film about 53 s.
-Scratch voice in this cut: Kokoro am_puck (placeholder for Fish Audio or the client's own read).
+Voice in this cut: **Fish Audio**, model `s2-pro`, library voice "Explainer" (id `3e8a237e7b5d4eaab50bd9e05053d70e`), energetic explainer read at speed 1.07 (n11 at 0.95 for the slow question).
+Each line is one Fish call with inline delivery tags (`[excited]`, `[pause]`, `[short pause]`, …) and the bold words in capitals; the lines are stitched into `take.wav` with designed gaps (0.75 s of silence after n11) and the film is built with `./build.sh --vo take.wav`. The tagged script is `fish_vo.json`; regenerate with `python3 ../tools/fish/gen.py .` (add line ids to retake only those) then `$LIB/.venv/bin/python ../tools/fish/stitch.py .`. Every line was checked with Whisper small.en. The earlier scratch voice was Kokoro am_puck (`./build.sh` with no options still builds it).
 
 ## How to read it
 - A calm-urgent news read: like the first minute of a good evening bulletin explained to a smart 10-year-old. Steady, clear, never shouting, never selling.

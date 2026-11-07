@@ -1,6 +1,7 @@
 #!/bin/sh
 # midterms-ai-stocks: one-command build (free: everything is rendered from code on this machine).
 #   ./build.sh                    scratch narration (Kokoro am_puck; generated if vo/ is empty)
+#   ./build.sh --vo take.wav      the Fish Audio narration (fish_vo.json -> ../tools/fish/gen.py + stitch.py -> take.wav)
 #   ./build.sh --vo myvoice.wav   ONE recording of the whole VO_SCRIPT.md (any rate/format ffmpeg reads); Whisper finds every line
 #   ./build.sh --vo-dir takes/    one WAV per line: takes/n1.wav … takes/n14.wav (ids as in lines.json / VO_SCRIPT.md)
 #   add --no-render to remix/remaster only (valid only if the voice timing did not change)

@@ -650,11 +650,15 @@ function stroked(s, x, y, size, font, col, align = 'center') { X.font = `${size}
 const CX = 504, GLOW = 'rgba(255,170,30,.85)', SRC = 'rgba(210,222,250,.92)';
 const fade = (t, a, b, fi = .15, fo = .15) => clamp((t - a) / fi) * (1 - clamp((t - b + fo) / fo));
 function head(lines, t, a, b, y0 = 205, size = 92, step = 104) {   // gold headline lines: [text, appearTime, color?, size?]
-  let y = y0; for (const L of lines) { const [s, at, col, sz] = L; const al = fade(t, at, b, .12) * (a <= t ? 1 : 0); if (al > 0) { X.globalAlpha = al; const pop = back(clamp((t - at) / .3), 1.6); X.save(); X.translate(CX, y); X.scale(lerp(.8, 1, pop), lerp(.8, 1, pop)); fitTx(s, 0, 0, sz || size, AN, col || CSS.gold, 860, 26, GLOW); X.restore(); X.globalAlpha = 1; } y += (sz || size) * step / size; }
+  // spacing: a small kicker line is lifted above y0 so the main line keeps its place; a bigger line that follows gets a full step (no overlap)
+  let y = y0; lines.forEach((L, i) => { const [s, at, col, sz0] = L; const sz = sz0 || size, nz = lines[i + 1] ? (lines[i + 1][3] || size) : size;
+    const kick = sz < size ? (size - sz) * step / size : 0; const al = fade(t, at, b, .12) * (a <= t ? 1 : 0);
+    if (al > 0) { X.globalAlpha = al; const pop = back(clamp((t - at) / .3), 1.6); X.save(); X.translate(CX, y - kick); X.scale(lerp(.8, 1, pop), lerp(.8, 1, pop)); fitTx(s, 0, 0, sz, AN, col || CSS.gold, 860, 26, GLOW); X.restore(); X.globalAlpha = 1; }
+    y += (kick ? sz : Math.max(sz, nz)) * step / size; });
 }
-function src(s, y, t, a, b) { const al = fade(t, a, b); if (al > 0) { X.globalAlpha = al; tx(s, CX, y, 32, BS, SRC, 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; } }
-function bigNum(s, y, t, a, b, size = 230, col = CSS.gold2) { const al = fade(t, a, b, .1); if (al > 0) { X.globalAlpha = al; const nb = back(clamp((t - a) / .35), 1.8); X.save(); X.translate(CX, y); X.scale(nb, nb); tx(s, 0, 0, size, AN, col, 'center', 44, GLOW); X.restore(); X.globalAlpha = 1; } }
-function tag(a, b, t, t0, t1) { const al = fade(t, t0, t1); if (al > 0) { X.globalAlpha = al; const x = 60 - 30 * (1 - eo(clamp((t - t0) / .3))); rr(X, x - 16, 1108, 10, 92, 4); X.fillStyle = CSS.gold; X.fill(); tx(a, x + 10, 1146, 44, BX, '#fff', 'left', 10, 'rgba(0,0,0,.85)'); tx(b, x + 10, 1192, 34, BB, CSS.cyan, 'left', 8, 'rgba(0,0,0,.85)'); X.globalAlpha = 1; } }
+function src(s, y, t, a, b) { const al = fade(t, a, b); if (al > 0) { X.globalAlpha = al; X.font = `32px ${BS}`; const w = X.measureText(s).width; rr(X, CX - w / 2 - 18, y - 32, w + 36, 44, 22); X.fillStyle = 'rgba(4,8,26,.62)'; X.fill(); tx(s, CX, y, 32, BS, SRC, 'center', 8, 'rgba(0,0,0,.9)'); X.globalAlpha = 1; } }
+function bigNum(s, y, t, a, b, size = 230, col = CSS.gold2, x = CX) { const al = fade(t, a, b, .1); if (al > 0) { X.globalAlpha = al; const nb = back(clamp((t - a) / .35), 1.8); X.save(); X.translate(x, y); X.scale(nb, nb); tx(s, 0, 0, size, AN, col, 'center', 44, GLOW); X.restore(); X.globalAlpha = 1; } }
+function tag(a, b, t, t0, t1) { const al = fade(t, t0, t1); if (al > 0) { X.globalAlpha = al; const x = 60 - 30 * (1 - eo(clamp((t - t0) / .3))); X.font = `34px ${BB}`; const bw = Math.max(X.measureText(b).width, 150); rr(X, x - 24, 1098, bw + 52, 112, 14); X.fillStyle = 'rgba(4,8,26,.62)'; X.fill(); rr(X, x - 16, 1108, 10, 92, 4); X.fillStyle = CSS.gold; X.fill(); tx(a, x + 10, 1146, 44, BX, '#fff', 'left', 10, 'rgba(0,0,0,.85)'); tx(b, x + 10, 1192, 34, BB, CSS.cyan, 'left', 8, 'rgba(0,0,0,.85)'); X.globalAlpha = 1; } }
 function overlay(t) {
   X.clearRect(0, 0, W, H);
   // HOOK (first line already on screen at frame 1)
@@ -709,7 +713,7 @@ function overlay(t) {
   head([['SO… DID THE ELECTION', T.k1], ['CAUSE IT?', word('n11', 'cause') - .1, CSS.gold2, 130]], t, T.k1, T.HIT, 205);
   if (t >= T.HIT && t < T.but + .02) { bigNum('PARTLY.', 330, t, T.partly - .05, T.but + .02, 190); src('the election was Thursday’s spark (Reuters, CNBC)', 410, t, T.spark - .2, T.but + .02); }
   head([['THE SLIDE STARTED', T.but], ['BEFORE THE VOTE', word('n12', 'before') - .1, CSS.gold2]], t, T.but, T.v1 + .02, 190);
-  bigNum('−10%', 470, t, word('n12', 'anyone') - .1, T.v1 + .02, 170);
+  bigNum('−10%', 480, t, word('n12', 'anyone') - .1, T.v1 + .02, 160, CSS.gold2, CX - 110);
   src('Nasdaq-100, Oct 6 record → Nov 2 close (Bloomberg)', 530, t, word('n12', 'anyone'), T.v1 + .02);
   // LOOP-BACK + END
   head([['CONNECTED? YES.', T.v1], ['NOT THE WHOLE STORY.', word('n13', 'but') - .1, CSS.gold2]], t, T.v1, T.e0 + .02, 205);

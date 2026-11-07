@@ -9,7 +9,8 @@ Fonts (SIL Open Font License 1.1, files and licences in fonts/):
   Anton (Vernon Adams), https://github.com/google/fonts/tree/main/ofl/anton
   Barlow Condensed (Jeremy Tribby), https://github.com/google/fonts/tree/main/ofl/barlowcondensed
 
-Scratch voice (placeholder, to be replaced by the client's recording or Fish Audio): Kokoro-82M via kokoro-onnx, voice am_puck (Apache-2.0, https://huggingface.co/hexgrad/Kokoro-82M).
+Voice: Fish Audio text-to-speech (https://fish.audio), model s2-pro, public library voice "Explainer" (id 3e8a237e7b5d4eaab50bd9e05053d70e), generated through the Fish Audio API on the client's own paid account; the script is in fish_vo.json.
+Earlier scratch voice (still built by ./build.sh with no options): Kokoro-82M via kokoro-onnx, voice am_puck (Apache-2.0, https://huggingface.co/hexgrad/Kokoro-82M).
 Speech check and word timestamps: faster-whisper (MIT) with OpenAI Whisper base.en / small.en weights (MIT).
 
 Music and sound effects: original, synthesised in numpy/scipy for this film (no samples).
