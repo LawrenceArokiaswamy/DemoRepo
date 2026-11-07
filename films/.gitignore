@@ -1,4 +1,4 @@
 out/
 stills/
 review/
-vo_fish/*.wav
+**/vo_fish/*.wav
