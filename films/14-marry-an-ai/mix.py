@@ -129,8 +129,9 @@ while t < F['S0'] - .01:
 dr = 1.5; add(mus, riser(dr, .8), F['S0'] - dr, .4)
 # 4) after the silence: hit, then a minor pulse under the three spotlights, then the wry music box
 HITt = F['HIT']; add(mus, sub(1.0, 95, 34, 2.4), HITt, .6); add(mus, kick(1.1, 160, 40, .5), HITt, .5); add(mus, crash(1.6), HITt, .08)
+tUPD = W('n11', 'one') - .06   # the pulse stops before "one update" so the punchline lands alone
 t = HITt; k = 0
-while t < tL0:
+while t < tUPD - beat * .45:
     if k % 2 == 0: add(mus, kick(.8), t, .26)
     add(mus, bass([33, 33, 41, 40][(k // 2) % 4], beat * .5 * .9, 1., .5), t, .2); add(mus, bass([33, 33, 41, 40][(k // 2) % 4], beat * .5 * .9, 1., .5), t + beat / 2, .14)
     k += 1; t += beat
@@ -167,7 +168,7 @@ for e in EV:
     elif TY == 'flutter': d = e.get('d', 1.); [add(fx, bp(noise(.05), 800, 4000) * np.exp(-t_(.05) / .015), t + k * .06, .08, rng.uniform(-.6, .6)) for k in range(int(d / .06))]
     elif TY == 'hum': add(fx, hum(e.get('d', 2.)) * .6, t, .3)
     elif TY == 'rise': add(fx, riser(e.get('d', 1.), .6), t, .12)
-    elif TY == 'dialup': d = e.get('d', 1.); tt = t_(d); f = 200 + 900 * (tt / d) ** 1.5; add(fx, np.sin(2 * np.pi * np.cumsum(f) / SR) * env(d, .1, .1) * .3, t, .2); [add(fx, tick(1, 3500, .02), t + k * d / 12, .1) for k in range(12)]
+    elif TY == 'dialup': d = e.get('d', 1.); tt = t_(d); f = 200 + 900 * (tt / d) ** 1.5; add(fx, np.sin(2 * np.pi * np.cumsum(f) / SR) * env(d, .1, .1) * .3, t, .2 * g); [add(fx, tick(1, 3500, .02), t + k * d / 12, .1 * g) for k in range(12)]
     elif TY == 'glitch': add(fx, glitch(1.), t, .35 * g, rng.uniform(-.3, .3))
     elif TY == 'coldblip': add(fx, blip(660, .14), t, .14); add(fx, blip(523, .2), t + .08, .1)
     elif TY == 'holo': d = e.get('d', 1.); add(fx, shimmer(d) * .7, t, .15); add(fx, hum(d) * .3, t, .12)

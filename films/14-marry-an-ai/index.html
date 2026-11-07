@@ -347,11 +347,11 @@ function timeline() {
   ev.push({ t: T.prop + .05, type: 'swish' }, { t: T.prop + .12, type: 'bubble', g: 1.2 }, { t: T.yes + .05, type: 'yes' });
   ev.push({ t: T.c0 - .06, type: 'whoosh', g: .7 }, { t: T.legal - .02, type: 'stamp' }, { t: T.p0 - .05, type: 'whoosh', g: .6 }, { t: T.p0 + .1, type: 'flutter', d: .9 });
   ev.push({ t: T.tw - .05, type: 'whoosh', g: .6 }, { t: T.twEnd, type: 'dropout' }, { t: T.turn, type: 'hum', d: T.u0 - T.turn + .4 }, { t: T.it6, type: 'rise', d: T.u0 - T.it6 });
-  ev.push({ t: T.u0 - .05, type: 'whoosh', g: .8 }, { t: T.u0 + .1, type: 'dialup', d: T.over - T.u0 - .1 }, { t: T.over, type: 'glitch' }, { t: T.over + .25, type: 'glitch', g: .6 });
+  ev.push({ t: T.u0 - .05, type: 'whoosh', g: .8 }, { t: T.u0 + .1, type: 'dialup', d: word('n7', 'bots') - T.u0 - .25, g: .6 }, { t: word('n7', 'overnight') + .35, type: 'glitch' }, { t: word('n7', 'overnight') + .6, type: 'glitch', g: .6 });
   ev.push({ t: T.s0 - .05, type: 'whoosh', g: .6 }); for (let k = 0; k < 3; k++) ev.push({ t: T.s0 + .25 + k * .55, type: 'coldblip' });
   ev.push({ t: T.ho0 - .05, type: 'whoosh', g: .7 }, { t: T.ho0 + .1, type: 'holo', d: T.ended - T.ho0 }, { t: T.ended, type: 'powerdown' });
   ev.push({ t: T.q0 - .05, type: 'whoosh', g: .7 }, { t: T.S0, type: 'silence' }, { t: T.HIT, type: 'hit' });
-  ev.push({ t: T.ai11, type: 'spot', g: .8 }, { t: T.co, type: 'spot', g: 1.2 }, { t: T.co + .05, type: 'hum', d: 1.2 }, { t: T.upd, type: 'glitch', g: .8 });
+  ev.push({ t: T.ai11, type: 'spot', g: .8 }, { t: T.co, type: 'spot', g: 1.2 }, { t: T.co + .05, type: 'hum', d: 1.2 }, { t: L1('n11') + .02, type: 'glitch', g: .8 });
   ev.push({ t: T.l0 - .05, type: 'whoosh', g: .8 }, { t: T.l0 + .1, type: 'scroll', d: T.terms - T.l0 }, { t: T.terms + .45, type: 'tick' }, { t: T.follow + .1, type: 'chime' });
   EV = ev.sort((a, b) => a.t - b.t);
 }
