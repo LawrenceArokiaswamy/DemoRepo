@@ -1,0 +1,63 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "speed": 1.1,
+ "lines": [
+  [
+   "n1",
+   "[intrigued, cinematic] What if the internet went DOWN... [short pause] for one WHOLE day?",
+   0.4
+  ],
+  [
+   "n2",
+   "[serious, revealing] It already HAPPENED. [short pause] In twenty twenty-two, [short pause] TWELVE MILLION Canadians lost their phones and internet. [short pause] DEBIT cards stopped working across the country.",
+   0.35
+  ],
+  [
+   "n3",
+   "[slower, ominous] Now imagine... [short pause] the WHOLE world.",
+   0.45
+  ],
+  [
+   "n4",
+   "[storytelling, a bit eerie] You wake up. [short pause] No messages. [short pause] No news. [short pause] No maps.",
+   0.3
+  ],
+  [
+   "n5",
+   "[deadpan] You tap your card. [pause] [clearly, flat] Declined. [short pause] Cash only.",
+   0.3
+  ],
+  [
+   "n6",
+   "[urgent] Offices FREEZE. [short pause] Email, [short pause] video calls, [short pause] cloud files: [short pause] GONE.",
+   0.3
+  ],
+  [
+   "n7",
+   "[urgent, building] Airports go into CHAOS. [short pause] In twenty twenty-four, [short pause] one bad software update cancelled over FIVE THOUSAND flights [short pause] in a single day.",
+   0.3
+  ],
+  [
+   "n8",
+   "[fast, punchy] No deliveries. [short pause] No rides. [short pause] No streaming.",
+   0.4
+  ],
+  [
+   "n9",
+   "[slow, dramatic] And the bill... [short pause] for ONE day?",
+   0.85,
+   0.95
+  ],
+  [
+   "n10",
+   "[heavy, impactful] About FORTY-THREE BILLION dollars.",
+   0.5
+  ],
+  [
+   "n11",
+   "[warm, playful, challenging] So, [short pause] could YOU survive a day offline? [short pause] Comment below!",
+   0.0
+  ]
+ ]
+}
