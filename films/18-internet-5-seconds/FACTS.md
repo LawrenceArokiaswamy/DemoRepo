@@ -1,0 +1,6 @@
+# Facts (claim → source, checked 2026-11-08). The outage itself is a "what if".
+
+1. **"Nearly 800,000 Google searches never happen" (in 5 seconds).** Google said in Jan 2025 it handles more than 5 trillion searches a year (its first official figure since 2016): 5e12 / 365 / 86,400 ≈ 158,000 per second → ≈ 790,000 in 5 s. Coverage: https://explodingtopics.com/blog/google-searches-per-day (third-party estimates run higher, up to ~16 billion/day).
+2. **"About twenty million emails freeze in mid-air."** Radicati / Statista: about 376 billion emails sent and received per day in 2025 → ≈ 4.35 million per second → ≈ 22 million in 5 s ("about twenty million"). https://www.statista.com/statistics/456500/daily-number-of-e-mails-worldwide/ ("freeze" = they would queue and retry; poetic wording).
+3. **"Tens of thousands of card payments just hang."** Visa processed about 257.5 billion transactions in FY2025 (≈ 8,200/s) and an estimated ~323 billion in calendar 2025 (≈ 10,000/s) → ≈ 40,000–50,000 in 5 s on Visa alone. https://capitaloneshopping.com/research/number-of-credit-card-transactions/ (some terminals can approve offline, hence "hang", not "fail").
+4. Times Square is shown as an original, brand-free city canyon; billboards carry invented words only.

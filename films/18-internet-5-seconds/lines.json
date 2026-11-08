@@ -1,0 +1,62 @@
+[
+ {
+  "id": "n1",
+  "text": "What if the internet disappeared for five seconds?",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n2",
+  "text": "You're in Times Square. It's Friday night.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n3",
+  "text": "All around you, invisible data is flying. Every phone. Every screen. Every card tap.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n4",
+  "text": "Three. Two. One.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n5",
+  "text": "Nearly eight hundred thousand Google searches never happen.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n6",
+  "text": "About twenty million emails freeze in mid-air.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n7",
+  "text": "Tens of thousands of card payments just hang.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n8",
+  "text": "And every phone in this square says the same thing: no connection.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n9",
+  "text": "Then, it all comes back.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n10",
+  "text": "Five seconds. So what would you miss first? Comment below.",
+  "voice": "am_puck",
+  "speed": 1.1
+ }
+]
