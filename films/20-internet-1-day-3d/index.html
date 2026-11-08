@@ -291,36 +291,37 @@ function globeDark(t, t0, t1) { const a = SETS.globe.userData.pts.geometry.attri
   for (let i = 0; i < a.count; i++) { const on = (pos[i * 3] / 30 * .5 + .5) * .6 + hash(i * 1.9) * .4 > k * 1.1; a.array[i * 3] = on ? 1.6 : .08; a.array[i * 3 + 1] = on ? 1.25 : .1; a.array[i * 3 + 2] = on ? .6 : .2; } a.needsUpdate = true; }
 
 
-// ---- film 20: a real animated 3D crowd (Mixamo characters, mocap clips from Xbot) ----
-const MODELS = {}; const CROWD_KIND = (new URLSearchParams(location.search).get('crowd')) || 'bot';
-const CROWD = [];
+// ---- film 20: a crowd of realistic animated people (Ready Player Me avatar + RPM motion-capture clips) ----
+const MODELS = {}; const CROWD = [];
+const ANIMS = { walk: 'M_Walk_001', idle: 'M_Standing_Idle_001', idle2: 'M_Standing_Idle_Variations_002', upset: 'M_Standing_Expressions_013', upset2: 'M_Standing_Expressions_010', talk: 'M_Talking_Variations_002' };
+function inPlace(clip) { const c = clip.clone(); c.tracks.forEach(tr => { if (tr.name.endsWith('.position') && /Hips/.test(tr.name)) { const v = tr.values, x0 = v[0], z0 = v[2]; for (let i = 0; i < v.length; i += 3) { v[i] = x0; v[i + 2] = z0; } } }); c.tracks = c.tracks.filter(tr => !tr.name.endsWith('.position') || /Hips/.test(tr.name)); return c; }
 function buildCrowd() {
-  const s = SETS.city, clips = {}, clipsM = {}; MODELS.x.animations.forEach(c => { clips[c.name] = c; });
-  const skOf = sc => { let k = null; sc.traverse(o => { if (o.isSkinnedMesh && !k) k = o; }); return k; };
-  try { const tgt = skOf(MODELS.m.scene), srcM = skOf(MODELS.x.scene); MODELS.x.scene.updateMatrixWorld(true); MODELS.m.scene.updateMatrixWorld(true);
-    for (const k of ['walk', 'idle', 'sad_pose', 'headShake']) clipsM[k] = SkeletonUtils.retargetClip(tgt, srcM, clips[k], { hip: 'mixamorigHips', useFirstFramePosition: true, fps: 30, preserveBoneMatrix: true }); window.RETARGET = 'ok'; }
-  catch (e) { window.RETARGET = String(e); MODELS.x.animations.forEach(c => { const c2 = c.clone(); c2.tracks = c2.tracks.filter(tr => !tr.name.endsWith('.position')); clipsM[c.name] = c2; }); }
-  const r = mulberry(20); const sizeOf = o => { const b = new THREE.Box3().setFromObject(o); return b.max.y - b.min.y; };
-  const N = 110; const roadRoad = s.children.find(o => o.geometry && o.geometry.type === 'PlaneGeometry' && o.geometry.parameters.width === 40); if (roadRoad) roadRoad.receiveShadow = true;
+  const s = SETS.city, r = mulberry(21); const clips = {}; for (const k in ANIMS) clips[k] = inPlace(MODELS[k].animations[0]);
+  const src = MODELS.av.scene; const box = new THREE.Box3().setFromObject(src); const h0 = box.max.y - box.min.y;
+  const TOPS = ['#1f2a44', '#2b2b30', '#b9a88a', '#3a5a80', '#7a2a33', '#4a5233', '#e8e4dc', '#8a6a4a', '#33363d', '#c45a3a', '#2f6f6a', '#d9c24a'];
+  const BOTS = ['#1a1d24', '#2c3a55', '#3a3530', '#4a4f58', '#22252b', '#5a4a3a'];
+  const SKIN = [[1, 1, 1], [.92, .8, .7], [.75, .58, .46], [.55, .4, .3], [.98, .9, .82]]; const HAIR = ['#1a1410', '#3a2a1a', '#6a4a2a', '#2a2a2a', '#8a7a5a'];
+  const N = 90;
   for (let i = 0; i < N; i++) {
-    const real = CROWD_KIND === 'real' || (CROWD_KIND === 'mix' && r() < .7); const src = real ? MODELS.m.scene : MODELS.x.scene;
-    const o = SkeletonUtils.clone(src); const h = sizeOf(src); const sc = (1.62 + r() * .2) / h; o.scale.setScalar(sc);
-    const PAL = ['#1f2a44', '#2b2b30', '#b9a88a', '#3a5a80', '#6b2a33', '#4a5233', '#d8d4cc', '#8a6a4a', '#33363d', '#5a6f8f']; const tint = real ? new THREE.Color().setHSL(r(), .25, .8) : new THREE.Color(PAL[Math.floor(r() * PAL.length)]).multiplyScalar(.85 + r() * .3);
-    o.traverse(m => { if (m.isMesh) { m.castShadow = true; m.frustumCulled = false; m.material = m.material.clone(); if (real) m.material.color.copy(tint).lerp(new THREE.Color(1, 1, 1), .5); else { m.material.color.copy(tint); if (m.material.emissive) m.material.emissive.setRGB(0, 0, 0); m.material.metalness = .25; m.material.roughness = .55; } } });
-    const walking = r() < .55, side = r() < .5 ? -1 : 1; const x = walking ? side * (2.2 + r() * 3.6) : (r() - .5) * 11; const z0 = -4 - r() * 62; const dir = r() < .5 ? 1 : -1;
-    o.position.set(x, 0, z0); o.rotation.y = walking ? (dir > 0 ? 0 : Math.PI) : r() * 6.28;
-    const mixer = new THREE.AnimationMixer(o); const act = {}; for (const k of ['walk', 'idle', 'sad_pose', 'headShake']) { act[k] = mixer.clipAction((real ? clipsM : clips)[k]); act[k].play(); act[k].setEffectiveWeight(0); }
-    // a glowing phone in the right hand for the people standing around
-    let phone = null; if (!walking && r() < .8) { const hand = o.getObjectByName('mixamorigRightHand'); if (hand) { phone = new THREE.Mesh(new THREE.BoxGeometry(.075, .15, .01), new THREE.MeshBasicMaterial({ color: 0x9fd4ff, toneMapped: false })); phone.scale.setScalar(1 / sc); phone.position.set(0, .1 / sc, .05 / sc); hand.add(phone); } }
-    s.add(o); CROWD.push({ o, mixer, act, walking, x, z0, dir, sp: 1.05 + r() * .3, off: r() * 20, phone, shake: r() < .25 });
+    const o = SkeletonUtils.clone(src); const sc = (1.66 + r() * .2) / h0; o.scale.setScalar(sc);
+    const top = new THREE.Color(TOPS[Math.floor(r() * TOPS.length)]), bot = new THREE.Color(BOTS[Math.floor(r() * BOTS.length)]), sk = SKIN[Math.floor(r() * SKIN.length)], hair = new THREE.Color(HAIR[Math.floor(r() * HAIR.length)]); const beard = r() < .45;
+    o.traverse(m => { if (!m.isMesh) return; m.castShadow = true; m.frustumCulled = false; const n = (m.material && m.material.name) || '';
+      m.material = m.material.clone();
+      if (n.includes('Outfit_Top')) m.material.color.copy(top); else if (n.includes('Outfit_Bottom')) m.material.color.copy(bot); else if (n.includes('Footwear')) m.material.color.setScalar(.35 + r() * .4);
+      else if (n.includes('Skin') || n.includes('Body')) m.material.color.setRGB(...sk); else if (n.includes('Beard')) { m.visible = beard; m.material.color.copy(hair); } else if (n.includes('Hair') || n.includes('Headwear')) m.material.color.copy(hair); });
+    const walking = r() < .5, side = r() < .5 ? -1 : 1; let x, z0, tries = 0; do { x = walking ? side * (2.4 + r() * 3.4) : (r() - .5) * 11; z0 = -3 - r() * 60; tries++; } while (tries < 40 && CROWD.some(c => Math.hypot(c.x - x, c.z0 - z0) < (walking || c.walking ? .75 : 1.1))); const dir = walking ? (side > 0 ? -1 : 1) : 1;
+    o.position.set(x, 0, z0); o.rotation.y = walking ? (dir > 0 ? 0 : Math.PI) : (r() < .6 ? r() * .8 - .4 : r() * 6.28);
+    const mixer = new THREE.AnimationMixer(o); const act = {}; for (const k in clips) { act[k] = mixer.clipAction(clips[k]); act[k].play(); act[k].setEffectiveWeight(0); }
+    let phone = null; if (!walking && r() < .75) { const hand = o.getObjectByName('RightHand'); if (hand) { phone = new THREE.Mesh(new THREE.BoxGeometry(.075, .15, .012), new THREE.MeshBasicMaterial({ color: 0x9fd4ff, toneMapped: false })); phone.scale.setScalar(1 / sc); phone.position.set(.0, .09 / sc, .04 / sc); phone.rotation.x = .4; hand.add(phone); } }
+    s.add(o); CROWD.push({ o, mixer, act, walking, x, z0, dir, sp: 1.15 + r() * .25, off: r() * 30, phone, mood: r() < .5 ? 'upset' : 'upset2', alt: r() < .4 ? 'idle2' : (r() < .3 ? 'talk' : 'idle') });
   }
 }
 function crowdUpdate(t) { const off = T.down !== undefined && t >= T.down;
-  CROWD.forEach(c => { const tt = t + c.off; let w = { walk: 0, idle: 0, sad_pose: 0, headShake: 0 };
-    if (c.walking) { w.walk = 1; let z = c.z0 + c.dir * c.sp * t; z = -4 - (((-4 - z) % 64) + 64) % 64; c.o.position.z = z; }
-    else if (!off) w.idle = 1; else { const k = clamp((t - T.down - .5 - (c.off % 3) * .3) / .6); if (c.shake && t < T.h8 + 3) { w.headShake = k; w.idle = 1 - k; } else { w.sad_pose = k; w.idle = 1 - k; } }
-    for (const k in w) c.act[k].setEffectiveWeight(w[k]); c.mixer.setTime(tt);
-    if (c.phone) c.phone.material.color.setRGB(...(off ? [.12, .12, .14] : [.62, .83, 1.1])); });
+  CROWD.forEach(c => { const w = {}; for (const k in c.act) w[k] = 0;
+    if (c.walking) { w.walk = 1; let z = c.z0 + c.dir * c.sp * t; z = -3 - (((-3 - z) % 62) + 62) % 62; c.o.position.z = z; }
+    else if (!off) w[c.alt] = 1; else { const k = clamp((t - T.down - .5 - (c.off % 3) * .3) / .8); w[c.mood] = k; w[c.alt] = 1 - k; }
+    for (const k in w) c.act[k].setEffectiveWeight(w[k]); c.mixer.setTime(t + c.off);
+    if (c.phone) c.phone.material.color.setRGB(...(off ? [.1, .1, .12] : [.62, .83, 1.1])); });
 }
 
 // ================= TIMELINE =================
@@ -411,7 +412,7 @@ function overlay(t) {
 async function boot() {
   for (const [n, u] of FONTS) { const f = new FontFace(n, `url(${u})`); await f.load(); document.fonts.add(f); }
   [F, CAPS] = await Promise.all(['film.json', 'caps.json'].map(u => fetch(u).then(r => r.json())));
-  const gl = new GLTFLoader(); MODELS.x = await gl.loadAsync('assets/Xbot.glb'); MODELS.m = await gl.loadAsync('assets/Michelle.glb');
+  const gl = new GLTFLoader(); MODELS.av = await gl.loadAsync('assets/avatar.glb'); for (const k in ANIMS) MODELS[k] = await gl.loadAsync(`assets/${ANIMS[k]}.glb`);
   timeline(); buildCity(); buildExtras(); buildCrowd();
   window.DUR = F.dur; window.EV = EV; window.T = T; window.SH = SH; window.DBG = { camera, scene, ST, grade, bloom };
   window.render = t => { frame(t); composer.render(); overlay(t); };

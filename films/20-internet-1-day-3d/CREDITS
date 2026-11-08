@@ -1,6 +1,6 @@
 internet-1-day: credits and licences
 
-3D characters: "X Bot" from Adobe Mixamo (https://www.mixamo.com), with Mixamo motion-capture clips (walk, idle, sad pose, head shake), as shipped in the three.js examples; used in a rendered video per Mixamo's terms (royalty-free in projects), fetched at build time and not redistributed in this repository.
+3D people: a Ready Player Me avatar (as shipped in the three.js examples, https://github.com/mrdoob/three.js) animated with the Ready Player Me Animation Library (https://github.com/readyplayerme/animation-library; motion-captured; free for personal and commercial use with Ready Player Me avatars per its LICENSE.md). Assets are fetched at build time and not redistributed in this repository.
 Picture: original code (three.js, MIT licence, https://threejs.org) rendered frame by frame in headless Chromium: the original brand-free city from film 18 with a 24-hour sky, a dark-Earth globe and hour-by-hour props (phone, card terminal, laptop, departures board with invented flights). No real brands or logos.
 
 Fonts (SIL Open Font License 1.1, files and licences in fonts/):

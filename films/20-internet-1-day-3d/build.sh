@@ -21,9 +21,10 @@ while [ $# -gt 0 ]; do
     *) echo "unknown option $1"; exit 2;;
   esac
 done
-# 3D characters (Mixamo models shipped as three.js examples; fetched at build time, not redistributed in this repo)
+# 3D people: Ready Player Me avatar (three.js example) + RPM motion-capture animation library; fetched at build time, not redistributed
 mkdir -p "$HERE/assets"
-for m in Xbot Michelle; do [ -f "$HERE/assets/$m.glb" ] || curl -sSfL "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/$m.glb" -o "$HERE/assets/$m.glb"; done
+[ -f "$HERE/assets/avatar.glb" ] || curl -sSfL "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/readyplayer.me.glb" -o "$HERE/assets/avatar.glb"
+for f in locomotion/M_Walk_001 idle/M_Standing_Idle_001 idle/M_Standing_Idle_Variations_002 expression/M_Standing_Expressions_010 expression/M_Standing_Expressions_013 expression/M_Talking_Variations_002; do n=$(basename $f); [ -f "$HERE/assets/$n.glb" ] || curl -sSfL "https://raw.githubusercontent.com/readyplayerme/animation-library/master/masculine/glb/$f.glb" -o "$HERE/assets/$n.glb"; done
 cd "$LIB"
 # 1. voice + word timestamps
 case $MODE in
