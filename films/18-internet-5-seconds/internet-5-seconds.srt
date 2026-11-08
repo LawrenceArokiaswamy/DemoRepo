@@ -1,0 +1,55 @@
+1
+00:00:00,200 --> 00:00:03,140
+What if the internet disappeared for five seconds?
+
+2
+00:00:03,340 --> 00:00:04,460
+You're in Times Square.
+
+3
+00:00:04,490 --> 00:00:05,390
+It's Friday night.
+
+4
+00:00:05,410 --> 00:00:07,850
+All around you, invisible data is flying.
+
+5
+00:00:07,870 --> 00:00:09,430
+Every phone. Every screen.
+
+6
+00:00:09,450 --> 00:00:10,580
+Every card tap.
+
+7
+00:00:10,640 --> 00:00:13,760
+Three. Two. One.
+
+8
+00:00:14,430 --> 00:00:17,480
+Nearly eight hundred thousand Google searches never happen.
+
+9
+00:00:17,500 --> 00:00:20,400
+About twenty million emails freeze in mid-air.
+
+10
+00:00:20,500 --> 00:00:22,900
+Tens of thousands of card payments just hang.
+
+11
+00:00:22,920 --> 00:00:26,200
+And every phone in this square says the same thing: no connection.
+
+12
+00:00:26,740 --> 00:00:28,720
+Then, it all comes back.
+
+13
+00:00:28,940 --> 00:00:31,380
+Five seconds. So what would you miss first?
+
+14
+00:00:31,410 --> 00:00:32,200
+Comment below.
