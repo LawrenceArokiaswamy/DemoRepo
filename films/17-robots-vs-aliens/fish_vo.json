@@ -1,0 +1,70 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "speed": 1.1,
+ "lines": [
+  [
+   "n1",
+   "[epic movie-trailer voice, intense, low] FINAL day. [pause] The sky turns RED. [pause] Aliens... are HERE.",
+   0.4,
+   1.0
+  ],
+  [
+   "n2",
+   "[determined, rising] Humanity has ONE army left: [short pause] one MILLION Optimus robots.",
+   0.3
+  ],
+  [
+   "n3",
+   "[shouting a battle cry, explosive] They CHARGE!",
+   0.45
+  ],
+  [
+   "n4",
+   "[urgent, desperate] The ships are too BIG. [short pause] Lasers bounce OFF. [short pause] Robots fall by the THOUSANDS.",
+   0.35
+  ],
+  [
+   "n5",
+   "[ominous, awed, slow] Then the MOTHERSHIP arrives. [short pause] TEN kilometers wide. [pause] Nothing on Earth can TOUCH it.",
+   0.45
+  ],
+  [
+   "n6",
+   "[quiet, shocked] The robots STOP. [pause] Every... single... one.",
+   0.45,
+   0.95
+  ],
+  [
+   "n7",
+   "[whispering, tense] Did they just... give up?",
+   0.8,
+   0.92
+  ],
+  [
+   "n8",
+   "[sudden, powerful, sharp] NO. [pause] They were CALCULATING.",
+   0.35
+  ],
+  [
+   "n9",
+   "[building intensity, faster] They start CLIMBING onto each other. [short pause] Arms LOCK. [short pause] Legs LOCK. [short pause] A MILLION machines,",
+   0.15
+  ],
+  [
+   "n10",
+   "[epic, triumphant, huge] becoming ONE. [pause] A GIANT [short pause] the size of a MOUNTAIN.",
+   0.45
+  ],
+  [
+   "n11",
+   "[awed, triumphant] And for the FIRST time, [short pause] the aliens... back AWAY.",
+   0.5
+  ],
+  [
+   "n12",
+   "[playful, challenging the viewer] Your move: [short pause] one GIANT robot, [short pause] or a MILLION small ones? [short pause] Which army WINS? [short pause] Comment below!",
+   0.0
+  ]
+ ]
+}
