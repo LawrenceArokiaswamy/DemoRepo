@@ -1,0 +1,18 @@
+internet-1-day: credits and licences
+
+Map data: Natural Earth (public domain), via github.com/nvkelso/natural-earth-vector.
+Picture: original code (three.js, MIT licence) rendered in headless Chromium: a generic AI chip (not Nvidia's design, no logo), a generic email UI, world map, boardroom, data center, stock line, calendar and a simplified Capitol dome. No images or likeness of any person.
+
+Fonts (SIL Open Font License 1.1, files and licences in fonts/):
+  Anton (Vernon Adams), https://github.com/google/fonts/tree/main/ofl/anton
+  Barlow Condensed (Jeremy Tribby), https://github.com/google/fonts/tree/main/ofl/barlowcondensed
+  Playfair Display (Claus Eggers Sørensen), https://github.com/google/fonts/tree/main/ofl/playfairdisplay
+  IBM Plex Mono (IBM), https://github.com/google/fonts/tree/main/ofl/ibmplexmono
+
+Voice: Fish Audio text-to-speech (https://fish.audio), model s2-pro, public library voice "Explainer" (id 3e8a237e7b5d4eaab50bd9e05053d70e), generated through the Fish Audio API on the client's own account; the script is in fish_vo.json.
+Fallback scratch voice (./build.sh with no options): Kokoro-82M via kokoro-onnx, voice am_puck (Apache-2.0, https://huggingface.co/hexgrad/Kokoro-82M).
+Speech check and word timestamps: faster-whisper (MIT) with OpenAI Whisper small.en weights (MIT).
+
+Music and sound effects: original, synthesised in numpy/scipy for this film (no samples).
+Production toolkit: Lemo-Opuscar film library (LIB=/root/lemo-opuscar; see its LICENSE).
+Facts: Axios, CNN, Washington Post, NBC News, CNBC, Al Jazeera, Nvidia board statement, IDC (see FACTS.md).

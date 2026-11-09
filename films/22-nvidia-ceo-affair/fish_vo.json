@@ -1,0 +1,63 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "speed": 1.1,
+ "lines": [
+  [
+   "n1",
+   "[serious, gripping news-anchor tone] The most powerful man in AI just admitted an AFFAIR. [pause] And this isn't just GOSSIP.",
+   0.4
+  ],
+  [
+   "n2",
+   "[measured, factual] The CEO of Nvidia, [short pause] Jensen Huang, [short pause] told his staff he was unfaithful to his wife.",
+   0.35
+  ],
+  [
+   "n3",
+   "[careful, serious] Reports say the woman was being watched by US INTELLIGENCE [short pause] over ties to China. [short pause] She hasn't been charged.",
+   0.35
+  ],
+  [
+   "n4",
+   "[measured] Nvidia's board opened an INVESTIGATION, [short pause] and says it has no reason to believe any secrets leaked.",
+   0.45
+  ],
+  [
+   "n5",
+   "[intrigued, leaning in] So why is the WHOLE AI world watching?",
+   0.4
+  ],
+  [
+   "n6",
+   "[building, explaining] Because Nvidia makes MOST of the chips that power today's AI. [short pause] It's worth about FOUR AND A HALF TRILLION dollars.",
+   0.6
+  ],
+  [
+   "n7",
+   "[sharp] On Monday, [short pause] the stock fell about FIVE percent.",
+   0.65
+  ],
+  [
+   "n8",
+   "[tense, building] Next week, [short pause] Nvidia reports earnings. [short pause] The day after, [short pause] CONGRESS wants answers.",
+   0.4
+  ],
+  [
+   "n9",
+   "[slow, ominous] If trust in Nvidia... CRACKS,",
+   0.8,
+   0.95
+  ],
+  [
+   "n10",
+   "[heavy, impactful] EVERY AI company built on its chips... feels it.",
+   0.5
+  ],
+  [
+   "n11",
+   "[direct, inviting debate] So, [short pause] should he STAY as CEO? [short pause] Comment below.",
+   0.0
+  ]
+ ]
+}
