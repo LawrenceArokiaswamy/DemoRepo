@@ -99,31 +99,8 @@ def wahwah(v=1.):   # comedic "nope" sting: two falling muted-brass notes
 def sting_up(v=1.):  # cheerful "correct!" two-note bell
     a = bell(84, 1.0, 1, 1.5); b = bell(91, 1.0, 1, 1.5); o = np.zeros(len(a) + int(.12 * SR)); o[:len(a)] += a; o[int(.12 * SR):] += b; return o * v
 
-# ---------------- score: clock-driven thriller (D minor, 112 BPM); silence before the bill; heavy hit ----------------
-EVT = lambda typ: [e['t'] for e in EV if e['type'] == typ]
-b = 60 / 112; DOWN = EVT('snap')[0]; HITt = F['HIT']; tQ = L0('n11') - .05; tW = L0('n4') - .05
-def snare(v=1.): d = .25; return (bp(noise(d), 1500, 7000) * np.exp(-t_(d) / .07) + np.sin(2 * np.pi * 190 * t_(d)) * np.exp(-t_(d) / .04) * .6) * v
-def arp(t0, t1, notes, g, step):
-    for k, t in enumerate(np.arange(t0, t1, step)): add(mus, pluck(notes[k % len(notes)], .18), t, g, (-.35, .35)[k % 2])
-# 1) online for a moment: bright pulse, cut on "down"
-for k, t in enumerate(np.arange(0, DOWN, b / 2)): add(mus, kick(.9), t, .22) if k % 2 == 0 else None
-arp(0, DOWN, [74, 77, 81, 86], .05, b / 4); add(mus, crash(1.2), DOWN, .08); add(mus, zap(1., 1200, 60, .6), DOWN, .15)
-# 2) offline: low pulse that speeds up hour by hour into 23:59
-t = DOWN + .4; k = 0
-while t < F['S0'] - .05:
-    acc = clamp_ = min(1, max(0, (t - tW) / (F['S0'] - tW)))
-    add(mus, kick(.85 + .3 * acc, 110, 38, .45), t, .26 + .12 * acc); add(mus, bass([38, 38, 34, 36][(k // 4) % 4], b * .45, 1., .35 + .4 * acc), t, .16 + .06 * acc)
-    if t > tW and k % 2 == 1: add(mus, snare(.9), t, .06 + .08 * acc)
-    add(mus, tick(1, 3600 if k % 2 else 2800, .02), t, .07, (-.3, .3)[k % 2])
-    k += 1; t += b * (1 - .45 * acc)
-add(mus, pad([38, 45, 50, 53], F['S0'] - DOWN, 1., 900, 1.0, .1), DOWN, .14); arp(tW, F['S0'] - .05, [62, 65, 69, 74, 69, 65], .04, b / 4)
-dr = 2.0; add(mus, riser(dr, .9), F['S0'] - dr, .5)
-# 3) the bill: massive hit, then a low, slow outro under the question
-add(mus, sub(1.3, 110, 28, 3.0), HITt, .8); add(mus, kick(1.2, 170, 38, .6), HITt, .55); add(mus, crash(2.4), HITt, .14); add(mus, pad([26, 38, 45, 50], DUR - HITt, 1., 700, .05, 1.4), HITt, .24)
-for k2, t in enumerate(np.arange(tQ, DUR - .8, b)): add(mus, pluck([74, 69, 65, 62][k2 % 4], .3), t, .045)
-fade = int(.01 * SR); s0i, hiti = int(S0 * SR), int(HIT * SR)
-mus[s0i - fade:s0i] *= np.linspace(1, 0, fade)[:, None]; mus[s0i:hiti] = 0
-mus[-int(1.2 * SR):] *= np.linspace(1, 0, int(1.2 * SR))[:, None] ** 2
+# ---------------- score: suspense (see score_suspense.py) ----------------
+exec(open(f'{H}/score_suspense.py').read())
 
 # ---------------- sound design ----------------
 def coin(v=1.):
@@ -131,15 +108,15 @@ def coin(v=1.):
 for e in EV:
     t, g = e['t'], e.get('g', 1.); TY = e['type']
     if TY == 'whoosh': add(fx, whoosh(.42, 1.), max(0, t - .1), .22 * g, rng.uniform(-.5, .5))
-    elif TY == 'city': d = e.get('d', 1.); add(fx, bp(noise(d), 200, 2500) * env(d, .1, .1) * .5, t, .12); [add(fx, blip(900 + 300 * rng.integers(0, 5), .05), t + rng.uniform(0, d), .03, rng.uniform(-.8, .8)) for _ in range(int(d * 4))]
+    elif TY == 'city': d = e.get('d', 1.); add(fx, lp(noise(d), 400) * env(d, .1, .1) * .5, t, .1)
     elif TY == 'snap': add(fx, sfx.thump(1., 55), t, .4)
     elif TY == 'powerdown': d = 1.2; tt = t_(d); f = 900 * (1 - tt / d) ** 2 + 40; add(fx, np.sin(2 * np.pi * np.cumsum(f) / SR) * env(d, .01, .2) * .45, t, .25)
-    elif TY == 'hour': add(fx, bell(86, .9, 1, 1.0), t, .07, -.3); add(fx, tick(1, 4200, .02), t, .1)
+    elif TY == 'hour': add(fx, sfx.thump(.6, 90), t, .12); add(fx, tick(1, 2400, .02), t, .08)
     elif TY == 'beepfail': add(fx, blip(880, .12), t, .14); add(fx, blip(620, .22), t + .16, .14)
     elif TY == 'thud': add(fx, sfx.thump(1., 70), t, .3)
     elif TY == 'flap': d = e.get('d', 1.); [add(fx, sfx.clack(1.6 + .3 * rng.random(), 1.), t + k * .045, .1, rng.uniform(-.5, .5)) for k in range(int(d / .045))]
     elif TY == 'hit': add(fx, sfx.thump(1., 50), t, .5)
-    elif TY == 'chime': add(fx, bell(81, 1.6), t, .14, -.2); add(fx, bell(86, 1.4), t + .02, .09, .2)
+    elif TY == 'chime': add(fx, bell(67, 2.0, 1, 1.2), t, .1, -.2); add(fx, bell(68, 2.0, 1, 1.2), t + .03, .07, .2)
 fx[s0i:hiti] = 0
 # ---------------- voice, balance, stems ----------------
 vo, sr = sf.read(f'{H}/out/vo.wav'); vo = vo[:N] if len(vo) >= N else np.pad(vo, (0, N - len(vo)))
@@ -150,7 +127,7 @@ ve = uniform_filter1d(act.astype(float), int(.15 * SR))
 duck = 1 - (1 - 10 ** (-5 / 20)) * ve
 mus *= duck[:, None]; fx *= (1 - (1 - 10 ** (-7 / 20)) * ve)[:, None]
 vr = np.sqrt((vo[act] ** 2).mean()); mr = np.sqrt((mus[act] ** 2).mean())
-mus *= (vr / 10 ** (10 / 20)) / mr                                        # voice 10 dB above the music (RMS while speaking)
+mus *= (vr / 10 ** (8.5 / 20)) / mr                                       # voice 8.5 dB above the music (RMS while speaking): the suspense score is felt
 fr = np.sqrt((fx[np.abs(fx).max(1) > 1e-4] ** 2).mean()); fx *= (vr / 10 ** (9 / 20)) / fr
 vo2 = np.stack([vo, vo], 1)
 mix = mus + fx + vo2
