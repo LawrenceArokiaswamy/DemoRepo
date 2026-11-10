@@ -5,14 +5,14 @@ H = os.path.dirname(os.path.abspath(__file__)); os.makedirs(f'{H}/out', exist_ok
 FONT = f'{H}/fonts/PlayfairDisplay-Italic.ttf'; MONO = f'{H}/fonts/IBMPlexMono-Medium.ttf'
 SHOT = 5.0
 CAPS = [  # (start, end, text, font, size, y)
-    (0.7, 4.4, 'We used to talk until 3 AM.', FONT, 58, 330),
-    (5.7, 9.5, 'Now we say goodnight to our screens.', FONT, 54, 330),
-    (11.6, 14.7, 'I stopped showing him things.', FONT, 56, 330),
-    (15.4, 19.2, '3 YEARS AGO TODAY', MONO, 30, 300),
-    (21.0, 24.6, 'Strangers in the same room.', FONT, 58, 330),
-    (31.4, 34.6, '“I’m here.”', FONT, 64, 330),
-    (36.0, 39.6, 'We talked until 3 AM again.', FONT, 56, 330),
-    (40.7, 44.4, 'Put it down.', FONT, 66, 300), (41.4, 44.4, 'They’re still here.', FONT, 66, 385),
+    (0.7, 4.4, 'We used to talk until 3 AM.', FONT, 58, 1450),
+    (5.7, 9.5, 'Now we say goodnight to our screens.', FONT, 54, 1450),
+    (11.6, 14.7, 'I stopped showing him things.', FONT, 56, 1450),
+    (15.4, 19.2, '3 YEARS AGO TODAY', MONO, 30, 1460),
+    (21.0, 24.6, 'Strangers in the same room.', FONT, 58, 1450),
+    (31.4, 34.6, '“I’m here.”', FONT, 64, 1450),
+    (36.0, 39.6, 'We talked until 3 AM again.', FONT, 56, 1450),
+    (40.7, 44.4, 'Put it down.', FONT, 66, 1420), (41.4, 44.4, 'They’re still here.', FONT, 66, 1505),
 ]
 def esc(s): return s.replace('\\', '\\\\').replace(':', '\\:').replace("'", "’").replace('%', '\\%')
 inputs = []; fl = []
