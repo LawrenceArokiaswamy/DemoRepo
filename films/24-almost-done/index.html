@@ -513,7 +513,7 @@ function sD2(u, t) { show('porch'); scene.background = BG.dusk; const z0 = -300;
   cam(V(lerp(-.9, -.6, u), 1.2, z0 + lerp(3.5, 3.1, u)), V(.7, .95, z0 + .3), 38); ST.warm = .6; bloom.strength = .6; }
 // ---------- day 1: the last bolt (hands), then the finished bike ----------
 function sD1a(u, t) { show('hood'); setWorld('night'); bikeState(SETS.bike, { paint: 1, rust: 0, wheels: true, stand: false }); SETS.stand.visible = false; SETS.bike.g.position.set(.05, 0, -3.1);
-  LT.spot.intensity = 6; LT.doorP.visible = true; LT.door.rotation.x = 0; place(DAD, .05, 0, -2.55, PI); const shk = noise1(t * 9) * .03; const hk = eio(seg(t, 53.4, 54.4));
+  LT.spot.intensity = 2.6; bloom.strength = .2; LT.fill.intensity = 1.2; LT.doorP.visible = true; LT.door.rotation.x = 0; place(DAD, .05, 0, -2.55, PI); const shk = noise1(t * 9) * .03; const hk = eio(seg(t, 53.4, 54.4));
   apply(DAD, { hy: -.12, spine: [.45, 0, 0], neck: [.2, 0, 0], head: [.3, 0, 0], rsh: [-1.25 + shk, .1, -.25], rel: [-.55, 0, 0], lsh: [-1.15, 0, .2], rel_: 0, lel: [-.6, 0, 0], lkn: [.3, 0, 0], rkn: [.3, 0, 0], sad: .3, smile: .2, blink: .4 });
   place(HER, lerp(-.6, -.45, hk), 0, -2.45, PI - .6); apply(HER, { hy: -.1, spine: [.45, 0, 0], head: [.3, 0, 0], lsh: [lerp(-.3, -1.2, hk), lerp(0, -.3, hk), lerp(-.1, .3, hk)], lel: [lerp(-.3, -.5, hk), 0, 0], rsh: [lerp(-.2, -1.0, hk), 0, .1], rel: [-.6, 0, 0], lkn: [.3, 0, 0], rkn: [.3, 0, 0], sad: .7, blink: .3 }); HER.aig.visible = false;
   const bar = V(.05 + .27, .72, -3.1 + .19); cam(V(lerp(-.55, -.4, u), 1.35, lerp(-4.75, -4.6, u)).add(shake(t, .003, .5)), V(.15, .95, -2.6), 36); ST.warm = .6; ST.vig = .75; }
