@@ -1,0 +1,6 @@
+"Same Room" — an original 45 s short in our house style "Pictogram Noir" (faceless glossy figures on a black mirror floor,
+one amber accent, small mono captions). Story, picture and score made in code (three.js + numpy). No narration.
+
+PIANO SAMPLES: Salamander Grand Piano V3 by Alexander Holm, CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
+  via the npm packages @audio-samples/piano-velocity4/8/12. Fetched at build time, not redistributed here.
+PADS, FOLEY: synthesised in mix.py.  FONT: IBM Plex Mono (SIL OFL, see fonts/).

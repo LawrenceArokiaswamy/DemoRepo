@@ -1,0 +1,199 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>same-room</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block;position:absolute;left:0;top:0}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<canvas id="gl"></canvas><canvas id="ui"></canvas>
+<script type="module">
+// "Same Room" — 45 s, no narration. House style "Pictogram Noir": faceless glossy white figures on a black mirror floor,
+// one accent colour (amber = phone light), small mono captions. Pure function of t (30 fps, 1080x1920).
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const W = innerWidth, H = innerHeight, DUR = 45;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, x) => a + (b - a) * x, seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - clamp(x), 3), eio = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2), ss = x => (x = clamp(x), x * x * (3 - 2 * x));
+const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+const noise1 = x => { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return lerp(hash(i), hash(i + 1), u) * 2 - 1; };
+const V = (x, y, z) => new THREE.Vector3(x, y, z), PI = Math.PI;
+const AMBER = new THREE.Color('#ffae42');
+
+// ---------------- renderer ----------------
+const glc = document.getElementById('gl'), uic = document.getElementById('ui');
+const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: false, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+uic.width = W; uic.height = H; const X = uic.getContext('2d');
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#000');
+const camera = new THREE.PerspectiveCamera(38, W / H, .05, 200);
+const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt); composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), .55, .5, .84); composer.addPass(bloom);
+const grade = new ShaderPass({ uniforms: { tDiffuse: { value: null }, uFade: { value: 0 }, uTime: { value: 0 }, uWarm: { value: 0 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `varying vec2 vUv; uniform sampler2D tDiffuse; uniform float uFade, uTime, uWarm;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+    void main(){ vec3 c = texture2D(tDiffuse, vUv).rgb; c = mix(c, c * vec3(1.06, 1.0, .9), uWarm);
+      vec2 d = vUv - .5; d.x *= 1.3; c *= 1. - .55 * smoothstep(.3, .9, length(d));
+      c += (h(vUv * 777. + fract(uTime) * 31.) - .5) * .035; c *= 1. - uFade; gl_FragColor = vec4(c, 1.); }` });
+composer.addPass(grade); composer.addPass(new OutputPass());
+
+function mesh(g, m, p, x = 0, y = 0, z = 0) { const o = new THREE.Mesh(g, m); o.position.set(x, y, z); o.castShadow = true; o.receiveShadow = true; if (p) p.add(o); return o; }
+function grp(p, x = 0, y = 0, z = 0) { const g = new THREE.Group(); g.position.set(x, y, z); if (p) p.add(g); return g; }
+function limb(r, len, m, p) { const g = new THREE.CapsuleGeometry(r, len, 8, 20); g.translate(0, -len / 2, 0); return mesh(g, m, p); }
+
+// ---------------- the floor: black mirror, dimmed, fading to the void ----------------
+const mirror = new Reflector(new THREE.PlaneGeometry(60, 60), { textureWidth: W / 2, textureHeight: H / 2, color: 0x6a6a6a });
+mirror.rotation.x = -PI / 2; scene.add(mirror);
+const dimTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d'); const gr = g.createRadialGradient(256, 256, 30, 256, 256, 256); gr.addColorStop(0, 'rgba(255,255,255,.55)'); gr.addColorStop(.55, 'rgba(255,255,255,.82)'); gr.addColorStop(1, 'rgba(255,255,255,1)'); g.fillStyle = gr; g.fillRect(0, 0, 512, 512); const t = new THREE.CanvasTexture(c); return t; })();
+const dim = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({ color: '#000000', transparent: true, alphaMap: dimTex, opacity: 1 }));
+dim.rotation.x = -PI / 2; dim.position.y = .002; dim.receiveShadow = true; scene.add(dim);
+// the split: a strip of true void between the halves, with glowing amber edges
+const chasm = new THREE.Mesh(new THREE.PlaneGeometry(1, 14), new THREE.MeshBasicMaterial({ color: '#000' })); chasm.rotation.x = -PI / 2; chasm.position.y = .004; scene.add(chasm);
+const edgeM = new THREE.MeshBasicMaterial({ color: AMBER, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+const edges = [-1, 1].map(s => { const e = new THREE.Mesh(new THREE.PlaneGeometry(.02, 14), edgeM); e.rotation.x = -PI / 2; e.position.y = .006; scene.add(e); return e; });
+const crackGeom = (() => { const pts = []; let x = 0; for (let z = -2.5; z <= 2.5; z += .08) { x = (hash(z * 31) - .5) * .05; pts.push(V(x, .007, z)); } return new THREE.BufferGeometry().setFromPoints(pts); })();
+const crack = new THREE.Line(crackGeom, new THREE.LineBasicMaterial({ color: AMBER, transparent: true, opacity: 0 })); scene.add(crack);
+
+// ---------------- lights ----------------
+scene.add(new THREE.HemisphereLight('#9aa4b8', '#000000', .07));
+const rim = new THREE.DirectionalLight('#cfd8ff', 1.4); rim.position.set(-2, 4, -6); scene.add(rim);
+const spots = [-1, 1].map(s => { const L = new THREE.SpotLight('#fff3e6', 7, 9, .42, .85, 1.4); L.castShadow = true; L.shadow.mapSize.set(1024, 1024); L.shadow.radius = 6; L.shadow.bias = -.0004; scene.add(L, L.target); return L; });
+
+// ---------------- pictogram figures ----------------
+const WHITE = new THREE.MeshPhysicalMaterial({ color: '#f2f1ee', roughness: .32, clearcoat: .7, clearcoatRoughness: .25 });
+function figure(o = {}) {
+  const J = {}; J.root = grp(scene); J.hips = grp(J.root, 0, .87, 0); J.spine = grp(J.hips, 0, .02, 0);
+  const torso = new THREE.CapsuleGeometry(.1, .32, 8, 20); torso.translate(0, .25, 0); torso.scale(1, 1, .8); mesh(torso, WHITE, J.spine);
+  J.neck = grp(J.spine, 0, .5, 0); J.head = grp(J.neck, 0, .02, 0); mesh(new THREE.SphereGeometry(.115, 32, 20), WHITE, J.head, 0, .155, 0);
+  if (o.bun) mesh(new THREE.SphereGeometry(.055, 20, 12), WHITE, J.head, 0, .24, -.1);
+  for (const [k, s] of [['l', -1], ['r', 1]]) {
+    J[k + 'sh'] = grp(J.spine, s * .14, .44, 0); limb(.038, .21, WHITE, J[k + 'sh']);
+    J[k + 'el'] = grp(J[k + 'sh'], 0, -.25, 0); limb(.035, .2, WHITE, J[k + 'el']);
+    J[k + 'ha'] = grp(J[k + 'el'], 0, -.235, 0); mesh(new THREE.SphereGeometry(.042, 20, 12), WHITE, J[k + 'ha'], 0, -.03, 0);
+    J[k + 'hi'] = grp(J.hips, s * .085, 0, 0); limb(.048, .33, WHITE, J[k + 'hi']);
+    J[k + 'kn'] = grp(J[k + 'hi'], 0, -.4, 0); limb(.044, .33, WHITE, J[k + 'kn']);
+    J[k + 'ft'] = grp(J[k + 'kn'], 0, -.4, 0); const f = new THREE.CapsuleGeometry(.05, .1, 6, 12); f.rotateX(PI / 2); mesh(f, WHITE, J[k + 'ft'], 0, -.02, .05);
+  }
+  // the phone (amber screen + its own light)
+  J.phone = grp(J.rha, 0, -.07, .045); J.phone.rotation.x = -.9;
+  mesh(new RoundedBoxGeometry(.075, .15, .012, 3, .006), new THREE.MeshStandardMaterial({ color: '#141416', roughness: .3, metalness: .5 }), J.phone);
+  J.screenM = new THREE.MeshBasicMaterial({ color: AMBER }); J.screen = mesh(new THREE.PlaneGeometry(.065, .135), J.screenM, J.phone, 0, 0, .0065); J.screen.castShadow = false;
+  J.plight = new THREE.PointLight(AMBER, 0, 1.3, 1.8); J.plight.position.set(0, 0, .12); J.phone.add(J.plight);
+  return J;
+}
+const P0 = { hy: 0, root: [0, 0, 0], hips: [0, 0, 0], spine: [0, 0, 0], neck: [0, 0, 0], head: [0, 0, 0], lsh: [0, 0, -.06], lel: [-.1, 0, 0], lha: [0, 0, 0], rsh: [0, 0, .06], rel: [-.1, 0, 0], rha: [0, 0, 0], lhi: [0, 0, 0], lkn: [0, 0, 0], lft: [0, 0, 0], rhi: [0, 0, 0], rkn: [0, 0, 0], rft: [0, 0, 0] };
+const KEYS = Object.keys(P0).filter(k => k !== 'hy' && k !== 'root');
+function mix(a, b, k) { const r = {}; for (const key in P0) { const A = a[key] ?? P0[key], B = b[key] ?? P0[key]; r[key] = Array.isArray(A) ? A.map((v, i) => lerp(v, B[i], k)) : lerp(A, B, k); } return r; }
+function apply(J, p) { p = mix(P0, p, 1); J.hips.position.y = .87 + p.hy; for (const k of KEYS) J[k].rotation.set(...p[k]); }
+const SIT = { hy: -.41, lhi: [-1.52, 0, -.06], rhi: [-1.52, 0, .06], lkn: [1.5, 0, 0], rkn: [1.5, 0, 0], lsh: [-.35, 0, -.08], lel: [-.95, 0, 0], rsh: [-.35, 0, .08], rel: [-.95, 0, 0] };
+const PHONE = { ...SIT, spine: [.22, 0, 0], neck: [.25, 0, 0], head: [.35, 0, 0], rsh: [-.75, 0, .22], rel: [-1.45, 0, 0], rha: [0, 0, 0], lsh: [-.6, 0, -.15], lel: [-1.2, 0, 0] };
+function walk(ph, amp = 1) { const s = Math.sin(ph), c = Math.cos(ph); return { hy: -.015 * Math.abs(c), lhi: [-.45 * s * amp, 0, 0], rhi: [.45 * s * amp, 0, 0], lkn: [Math.max(0, -.7 * c) * amp + .05, 0, 0], rkn: [Math.max(0, .7 * c) * amp + .05, 0, 0], lsh: [.35 * s * amp, 0, -.06], rsh: [-.35 * s * amp, 0, .06], lel: [-.3, 0, 0], rel: [-.3, 0, 0], spine: [.03, 0, 0] }; }
+
+const A = figure(), B = figure({ bun: true });    // A: him (left), B: her (right) — the "I" of the captions
+// bench halves
+const benchM = new THREE.MeshPhysicalMaterial({ color: '#1b1b1e', roughness: .4, clearcoat: .5 });
+function benchHalf() { const g = grp(scene); mesh(new RoundedBoxGeometry(.78, .06, .42, 3, .02), benchM, g, 0, .44, 0); for (const x of [-.32, .32]) mesh(new RoundedBoxGeometry(.05, .42, .36, 2, .015), benchM, g, x, .21, 0); return g; }
+const benchA = benchHalf(), benchB = benchHalf();
+const fallPhone = (() => { const g = grp(scene); mesh(new RoundedBoxGeometry(.075, .15, .012, 3, .006), new THREE.MeshStandardMaterial({ color: '#141416' }), g); const s = mesh(new THREE.PlaneGeometry(.065, .135), new THREE.MeshBasicMaterial({ color: AMBER, transparent: true }), g, 0, 0, .0065); g.userData.s = s; g.visible = false; return g; })();
+const pulse = new THREE.Mesh(new THREE.RingGeometry(.9, 1.0, 64), new THREE.MeshBasicMaterial({ color: AMBER, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+pulse.rotation.x = -PI / 2; pulse.position.y = .01; scene.add(pulse);
+
+// ---------------- timeline ----------------
+// distance: each look at a phone pushes the halves apart
+function D(t) { let d = 0; for (const [a, v] of [[8.5, .3], [10, .3], [11.5, .35], [13, .3], [16.9, .5], [19.2, .4], [21.2, .45], [23.5, .4], [25.5, .4]]) d += v * eo(seg(t, a, a + (a > 16 ? 1.4 : .7))); return d * (1 - eio(seg(t, 38, 41.2))); }
+const TEXT = [[.6, 3.9, 'WE NEVER FOUGHT.'], [8.7, 13.6, 'WE JUST STOPPED LOOKING UP.'], [15.2, 21.4, 'EVERY DAY, A LITTLE FURTHER.'], [22.4, 26.9, 'STRANGERS|IN THE SAME ROOM.'],
+  [27.8, 31.0, 'THEN MY SCREEN WENT DARK.'], [31.4, 36.6, 'AND I SAW HOW FAR WE’D GONE.'], [37.4, 41.4, 'IT ONLY TOOK ONE OF US|TO LOOK UP.'], [41.8, 45.0, 'PUT IT DOWN.|THEY’RE STILL HERE.']];
+const EV = [{ t: 0, type: 'room' }, { t: 4.3, type: 'buzz' }, { t: 5.2, type: 'crack' }, { t: 7.2, type: 'ping' }];
+for (const a of [8.5, 10, 11.5, 13, 16.9, 19.2, 21.2, 23.5, 25.5]) EV.push({ t: a, type: 'drift', g: a > 16 ? 1 : .7 }, { t: a - .25, type: 'ping', g: .6 });
+EV.push({ t: 16.1, type: 'share' }, { t: 27.5, type: 'die' }, { t: 30.0, type: 'stand' }, { t: 31.1, type: 'steps', d: 1.9 }, { t: 33.4, type: 'drop' }, { t: 34.6, type: 'call' }, { t: 37.6, type: 'facedown' }, { t: 38, type: 'close', d: 3.2 }, { t: 41.2, type: 'seal' });
+EV.sort((a, b) => a.t - b.t);
+
+// camera keys: [t, pos, look, fov, cut?]
+const CK = [
+  [0, V(0, 1.25, 6.4), V(0, .82, 0), 32], [4.0, V(-.45, 1.12, 4.4), V(-.45, .88, 0), 30], [7.6, V(-.05, 1.18, 5.2), V(0, .85, 0), 31],
+  [8.0, V(0, 1.6, 7.6), V(0, .75, 0), 36, 1], [14, V(0, 2.1, 10.2), V(0, .7, 0), 40], [21.5, V(0, 3.0, 13.4), V(0, .55, 0), 42],
+  [22.2, V(0, 8.5, 15.5), V(0, .2, 0), 40, 1], [27.3, V(0, 9.2, 16.2), V(0, .15, 0), 40],
+  [27.4, V(4.5, 1.25, 3.7), V(3.78, .85, 0), 30, 1], [30.9, V(4.4, 1.32, 3.4), V(3.78, .95, 0), 30],
+  [31.0, V(5.3, 1.45, 2.6), V(-3.78, .75, 0), 22, 1], [33.0, V(5.1, 1.45, 2.7), V(-3.78, .75, 0), 20],
+  [33.1, V(6.5, 1.62, .42), V(-3.8, .55, -.1), 34, 1], [37.2, V(6.2, 1.6, .38), V(-3.8, .55, -.1), 31],
+  [37.3, V(-3.0, 1.2, 3.6), V(-3.78, .78, 0), 30, 1], [38.4, V(-2.95, 1.22, 3.5), V(-3.78, .78, 0), 30],
+  [38.5, V(0, 1.9, 10.0), V(0, .75, 0), 38, 1], [41.5, V(0, 1.3, 5.8), V(0, .84, 0), 32], [45, V(0, 1.22, 5.1), V(0, .86, 0), 30]];
+function camAt(t) { let i = 0; while (i < CK.length - 1 && CK[i + 1][0] <= t) i++; const a = CK[i], b = CK[i + 1];
+  if (!b || b[4]) { const k = b ? seg(t, a[0], b[0]) : 0; return [a[1], a[2], a[3]]; }
+  const k = eio(seg(t, a[0], b[0])); return [a[1].clone().lerp(b[1], k), a[2].clone().lerp(b[2], k), lerp(a[3], b[3], k)]; }
+// hard cuts hold the previous key's framing (with a slow drift) until the next cut key
+function cameraAt(t) { let i = 0; while (i < CK.length - 1 && CK[i + 1][0] <= t) i++; const a = CK[i], b = CK[i + 1];
+  if (b && !b[4]) { const k = eio(seg(t, a[0], b[0])); return [a[1].clone().lerp(b[1], k), a[2].clone().lerp(b[2], k), lerp(a[3], b[3], k)]; }
+  const hold = b ? b[0] - a[0] : 3; const k = seg(t, a[0], a[0] + hold); return [a[1].clone().add(V(0, 0, -.25 * k)), a[2], a[3] - 1.2 * k]; }
+
+// ---------------- frame ----------------
+const ST = {};
+function frame(t) {
+  const d = D(t), ax = -.38 - d, bx = .38 + d;
+  benchA.position.set(-.38 - d, 0, 0); benchB.position.set(.38 + d, 0, 0);
+  chasm.scale.x = Math.max(.0001, 2 * d); chasm.visible = d > .002; edges[0].position.x = -d; edges[1].position.x = d;
+  edgeM.opacity = clamp(d * 3) * (.55 + .45 * clamp(1 - seg(t, 38, 41))) * (t > 41.2 ? 0 : 1);
+  crack.material.opacity = (t > 5.2 && t < 38 ? .9 * eo(seg(t, 5.2, 5.5)) : 0) * (d < .05 ? 1 : 0);
+  // phone states
+  const aOn = t > 4.3 && t < 37.6, bOn = t > 7.2 && t < 27.5;
+  for (const [J, on, t0] of [[A, aOn, 4.3], [B, bOn, 7.2]]) { const k = on ? eo(seg(t, t0, t0 + .3)) : 0; J.screenM.color.copy(AMBER).multiplyScalar(.15 + .85 * k); J.plight.intensity = .75 * k * (1 + .08 * Math.sin(t * 7 + t0)); }
+  if (t > 27.5 && t < 27.9) { B.screenM.color.copy(AMBER).multiplyScalar(Math.random() > .5 ? 1 : .1); }
+  // A (him): always on the left half
+  const aLook = seg(t, 35.7, 36.3), aDown = seg(t, 37.4, 38.0);
+  A.root.position.set(ax, 0, 0); A.root.rotation.y = .12 * aLook;
+  let pa = SIT; const laugh = t < 4.2 ? Math.max(0, Math.sin(t * 9)) * .06 : 0;
+  if (t < 4.3) pa = { ...SIT, head: [-.12 - laugh, .25, .12], spine: [-.03 - laugh * .5, .1, 0], lsh: [-.3, 0, -.05] };
+  else { const up = eo(seg(t, 4.3, 4.8)); pa = mix({ ...SIT, head: [-.1, .25, .1] }, PHONE, up); }
+  if (t > 35.7) pa = mix(pa, { ...PHONE, head: [-.05, .7, 0], neck: [0, 0, 0], spine: [.05, .2, 0] }, aLook);
+  if (t > 37.4) pa = mix(pa, { ...SIT, head: [-.05, .6, 0], rsh: [-.2, 0, .1], rel: [-.4, 0, 0] }, aDown);
+  if (t > 41.2) pa = mix(pa, { ...SIT, head: [.05, .3, -.12], lsh: [-.3, 0, -.05], rsh: [-.2, -.3, -.2], rel: [-.9, 0, 0] }, seg(t, 41.2, 42));
+  apply(A, pa); A.phone.visible = t < 37.9;
+  // B (her)
+  const share = seg(t, 16.0, 16.6) * (1 - seg(t, 18.0, 18.8));
+  let pb;
+  if (t < 7.2) pb = { ...SIT, head: [-.1 - laugh, -.25 + .35 * seg(t, 6.3, 6.8), -.12], spine: [-.03, -.1, 0] };
+  else pb = mix({ ...SIT, head: [-.1, -.1, 0] }, PHONE, eo(seg(t, 7.2, 7.7)));
+  if (share > 0) pb = mix(pb, { ...SIT, spine: [.05, -.45, 0], head: [-.05, -.35, 0], rsh: [-1.25, -.35, -.25], rel: [-.25, 0, 0], lsh: [-.6, 0, -.15], lel: [-1.2, 0, 0] }, share);
+  const dead = seg(t, 27.6, 28.6), lookUp = seg(t, 29.0, 29.6), stand = eio(seg(t, 30.0, 30.9));
+  if (t > 27.5) pb = mix(pb, { ...PHONE, head: [.5, 0, .1], rha: [0, 0, Math.sin(t * 20) * .3 * (1 - dead)] }, dead);
+  if (t > 29) pb = mix(pb, { ...PHONE, head: [-.05, -.75, 0], neck: [0, -.2, 0], spine: [.05, -.2, 0] }, lookUp);
+  let bxx = bx, bry = 0;
+  if (t > 30) { const stP = { head: [-.05, -.5, 0], rsh: [-.6, 0, .1], rel: [-1.2, 0, 0] }; pb = mix(pb, stP, stand); }
+  const walkK = seg(t, 31.1, 33.0); if (t > 31.1) { const tgt = d + .25; bxx = lerp(bx, tgt, ss(walkK)); bry = -PI / 2 * ss(seg(t, 31.0, 31.5)); if (walkK < 1) pb = mix(pb, { ...walk(t * 7.2, .9), rsh: [-.6, 0, .1], rel: [-1.2, 0, 0] }, 1); else pb = { head: [0, 0, 0], rsh: [-.6, 0, .1], rel: [-1.2, 0, 0] }; }
+  const drop = seg(t, 33.3, 33.6); if (t > 33.3) pb = mix(pb, { rsh: [-1.3, 0, .1], rel: [-.1, 0, 0], head: [.3, 0, 0], spine: [.15, 0, 0] }, drop);
+  const call = seg(t, 34.4, 34.9) * (1 - seg(t, 36.2, 37)); if (t > 34.4) pb = mix(pb, { rsh: [-.2, 0, .15], lsh: [-.2, 0, -.15], head: [-.25, 0, 0], spine: [-.1, 0, 0] }, call);
+  if (t > 38) { bxx = d + .25; }
+  const sitBack = eio(seg(t, 41.1, 41.9)); if (t > 41.1) { bxx = lerp(d + .25, .38, sitBack); bry = lerp(-PI / 2, 0, sitBack); pb = mix(pb, { ...SIT, head: [.1, -.25, .38], spine: [.05, -.15, .12], lsh: [-.45, .3, .25], lel: [-1.0, 0, 0] }, sitBack); }
+  B.root.position.set(bxx, 0, 0); B.root.rotation.y = bry; apply(B, pb); B.phone.visible = t < 33.45;
+  // the dropped phone falls into the void
+  fallPhone.visible = t > 33.45 && t < 36.5; if (fallPhone.visible) { const k = t - 33.45; fallPhone.position.set(d - .05 + k * .05, .95 - 4.9 * k * k, .1); fallPhone.rotation.set(k * 5, k * 2, 0); fallPhone.userData.s.material.opacity = 0.15; }
+  // her call crosses the gap
+  const pk = seg(t, 34.6, 35.9); pulse.material.opacity = pk > 0 && pk < 1 ? .9 * Math.sin(pk * PI) : 0; pulse.position.set(lerp(d, -d - .4, pk), .01, .05); pulse.scale.setScalar(.15 + .25 * pk);
+  // spot lights follow each half
+  spots[0].position.set(ax, 3.6, .8); spots[0].target.position.set(ax, 0, 0); spots[1].position.set(t > 31 && t < 41.2 ? bxx : bx, 3.6, .8); spots[1].target.position.set(t > 31 && t < 41.2 ? bxx : bx, 0, 0);
+  spots[1].intensity = 7 * (t > 27.5 && t < 29.4 ? .55 : 1); const seal = Math.exp(-Math.max(0, t - 41.2) * 2) * (t > 41.2 ? 1 : 0);
+  // camera
+  const [cp, cl, fov] = cameraAt(t); const sh = V(noise1(t * .6) * .02, noise1(t * .6 + 9) * .015, 0); camera.position.copy(cp).add(sh); camera.lookAt(cl); if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
+  grade.uniforms.uFade.value = 1 - seg(t, 0, .5) + seg(t, 44.3, 45); grade.uniforms.uTime.value = t; grade.uniforms.uWarm.value = .25 + .45 * seg(t, 41, 43) + seal * .3;
+  bloom.strength = .55 + seal * .7;
+}
+// ---------------- captions (small mono, typed on) ----------------
+const MONO = 'PlexMono';
+function captions(t) { X.clearRect(0, 0, W, H);
+  for (const [a, b, s] of TEXT) { if (t < a || t > b) continue; const out = 1 - seg(t, b - .35, b); const lines = s.split('|'); let n = Math.floor((t - a) / .045);
+    X.save(); X.globalAlpha = out; X.font = `500 30px ${MONO}`; X.textAlign = 'center'; X.fillStyle = '#ece9e2'; X.shadowColor = 'rgba(0,0,0,.8)'; X.shadowBlur = 10;
+    lines.forEach((l, i) => { const vis = l.slice(0, Math.max(0, n)); n -= l.length; const sp = [...vis].join(' '); X.fillText(sp, W / 2, 330 + i * 46); });
+    X.restore(); } }
+async function boot() {
+  const f = new FontFace(MONO, 'url(fonts/IBMPlexMono-Medium.ttf)'); await f.load(); document.fonts.add(f);
+  window.DUR = DUR; window.EV = EV; window.render = t => { frame(t); composer.render(); captions(t); }; window.render(.5); window.READY = true;
+}
+boot();
+</script></body></html>
