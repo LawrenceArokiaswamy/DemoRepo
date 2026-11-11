@@ -80,7 +80,7 @@ export const SendPhotoFull: React.FC = () => {
       {s.id === 15 && <Drafts t={lt} />}
       {flash > 0 && <AbsoluteFill style={{ background: "#fffaf0", opacity: flash }} />}
       {black > 0 && <AbsoluteFill style={{ background: "#000", opacity: black }} />}
-      {!(getInputProps() as { photo?: unknown }).photo && <Caption t={t} />}
+      {!(getInputProps() as { photo?: unknown; noCaps?: boolean }).photo && !(getInputProps() as { noCaps?: boolean }).noCaps && <Caption t={t} />}
       {endQ > 0 && <div style={{ position: "absolute", left: 80, right: 80, top: 700, textAlign: "center", fontFamily: "Playfair", fontSize: 76, lineHeight: 1.25, color: "#fff", opacity: endQ * (1 - Math.min(1, (f - (TOTAL - 24)) / 24)), textShadow: "0 4px 22px rgba(0,0,0,.85)" }}>When did you last sit with your dad?</div>}
     </AbsoluteFill>
   );
