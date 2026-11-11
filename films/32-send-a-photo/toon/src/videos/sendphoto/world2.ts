@@ -321,7 +321,7 @@ export class World2 {
       side(SON, "son", p[0], p[1], p[2], { mode: walking ? "walk" : "stand", phase: q(ph, 30), stride: 0.75, expr: "neutral", hold: "phone", screenK: 0.5, lookY: walking ? 1.2 * (1 - arrive) : 0, blink: lid(0.7) }, 6, true);
       contact(p[0], 0, p[2]);
       // name tags pop in (overshoot) and fade before the walk ends
-      const pop = (t0: number) => { const u = seg(t, t0, t0 + 0.35); return u <= 0 ? 0 : (u < 1 ? smooth(u) * (1 + 0.25 * Math.sin(u * Math.PI)) : 1) * (1 - seg(t, 2.9, 3.2)); };
+      const pop = (t0: number) => { const u = seg(t, t0, t0 + 0.35); return u <= 0 ? 0 : (u < 1 ? smooth(u) * (1 + 0.25 * Math.sin(u * Math.PI)) : 1) * (1 - seg(t, 2.15, 2.5)); };
       const kd = q(pop(0.35), 20), ks = q(pop(0.95), 20);
       const ds = (x: number, y: number, z: number) => cam.position.distanceTo(V(x, y, z)) * 0.13;
       if (kd > 0) { const k2 = ds(0.15, 2.9, -0.25) * kd; fxl.push({ key: "tagDad", cw: 600, ch: 270, draw: (pp) => nameTag(pp, "Dad"), x: 0.15, y: PORCH_Y + 2.45, z: -0.25, w: 1.0 * k2, h: 0.45 * k2 }); }
