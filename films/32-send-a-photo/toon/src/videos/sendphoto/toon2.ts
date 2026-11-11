@@ -20,6 +20,8 @@ export type Outfit = {
   jacket: string; pants: string; boots: string; hat?: string | null; belt?: string | null; buttons?: string; rifle?: boolean;
   sash?: string; sword?: boolean; moustache?: string; skin?: string; head?: number; cap?: string; hair?: string; dress?: string;
   build?: Build; plaid?: string; glasses?: boolean; hood?: boolean;
+  /** film 33: hair bun (Mom), graduation mortarboard */
+  bun?: boolean; mortar?: boolean;
 };
 type P2 = [number, number];
 
@@ -369,6 +371,12 @@ const faceSide = (p: Pen, hx: number, hy: number, W: number, expr: Expr, lid: nu
 const BONNET = "#e9cf8f", BONNET_BRIM = "#d6b46a";
 /** parts of a hat that sit behind the head (bonnet) */
 const hatBehind = (p: Pen, o: Outfit, H: Blob, cx: number, hc: number, light: number, thick: number, ow: number, side: boolean) => {
+  if (o.bun && o.hair) { // a round bun on top (front) / at the back (side)
+    const u = (2 * H.a) / 100, bx = side ? cx - 0.62 * H.a : cx, by = side ? hc - 0.55 * H.b : hc - 1.08 * H.b, r = (side ? 23 : 25) * u;
+    const bp = blobPts(bx, by, { ...H, a: r, b: r * 0.9, asym: 0, egg: 0, rot: 0, seed: H.seed + 5 });
+    p.shadedFill(bp, o.hair, mul(o.hair, SH_FELT), light, r); p.inkRing(bp, ow * 0.85, thick);
+    p.arc(bx, by, r * 0.55, r * 0.4, 200, 330, 1.4 * u);
+  }
   if (o.hat !== "bonnet") return;
   const bb = blobPts(cx - (side ? 12 : 0) * (H.a / 50), hc - 0.07 * 2 * H.b, { ...H, a: H.a * 1.17, b: H.b * 1.13, asym: 0, egg: 0.04, seed: H.seed + 3 });
   p.shadedFill(bb, BONNET, mul(BONNET, SH_CLOTH), light, H.a * 1.17);
@@ -446,6 +454,15 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     const cy = hc + H.b * 0.98;
     p.stroke([[cx - 14 * u, cy - 4 * u], [cx, cy + 2 * u], [cx + 14 * u, cy - 4 * u]], 2 * u, BONNET_BRIM);
   }
+  if (o.mortar) { // graduation cap: a skull band and a flat board seen a little from above, gold tassel
+    const band = R([[cx - 0.4 * W, crown + 0.2 * HH], [cx + 0.4 * W, crown + 0.2 * HH], [cx + 0.36 * W, crown + 0.04 * HH], [cx - 0.36 * W, crown + 0.04 * HH]]);
+    p.poly(band, "#22252e", ow);
+    const board = R([[cx - 0.66 * W, crown + 0.03 * HH], [cx - 0.05 * W, crown - 0.13 * HH], [cx + 0.66 * W, crown + 0.0 * HH], [cx + 0.05 * W, crown + 0.15 * HH]]);
+    p.poly(board, "#2b2f3a", ow);
+    const [tx, ty] = R([[cx, crown + 0.01 * HH]])[0], [ex, ey] = R([[cx + 0.5 * W, crown + 0.08 * HH]])[0];
+    p.stroke([[tx, ty], [ex, ey], [ex + 2 * u, ey + 0.32 * HH]], 2.6 * u, "#e8c45a"); p.ell(ex + 2 * u, ey + 0.34 * HH, 4 * u, 6 * u, "#e8c45a", 1.4 * u);
+    p.dot(tx, ty, 3 * u, "#e8c45a");
+  }
 };
 
 // ---------------- bodies ----------------
@@ -474,6 +491,8 @@ export type FrontOpts = {
   /** film 32: free hand targets (design units), held props, posture and face extras */
   handL?: P2 | null; handR?: P2 | null; holdR?: "phone" | null; holdL?: "phone" | null; lap?: "laptop" | null; screenK?: number;
   slump?: number; lookY?: number; tear?: number; glow?: string; glowK?: number;
+  /** film 33: the phone screen is cracked and taped */
+  cracked?: boolean;
 };
 
 const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
@@ -633,6 +652,11 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     const w = 15 * u, h = 26 * u, x0 = hx - w / 2 + side * 2 * u, y0 = hy - h * 0.75;
     p.poly(rrect(x0, y0, x0 + w, y0 + h, 3 * u), "#2a2d36", 2.2 * u);
     p.poly(rrect(x0 + 2 * u, y0 + 2.5 * u, x0 + w - 2 * u, y0 + h - 3 * u, 1.5 * u), opts.screenK ? mix("#2b3a55", "#cfe6ff", opts.screenK) : "#2b3a55", 0);
+    if (opts.cracked) {
+      p.stroke([[x0 + 3 * u, y0 + 5 * u], [x0 + 8 * u, y0 + 11 * u], [x0 + 6 * u, y0 + 16 * u], [x0 + 12 * u, y0 + 22 * u]], 1.1 * u, "#f4f6ff");
+      p.stroke([[x0 + 8 * u, y0 + 11 * u], [x0 + 13 * u, y0 + 9 * u]], 1.0 * u, "#f4f6ff");
+      p.poly([[x0 - 1 * u, y0 + 13 * u], [x0 + w + 1 * u, y0 + 9 * u], [x0 + w + 1 * u, y0 + 13 * u], [x0 - 1 * u, y0 + 17 * u]], "#e9dcb8", 1 * u);
+    }
     p.dot(hx, hy, 5.5 * u);
   };
   if (opts.holdR) { const a = arms[1]; if (a) phone(a.pts[2][0], a.pts[2][1], 1); }

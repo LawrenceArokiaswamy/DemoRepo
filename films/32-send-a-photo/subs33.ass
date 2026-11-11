@@ -1,0 +1,51 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Top,Inter,52,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,1090,1
+Style: TopUI,Inter,52,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,150,1
+Style: Mid,Inter,64,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,50,50,1235,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.30,0:00:04.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[Dad's slippers. Taped. Again.]{\i0}
+Dialogue: 0,0:00:05.20,0:00:08.40,Top,,0,0,0,,{\fad(200,200)}{\i1}[20 years ago. The shoe store.]{\i0}
+Dialogue: 0,0:00:08.60,0:00:11.40,Top,,0,0,0,,{\fad(200,200)}{\i1}[He counted every bill twice]{\i0}
+Dialogue: 0,0:00:11.60,0:00:14.40,Top,,0,0,0,,{\fad(200,200)}{\i1}[He kept his son dry. Not himself.]{\i0}
+Dialogue: 0,0:00:14.60,0:00:18.40,Top,,0,0,0,,{\fad(200,200)}{\i1}[She mended hers. She bought him new.]{\i0}
+Dialogue: 0,0:00:18.60,0:00:21.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[He got the new one. She kept the old.]{\i0}
+Dialogue: 0,0:00:22.10,0:00:25.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[There was never enough for three]{\i0}
+Dialogue: 0,0:00:26.10,0:00:29.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[She went to bed hungry. Again.]{\i0}
+Dialogue: 0,0:00:30.10,0:00:33.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[Dad took the night shifts nobody wanted]{\i0}
+Dialogue: 0,0:00:34.10,0:00:39.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[A new laptop. Dad's phone stayed cracked.]{\i0}
+Dialogue: 0,0:00:40.10,0:00:43.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[Their best clothes were ten years old]{\i0}
+Dialogue: 0,0:00:44.10,0:00:47.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[They stood aside… and still smiled]{\i0}
+Dialogue: 0,0:01:00.10,0:01:03.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[Dad's wardrobe. Everything still patched.]{\i0}
+Dialogue: 0,0:01:04.10,0:01:07.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[He kept the receipt. For twenty years.]{\i0}
+Dialogue: 0,0:01:08.10,0:01:11.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[Every dollar he sent… never spent]{\i0}
+Dialogue: 0,0:01:12.10,0:01:16.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[This time, he didn't let her refuse]{\i0}
+Dialogue: 0,0:01:17.10,0:01:21.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[She cried over a pair of slippers]{\i0}
+Dialogue: 0,0:00:48.10,0:00:55.90,TopUI,,0,0,0,,{\fad(200,200)}{\i1}[Years later. He had money to give back.]{\i0}
+Dialogue: 0,0:00:56.10,0:00:59.90,TopUI,,0,0,0,,{\fad(200,200)}{\i1}[Then the call no one wants]{\i0}
+Dialogue: 0,0:00:00.60,0:00:04.80,Mid,,0,0,0,,{\fad(150,150)}My dad wore the same slippers for eleven years.
+Dialogue: 0,0:00:05.60,0:00:07.80,Mid,,0,0,0,,{\fad(150,150)}BOY: {\i1}(excited){\i0} Those ones, Dad!
+Dialogue: 0,0:00:09.90,0:00:11.40,Mid,,0,0,0,,{\fad(150,150)}DAD: {\i1}(smiling){\i0} Only the best for you.
+Dialogue: 0,0:00:11.70,0:00:14.30,Mid,,0,0,0,,{\fad(150,150)}{\i1}[rain pouring]{\i0}
+Dialogue: 0,0:00:18.90,0:00:21.80,Mid,,0,0,0,,{\fad(150,150)}MOM: {\i1}(softly){\i0} I don't need anything. Mine still fits.
+Dialogue: 0,0:00:22.40,0:00:25.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[spoons on plates]{\i0}
+Dialogue: 0,0:00:26.40,0:00:28.00,Mid,,0,0,0,,{\fad(150,150)}MOM: {\i1}(gently){\i0} Eat, I'm not hungry.
+Dialogue: 0,0:00:28.10,0:00:29.70,Mid,,0,0,0,,{\fad(150,150)}{\i1}[stomach growls]{\i0}
+Dialogue: 0,0:00:30.40,0:00:33.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[the booth light hums]{\i0}
+Dialogue: 0,0:00:35.70,0:00:37.30,Mid,,0,0,0,,{\fad(150,150)}SON: {\i1}(not looking up){\i0} Finally.
+Dialogue: 0,0:00:37.40,0:00:39.60,Mid,,0,0,0,,{\fad(150,150)}DAD: {\i1}(proud){\i0} Study hard.
+Dialogue: 0,0:00:41.30,0:00:43.80,Mid,,0,0,0,,{\fad(150,150)}SON: {\i1}(embarrassed){\i0} Can you guys… stand over there?
+Dialogue: 0,0:00:46.50,0:00:47.80,Mid,,0,0,0,,{\fad(150,150)}{\i1}[camera clicks]{\i0}
+Dialogue: 0,0:01:00.40,0:01:03.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[wardrobe door creaks]{\i0}
+Dialogue: 0,0:01:08.40,0:01:11.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[he can't hold it in]{\i0}
+Dialogue: 0,0:01:14.40,0:01:16.80,Mid,,0,0,0,,{\fad(150,150)}MOM: {\i1}(tearful){\i0} I don't need anything…
+Dialogue: 0,0:01:17.50,0:01:21.60,Mid,,0,0,0,,{\fad(150,150)}SON: {\i1}(softly){\i0} I know, Mom. That's why.
