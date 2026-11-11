@@ -1,13 +1,26 @@
-# Film 32 "How Do I Send a Photo?" (45 s, 9 shots, Higgsfield animation, no voice)
-Characters: Dad (~65, flannel shirt, glasses on forehead) and his son (~30, grey hoodie). Pixar-like 3D, as in film 26.
-1. Son's car pulls into the farmhouse driveway; Dad waiting on the porch, beaming. Golden evening.
-2. Couch, side by side: son on his laptop; Dad shuffles closer with his old phone: "Son... how do I send a photo?"
-3. Son taps the phone twice without looking up, hands it back: "Dad, I showed you already." Dad's smile fades. "Okay."
-4. Night: son asleep on the couch, laptop open; Dad quietly takes a photo of him, fumbling with the button.
-5. Morning: son's car pulls away; Dad on the porch waving, phone raised for one more photo.
-6. Black, phone buzzes: Mom: "Come home. It's Dad."
-7. After the funeral: son alone at Dad's kitchen table, picks up Dad's phone.
-8. Drafts (phone UI built in code, thumbnails = frames of shots 2-5): "Proud of you son." "So glad you came home." "Drive safe. Love Dad." each "Not sent". He breaks down.
-9. Years later, same porch: his little boy holds out a phone: "Dad, how do I send a photo?" He closes his laptop, pulls him close, shows him slowly. "He wasn't learning the phone. He was trying to reach you."
-End question: "When did you last sit with your dad?"
+# Film 32 "How Do I Send a Photo?" (88 s, 15 Higgsfield shots + 2 code-built phone shots, no voice, captions)
+Characters: Dad (~65, flannel shirt, glasses on forehead) and his son (~30, grey hoodie), Pixar-like 3D as in film 26; the son's little boy (~6) in shots 16-17.
 Character image jobs: A 4f3e3d17-8d7b-4383-ade8-c6575e10238c, B 904e4d9e-e8d4-4597-a3a2-5ed6ce768361
+
+## Act 1, the visit (0-30)
+1. 0-5 Golden hour, son's car up a gravel drive to an old farmhouse. "He came home for the first time in two years."
+2. 5-10 Dad on the porch lights up, hugs him tight; son hugs back with one arm, phone in the other hand.
+3. 10-15 Dinner: Dad sets down a plate, "Made your favourite." Son eats while typing emails.
+4. 15-20 Couch: Dad shuffles closer with his old phone: "Son... how do I send a photo?"
+5. 20-25 Son taps twice without looking, hands it back: "I showed you already, Dad." Dad: "Right... okay."
+6. 25-30 Dad alone under the lamp, glasses on, one slow finger, trying to work it out.
+## Act 2, the goodbye (30-48)
+7. 30-35 Night: son asleep on the couch, laptop open; Dad covers him with a blanket, takes a photo, the flash startles him, he smiles.
+8. 35-40 Morning at the car: "Stay one more day?" "Can't, Dad. Big week."
+9. 40-45 Car pulls away; Dad on the porch waving, phone raised; small in the rear-view mirror.
+10. 45-48 CODE: son's phone on an office desk, "Dad - 3 missed calls"; a hand flips it face down.
+## Act 3, the loss (48-88)
+11. 48-53 Office at night; phone buzzes: Mom: "Come home. It's Dad." His face falls.
+12. 53-58 Rain; Dad's empty rocking chair on the porch, his work boots beside it.
+13. 58-63 Son alone at Dad's kitchen table; Dad's old phone and reading glasses; he picks the phone up.
+14. 63-71 CODE: drafts with photos from the visit (frames of shots 5, 7, 9): "Proud of you son." "So glad you came home." "Drive safe. Love Dad." each "Not sent"; last draft: "I still can't figure this out. Just wanted you to know I'm proud of you. Come home soon. Love, Dad." Not sent.
+15. 71-76 He breaks down, phone pressed to his chest.
+16. 76-81 Years later, same porch: his little boy runs up with a phone: "Dad, how do I send a photo?"
+17. 81-88 He closes his laptop, pulls the boy onto his lap, shows him slowly; both smile. "He wasn't learning the phone. He was trying to reach you." Fade.
+End question: "When did you last sit with your dad?"
+Budget: 15 keyframes (~4 cr) + 15 Wan clips 5 s 720p (~112 cr) = ~116 credits.
