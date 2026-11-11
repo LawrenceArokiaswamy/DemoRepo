@@ -54,10 +54,10 @@ async function character(file, o = {}) {
     if (x.isMesh) {
       x.castShadow = x.receiveShadow = true; x.frustumCulled = false;
       const m = x.material; m.envMapIntensity = .9;
-      if (m.name === 'hair') { m.alphaHash = true; m.transparent = false; m.alphaTest = 0; m.roughness = .55; m.side = THREE.DoubleSide; if (o.hair) m.color.set(o.hair); }
+      if (m.name === 'hair') { m.alphaToCoverage = true; m.alphaTest = .22; m.transparent = false; m.roughness = .55; m.side = THREE.DoubleSide; if (o.hair) m.color.set(o.hair); }
       if (m.name === 'skin') { m.roughness = .58; if (o.skin) m.color.set(o.skin); }
       if (m.name === 'body' && o.body) m.color.set(o.body);
-      if (x.morphTargetDictionary) C.morphs.push(x);
+      if (x.morphTargetDictionary) { C.morphs.push(x); }
     }
   });
   C.mixer = new THREE.AnimationMixer(root);
@@ -81,7 +81,11 @@ function face(C, f) { // ARKit names; f: {smile, sad, blink, browUp, frown, jaw,
   v.eyeBlinkLeft = v.eyeBlinkRight = clamp((f.blink || 0) + (f.lids || 0) * (1 - (f.blink || 0)));
   v.eyeSquintLeft = v.eyeSquintRight = clamp(s * .35 + (f.squint || 0) * .6); v.jawOpen = clamp(f.jaw || 0); v.mouthRollLower = clamp((f.roll || 0));
   v.browDownLeft = v.browDownRight = clamp(f.browDown || 0); v.mouthShrugLower = clamp(sad * .3 + (f.cry || 0) * .4);
-  for (const m of C.morphs) { const d = m.morphTargetDictionary; for (const k in d) m.morphTargetInfluences[d[k]] = v[k] || 0; }
+  // Rocketbox's ARKit shapes are mild: amplify them so expressions read on a phone screen
+  const G = { mouthSmileLeft: 1.05, mouthSmileRight: 1.05, cheekSquintLeft: 1.5, cheekSquintRight: 1.5, eyeBlinkLeft: 1, eyeBlinkRight: 1, browInnerUp: 1.1,
+    mouthFrownLeft: 1.8, mouthFrownRight: 1.8, eyeSquintLeft: 1.4, eyeSquintRight: 1.4, mouthPressLeft: 1.5, mouthPressRight: 1.5, mouthShrugLower: 1.5 };
+  v.mouthUpperUpLeft = v.mouthUpperUpRight = 0; v.mouthCloseL = 0; v.mouthDimpleLeft = v.mouthDimpleRight = clamp(s * .8); v.eyeSquintLeft = v.eyeSquintRight = clamp(v.eyeSquintLeft + s * .25);
+  for (const m of C.morphs) { const d = m.morphTargetDictionary; for (const k in d) m.morphTargetInfluences[d[k]] = (v[k] || 0) * (G[k] || 1); }
 }
 export const blinkAt = (t, seed) => { const p = (t + hash(seed) * 4) % (2.6 + hash(seed + 1) * 2); return p < .16 ? Math.sin(p / .16 * Math.PI) : 0; };
 // rotate a bone so that (in world space) direction from it to `childPos` points at `target`, blended by w
@@ -117,13 +121,15 @@ function rotLocal(b, x, y, z, w = 1) { if (!b) return; const q = new THREE.Quate
 function rotWorld(b, axis, ang) { const wq = b.getWorldQuaternion(new THREE.Quaternion()); const nq = new THREE.Quaternion().setFromAxisAngle(axis, ang).multiply(wq);
   b.quaternion.copy(b.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(nq)); b.updateMatrixWorld(true); }
 
+function seat(C, seatY, seatZ) { // move the root so the pelvis rests just above the cushion at seatZ
+  C.root.updateMatrixWorld(true); const p = wp(C.b('Pelvis')); C.root.position.y += seatY + .09 - p.y; C.root.position.z += seatZ - p.z; C.root.updateMatrixWorld(true); }
 // ---------- sets ----------
 async function buildPorch() {
   const g = new THREE.Group(); scene.add(g); SETS.porch = g;
-  const deck = await texSet('wood_floor_deck', [1, 1], { color: '#d8c8b0' }); const sid = await texSet('weathered_plank_siding', [1, 1], { color: '#f2ece2' });
+  const deck = await texSet('wood_floor_deck', [1, 1], { color: '#d8c8b0' }); const sid = await texSet('weathered_plank_siding', [1, 1], { color: '#fff8ee' });
   const grass = await texSet('leafy_grass', [1, 1], { color: '#a8a070' }); const roof = await texSet('roof_planks', [1, 1], { color: '#e8e0d4' }); const grav = await texSet('gravel_road', [1, 1]);
   uvBox(7, .12, 3.2, deck, g, 0, -.06, -.6, 1.6);                   // porch floor (front edge at z = 1.0)
-  uvBox(9, 3.6, .2, sid, g, 0, 1.68, -2.3, 1.8);                     // house wall
+  uvBox(9, 3.6, .2, sid, g, 0, 1.68, -2.3, .7);                     // house wall
   uvBox(7.4, .08, 3.6, roof, g, 0, 2.95, -.7, 2);                     // porch ceiling
   for (const x of [-3.2, -1.1, 1.1, 3.2]) cyl(.07, .08, 3, M('#efe9de', .6), g, x, 1.45, .85, 12); // posts
   const rail = M('#ebe4d8', .65); for (const x0 of [-3.2, 1.1]) { box(2.1, .06, .08, rail, g, x0 + 1.05, .92, .85); box(2.1, .05, .06, rail, g, x0 + 1.05, .12, .85); for (let k = 0; k < 13; k++) box(.035, .8, .035, rail, g, x0 + .1 + k * .16, .52, .85); }
@@ -131,7 +137,7 @@ async function buildPorch() {
   // window with warm light behind it + door
   const frame = M('#f4efe6', .55); box(1.3, 1.5, .08, frame, g, -2, 1.55, -2.17); const glass = new THREE.Mesh(new THREE.PlaneGeometry(1.15, 1.35), new THREE.MeshStandardMaterial({ color: '#2a1a10', emissive: '#ffb25c', emissiveIntensity: 1.6, roughness: .2 })); glass.position.set(-2, 1.55, -2.12); g.add(glass);
   box(1.0, 2.1, .08, M('#6b4a32', .5), g, 1.4, 1.05, -2.16); box(.04, .04, .06, M('#c9a24a', .3, .8), g, 1.05, 1.0, -2.1);
-  const lamp = new THREE.Mesh(new THREE.SphereGeometry(.09, 16, 12), new THREE.MeshStandardMaterial({ emissive: '#ffcc88', emissiveIntensity: 4 })); lamp.position.set(.6, 2.3, -2.1); g.add(lamp);
+  const lamp = new THREE.Mesh(new THREE.CylinderGeometry(.05, .07, .16, 16), new THREE.MeshStandardMaterial({ emissive: '#ffcc88', emissiveIntensity: 4 })); lamp.position.set(.6, 2.3, -2.1); g.add(lamp);
   // yard + drive
   const gr = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), grass); grass.map.repeat.set(200, 200); grass.normalMap.repeat.set(200, 200); grass.roughnessMap.repeat.set(200, 200);
   gr.rotation.x = -Math.PI / 2; gr.position.y = -.66; gr.receiveShadow = true; g.add(gr);
@@ -149,11 +155,11 @@ async function buildLiving() {
   const rm = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.8), rug); rug.map.repeat.set(1.3, .9); rug.normalMap.repeat.set(1.3, .9); rm.rotation.x = -Math.PI / 2; rm.position.set(0, .006, .7); rm.receiveShadow = true; g.add(rm);
   SETS.sofa = await model('Sofa_01', g, 0, 0, -1.05, 0, 1);
   await model('throw_pillows_01', g, -.95, .45, -1.15, .3, .9);
-  SETS.table = await model('CoffeeTable_01', g, 0, 0, .55, 0, 1);
+  SETS.table = await model('CoffeeTable_01', g, 0, 0, .15, 0, .8);
   await model('wooden_bookshelf_worn', g, 2.3, 0, -1.35, 0, 1); await model('mantel_clock_01', g, 2.3, 1.02, -1.35, 0, 1.2);
   await model('potted_plant_02', g, -2.4, 0, -1.2, 0, 1.2);
   await model('hanging_picture_frame_01', g, -.6, 1.75, -1.52, 0, 1.4); await model('hanging_picture_frame_02', g, .55, 1.65, -1.52, 0, 1.2);
-  await model('standing_picture_frame_01', g, -.3, .43, .45, .3, 1.3);
+  await model('standing_picture_frame_01', g, 1.25, .55, -.85, -.4, 1.1);
   // side table + lamp (warm key light)
   box(.5, .55, .5, M('#5a3c26', .55), g, 1.35, .275, -1.0); cyl(.08, .11, .3, M('#c9b79a', .4), g, 1.35, .7, -1.0);
   const shade = cyl(.17, .24, .3, new THREE.MeshStandardMaterial({ color: '#f3dcb0', emissive: '#ffbf73', emissiveIntensity: 2.2, roughness: .9, side: THREE.DoubleSide }), g, 1.35, 1.0, -1.0, 32); shade.castShadow = false;
@@ -206,7 +212,7 @@ export function init(canvas) {
 }
 
 // ---------- shots ----------
-function hide() { for (const k of ['porch', 'living']) SETS[k].visible = false; for (const C of Object.values(CH)) { C.root.visible = false; C.phone.visible = false; } SETS.laptop.visible = false; }
+function hide() { for (const k of ['porch', 'living']) SETS[k].visible = false; if (SETS.table) SETS.table.visible = true; for (const C of Object.values(CH)) { C.root.visible = false; C.phone.visible = false; } SETS.laptop.visible = false; }
 function cam(p, l, fov, focus, ap) { camera.position.copy(p); camera.lookAt(l); camera.fov = fov; camera.updateProjectionMatrix(); bokeh.uniforms.focus.value = focus; bokeh.uniforms.aperture.value = ap; bokeh.uniforms.maxblur.value = .012; }
 function outdoor(name, sunPos, sunCol, sunI, envI, bgI = 1) { scene.background = ENV[name].bg; scene.environment = ENV[name].env; scene.backgroundIntensity = bgI; scene.environmentIntensity = envI; scene.backgroundBlurriness = .02;
   ENV.sun.visible = true; ENV.sun.position.copy(sunPos); ENV.sun.target.position.set(0, 1, 0); ENV.sun.color.set(sunCol); ENV.sun.intensity = sunI; scene.fog = new THREE.Fog('#f0b27a', 40, 300); }
@@ -215,18 +221,18 @@ function indoor() { scene.background = new THREE.Color('#000'); scene.environmen
 // SHOT 1 (0-6 s): porch at golden hour — the son climbs onto the porch; Dad, beaming, pulls him into a hug. The son hugs back with one arm,
 // the phone still in his other hand.
 function shotHug(t) {
-  SETS.porch.visible = true; outdoor('farm_sunset', V(-6, 4.2, -9), '#ffb877', 3.2, .55, .9);
+  SETS.porch.visible = true; outdoor('farm_sunset', V(9, 2.6, 3), '#ffae68', 3.6, .55, 1);
   const D = CH.dad, S = CH.son; D.root.visible = S.root.visible = true; S.phone.visible = true;
   const meet = 2.0, k = sm(t, meet - .9, meet + .5); // arms come up and close
   // son walks the last two steps in (walk clip), then stops
-  const walkK = 1 - sm(t, meet - .4, meet + .1); const sz = lerp(1.25, .36, sm(t, 0, meet + .1));
-  S.root.position.set(.05, 0, sz); S.root.rotation.y = Math.PI; D.root.position.set(0, 0, 0); D.root.rotation.y = 0;
+  const walkK = 1 - sm(t, meet - .4, meet + .1); const sz = lerp(1.25, .24, sm(t, 0, meet + .1));
+  S.root.position.set(.1, 0, sz); S.root.rotation.y = Math.PI; D.root.position.set(0, 0, 0); D.root.rotation.y = 0;
   pose(S, [['m_walk_slow_01', t * 1.0, walkK + .001], ['m_idle_neutral_01', t, 1 - walkK + .001]]);
   pose(D, [['m_idle_breathe_01', t, 1]]);
   // lean into each other
-  const lean = k * .14; rotWorld(D.b('Spine1'), V(1, 0, 0), lean); rotWorld(S.b('Spine1'), V(1, 0, 0), -lean * .8);
-  rotWorld(D.b('Head'), V(0, 0, 1), -k * .25); rotWorld(D.b('Head'), V(0, 1, 0), k * .35); rotWorld(D.b('Head'), V(1, 0, 0), k * .12);
-  rotWorld(S.b('Head'), V(0, 1, 0), k * .3);
+  const lean = k * .2; rotWorld(D.b('Spine1'), V(1, 0, 0), lean); rotWorld(S.b('Spine1'), V(1, 0, 0), -lean * .8);
+  lookAt(D, wp(S.b('L Clavicle')).add(V(-.12, .08, .35)), k * .95, false); rotWorld(D.b('Head'), V(0, 0, 1), k * .18);
+  rotWorld(S.b('Neck'), V(0, 0, 1), k * .18); rotWorld(S.b('Head'), V(0, 1, 0), -k * .2);
   // Dad: both arms around the son's back (shoulder blades), elbows out
   const sB = wp(S.b('Spine2')); const back = sB.clone().add(V(0, .02, .16));
   ik(D, 'R', back.clone().add(V(-.13, .06, 0)), wp(D.b('R Forearm')).add(V(-.5, -.2, .3)), k);
@@ -236,20 +242,20 @@ function shotHug(t) {
   S.phone.position.set(.02, -.06, .03); S.phone.rotation.set(1.3, 0, 1.6);
   const bl = blinkAt(t, 3); face(D, { smile: .25 + k * .55, blink: k > .5 ? .92 : bl, browUp: k * .35, squint: k * .2 }); face(S, { smile: .15, blink: blinkAt(t, 9) });
   // camera: 3/4 over the son's shoulder onto Dad's face, slow push
-  const pz = lerp(3.1, 2.55, ss(t / 6)); cam(V(-1.15, 1.5, pz), V(.02, 1.5, .1), 30, wp(D.b('Head')).distanceTo(camera.position), .0016);
+  const pz = lerp(2.5, 2.05, ss(t / 6)); cam(V(-2.1, 1.5, pz), V(.15, 1.4, .1), 34, wp(D.b('Head')).distanceTo(camera.position), .0016);
   grade.uniforms.uWarm.value = .5; grade.uniforms.uLift.value = .03;
 }
 // SHOT 2 (6-12 s): the couch, evening lamp light. The son types on his laptop. Dad sits close, holds out his old phone: "Son... how do I send a photo?"
 function shotCouch(t, close) {
-  SETS.living.visible = true; indoor(); const D = CH.dad, S = CH.son; D.root.visible = S.root.visible = true; D.phone.visible = true; SETS.laptop.visible = true;
-  const seatY = -.03; S.root.position.set(-.38, seatY, -.78); S.root.rotation.y = 0; D.root.position.set(.36, seatY, -.8); D.root.rotation.y = -.28;
-  pose(S, [['m_sit_chair_idle_neutral_01', t + 3, 1]]); pose(D, [['m_sit_chair_breathe_01', t, 1]]);
+  SETS.living.visible = true; SETS.table.visible = false; indoor(); const D = CH.dad, S = CH.son; D.root.visible = S.root.visible = true; D.phone.visible = true; SETS.laptop.visible = true;
+  const seatY = -.03; S.root.position.set(-.33, seatY, -.78); S.root.rotation.y = 0; D.root.position.set(.3, seatY, -.8); D.root.rotation.y = -.28;
+  pose(S, [['m_sit_chair_idle_neutral_01', t + 3, 1]]); pose(D, [['m_sit_chair_breathe_01', t, 1]]); seat(S, .41, -1.08); seat(D, .41, -1.1);
   // son: hands on the laptop keyboard on his knees, head down to the screen
-  const lap = wp(S.b('L Thigh')).lerp(wp(S.b('R Thigh')), .5); lap.y += .1; lap.z += .3;
-  SETS.laptop.position.copy(lap).add(V(0, -.0, .02)); SETS.laptop.rotation.set(0, Math.PI, 0); SETS.laptop.scale.setScalar(1);
+  const kn = wp(S.b('L Calf')).lerp(wp(S.b('R Calf')), .5); const lap = kn.clone().lerp(wp(S.b('Pelvis')), .5); lap.y = kn.y + .02;
+  SETS.laptop.position.copy(lap).add(V(0, -.0, .02)); SETS.laptop.rotation.set(0, Math.PI, 0); SETS.laptop.scale.setScalar(.52);
   const typ = n => .012 * Math.sin(t * 17 + n) * (Math.sin(t * 2.3 + n) > 0 ? 1 : 0);
-  ik(S, 'L', lap.clone().add(V(.09, .03 + typ(1), .05)), wp(S.b('L Forearm')).add(V(.4, -.3, 0)), 1);
-  ik(S, 'R', lap.clone().add(V(-.09, .03 + typ(2), .05)), wp(S.b('R Forearm')).add(V(-.4, -.3, 0)), 1);
+  ik(S, 'L', lap.clone().add(V(.08, .03 + typ(1), .04)), wp(S.b('L Forearm')).add(V(.4, -.3, 0)), 1);
+  ik(S, 'R', lap.clone().add(V(-.08, .03 + typ(2), .04)), wp(S.b('R Forearm')).add(V(-.4, -.3, 0)), 1);
   rotWorld(S.b('Neck'), V(1, 0, 0), .32); rotWorld(S.b('Head'), V(1, 0, 0), .18);
   // Dad: leans in, right hand offers the phone toward the son at chest height, head turned to him
   const ask = sm(t, .6, 1.8); rotWorld(D.b('Spine1'), V(0, 0, 1), ask * .1); rotWorld(D.b('Spine1'), V(1, 0, 0), ask * .1);
@@ -259,14 +265,18 @@ function shotCouch(t, close) {
   lookAt(D, sH, .9 * ask + .1); lookAt(S, SETS.laptop.position.clone().add(V(0, .1, 0)), .6);
   const fade = sm(t, 4.0, 5.2); // no answer: his smile slowly fades
   face(D, { smile: lerp(.55, .12, fade), sad: fade * .45, blink: blinkAt(t, 5), browUp: .25 + fade * .2 }); face(S, { blink: blinkAt(t, 11) * .8, lids: .35 });
-  if (!close) cam(V(.15, 1.05, 2.0), V(.0, .78, -.75), 34, 2.75, .0011);
+  if (!close) cam(V(.1, 1.02, 2.1), V(-.02, .82, -1.0), 46, 3.1, .0008);
   else { const hp = wp(D.b('Head')); cam(V(-.45, 1.12, .55).add(V(0, 0, -t * .01)), hp.clone().add(V(-.02, -.02, 0)), 26, hp.distanceTo(V(-.45, 1.12, .55)), .003); }
   grade.uniforms.uWarm.value = .35; grade.uniforms.uLift.value = .02;
 }
 
 export const DUR = 12;
+const LAB = [{}, { smile: 1 }, { smile: 1, squint: .5 }, { sad: 1 }, { sad: .6, browUp: .5, cry: .6 }, { blink: 1 }];
+function faceLab(i) { SETS.living.visible = true; indoor(); const D = CH.dad; D.root.visible = true; D.root.position.set(0, 0, 0); D.root.rotation.y = 0; pose(D, [['m_idle_neutral_01', 0, 1]]);
+  face(D, LAB[i] || {}); const hp = wp(D.b('Head')); cam(hp.clone().add(V(0, .02, .7)), hp, 30, .7, 0); SETS.lampL.position.set(.6, 1.9, .8); }
 export function render(t) {
   hide(); grade.uniforms.uT.value = t; grade.uniforms.uFade.value = 1 - sm(t, 0, .6) * (1 - sm(t, DUR - .7, DUR));
+  if (t >= 12) { faceLab(Math.round((t - 12) * 30)); composer.render(); return; }
   if (t < 6) shotHug(t); else if (t < 9) shotCouch(t - 6, false); else shotCouch(t - 6, true);
   composer.render();
 }
