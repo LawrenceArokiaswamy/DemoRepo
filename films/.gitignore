@@ -54,3 +54,7 @@ stems/
 32-send-a-photo/send-a-photo-toon-test.mp4
 32-send-a-photo/toon/out-full/
 32-send-a-photo/send-a-photo.mp4
+32-send-a-photo/blender/assets/
+32-send-a-photo/blender/out/
+32-send-a-photo/blender/*.blend
+32-send-a-photo/blender/*.mp4
