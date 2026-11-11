@@ -58,3 +58,4 @@ stems/
 32-send-a-photo/blender/out/
 32-send-a-photo/blender/*.blend
 32-send-a-photo/blender/*.mp4
+__pycache__/
