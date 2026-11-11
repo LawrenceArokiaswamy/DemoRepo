@@ -87,6 +87,13 @@ const haloTex = () => ctex("sunHalo32", 256, 256, (g) => {
   }
   g.putImageData(im, 0, 0);
 });
+/** hand-drawn name tag with a little arrow pointing down at the character (opening shot: who is who) */
+const nameTag = (p: Pen, text: string) => {
+  const g = p.g; g.font = "88px Playfair"; const w = g.measureText(text).width + 90, x0 = 300 - w / 2;
+  p.poly([[x0, 40], [x0 + w, 34], [x0 + w + 6, 150], [x0 - 4, 156]], "#fff6e2", 9);
+  g.fillStyle = "#241726"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(text, 300, 98);
+  p.stroke([[300, 168], [296, 210], [300, 252]], 10); p.stroke([[278, 228], [300, 256], [322, 228]], 10);
+};
 /** "..." thought bubble that fades (alpha baked per step) */
 const bubble = (p: Pen, a: number) => {
   const g = p.g; g.globalAlpha = a;
@@ -313,6 +320,12 @@ export class World2 {
       const p = sonWalk(t), walking = t < 3.15, ph = (t * 1.6) % 1;
       side(SON, "son", p[0], p[1], p[2], { mode: walking ? "walk" : "stand", phase: q(ph, 30), stride: 0.75, expr: "neutral", hold: "phone", screenK: 0.5, lookY: walking ? 1.2 * (1 - arrive) : 0, blink: lid(0.7) }, 6, true);
       contact(p[0], 0, p[2]);
+      // name tags pop in (overshoot) and fade before the walk ends
+      const pop = (t0: number) => { const u = seg(t, t0, t0 + 0.35); return u <= 0 ? 0 : (u < 1 ? smooth(u) * (1 + 0.25 * Math.sin(u * Math.PI)) : 1) * (1 - seg(t, 2.9, 3.2)); };
+      const kd = q(pop(0.35), 20), ks = q(pop(0.95), 20);
+      const ds = (x: number, y: number, z: number) => cam.position.distanceTo(V(x, y, z)) * 0.13;
+      if (kd > 0) { const k2 = ds(0.15, 2.9, -0.25) * kd; fxl.push({ key: "tagDad", cw: 600, ch: 270, draw: (pp) => nameTag(pp, "Dad"), x: 0.15, y: PORCH_Y + 2.45, z: -0.25, w: 1.0 * k2, h: 0.45 * k2 }); }
+      if (ks > 0) { const k2 = ds(p[0], 2.4, p[2]) * ks; fxl.push({ key: "tagSon", cw: 600, ch: 270, draw: (pp) => nameTag(pp, "His son"), x: p[0], y: 2.35, z: p[2], w: 1.0 * k2, h: 0.45 * k2 }); }
     } else if (s.id === 2) {
       // the hug: side-on, Dad (left, facing right) wraps both arms around his son; the son holds his phone
       const k = smooth(seg(lt, 0.0, 0.9)), pat = 0.92 + 0.08 * Math.max(0, Math.sin(lt * 9)) * seg(lt, 1.2, 1.4);

@@ -24,7 +24,7 @@ export const PORCH_Y = 0.5;
 // son's walk from the car to the foot of the steps, then up onto the porch (shot 1); x, z over story time
 export const sonWalk = (t: number): V3 => {
   const k = smooth(seg(t, 0.2, 3.2));
-  const p = L([4.6, 0, 6.2], [0.75, 0, 1.25], k);
+  const p = L([3.4, 0, 4.4], [0.75, 0, 1.25], k);
   return p;
 };
 
@@ -49,7 +49,7 @@ export const dofAt = (f: number): { cInf: number; focus: V3 } => {
 };
 /** captions (seconds) */
 export const CAPS: [number, number, string][] = [
-  [0.6, 3.1, "He came home for the first time in two years."],
+  [0.6, 3.1, "His son came home for the first time in two years."],
   [6.9, 9.4, "“Son… how do I send a photo?”"],
   [10.4, 12.6, "He didn’t look up."],
 ];
