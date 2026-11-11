@@ -42,3 +42,7 @@ stems/
 32-send-a-photo/gen/
 32-send-a-photo/out/
 32-send-a-photo/samples
+32-send-a-photo/remotion/node_modules/
+32-send-a-photo/remotion/public/
+32-send-a-photo/remotion/review/
+32-send-a-photo/remotion/out/
