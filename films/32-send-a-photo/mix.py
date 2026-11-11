@@ -6,7 +6,7 @@ from scipy.signal import fftconvolve, resample_poly
 LIB = os.environ.get('LIB', '/root/lemo-opuscar'); sys.path.insert(0, f'{LIB}/core/audio')
 import sfx
 from sfx import SR, add, bp, lp, hp, noise, t_
-H = os.path.dirname(os.path.abspath(__file__)); DUR = 12.0; N = int(DUR * SR); rng = np.random.default_rng(32)
+H = os.path.dirname(os.path.abspath(__file__)); DUR = 12.8; N = int(DUR * SR); rng = np.random.default_rng(32)
 mus = np.zeros((N, 2)); fx = np.zeros((N, 2)); mt = lambda m: 440 * 2 ** ((m - 69) / 12)
 def add2(buf, x, t, g=1.):
     i = int(t * SR); e = min(len(buf), i + len(x))
@@ -36,11 +36,12 @@ def strings(t, ms, d, v=1., att=1.5, rel=2., bright=1500):
 def arp(t0, notes, step, n, vel, pan=.18):
     for k in range(n): piano(t0 + k * step, notes[k % len(notes)], vel * (.88 + .24 * rng.random()), step * 4, pan if k % 2 else -pan)
 
-# 0-6 porch: warm G major, rising; 6-12 couch: the figure thins out to E minor, a held note under "how do I send a photo?"
-piano(.3, 31, .3, 5.5, -.2); piano(.32, 43, .24, 5.5); arp(.3, [55, 59, 62, 67, 62, 59], .45, 12, .26); strings(.4, [55, 59, 62], 5.6, .05, att=2, rel=1, bright=2100)
-for t, m, d in [(1.2, 71, 1.0), (2.2, 74, .8), (2.9, 76, 1.6), (4.4, 74, 1.4)]: piano(t, m, .34, d, .1)
-piano(6.1, 28, .28, 5.8, -.2); arp(6.1, [52, 55, 59, 55], .7, 6, .2); piano(7.2, 71, .28, 2.2); piano(9.6, 67, .26, 2.0)
-strings(6.1, [40, 47], 5.8, .04, att=2.5, rel=1.4, bright=900)
+# 0-6.4 porch: warm G major, rising | 6.4-9.6 couch: E minor, thinner | 9.6-12.8 no answer: the piano stops, one low note holds
+piano(.3, 31, .3, 5.8, -.2); piano(.32, 43, .24, 5.8); arp(.3, [55, 59, 62, 67, 62, 59], .45, 13, .26); strings(.4, [55, 59, 62], 6.0, .05, att=2, rel=1, bright=2100)
+for t, m, d in [(1.2, 71, 1.0), (2.2, 74, .8), (3.2, 76, 1.8), (4.8, 74, 1.4)]: piano(t, m, .34, d, .1)
+piano(6.5, 28, .28, 3.2, -.2); arp(6.5, [52, 55, 59, 55], .7, 5, .2); piano(7.4, 71, .28, 2.0); piano(8.6, 67, .26, 1.4)
+strings(6.5, [40, 47], 3.4, .04, att=2, rel=1.0, bright=900)
+piano(9.9, 40, .26, 3.2, -.1); piano(11.0, 64, .2, 2.4, .1)   # held low E, then one quiet high note as he looks down
 def hall(x, secs=3.4, wet=.36, pre=.025):
     n = int(secs * SR); tt = np.arange(n) / SR; ir = np.zeros((n, 2))
     for ch in range(2): r = np.random.default_rng(ch + 3).standard_normal(n); ir[:, ch] = lp(r, 6000) * np.exp(-tt / (secs / 6.9))
@@ -51,22 +52,22 @@ mus[-int(1.2 * SR):] *= np.linspace(1, 0, int(1.2 * SR))[:, None] ** 2
 
 # foley
 SR_ = SR; room = lp(noise(DUR), 220)
-out_amb = np.zeros(N); i6 = int(6.0 * SR)
+out_amb = np.zeros(N); i6 = int(6.4 * SR)
 for k in range(28):                                   # crickets at golden hour (porch only)
     t0 = rng.uniform(0, 5.8); f = rng.uniform(4200, 5200); tt = t_(.18)
     ch = np.sin(2 * np.pi * f * tt) * (np.sin(2 * np.pi * 32 * tt) > 0) * np.sin(np.pi * tt / .18)
     add(fx, ch, t0, .006, rng.uniform(-.8, .8))
 add2(fx, np.stack([room, np.roll(room, 900)], 1)[:i6] * 1.0, 0, .02)
-for t0 in [.45, 1.0, 1.55]: add(fx, sfx.thump(.4, 90), t0, .05, .2)    # footsteps on porch boards
-add(fx, bp(noise(.6), 300, 1200) * np.sin(np.pi * t_(.6) / .6) ** 2, 2.0, .03)  # board creak / clothes as they hug
+for t0 in [.5, 1.05, 1.6, 2.15, 2.7]: add(fx, bp(noise(.08), 400, 2500) * np.exp(-t_(.08) / .03), t0, .03, .3)  # footsteps on gravel
+add(fx, bp(noise(.6), 300, 1200) * np.sin(np.pi * t_(.6) / .6) ** 2, 3.3, .03); add(fx, sfx.thump(.4, 90), 3.25, .05)  # clothes + a porch board as they hug
 tick = lambda: bp(noise(.02), 3000, 7000) * np.exp(-t_(.02) / .004)
-t = 6.0
-while t < 12: add(fx, tick(), t, .02, .4); t += 1.0                       # mantel clock
-t = 6.2
-while t < 11.8:
+t = 6.4
+while t < 12.8: add(fx, tick(), t, .02, .4); t += 1.0                       # mantel clock
+t = 6.6
+while t < 12.6:
     if np.sin(t * 2.3) > 0: add(fx, bp(noise(.03), 2500, 6000) * np.exp(-t_(.03) / .006), t, .015, -.2)
     t += rng.uniform(.09, .2)                                              # laptop keys
-add2(fx, np.stack([room, room], 1)[i6:] * 1.0, 6.0, .012)
+add2(fx, np.stack([room, room], 1)[i6:] * 1.0, 6.4, .012)
 mus = hall(mus); mus[-int(.9 * SR):] *= np.linspace(1, 0, int(.9 * SR))[:, None] ** 2
 mus *= .5 / np.sqrt((mus ** 2).mean()); fx *= 4.0
 mix = mus * .5 + fx; mix = hp(mix.T, 30).T; mix *= .7 / np.abs(mix).max()
