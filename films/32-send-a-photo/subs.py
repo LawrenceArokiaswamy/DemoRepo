@@ -10,19 +10,19 @@ TOP = [
     (6.5, 9.5, "[That evening. Dad shyly holds out his phone]"),
     (9.7, 13.5, "[The son doesn't look up from his laptop]"),
     (13.7, 17.5, "[Dad smiles it off. But it stings.]"),
-    (17.8, 21.5, "[Late at night. Dad squints at the screen, tapping slowly]"),
-    (21.7, 25.9, "[He tucks his sleeping son in… and quietly takes a photo]"),
+    (17.8, 21.5, "[Late night. Dad tries the phone alone]"),
+    (21.7, 25.9, "[He tucks his son in, and takes a photo]"),
     (26.1, 29.9, "[Morning. Dad hoping for just one more day]"),
-    (30.1, 33.9, "[The car pulls away. Dad keeps waving long after it's gone]"),
-    (34.1, 36.9, "[Weeks later. Dad keeps calling. Busy at work, the son turns his phone over]"),
+    (30.1, 33.9, "[Dad keeps waving long after the car is gone]"),
+    (34.1, 36.9, "[Weeks later. Dad keeps calling. The son flips his phone over]"),
     (37.1, 43.9, "[Messages from Mom]"),
     (44.1, 47.9, "[It finally sinks in]"),
     (48.1, 51.9, "[Rain. Dad's chair sits empty.]"),
-    (52.1, 55.9, "[After the funeral. Dad's glasses and phone, left behind]"),
-    (56.1, 60.6, "[He opens Dad's phone. Drafts, all addressed to him]"),
+    (52.1, 55.9, "[After the funeral. Dad's glasses and phone]"),
+    (56.1, 60.6, "[Dad's drafts. Every one addressed to him]"),
     (60.7, 65.9, "[Not one of them was ever sent]"),
     (66.1, 70.9, "[He breaks down]"),
-    (71.1, 75.9, "[Years later. In his dad's shirt, in his dad's chair]"),
+    (71.1, 75.9, "[Years later. In his dad's shirt and chair]"),
     (76.1, 82.9, "[This time, he puts the laptop away]"),
     (83.1, 87.8, "[He holds his boy close]"),
 ]
@@ -72,7 +72,7 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Top,Inter,46,&H00B8EBFF,&H000000FF,&H38000000,&H00000000,0,1,0,0,100,100,0,0,3,14,0,8,80,80,175,1
-Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H30000000,&H00000000,0,0,0,0,100,100,0,0,3,16,0,8,70,70,1090,1
+Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H30000000,&H00000000,0,0,0,0,100,100,0,0,3,16,0,8,70,70,300,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
