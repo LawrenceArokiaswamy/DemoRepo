@@ -15,12 +15,13 @@ Character image jobs: A 4f3e3d17-8d7b-4383-ade8-c6575e10238c, B 904e4d9e-e8d4-45
 9. 40-45 Car pulls away; Dad on the porch waving, phone raised; small in the rear-view mirror.
 10. 45-48 CODE: son's phone on an office desk, "Dad - 3 missed calls"; a hand flips it face down.
 ## Act 3, the loss (48-88)
-11. 48-53 Office at night; phone buzzes: Mom: "Come home. It's Dad." His face falls.
-12. 53-58 Rain; Dad's empty rocking chair on the porch, his work boots beside it.
-13. 58-63 Son alone at Dad's kitchen table; Dad's old phone and reading glasses; he picks the phone up.
-14. 63-71 CODE: drafts with photos from the visit (frames of shots 5, 7, 9): "Proud of you son." "So glad you came home." "Drive safe. Love Dad." each "Not sent"; last draft: "I still can't figure this out. Just wanted you to know I'm proud of you. Come home soon. Love, Dad." Not sent.
-15. 71-76 He breaks down, phone pressed to his chest.
-16. 76-81 Years later, same porch: his little boy runs up with a phone: "Dad, how do I send a photo?"
-17. 81-88 He closes his laptop, pulls the boy onto his lap, shows him slowly; both smile. "He wasn't learning the phone. He was trying to reach you." Fade.
+11. 48-55 CODE: Mom's texts arrive on his phone during a meeting: "Mom 9:14 AM: Dad collapsed this morning. It's his heart. We're at the hospital." / "9:16 AM: Please call me." / "10:41 AM: He keeps asking for you." / "11:52 AM: He's gone, sweetheart. I'm so sorry."
+11b. 55-60 Office: the son stares at the screen, his face falls, the phone slowly lowers.
+12. 60-64 Rain; Dad's empty rocking chair on the porch, his work boots beside it.
+13. 64-68 Son alone at Dad's kitchen table; Dad's old phone and reading glasses; he picks the phone up.
+14. 68-75 CODE: drafts with photos from the visit (frames of shots 5, 7, 9): "Proud of you son." "So glad you came home." "Drive safe. Love Dad." each "Not sent"; last draft: "I still can't figure this out. Just wanted you to know I'm proud of you. Come home soon. Love, Dad." Not sent.
+15. 75-79 He breaks down, phone pressed to his chest.
+16. 79-83 Years later, same porch: his little boy runs up with a phone: "Dad, how do I send a photo?"
+17. 83-88 He closes his laptop, pulls the boy onto his lap, shows him slowly; both smile. "He wasn't learning the phone. He was trying to reach you." Fade.
 End question: "When did you last sit with your dad?"
 Budget: 15 keyframes (~4 cr) + 15 Wan clips 5 s 720p (~112 cr) = ~116 credits.
