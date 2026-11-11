@@ -1,0 +1,4 @@
+Film 32 "How Do I Send a Photo?" — original story, characters, picture and score.
+- Animation engine: claude-animated-shorts (MIT, github.com/mromidev/claude-animated-shorts); toon2.ts is a fork of its toon.ts.
+- Piano samples: Salamander Grand Piano V3, Alexander Holm, CC BY 3.0 (via @audio-samples/piano-velocity4/8/12, fetched, not committed).
+- Fonts: Playfair Display (OFL), Inter (OFL).
