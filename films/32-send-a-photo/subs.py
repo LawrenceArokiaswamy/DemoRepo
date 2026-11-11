@@ -58,7 +58,7 @@ def esc(t):
         who, line = t.split(":", 1); line = line.strip()
         if line.startswith("("):
             note, rest = line[1:].split(")", 1); line = r"{\i1}(" + note + r"){\i0} " + rest.strip()
-        return r"{\b1}" + who + r":{\b0} " + line
+        return who + ": " + line
     if t.startswith("["): return r"{\i1}" + t + r"{\i0}"
     return t
 
@@ -71,8 +71,8 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Top,Inter,46,&H00B8EBFF,&H000000FF,&H38000000,&H00000000,0,1,0,0,100,100,0,0,3,14,0,8,80,80,175,1
-Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H30000000,&H00000000,0,0,0,0,100,100,0,0,3,16,0,8,70,70,300,1
+Style: Top,Inter,50,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,70,70,170,1
+Style: Mid,Inter,62,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,60,60,300,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

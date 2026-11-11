@@ -7,8 +7,8 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Top,Inter,46,&H00B8EBFF,&H000000FF,&H38000000,&H00000000,0,1,0,0,100,100,0,0,3,14,0,8,80,80,175,1
-Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H30000000,&H00000000,0,0,0,0,100,100,0,0,3,16,0,8,70,70,300,1
+Style: Top,Inter,50,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,70,70,170,1
+Style: Mid,Inter,62,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,60,60,300,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -33,19 +33,19 @@ Dialogue: 0,0:01:11.10,0:01:15.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[Years later. 
 Dialogue: 0,0:01:16.10,0:01:22.90,Top,,0,0,0,,{\fad(200,200)}{\i1}[This time, he puts the laptop away]{\i0}
 Dialogue: 0,0:01:23.10,0:01:27.80,Top,,0,0,0,,{\fad(200,200)}{\i1}[He holds his boy close]{\i0}
 Dialogue: 0,0:00:00.60,0:00:03.10,Mid,,0,0,0,,{\fad(150,150)}His son came home for the first time in two years.
-Dialogue: 0,0:00:06.90,0:00:09.40,Mid,,0,0,0,,{\fad(150,150)}{\b1}DAD:{\b0} {\i1}(hopeful){\i0} Son… how do I send a photo?
-Dialogue: 0,0:00:09.90,0:00:11.80,Mid,,0,0,0,,{\fad(150,150)}{\b1}SON:{\b0} {\i1}(not looking up){\i0} I showed you already, Dad.
-Dialogue: 0,0:00:12.00,0:00:13.50,Mid,,0,0,0,,{\fad(150,150)}{\b1}DAD:{\b0} {\i1}(quietly){\i0} Right… okay.
+Dialogue: 0,0:00:06.90,0:00:09.40,Mid,,0,0,0,,{\fad(150,150)}DAD: {\i1}(hopeful){\i0} Son… how do I send a photo?
+Dialogue: 0,0:00:09.90,0:00:11.80,Mid,,0,0,0,,{\fad(150,150)}SON: {\i1}(not looking up){\i0} I showed you already, Dad.
+Dialogue: 0,0:00:12.00,0:00:13.50,Mid,,0,0,0,,{\fad(150,150)}DAD: {\i1}(quietly){\i0} Right… okay.
 Dialogue: 0,0:00:15.00,0:00:17.30,Mid,,0,0,0,,{\fad(150,150)}{\i1}[clock ticking]{\i0}
 Dialogue: 0,0:00:18.00,0:00:21.30,Mid,,0,0,0,,{\fad(150,150)}Later that night, he tried on his own.
 Dialogue: 0,0:00:24.20,0:00:25.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[camera shutter clicks]{\i0}
-Dialogue: 0,0:00:26.50,0:00:28.10,Mid,,0,0,0,,{\fad(150,150)}{\b1}DAD:{\b0} {\i1}(gently){\i0} Stay one more day?
-Dialogue: 0,0:00:28.30,0:00:29.90,Mid,,0,0,0,,{\fad(150,150)}{\b1}SON:{\b0} {\i1}(rushed){\i0} Can't, Dad. Big week.
+Dialogue: 0,0:00:26.50,0:00:28.10,Mid,,0,0,0,,{\fad(150,150)}DAD: {\i1}(gently){\i0} Stay one more day?
+Dialogue: 0,0:00:28.30,0:00:29.90,Mid,,0,0,0,,{\fad(150,150)}SON: {\i1}(rushed){\i0} Can't, Dad. Big week.
 Dialogue: 0,0:00:30.40,0:00:33.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[engine starts, car drives away]{\i0}
 Dialogue: 0,0:00:44.30,0:00:47.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[breath catches]{\i0}
 Dialogue: 0,0:00:48.30,0:00:51.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[rain, distant thunder]{\i0}
 Dialogue: 0,0:01:06.30,0:01:10.60,Mid,,0,0,0,,{\fad(150,150)}{\i1}[quiet sobbing]{\i0}
 Dialogue: 0,0:01:11.30,0:01:13.00,Mid,,0,0,0,,{\fad(150,150)}Years later.
-Dialogue: 0,0:01:13.40,0:01:15.90,Mid,,0,0,0,,{\fad(150,150)}{\b1}BOY:{\b0} {\i1}(excited){\i0} Dad, how do I send a photo?
+Dialogue: 0,0:01:13.40,0:01:15.90,Mid,,0,0,0,,{\fad(150,150)}BOY: {\i1}(excited){\i0} Dad, how do I send a photo?
 Dialogue: 0,0:01:17.00,0:01:19.60,Mid,,0,0,0,,{\fad(150,150)}He wasn't learning the phone.
 Dialogue: 0,0:01:19.80,0:01:22.80,Mid,,0,0,0,,{\fad(150,150)}He was trying to reach you.
