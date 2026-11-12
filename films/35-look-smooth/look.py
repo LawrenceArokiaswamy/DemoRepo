@@ -117,7 +117,22 @@ BLUSH = mat("blush", "#e8806f", rough=0.6, alpha=0.32)
 HAIR = mat("hair", "#2a1810", rough=0.38, coat=0.35)
 HAIR_HI = mat("hair_hi", "#3b2418", rough=0.35, coat=0.35)
 SCLERA = mat("sclera", "#f3ede6", rough=0.25, coat=1.0)
-IRIS = mat("iris", "#5a3420", rough=0.2, coat=1.0)
+def iris_mat():
+    m = bpy.data.materials.new("irisring"); m.use_nodes = True; Nn = m.node_tree.nodes; L = m.node_tree.links
+    b = Nn["Principled BSDF"]; b.inputs["Roughness"].default_value = 0.25; b.inputs["Coat Weight"].default_value = 1.0
+    tc = Nn.new("ShaderNodeTexCoord"); g = Nn.new("ShaderNodeTexGradient"); g.gradient_type = 'SPHERICAL'
+    mp = Nn.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (1.0, 0.0, 1.0)
+    nz = Nn.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 18; nz.inputs["Detail"].default_value = 4
+    mxn = Nn.new("ShaderNodeMix"); mxn.data_type = 'FLOAT'; mxn.inputs["Factor"].default_value = 0.12
+    cr = Nn.new("ShaderNodeValToRGB"); E = cr.color_ramp.elements
+    E[0].position = 0.0; E[0].color = (*lin("#1c0d06"), 1); E[1].position = 0.86; E[1].color = (*lin("#070303"), 1)
+    for pos, col in [(0.08, "#4a2410"), (0.35, "#9a5a26"), (0.62, "#c98a3e"), (0.74, "#5a3014")]:
+        e = E.new(pos); e.color = (*lin(col), 1)
+    L.new(tc.outputs["Object"], mp.inputs["Vector"]); L.new(mp.outputs["Vector"], g.inputs["Vector"]); L.new(tc.outputs["Object"], nz.inputs["Vector"])
+    L.new(g.outputs["Fac"], mxn.inputs["A"]); L.new(nz.outputs["Fac"], mxn.inputs["B"]); L.new(mxn.outputs["Result"], cr.inputs["Fac"])
+    L.new(cr.outputs["Color"], b.inputs["Base Color"]); return m
+IRIS = iris_mat()
+CORNEA = mat("cornea", "#ffffff", rough=0.02, trans=1.0, coat=1.0)
 PUPIL = mat("pupil", "#100907", rough=0.15, coat=1.0)
 GLINT = mat("glint", "#ffffff", emit=6.0)
 LASH = mat("lash", "#1a0f0a", rough=0.5)
@@ -165,29 +180,32 @@ for sx in (-1, 1):
 
 # nose
 np_, nn = surf(0, HC.z - 0.03)
-uvsphere("nose", SKIN, HEAD, loc=np_ + nn * -0.004 + Vector((0, 0, 0.0)), scale=(0.016, 0.014, 0.02))
-uvsphere("nosetip", SKIN, HEAD, loc=np_ + Vector((0, -0.009, -0.006)), scale=(0.011, 0.01, 0.009))
+uvsphere("nose", SKIN, HEAD, loc=np_ + nn * -0.004 + Vector((0, 0, 0.0)), scale=(0.012, 0.011, 0.015))
+uvsphere("nosetip", SKIN, HEAD, loc=np_ + Vector((0, -0.007, -0.005)), scale=(0.008, 0.008, 0.007))
 
 # eyes (unit-eye coords under a scaled pivot)
-EYE_R = 0.029; EYES = []
+EYE_R = 0.039; EYES = []
 for sx in (-1, 1):
-    ep, en = surf(sx * 0.056, HC.z + 0.012)
-    E = piv(f"eye{sx}", HEAD, loc=ep + Vector((0, 0.013, 0)))
-    E.scale = (EYE_R, EYE_R * 0.8, EYE_R * 1.12); E.rotation_euler = (0, sx * -0.12, sx * -0.18)
+    ep, en = surf(sx * 0.061, HC.z + 0.004)
+    E = piv(f"eye{sx}", HEAD, loc=ep + Vector((0, 0.027, 0)))
+    E.scale = (EYE_R, EYE_R * 0.78, EYE_R * 1.1); E.rotation_euler = (0, sx * -0.12, sx * -0.18)
     uvsphere(f"sclera{sx}", SCLERA, E, scale=(1, 1, 1), seg=32, rings=24)
     G = piv(f"gaze{sx}", E)
-    uvsphere(f"iris{sx}", IRIS, G, loc=(0, -0.68, 0), scale=(0.66, 0.33, 0.66), seg=32, rings=16)
-    uvsphere(f"pupil{sx}", PUPIL, G, loc=(0, -0.92, 0), scale=(0.33, 0.1, 0.33), seg=24, rings=12)
-    uvsphere(f"glint{sx}", GLINT, G, loc=(-0.24, -1.0, 0.26), scale=(0.13, 0.04, 0.13), seg=12, rings=8, smooth_lv=0)
+    uvsphere(f"iris{sx}", IRIS, G, loc=(0, -0.66, 0), scale=(0.74, 0.34, 0.74), seg=40, rings=20, smooth_lv=1)
+    uvsphere(f"cornea{sx}", CORNEA, E, scale=(1.012, 1.012, 1.012), seg=32, rings=24)
+    uvsphere(f"glint{sx}", GLINT, G, loc=(-0.28, -1.0, 0.3), scale=(0.17, 0.04, 0.17), seg=12, rings=8, smooth_lv=0)
     uvsphere(f"glint2{sx}", GLINT, G, loc=(0.2, -0.99, -0.22), scale=(0.06, 0.03, 0.06), seg=12, rings=8, smooth_lv=0)
     LU = piv(f"lidU{sx}", E)
-    uvsphere(f"lidUm{sx}", SKIN, LU, scale=(1.075, 1.075, 1.075), keep=lambda c: c.z > -0.02, seg=40, rings=24)
-    arc = [Vector((1.095 * math.sin(a), -1.095 * math.cos(a), 0.0)) for a in [math.radians(d) for d in range(-84, 88, 8)]]
+    uvsphere(f"lidUm{sx}", SKIN, LU, scale=(1.035, 1.035, 1.035), keep=lambda c: c.z > -0.02, seg=40, rings=24)
+    arc = [Vector((1.05 * math.sin(a), -1.05 * math.cos(a), 0.0)) for a in [math.radians(d) for d in range(-84, 88, 8)]]
     arc.append(arc[-1] + Vector((0.18 * sx * 0 + 0.14, 0.05, 0.16)) if sx > 0 else arc[-1] + Vector((0.14, 0.05, 0.12)))
     if sx < 0: arc = [Vector((-p.x, p.y, p.z)) for p in arc]
-    tube(f"lash{sx}", arc, prof(len(arc), 0.05, 0.09, 0.03, 0.6), LASH, LU, seg=8, flat=0.6, lv=1)
+    tube(f"lash{sx}", arc, prof(len(arc), 0.06, 0.12, 0.05, 0.7), LASH, LU, seg=8, flat=0.6, lv=1)
+    for k, (a0, up) in enumerate([(62, 0.22), (72, 0.3), (82, 0.36)]):
+        a = math.radians(a0) * sx; b0 = Vector((1.05 * math.sin(a), -1.05 * math.cos(a), 0.0))
+        tube(f"flick{sx}{k}", [b0, b0 + Vector((0.1 * sx, -0.08, up * 0.6)), b0 + Vector((0.2 * sx, -0.1, up))], [0.05, 0.035, 0.012], LASH, LU, seg=6, flat=0.6, lv=1)
     LL = piv(f"lidL{sx}", E)
-    uvsphere(f"lidLm{sx}", SKIN, LL, scale=(1.065, 1.065, 1.065), keep=lambda c: c.z < 0.02, seg=40, rings=24)
+    uvsphere(f"lidLm{sx}", SKIN, LL, scale=(1.03, 1.03, 1.03), keep=lambda c: c.z < 0.02, seg=40, rings=24)
     tr = tube(f"tear{sx}", [Vector((1.0 * math.sin(math.radians(d)), -1.03 * math.cos(math.radians(d)), -0.02)) for d in range(-60, 64, 8)],
               [0.07] * 16, TEAR, LL, seg=8, flat=0.7, lv=1)
     EYES.append(dict(E=E, G=G, LU=LU, LL=LL, tear=tr, sx=sx))
@@ -248,7 +266,7 @@ hb.inputs["Roughness"].default_value = 0.32; hb.inputs["Radial Roughness"].defau
 hb.inputs["Random Roughness"].default_value = 0.2; hb.inputs["Random Color"].default_value = 0.12
 _l.new(hb.outputs[0], _n["Material Output"].inputs["Surface"])
 HAIR.diffuse_color = (0.05, 0.03, 0.02, 1)
-_hb = HAIR.node_tree.nodes["Principled BSDF"]; _hb.inputs["Base Color"].default_value = (0.022, 0.012, 0.007, 1); _hb.inputs["Roughness"].default_value = 0.8
+_hb = HAIR.node_tree.nodes["Principled BSDF"]; _hb.inputs["Base Color"].default_value = (*lin("#3b2417"), 1); _hb.inputs["Roughness"].default_value = 0.55
 _hb.inputs["Coat Weight"].default_value = 0.0
 hrnd = random.Random(11)
 def ell(d, k):
@@ -268,7 +286,7 @@ def strand_from(dirs, ks, clump, indiv, n=16):
         out.append(q)
     STR.append(out)
 # front/side: roots between the hairline and a side part, swept back into the bun
-for c in range(260):
+for c in range(380):
     az = hrnd.uniform(-108, 108); a = math.radians(az)
     clump = jit(0.0025)
     for s in range(48):
@@ -279,16 +297,24 @@ for c in range(260):
         dirs = [root, Vector((math.sin(a2) * 0.85, -0.35 * math.cos(a2) * (1 - u), 0.85)), Vector((math.sin(a2) * 0.92, 0.2, 0.62)),
                 Vector((math.sin(a2) * 0.85, 0.55, 0.2)), Vector((math.sin(a2) * 0.35, 0.93, -0.22))]
         lift = 0.012 + 0.012 * hrnd.random()
-        ks = [1.015, 1.02 + lift, 1.025 + lift, 1.025 + lift * 0.8, 1.03]
+        ks = [1.02, 1.05 + lift, 1.075 + lift, 1.065 + lift * 0.8, 1.045]
         strand_from(dirs, ks, clump, jit(0.0012))
+# a soft side-swept fringe: from the part, across the forehead, tucked behind the far ear
+for c in range(70):
+    u = hrnd.random(); v = hrnd.random(); clump = jit(0.003)
+    for s in range(36):
+        uu = min(1, max(0, u + hrnd.gauss(0, 0.04))); lift = 0.01 * hrnd.random()
+        dirs = [Vector((0.34 - 0.12 * uu, -0.1 - 0.25 * uu, 0.93)), Vector((0.12 - 0.1 * uu, -0.78, 0.62 - 0.12 * v)),
+                Vector((-0.4, -0.86, 0.5 - 0.18 * uu - 0.06 * v)), Vector((-0.86, -0.48, 0.34 - 0.12 * uu)), Vector((-0.96, -0.1, 0.12 - 0.1 * uu))]
+        strand_from(dirs, [1.02, 1.085 + lift, 1.1 + lift, 1.08 + lift, 1.05], clump, jit(0.0014), n=20)
 # crown/back into the bun
-for c in range(200):
+for c in range(320):
     az = hrnd.uniform(100, 260); a = math.radians(az); clump = jit(0.0025)
     for s in range(40):
         a2 = a + math.radians(hrnd.gauss(0, 3)); lift = 0.01 + 0.012 * hrnd.random()
         dirs = [Vector((0.2 + 0.1 * math.sin(a2), 0.0, 1.0)), Vector((math.sin(a2) * 0.65, -math.cos(a2) * 0.6 + 0.15, 0.72)),
                 Vector((math.sin(a2) * 0.6, 0.82, 0.15)), Vector((math.sin(a2) * 0.25, 0.95, -0.22))]
-        strand_from(dirs, [1.015, 1.025 + lift, 1.025 + lift, 1.03], clump, jit(0.0012))
+        strand_from(dirs, [1.02, 1.06 + lift, 1.065 + lift, 1.045], clump, jit(0.0012))
 # the bun: strands wrapped round a ball
 uvsphere("bun", HAIR, HEAD, loc=BUN, scale=(0.055, 0.042, 0.048))
 for c in range(60):
@@ -318,7 +344,7 @@ flat = [c for pts in STR for p in pts for c in p]
 hc.position_data.foreach_set("vector", flat)
 rad = []
 for pts in STR:
-    m = len(pts); rad += [mix(0.0007, 0.00025, (i / (m - 1)) ** 1.5) for i in range(m)]
+    m = len(pts); rad += [mix(0.00085, 0.0003, (i / (m - 1)) ** 1.5) for i in range(m)]
 ra = hc.attributes.get("radius") or hc.attributes.new("radius", 'FLOAT', 'POINT'); ra.data.foreach_set("value", rad)
 hc.materials.append(HAIRMAT)
 hobj = bpy.data.objects.new("hair", hc); link(hobj, HEAD)
@@ -467,6 +493,11 @@ def stage(f):
     dirv = Vector((-0.42, -1.0, 0.1)).normalized()
     cam.location = hp + dirv * d + Vector((0, 0, -0.02))
     aim(cam, hp + Vector((0.0, 0, -0.07))); cam.data.lens = 52
+    if "--portrait" in argv:                                  # look-dev camera: straight at her face
+        NECK.rotation_euler = (0.05, 0, 0); HEAD.rotation_euler = (0.02, 0.08, 0.12)
+        for e in EYES: e['G'].rotation_euler = (0, 0, 0); e['LU'].rotation_euler = (math.radians(-28 + 20 * smile), 0, 0); e['LL'].rotation_euler = (math.radians(30 - 18 * smile), 0, 0)
+        bpy.context.view_layer.update()
+        hp = HEAD.matrix_world @ HC; cam.location = hp + Vector((-0.3, -1.05, 0.04)); aim(cam, hp + Vector((0, 0, -0.03))); cam.data.lens = 58
     eye = EYES[0]["E"].matrix_world.translation
     cam.data.dof.focus_distance = (eye - cam.location).length
 
