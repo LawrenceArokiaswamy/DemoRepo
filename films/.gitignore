@@ -62,3 +62,7 @@ __pycache__/
 32-send-a-photo/send-a-photo-subs.mp4
 32-send-a-photo/toon/out-33/
 32-send-a-photo/the-things-they-never-bought.mp4
+34-first-home/out/
+34-first-home/*.mp4
+34-first-home/blender/tex/photo.png
+34-first-home/fonts/
