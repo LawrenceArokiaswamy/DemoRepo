@@ -1,0 +1,80 @@
+[
+ {
+  "id": "n1",
+  "text": "USA or China. Who's winning the AI race? Let's check the scoreboard.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n2",
+  "text": "Round one: the smartest AI. The best American model beats the best Chinese one by just two point seven percent.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n3",
+  "text": "Three years ago, that gap was huge.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n4",
+  "text": "Point, USA. Barely.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n5",
+  "text": "Round two: computing power. America has about seventy-two percent of the world's AI computing power. China? About ten.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n6",
+  "text": "Point, USA. Easily.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n7",
+  "text": "Round three: electricity. AI eats power, and China is adding power plants about six times faster than America.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n8",
+  "text": "Point, China.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n9",
+  "text": "Round four: the shock. In January twenty twenty-five, a cheap Chinese AI called DeepSeek wiped nearly six hundred billion dollars off Nvidia in one day.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n10",
+  "text": "Point, China. Two, two.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n11",
+  "text": "So, who wins?",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n12",
+  "text": "Right now, America leads. But China is catching up, fast and cheap. The race isn't over. It's barely past the first lap.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n13",
+  "text": "Follow for more.",
+  "voice": "am_puck",
+  "speed": 1.1
+ }
+]

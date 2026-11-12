@@ -1,0 +1,63 @@
+1
+00:00:00,200 --> 00:00:02,690
+The most powerful man in AI just admitted an affair.
+
+2
+00:00:02,710 --> 00:00:04,240
+And this isn't just gossip.
+
+3
+00:00:04,440 --> 00:00:09,000
+The CEO of Nvidia, Jensen Huang, told his staff he was unfaithful to his wife.
+
+4
+00:00:09,040 --> 00:00:13,070
+Reports say the woman was being watched by US intelligence over ties to China.
+
+5
+00:00:13,090 --> 00:00:14,200
+She hasn't been charged.
+
+6
+00:00:14,260 --> 00:00:18,920
+Nvidia's board opened an investigation, and says it has no reason to believe any secrets leaked.
+
+7
+00:00:19,100 --> 00:00:21,120
+So why is the whole AI world watching?
+
+8
+00:00:21,290 --> 00:00:24,110
+Because Nvidia makes most of the chips that power today's AI.
+
+9
+00:00:24,130 --> 00:00:26,260
+It's worth about four and a half trillion dollars.
+
+10
+00:00:26,590 --> 00:00:29,480
+On Monday, the stock fell about five percent.
+
+11
+00:00:29,570 --> 00:00:31,840
+Next week, Nvidia reports earnings.
+
+12
+00:00:31,930 --> 00:00:34,080
+The day after, Congress wants answers.
+
+13
+00:00:34,200 --> 00:00:36,880
+If trust in Nvidia cracks,
+
+14
+00:00:37,520 --> 00:00:40,280
+every AI company built on its chips feels it.
+
+15
+00:00:40,410 --> 00:00:42,080
+So, should he stay as CEO?
+
+16
+00:00:42,130 --> 00:00:42,980
+Comment below.

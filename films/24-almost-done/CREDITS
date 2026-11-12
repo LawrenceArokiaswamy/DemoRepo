@@ -1,0 +1,7 @@
+"Almost Done" — an original short. Story, picture, animation and score made in code (three.js + numpy). No narration.
+
+PIANO SAMPLES: Salamander Grand Piano V3 by Alexander Holm, CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/),
+  via the npm packages @audio-samples/piano-velocity4/8/12 (MIT packaging, Jan Forst). Fetched at build time, not redistributed here.
+STRINGS, AMBIENCE, FOLEY: synthesised in mix.py.
+FONTS: Playfair Display, IBM Plex Mono, Barlow Condensed (SIL OFL, see fonts/).
+CHARACTERS AND SETS: modelled procedurally in index.html (no third-party models).

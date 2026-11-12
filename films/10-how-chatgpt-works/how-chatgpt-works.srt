@@ -1,0 +1,67 @@
+1
+00:00:00,250 --> 00:00:06,180
+The question you just asked ChatGPT set off billions of calculations, for every word of the answer.
+
+2
+00:00:06,430 --> 00:00:07,380
+Let's slow it down.
+
+3
+00:00:07,510 --> 00:00:09,180
+Zero milliseconds. You hit Enter.
+
+4
+00:00:09,400 --> 00:00:12,770
+Your words get chopped into tokens, and each one becomes a number.
+
+5
+00:00:12,910 --> 00:00:16,620
+Each number lands on a map of meaning, where king sits right next to queen.
+
+6
+00:00:16,840 --> 00:00:18,720
+Your prompt races to a data centre.
+
+7
+00:00:18,740 --> 00:00:20,350
+Thousands of chips light up.
+
+8
+00:00:20,510 --> 00:00:24,080
+Then, attention. Every word looks at the others, to work out what you mean.
+
+9
+00:00:24,270 --> 00:00:25,470
+It doesn't look up an answer.
+
+10
+00:00:25,490 --> 00:00:26,820
+It guesses the next word.
+
+11
+00:00:26,970 --> 00:00:29,800
+It picks one, then guesses again, one piece at a time.
+
+12
+00:00:30,350 --> 00:00:31,180
+Here's the twist.
+
+13
+00:00:31,620 --> 00:00:33,430
+There's no answer stored inside.
+
+14
+00:00:33,620 --> 00:00:38,170
+It's the world's most powerful autocomplete, trained on mountains of text from the internet.
+
+15
+00:00:38,500 --> 00:00:39,820
+That reply wasn't looked up.
+
+16
+00:00:39,840 --> 00:00:40,680
+It was predicted.
+
+17
+00:00:40,700 --> 00:00:41,730
+Follow for more.

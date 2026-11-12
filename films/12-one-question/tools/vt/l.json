@@ -1,0 +1,11 @@
+[{"id":"a1","text":"So, can I eat pizza for breakfast? Send!","voice":"am_puck","speed":1.1},
+{"id":"a2","text":"Okay: can I eat pizza for breakfast? Send!","voice":"am_puck","speed":1.1},
+{"id":"b1","text":"Next, it reads all the words together.","voice":"am_puck","speed":1.15},
+{"id":"b2","text":"Then, it reads all the words together.","voice":"am_puck","speed":1.15},
+{"id":"c1","text":"Now the answer zooms all the way back!","voice":"am_puck","speed":1.15},
+{"id":"c2","text":"Then, the answer zooms all the way back!","voice":"am_puck","speed":1.15},
+{"id":"d1","text":"All of that, in about two seconds.","voice":"am_puck","speed":1.15},
+{"id":"d2","text":"All that, in just about two seconds.","voice":"am_puck","speed":1.15},
+{"id":"e1","text":"And it has never, once, tasted pizza.","voice":"am_puck","speed":1.08},
+{"id":"e2","text":"And it's never even tasted pizza.","voice":"am_puck","speed":1.08},
+{"id":"e3","text":"And it has never once tasted a pizza.","voice":"am_puck","speed":1.05}]

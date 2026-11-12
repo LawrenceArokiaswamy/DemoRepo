@@ -1,0 +1,74 @@
+{
+ "voice": "3e8a237e7b5d4eaab50bd9e05053d70e",
+ "model": "s2-pro",
+ "speed": 1.12,
+ "lines": [
+  [
+   "n1",
+   "[excited, sports-announcer energy] USA or CHINA. [short pause] Who's WINNING the AI race? [pause] [punchy] Let's check the SCOREBOARD.",
+   0.4
+  ],
+  [
+   "n2",
+   "[announcer, building] Round ONE: [short pause] the smartest AI. [short pause] [explaining] The best American model beats the best Chinese one [short pause] by just two point SEVEN percent.",
+   0.25
+  ],
+  [
+   "n3",
+   "[surprised, emphatic] Three years ago, [short pause] that gap was HUGE.",
+   0.3
+  ],
+  [
+   "n4",
+   "[referee call, crisp] Point, USA. [short pause] [wry] Barely.",
+   0.45
+  ],
+  [
+   "n5",
+   "[announcer] Round TWO: [short pause] computing power. [short pause] [impressed] America has about SEVENTY-TWO percent of the world's AI computing power. [pause] [teasing] China? [short pause] About TEN.",
+   0.25
+  ],
+  [
+   "n6",
+   "[referee call, crisp] Point, USA. [short pause] Easily.",
+   0.45
+  ],
+  [
+   "n7",
+   "[announcer] Round THREE: [short pause] electricity. [short pause] [explaining, energetic] AI EATS power, [short pause] and China is adding power plants about SIX times faster than America.",
+   0.25
+  ],
+  [
+   "n8",
+   "[referee call, crisp, clear] Point, [short pause] CHINA!",
+   0.45,
+   1.0
+  ],
+  [
+   "n9",
+   "[dramatic, building] Round FOUR: [short pause] the SHOCK. [short pause] In January twenty twenty-five, [short pause] a cheap Chinese AI called DeepSeek [short pause] wiped nearly SIX HUNDRED BILLION dollars off Nvidia [short pause] in ONE day.",
+   0.3
+  ],
+  [
+   "n10",
+   "[referee call] Point, CHINA. [pause] [amazed] Two... [short pause] TWO.",
+   0.45
+  ],
+  [
+   "n11",
+   "[slow, dramatic, leaning in] So... [short pause] who WINS?",
+   0.8,
+   0.95
+  ],
+  [
+   "n12",
+   "[clear, confident] Right now, [short pause] America LEADS. [short pause] But China is catching up, [short pause] FAST and CHEAP. [pause] [wry, smiling] The race isn't over. [short pause] It's barely past the FIRST lap.",
+   0.45
+  ],
+  [
+   "n13",
+   "[friendly, upbeat] Follow for more!",
+   0.0
+  ]
+ ]
+}

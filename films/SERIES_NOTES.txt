@@ -1,0 +1,39 @@
+1	# Series brief: 10 money & housing explainer reels (shared rules for every film)
+2	
+3	The client (an Ontario, Canada realtor-adjacent creator building an Instagram/TikTok following) wants world-class, scroll-stopping 40–50 s vertical reels. You are the director AND the whole studio. The user is not available for questions: every decision is yours, within these rules.
+4	
+5	## Tools and environment (this exact machine)
+6	- The Lemo-Opuscar film library is installed at `LIB=/root/lemo-opuscar` (skill mode). Read, in order: `$LIB/AGENTS.md` (skip its "Start" questions and its brief round: the brief is THIS file plus your film's prompt), `$LIB/DIRECTOR.md`, `$LIB/TECHNIQUE.md`, `$LIB/core/README.md`, then `$LIB/styles/<slug>/STYLE.md`. Follow them: treatment first, then look frames, then produce, then self-check.
+7	- Get the style's demo source ONLY after your TREATMENT.md exists: `sh /root/.claude/plugins/cache/lemolab/lemo-opuscar/*/skills/lemo-opuscar/scripts/setup.sh demo <slug>` (then it's in `$LIB/styles/<slug>/demo/`). Learn techniques from it; copy engine files into your project; never rebuild its story. Never edit anything under `$LIB/core` or `$LIB/styles`.
+8	- Project folder: the path given in your film prompt (under the scratchpad `films/` folder). Work only there.
+9	- **Every** `node core/render/*.mjs` command must run from `$LIB` with `PLAYWRIGHT_CHROME=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell` set in the environment (Playwright's own browser download is blocked here) and `--size 1080x1920`. Use `--workers 2` for video.mjs (another film may be rendering at the same time).
+10	- ffmpeg 8.1 is at /usr/local/bin (already first on PATH). Python: `$LIB/.venv/bin/python` with core, voice and music tiers installed (Kokoro + model, faster-whisper, numba). Sample libraries vsco2ce and vcsl are installed; fetch others only if your score needs them: `cd $LIB && sh tools/fetch.sh instruments <freepats|karoryfer|salamander>`.
+11	- Fonts named by a STYLE.md: download the OFL files from `https://raw.githubusercontent.com/google/fonts/main/ofl/<family>/<File>.ttf` into the project's `fonts/` (check the exact file names in the google/fonts repo layout; static files are sometimes under `static/`).
+12	- Facts: use the WebSearch tool (mode "standard", or "extended" for hard numbers). Today is late October 2026. Canadian / Ontario / GTA figures wherever the topic is about housing, rent, prices or taxes in the viewer's life (the audience is in Canada). Keep `FACTS.md` (claim → source URL + date). Never invent a number; if you cannot source it, say it qualitatively. Balanced, not financial advice. No brand logos; brand or company names only in narration when factual.
+13	- No paid services, no uploads, no Higgsfield, no credits of any kind.
+14	
+15	## Creative rules (what "world class" means here)
+16	- Vertical 1080×1920, the style's frame rate (STYLE.md) or 24 fps. Length 40–50 s. English.
+17	- **Hook in the first 1.5 s**: a bold claim, number or question on screen AND in the voice, with motion already happening on frame 1. No logo, no slow open.
+18	- **Heart-pounding pacing**: the score builds like a pulse (a low heartbeat-like kick or ostinato under the hook, acceleration into the turn), at least two real silences (or near-silences) right before the turn and before the payoff; the first sound after each silence is a key sound. Vary pace: fast-slow-fast, one breath moment.
+19	- **One story with a turn**: setup → tension → twist/payoff → a closing line that loops back to the hook. End with an on-screen "Follow for more" (never promise a "part 2").
+20	- Every visible action has a sound. Score in the style's sound palette (STYLE.md §7). Original music only (sampler/synthesis); voice about 10 dB above the music.
+21	- Burned-in captions designed in the style, readable on a phone (cap height ≥ 40 px at 1080 wide), never covering faces or key action; hold rules from DIRECTOR.md §7. Also export `<name>.srt`.
+22	- Characters: an original cast for THIS film. **No robots.** Faces/staging readable at phone size: subject ≥ 1/3 of frame height at key moments, no tiny far-wide gags.
+23	- Keep text on screen short (numbers big, words few).
+24	
+25	## Voice (Kokoro, `core/tts/tts.py`)
+26	- Use the voice named in your film prompt (if the name is unknown, tts.py prints the list; pick the closest match in spirit).
+27	- Spell numbers and years out in the TTS text ("nineteen eighty", "seven hundred thousand"), digits in captions. Check every line with `core/tts/asr_check.py`, and double-check doubtful ones with system `python3` + `faster_whisper` model `small.en`. Kokoro mushes short plosive words ("pump" → "thumb"): rephrase until the transcript is right. Leading words after a pause can be clipped: test.
+28	
+29	## Sound and master
+30	- Mix: duck music under voice; voice ≈ 10 dB above the music bed. Master with `sh core/render/mux.sh <video> <mix.wav> <out.mp4> <fps> [grain]` → it must report about −14 LUFS and no peak warning (true peak ≤ −1.2 dB). If it warns, compress/limit your mix bus and remux.
+31	- Final checks: `ffmpeg -af ebur128`, `blackdetect`, whisper on the final mp4 (every line must come back right), a contact sheet every ~2 s that you actually look at, 0.2 s strips of key actions. One fix round.
+32	
+33	## Deliver (in the project folder)
+34	`<name>.mp4` (master), `<name>_preview.mp4` (H.264 ≈ 3 Mb/s, must be < 28 MB), `poster.jpg` (a strong frame for the thumbnail), `<name>.srt`, `TREATMENT.md`, `FACTS.md`, `CREDITS` (every sample library, voice engine, font with licence), `build.sh`.
+35	`grep -rniE "lemo ?lab|opus 5\.5"` over the project must find nothing outside LICENSE/CREDITS/LIB= lines.
+36	
+37	## Report back (your final message)
+38	Project path; final duration; measured LUFS/peak; the full narration script; which shots carry the hook, the turn and the payoff; anything you know is still imperfect. Be honest: if something failed, say so. Do not kill processes you did not start, and leave no background processes running.
+39	

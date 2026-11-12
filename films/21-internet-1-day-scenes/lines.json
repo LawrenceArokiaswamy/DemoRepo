@@ -1,0 +1,68 @@
+[
+ {
+  "id": "n1",
+  "text": "What if the internet went down for one whole day?",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n2",
+  "text": "It already happened. In twenty twenty-two, twelve million Canadians lost their phones and internet. Debit cards stopped working across the country.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n3",
+  "text": "Now imagine the whole world.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n4",
+  "text": "You wake up. No messages. No news. No maps.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n5",
+  "text": "You tap your card. Declined. Cash only.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n6",
+  "text": "Offices freeze. Email, video calls, cloud files: gone.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n7",
+  "text": "Airports go into chaos. In twenty twenty-four, one bad software update cancelled over five thousand flights in a single day.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n8",
+  "text": "No deliveries. No rides. No streaming.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n9",
+  "text": "And the bill for one day?",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n10",
+  "text": "About forty-three billion dollars.",
+  "voice": "am_puck",
+  "speed": 1.1
+ },
+ {
+  "id": "n11",
+  "text": "So, could you survive a day offline? Comment below.",
+  "voice": "am_puck",
+  "speed": 1.1
+ }
+]

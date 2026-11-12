@@ -1,0 +1,99 @@
+[
+ {
+  "id": "s1",
+  "text": "Mom? It's me... I'm in trouble. I need money. Right now!",
+  "voice": "af_sky",
+  "speed": 1.18
+ },
+ {
+  "id": "n1",
+  "text": "That isn't Sam. It's an AI clone.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "n2",
+  "text": "Made from three seconds of audio.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "n3",
+  "text": "One clip from social media can be enough.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "n4",
+  "text": "Now watch the script.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "s2",
+  "text": "Please, don't tell Dad!",
+  "voice": "af_sky",
+  "speed": 1.18
+ },
+ {
+  "id": "n5",
+  "text": "Urgency. Secrecy.",
+  "voice": "am_fenrir",
+  "speed": 1.12
+ },
+ {
+  "id": "s3",
+  "text": "Just buy gift cards. Or send crypto!",
+  "voice": "af_sky",
+  "speed": 1.18
+ },
+ {
+  "id": "n6",
+  "text": "That combo is always a scam.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "n7",
+  "asr": "Americans lost $3.5 billion to imposter scams last year.",
+  "text": "Americans lost three point five billion dollars to impostor scams last year.",
+  "voice": "am_fenrir",
+  "speed": 1.17
+ },
+ {
+  "id": "n8",
+  "text": "Oh, and this voice? Also AI. Every voice in this video is.",
+  "voice": "am_fenrir",
+  "speed": 1.12
+ },
+ {
+  "id": "n9",
+  "text": "Fooled you? Then it can fool your mom.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "n10",
+  "text": "So tonight, pick a safe word for your family.",
+  "voice": "am_fenrir",
+  "speed": 1.12
+ },
+ {
+  "id": "n11",
+  "text": "No safe word? Hang up. Call back on a number you know.",
+  "voice": "am_fenrir",
+  "speed": 1.15
+ },
+ {
+  "id": "n12",
+  "text": "Send this to your parents.",
+  "voice": "am_fenrir",
+  "speed": 1.12
+ },
+ {
+  "id": "n13",
+  "text": "Follow for more.",
+  "voice": "am_fenrir",
+  "speed": 1.12
+ }
+]

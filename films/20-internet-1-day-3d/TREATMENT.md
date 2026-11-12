@@ -1,0 +1,3 @@
+# Treatment: "What if the internet went down for one whole day?" (film 19)
+
+One city, one day. 00:00 the neon canyon is alive (data streams, billboards); on "down" everything snaps (rain of light, screens die, phones grey) and the status flips to OFFLINE. Rogers 2022 (12,000,000 Canadians) over a dark city; a globe of city lights going dark ("now: the whole world"); then the 24-hour clock races with a real sky cycle: 07:00 phone "No messages / No news / No maps", 08:00 terminal DECLINED + CASH ONLY sign, 09:00 laptop "Reconnecting…", 12:00 departures board all CANCELLED (5,000+ flights, CrowdStrike 2024), 18:00 dead street at dusk, 23:59 silence → "$43,000,000,000 · the cost of ONE day offline" → "Could you survive a day offline? comment below 👇".

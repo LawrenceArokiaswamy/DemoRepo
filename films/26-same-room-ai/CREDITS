@@ -1,0 +1,5 @@
+"Same Room" (animated) — 45 s, no narration. Original story.
+PICTURE: keyframes generated with GPT Image 2.6 and animated with Wan 2.7 on Higgsfield (user's account; ~70 credits).
+  Edit, grade and captions: assemble.py (ffmpeg). Raw generations kept out of git (gen/).
+PIANO SAMPLES: Salamander Grand Piano V3 by Alexander Holm, CC BY 3.0, via @audio-samples/piano-velocity4/8/12 (fetched, not redistributed).
+STRINGS, FOLEY: synthesised in mix.py.  FONTS: Playfair Display, IBM Plex Mono (SIL OFL, see fonts/).

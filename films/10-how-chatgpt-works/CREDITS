@@ -1,0 +1,15 @@
+how-chatgpt-works: credits and licences
+
+Picture: original code (three.js r170, MIT licence, https://threejs.org) rendered with headless Chromium. No stock footage, no generated video, no logos.
+Map data: Natural Earth (public domain, https://www.naturalearthdata.com), ne_110m_land (land polygons, no borders) and ne_50m_populated_places_simple (city lights), via github.com/nvkelso/natural-earth-vector.
+Token IDs: o200k_base vocabulary (GPT-4o tokenizer) via the Hugging Face port Xenova/gpt-4o (tokenizer.json), used only to compute six IDs shown on screen.
+
+Fonts (SIL Open Font License 1.1, files and licences in fonts/):
+  Anton (Vernon Adams), https://github.com/google/fonts/tree/main/ofl/anton
+  Barlow Condensed (Jeremy Tribby), https://github.com/google/fonts/tree/main/ofl/barlowcondensed
+
+Scratch voice (to be replaced by the client's recording): Kokoro-82M via kokoro-onnx, voice am_puck (Apache-2.0, https://huggingface.co/hexgrad/Kokoro-82M).
+Speech check and word timestamps: faster-whisper (MIT) with OpenAI Whisper base.en / small.en weights (MIT).
+
+Music and sound effects: original, synthesised in numpy/scipy for this film (no samples).
+Production toolkit: Lemo-Opuscar film library (LIB=/root/lemo-opuscar; see its LICENSE).

@@ -1,0 +1,214 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>nvidia-ceo-affair-doc</title>
+<style>html,body{margin:0;background:#0b0b0a;overflow:hidden}canvas{display:block;position:absolute;left:0;top:0}</style>
+</head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Film 23: the Nvidia CEO story as a captions-first documentary news reel (Lemo-Opuscar "caption-news" grammar, vertical layout).
+// Real photographs only (Wikimedia Commons: CC0 / public domain / CC BY, credited on every shot), re-set type for every fact, a source tag on every number.
+// Pure function of t (30 fps, 1080x1920). All timing comes from film.json (prep.py, from the narration take).
+const W = innerWidth, H = innerHeight;
+const cv = document.getElementById('c'); cv.width = W; cv.height = H; const X = cv.getContext('2d');
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, x) => a + (b - a) * x, seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - clamp(x), 3), ei = x => Math.pow(clamp(x), 3), eio = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const back = (x, s = 1.6) => (x = clamp(x) - 1, 1 + x * x * ((s + 1) * x + s));
+const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+const AN = 'Anton', BX = 'BarlowXB', BB = 'BarlowB', BS = 'BarlowS', MONO = 'PlexMono', EMO = '"Noto Color Emoji"';
+const FONTS = [[AN, 'fonts/Anton-Regular.ttf'], [BX, 'fonts/BarlowCondensed-ExtraBold.ttf'], [BB, 'fonts/BarlowCondensed-Bold.ttf'], [BS, 'fonts/BarlowCondensed-SemiBold.ttf'], [MONO, 'fonts/IBMPlexMono-Medium.ttf']];
+const C = { ivory: '#F7F5EF', honey: '#FFC21A', ink: '#0E0E0C', red: '#FF4A3D', grey: '#8D8B83', sheet: '#151512', green: '#3EE08A' };
+const CX = 520;                                     // content sits a little left of centre: the right edge belongs to Instagram's buttons
+
+// ---------------- photos (credits are shown on every shot that uses them) ----------------
+const PH = {
+  gest: { f: 'img/gest.jpg', cr: 'Photo: Maurizio Pesce · CC BY 2.0' },
+  ces1: { f: 'img/ces1.jpg', cr: 'Photo: Pronoia · CC0' },
+  ces2: { f: 'img/ces2.jpg', cr: 'Photo: Pronoia · CC0' },
+  portrait: { f: 'img/portrait.jpg', cr: 'Photo: Peter DaSilva · CC BY 4.0' },
+  hq: { f: 'img/hq.jpg', cr: 'Photo: Kevin McCarthy · CC BY 2.0' },
+  h100: { f: 'img/h100.jpg', cr: 'Photo: 极客湾Geekerwan · CC BY 3.0' },
+  racks: { f: 'img/racks.jpg', cr: 'Photo: Carl Lender · CC BY 2.0' },
+  rack2: { f: 'img/rack2.jpg', cr: 'Photo: Tony Webster · CC BY 2.0' },
+  nersc: { f: 'img/nersc.jpg', cr: 'Photo: Derrick Coetzee · CC0' },
+  capitol: { f: 'img/capitol.jpg', cr: 'Photo: Diliff · public domain' },
+  gtc2: { f: 'img/gtc2.jpg', cr: 'Photo: NVIDIA Taiwan · CC BY 2.0' },
+  gtc1: { f: 'img/gtc1.jpg', cr: 'Photo: NVIDIA Taiwan · CC BY 2.0' },
+};
+const load = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(src); i.src = src; });
+
+// ---------------- data ----------------
+let F, CAPS, MAP; const T = {}; let EV = [];
+const word = (id, w) => { const ws = F.words[id]; const k = ws.findIndex(x => x[0].toLowerCase().replace(/[^a-z']/g, '') === w); return k < 0 ? ws[0][1] : ws[k][1]; };
+const L0 = id => F.lines[id][0], L1 = id => F.lines[id][1];
+
+// ---------------- drawing primitives ----------------
+const GRADE = 'contrast(1.07) saturate(0.92) brightness(0.98)';
+// cover-fit a photo; (fx, fy) = focus point in the image (0..1), z = zoom over cover, dx/dy = pan in output px
+function photo(k, fx, fy, z = 1, o = {}) {
+  if (!PH[k].img) { X.fillStyle = '#333'; X.fillRect(0, 0, W, H); tx('MISSING ' + k, W / 2, H / 2, 60, MONO, '#f00', 'center'); return; }
+  const im = PH[k].img, iw = im.naturalWidth, ih = im.naturalHeight;
+  const s = Math.max(W / iw, H / ih) * z, vw = W / s, vh = H / s;
+  const sx = clamp(fx * iw - vw / 2, 0, iw - vw), sy = clamp(fy * ih - vh / 2, 0, ih - vh);
+  X.save(); X.filter = `${GRADE} saturate(${o.sat ?? 1}) brightness(${o.bri ?? 1})`;
+  X.drawImage(im, sx, sy, vw, vh, 0, 0, W, H); X.filter = 'none';
+  X.globalCompositeOperation = 'soft-light'; X.fillStyle = o.tint || 'rgba(255,170,90,.06)'; X.fillRect(0, 0, W, H); X.restore();
+  CUR.credit = PH[k].cr;
+}
+function shade(top = .55, from = 760, to = 1700, a = .88) {
+  let g = X.createLinearGradient(0, 0, 0, 330); g.addColorStop(0, `rgba(8,8,6,${top})`); g.addColorStop(1, 'rgba(8,8,6,0)'); X.fillStyle = g; X.fillRect(0, 0, W, 330);
+  g = X.createLinearGradient(0, from, 0, to); g.addColorStop(0, 'rgba(8,8,6,0)'); g.addColorStop(1, `rgba(8,8,6,${a})`); X.fillStyle = g; X.fillRect(0, from, W, H - from);
+  const r = X.createRadialGradient(W / 2, H * .45, H * .3, W / 2, H * .45, H * .75); r.addColorStop(0, 'rgba(0,0,0,0)'); r.addColorStop(1, 'rgba(0,0,0,.45)'); X.fillStyle = r; X.fillRect(0, 0, W, H);
+}
+function tx(s, x, y, size, font, col, align = 'left', sh = 0) { X.font = `${size}px ${font}`; X.textAlign = align; X.textBaseline = 'alphabetic'; if (sh) { X.shadowColor = 'rgba(0,0,0,.75)'; X.shadowBlur = sh; X.shadowOffsetY = 3; } X.fillStyle = col; X.fillText(s, x, y); X.shadowBlur = 0; X.shadowOffsetY = 0; }
+const tw = (s, size, font) => (X.font = `${size}px ${font}`, X.measureText(s).width);
+function rr(x, y, w, h, r) { X.beginPath(); X.roundRect(x, y, w, h, r); }
+// a yellow (or red) block that wipes in left->right behind a word
+function block(s, x, y, size, font, k, bg = C.honey, fg = C.ink, padX = .16, align = 'left') {
+  const w = tw(s, size, font), px = size * padX, bx = align === 'center' ? x - w / 2 - px : x - px;
+  X.fillStyle = bg; X.fillRect(bx, y - size * .92, (w + 2 * px) * eo(k), size * 1.12);
+  tx(s, align === 'center' ? x : x, y, size, font, fg, align);
+}
+// fixed-width digit cells so rolling counters never jitter
+function num(s, x, y, size, col, align = 'center') { X.font = `${size}px ${AN}`; const cw = X.measureText('0').width; const widths = [...s].map(ch => /[0-9]/.test(ch) ? cw : X.measureText(ch).width); const tot = widths.reduce((a, b) => a + b, 0); let cx = align === 'center' ? x - tot / 2 : x; X.textAlign = 'center'; X.fillStyle = col; X.shadowColor = 'rgba(0,0,0,.6)'; X.shadowBlur = 24; [...s].forEach((ch, i) => { X.fillText(ch, cx + widths[i] / 2, y); cx += widths[i]; }); X.shadowBlur = 0; }
+
+// ---------------- frame chrome: bug, source tag, credit chip, lower third ----------------
+function bug(t) {
+  const y = 150; X.fillStyle = C.honey; X.fillRect(56, y - 44, 18, 56);
+  tx('AI IN 60', 86, y, 44, AN, C.ivory, 'left', 10); tx('THE NVIDIA STORY', 86 + tw('AI IN 60', 44, AN) + 16, y - 2, 30, BB, C.honey, 'left', 10);
+}
+function source(t, t0, label) { const k = eo(seg(t, t0, t0 + .2)); if (k <= 0) return; const y = 194, x = lerp(-400, 56, k);
+  X.save(); X.globalAlpha = k; X.fillStyle = C.ivory; X.fillRect(x, y, 112, 40); tx('SOURCE', x + 56, y + 30, 26, BB, C.ink, 'center');
+  const w = tw(label, 26, MONO) + 28; X.fillStyle = 'rgba(14,14,12,.88)'; X.fillRect(x + 112, y, w, 40); tx(label, x + 126, y + 29, 26, MONO, C.ivory); X.restore(); }
+function credit(s) { if (!s) return; const w = tw(s, 22, MONO) + 26; X.fillStyle = 'rgba(0,0,0,.5)'; rr(W - 40 - w, 1560, w, 36, 6); X.fill(); tx(s, W - 40 - w + 13, 1585, 22, MONO, 'rgba(247,245,239,.9)'); }
+function lower(t, t0, t1, a, b) { const k = eo(seg(t, t0, t0 + .25)) * (1 - seg(t, t1 - .2, t1)); if (k <= 0) return; const y = 1010;
+  X.save(); X.globalAlpha = k; X.fillStyle = C.honey; X.fillRect(56, y, 14, 112); const w = Math.max(tw(a, 64, AN), tw(b, 34, BS)) + 56;
+  X.fillStyle = 'rgba(14,14,12,.82)'; X.fillRect(70, y, w * eo(seg(t, t0, t0 + .3)), 112); tx(a, 96, y + 66, 64, AN, C.ivory); tx(b, 96, y + 102, 34, BS, C.honey); X.restore(); }
+function brackets(k, x0, y0, x1, y1, col = C.honey) { if (k <= 0) return; const L = 90, g = lerp(80, 0, eo(k)); X.strokeStyle = col; X.lineWidth = 8; X.globalAlpha = clamp(k * 3);
+  for (const [x, y, sx, sy] of [[x0 - g, y0 - g, 1, 1], [x1 + g, y0 - g, -1, 1], [x0 - g, y1 + g, 1, -1], [x1 + g, y1 + g, -1, -1]]) { X.beginPath(); X.moveTo(x + sx * L, y); X.lineTo(x, y); X.lineTo(x, y + sy * L); X.stroke(); } X.globalAlpha = 1; }
+function stamp(t, t0, s, x, y, col = C.red, size = 92, rot = -.08) { const k = seg(t, t0, t0 + .18); if (k <= 0) return; const sc = lerp(2.2, 1, eo(k));
+  X.save(); X.translate(x, y); X.rotate(rot); X.scale(sc, sc); X.globalAlpha = clamp(k * 2); const w = tw(s, size, AN) + 50; X.strokeStyle = col; X.lineWidth = 9; X.strokeRect(-w / 2, -size * .78, w, size * 1.15); tx(s, 0, size * .2, size, AN, col, 'center'); X.restore(); }
+
+// ---------------- ledger card (the data-card ground) ----------------
+function ledger(t, t0, y0 = 300, h = 760) { const k = eo(seg(t, t0 - .1, t0 + .08)); const x = lerp(W, 40, k);
+  X.save(); X.translate(x, 0); X.fillStyle = C.sheet; X.shadowColor = 'rgba(0,0,0,.6)'; X.shadowBlur = 40; X.fillRect(0, y0, W - 80, h); X.shadowBlur = 0;
+  X.strokeStyle = 'rgba(255,255,255,.045)'; X.lineWidth = 2; for (let y = y0 + 54; y < y0 + h; y += 54) { X.beginPath(); X.moveTo(0, y); X.lineTo(W - 80, y); X.stroke(); }
+  X.strokeStyle = 'rgba(255,74,61,.55)'; for (const mx of [58, 66]) { X.beginPath(); X.moveTo(mx, y0); X.lineTo(mx, y0 + h); X.stroke(); }
+  if (k < 1) { X.fillStyle = 'rgba(255,255,255,.15)'; for (let i = 0; i < 6; i++) X.fillRect(W - 80 + 20 + i * 30, y0 + 80 + i * 110, 200 * (1 - k), 4); }
+  X.restore(); return x; }
+function highlight(t, t0, x, y, w, h, col = C.honey) { const k = eio(seg(t, t0, t0 + .4)); if (k <= 0) return 0; X.fillStyle = col; X.fillRect(x, y, w * k, h); return k; }
+
+// ---------------- map (Natural Earth land, borders not drawn) ----------------
+function mapCard(t, t0) {
+  const x0 = ledger(t, t0, 300, 760); const L = MAP.L0, sx = 3.7, ox = x0 + 100, oy = 840, P = (lo, la) => [ox + (((lo - L) % 360 + 360) % 360 + 10) * sx, oy - (la - 5) * sx];
+  const push = lerp(1, 1.08, seg(t, t0, T.l4)); X.save(); X.beginPath(); X.rect(x0, 300, W - 80, 760); X.clip();
+  X.translate(W / 2, 640); X.scale(push, push); X.translate(-W / 2, -640);
+  X.fillStyle = '#3a3a34'; for (const p of MAP.polys) { X.beginPath(); p.forEach(([x, y], i) => { const px = ox + (x + 10) * sx, py = oy - (y - 5) * sx; i ? X.lineTo(px, py) : X.moveTo(px, py); }); X.closePath(); X.fill(); }
+  const A = P(116.4, 39.9), B = P(-77.0, 38.9); const k = eio(seg(t, t0 + .3, t0 + 1.6));
+  X.strokeStyle = C.red; X.lineWidth = 6; X.setLineDash([18, 12]); X.beginPath(); const mx = (A[0] + B[0]) / 2, my = Math.min(A[1], B[1]) - 260;
+  for (let i = 0; i <= 60 * k; i++) { const u = i / 60, x = (1 - u) ** 2 * B[0] + 2 * (1 - u) * u * mx + u * u * A[0], y = (1 - u) ** 2 * B[1] + 2 * (1 - u) * u * my + u * u * A[1]; i ? X.lineTo(x, y) : X.moveTo(x, y); } X.stroke(); X.setLineDash([]);
+  for (const [p, lab, al] of [[B, 'WASHINGTON', 1], [A, 'CHINA', k]]) { if (al <= 0) continue; X.globalAlpha = al; X.fillStyle = C.honey; X.beginPath(); X.arc(p[0], p[1], 12, 0, 7); X.fill();
+    const ring = (t * 1.4) % 1; X.strokeStyle = `rgba(255,194,26,${1 - ring})`; X.lineWidth = 4; X.beginPath(); X.arc(p[0], p[1], 12 + ring * 40, 0, 7); X.stroke(); tx(lab, p[0], p[1] + 56, 36, BX, C.ivory, 'center'); X.globalAlpha = 1; }
+  X.restore();
+  tx('REPORTED', x0 + 100, 400, 40, BB, C.grey); block('WATCHED BY', x0 + 100, 480, 72, AN, seg(t, t0 + .15, t0 + .3), C.red, C.ivory); tx('US INTELLIGENCE', x0 + 100, 556, 72, AN, C.ivory);
+  tx('over ties to China', x0 + 100, 610, 40, BS, C.grey);
+  tx('Allegations as reported. No charges filed.', x0 + 100, 1030, 26, MONO, C.grey);
+}
+
+// ---------------- grain ----------------
+const GR = []; for (let s = 0; s < 4; s++) { const c = document.createElement('canvas'); c.width = 540; c.height = 960; const g = c.getContext('2d'); const d = g.createImageData(540, 960); for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (hash(i * .37 + s * 91.7) - .5) * 70; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); GR.push(c); }
+function grain(t) { X.save(); X.globalCompositeOperation = 'overlay'; X.globalAlpha = .07; X.drawImage(GR[Math.floor(t * 30) % 4], 0, 0, W, H); X.restore(); }
+
+// ================= TIMELINE =================
+const SH = []; function shot(name, t0, t1, fn) { SH.push({ name, t0, t1, fn }); }
+function timeline() {
+  T.affair = word('n1', 'affair') - .1; T.and = word('n1', 'and') - .08; T.l2 = L0('n2') - .05; T.staff = word('n2', 'told') - .05; T.l3 = L0('n3') - .05; T.charged = word('n3', 'charged') - .3;
+  T.l4 = L0('n4') - .05; T.says = word('n4', 'says') - .1; T.l5 = L0('n5') - .05; T.l6 = L0('n6') - .05; T.tril = word('n6', "it's") - .1;
+  T.l7 = L0('n7') - .05; T.fell = word('n7', 'fell') - .05; T.l8 = L0('n8') - .05; T.cong = word('n8', 'congress') - .1; T.l9 = L0('n9') - .05; T.S0 = F.S0; T.HIT = F.HIT; T.q = L0('n11') - .05;
+  const r1 = T.HIT + (T.q - T.HIT) / 3, r2 = T.HIT + 2 * (T.q - T.HIT) / 3; T.r1 = r1; T.r2 = r2;
+  shot('hook', 0, T.and, sHook); shot('stage', T.and, T.l2, sStage); shot('portrait', T.l2, T.staff, sPortrait); shot('letter', T.staff, T.l3, sLetter); shot('map', T.l3, T.l4, sMap);
+  shot('hq', T.l4, T.says, sHQ); shot('board', T.says, T.l5, sBoard); shot('racks', T.l5, T.l6, sRacks); shot('chip', T.l6, T.tril, sChip); shot('value', T.tril, T.l7, sValue);
+  shot('stock', T.l7, T.l8, sStock); shot('capitol', T.l8, T.l9, sCapitol); shot('crack', T.l9, T.HIT, sCrack); shot('rip1', T.HIT, r1, sRip(0)); shot('rip2', r1, r2, sRip(1)); shot('rip3', r2, T.q, sRip(2)); shot('end', T.q, F.dur + 1, sEnd);
+  const ev = [{ t: 0, type: 'city', d: T.affair + .2 }, { t: T.affair, type: 'snap' }, { t: T.affair + .05, type: 'powerdown' }];
+  for (const s of SH.slice(1)) if (s.t0 < T.S0 || s.t0 >= T.q) ev.push({ t: s.t0 - .05, type: 'whoosh', g: .7 });
+  for (const at of [T.l3, T.says, T.l6, T.tril, T.l8, T.cong]) ev.push({ t: at + .05, type: 'hour' });
+  ev.push({ t: T.l6 + .3, type: 'flap', d: .9 }, { t: T.tril + .2, type: 'flap', d: .9 }, { t: T.charged + .3, type: 'thud' }, { t: T.fell, type: 'beepfail' }, { t: T.cong + .15, type: 'thud' },
+    { t: T.S0, type: 'silence' }, { t: T.HIT, type: 'hit' }, { t: r1, type: 'thud' }, { t: r2, type: 'thud' }, { t: T.q + .1, type: 'chime' });
+  EV = ev.sort((a, b) => a.t - b.t);
+}
+
+// ================= SHOTS (u = 0..1 through the shot) =================
+let CUR = { t: 0, t0: 0, credit: null }; const cutFlash = (k = .5) => k * (1 - eo(clamp((CUR.t - CUR.t0) / .1)));
+function sHook(u, t) { const fr = t >= T.affair; const z = fr ? lerp(1.14, 1.26, eo(seg(t, T.affair, T.affair + .3))) : lerp(1.1, 1.14, u);
+  photo('gest', .47, .3, z, { sat: fr ? .45 : 1 }); shade(); if (fr) { brackets(seg(t, T.affair, T.affair + .3), 300, 320, 800, 860); X.fillStyle = 'rgba(0,0,0,.6)'; rr(W - 250, 260, 200, 52, 8); X.fill(); tx('❚❚ 00:02', W - 150, 297, 30, MONO, C.ivory, 'center'); }
+  ST.flash = Math.max(.9 * (1 - eo(seg(t, 0, .15))), fr ? Math.exp(-(t - T.affair) * 9) : 0);
+  const k = eo(seg(t, .05, .4)); X.globalAlpha = k; tx('NEWS · NOV 8, 2026', 56, 300, 32, MONO, C.ivory, 'left', 8); X.globalAlpha = 1; }
+function sStage(u, t) { photo('ces1', .66, .42, lerp(1.0, 1.12, u)); shade(); ST.flash = cutFlash(.25); }
+function sPortrait(u, t) { photo('portrait', .52, .38, lerp(1.04, 1.12, u)); shade(); lower(t, T.l2 + .3, T.staff, 'JENSEN HUANG', 'Founder & CEO, Nvidia · since 1993'); }
+function sLetter(u, t) { photo('portrait', .52, .38, 1.14, { bri: .45, sat: .5 }); shade(); const x = ledger(t, T.staff, 330, 700);
+  tx('LETTER TO NVIDIA STAFF', x + 100, 430, 44, BB, C.grey); tx('NOV 8, 2026', x + 100, 480, 34, MONO, C.honey);
+  const lines = ['Huang told employees', 'he had been', 'to his wife.']; tx(lines[0], x + 100, 600, 72, AN, C.ivory); tx(lines[1], x + 100, 690, 72, AN, C.ivory);
+  const hk = highlight(t, T.staff + .9, x + 88, 712, tw('UNFAITHFUL', 96, AN) + 24, 108); tx('UNFAITHFUL', x + 100, 800, 96, AN, hk > .6 ? C.ink : C.ivory); tx(lines[2], x + 100, 890, 72, AN, C.ivory);
+  tx('As reported; summary, not a quote.', x + 100, 990, 26, MONO, C.grey); source(t, T.staff + .1, 'AXIOS · CNN · NOV 8'); }
+function sMap(u, t) { photo('capitol', .5, .5, 1.1, { bri: .35, sat: .4 }); mapCard(t, T.l3); source(t, T.l3 + .1, 'NYT · NBC NEWS (REPORTING)'); stamp(t, T.charged + .3, 'NOT CHARGED', 560, 960, C.honey, 84, -.06); }
+function sHQ(u, t) { photo('hq', .78, .42, lerp(1.0, 1.1, u)); shade(); lower(t, T.l4 + .2, T.says, 'NVIDIA HQ', 'Santa Clara, California'); ST.flash = cutFlash(.3); }
+function sBoard(u, t) { photo('hq', .78, .42, 1.12, { bri: .4, sat: .5 }); shade(); const x = ledger(t, T.says, 330, 720);
+  tx('NVIDIA BOARD STATEMENT', x + 100, 430, 44, BB, C.grey); tx('"', x + 92, 560, 130, AN, C.honey);
+  const L = ['...no reason to believe', 'that national security', 'or NVIDIA secrets', 'were compromised."']; const hk = highlight(t, T.says + .5, x + 90, 540, tw(L[0], 66, AN) + 20, 80);
+  L.forEach((s, i) => tx(s, x + 100, 600 + i * 84, 66, AN, i === 0 && hk > .6 ? C.ink : C.ivory)); source(t, T.says + .1, 'NVIDIANEWS.NVIDIA.COM · NOV 8'); }
+function sRacks(u, t) { photo('gtc2', .52, .5, lerp(1.25, 1.05, eo(u))); shade(); ST.flash = cutFlash(.3); }
+function sChip(u, t) { photo('h100', .66, .6, lerp(1.02, 1.1, u)); const p = .81, k = eio(seg(t, T.l6 + .3, T.l6 + 1.4)); const yl = lerp(H, H * (1 - p), k);
+  X.fillStyle = 'rgba(8,8,6,.5)'; X.fillRect(0, yl, W, H - yl); X.fillStyle = C.honey; X.fillRect(0, yl - 4, W, 8); shade(.55, 1200, 1800, .6);
+  const v = Math.round(81 * eo(seg(t, T.l6 + .3, T.l6 + 1.4))); num(`~${v}%`, CX, 600, 220, k >= 1 ? C.honey : C.ivory); tx('OF AI DATA-CENTER CHIPS', CX, 690, 58, AN, C.ivory, 'center', 12); tx('are made by Nvidia (estimate, range ~70–90%)', CX, 742, 34, BS, C.ivory, 'center', 10);
+  source(t, T.l6 + .3, 'IDC ESTIMATE · 2026'); }
+function sValue(u, t) { photo('ces2', .5, .42, lerp(1.0, 1.1, u)); shade(); const k = eo(seg(t, T.tril + .1, T.tril + 1.1)); const v = (4.5 * k).toFixed(1);
+  tx('NVIDIA IS WORTH ABOUT', CX, 420, 50, AN, C.ivory, 'center', 12); num(`$${v}`, CX, 640, 250, k >= 1 ? C.honey : C.ivory); block('TRILLION', CX, 770, 110, AN, seg(t, T.tril + .9, T.tril + 1.1), C.honey, C.ink, .12, 'center');
+  source(t, T.tril + .1, 'MARKET VALUE · AL JAZEERA · NOV 9'); }
+function sStock(u, t) { photo('hq', .84, .24, lerp(1.1, 1.2, u), { sat: .35, bri: .45, tint: 'rgba(255,40,30,.35)' }); shade(); X.fillStyle = 'rgba(10,10,8,.72)'; X.fillRect(40, 340, W - 80, 580); const k = eo(seg(t, T.fell, T.fell + .6));
+  tx('NVDA · MONDAY, NOV 9', CX, 420, 48, MONO, C.ivory, 'center', 10); num(`−${(5 * k).toFixed(1)}%`, CX, 640, 250, k > .02 ? C.red : C.ivory);
+  X.fillStyle = C.red; const ay = lerp(700, 760, eo(seg(t, T.fell, T.fell + .4))); X.globalAlpha = k; X.beginPath(); X.moveTo(CX - 40, ay); X.lineTo(CX + 40, ay); X.lineTo(CX, ay + 50); X.fill(); X.globalAlpha = 1;
+  tx('about five percent in one day', CX, 860, 40, BS, C.ivory, 'center', 10); source(t, T.l7 + .1, 'CNBC · NOV 9'); ST.flash = cutFlash(.3); }
+function sCapitol(u, t) { photo('capitol', .5, .45, lerp(1.0, 1.1, u)); shade();
+  const card = (t0, x, y, d, l1, l2, col) => { const k = back(seg(t, t0, t0 + .3), 1.4); if (k <= 0) return; X.save(); X.translate(x, y); X.scale(k, k); X.fillStyle = 'rgba(14,14,12,.9)'; X.fillRect(-200, -150, 400, 300); X.fillStyle = col; X.fillRect(-200, -150, 400, 70);
+    tx('NOV', 0, -98, 48, AN, C.ink, 'center'); tx(d, 0, 70, 150, AN, C.ivory, 'center'); tx(l1, 0, 122, 34, BX, col, 'center'); X.restore(); if (l2) tx(l2, x, y + 200, 26, MONO, C.ivory, 'center', 8); };
+  card(T.l8 + .2, CX - 220, 560, '17', 'EARNINGS', 'expected', C.honey); card(T.cong, CX + 220, 560, '18', 'CONGRESS', 'briefing requested', C.red); source(t, T.l8 + .2, 'CNBC · AXIOS'); }
+function sCrack(u, t) { const fr = t >= T.S0; photo('gest', .47, .3, fr ? 1.3 : lerp(1.16, 1.28, ei(u)), { sat: lerp(1, .2, seg(t, T.l9, T.S0)) }); shade();
+  const k = seg(t, T.l9 + .3, T.S0); const R = (a) => hash(a * 13.1); X.strokeStyle = 'rgba(255,255,255,.95)'; X.lineWidth = 7; X.shadowColor = 'rgba(0,0,0,.8)'; X.shadowBlur = 8;
+  for (let b = 0; b < 5; b++) { let x = 540 + (R(b) - .5) * 200, y = 700 + (R(b + 9) - .5) * 200, a = b * 1.256 + R(b + 3); X.beginPath(); X.moveTo(x, y); const n = Math.floor(22 * eo(k)); for (let i = 0; i < n; i++) { a += (R(b * 50 + i) - .5) * .9; x += Math.cos(a) * 34; y += Math.sin(a) * 34; X.lineTo(x, y); } X.stroke(); } X.shadowBlur = 0;
+  if (fr) { X.fillStyle = 'rgba(0,0,0,.3)'; X.fillRect(0, 0, W, H); } }
+const RIP = [['racks', .3, .5], ['rack2', .5, .45], ['nersc', .5, .5]];
+const sRip = i => (u, t) => { const [k, fx, fy] = RIP[i]; photo(k, fx, fy, lerp(1.15, 1.04, eo(u)), { sat: .5, tint: 'rgba(255,40,30,.45)' }); shade(); ST.flash = cutFlash(.7); ST.flashCol = '255,80,60';
+  const sweep = eio(seg(t, CUR.t0, CUR.t0 + .5)); X.fillStyle = 'rgba(0,0,0,.45)'; X.fillRect(0, 0, W, H * sweep); };
+function sEnd(u, t) { photo('gtc1', .64, .62, lerp(1.05, 1.15, u), { bri: .32, sat: .7 }); shade(.55, 300, 1700, .9); CUR.credit = null; ST.flash = cutFlash(.4);
+  const a = eo(seg(t, T.q, T.q + .4)); X.globalAlpha = a; tx('SHOULD HE', CX, 420, 110, AN, C.ivory, 'center', 14); block('STAY AS CEO?', CX, 550, 120, AN, seg(t, T.q + .2, T.q + .4), C.honey, C.ink, .1, 'center');
+  const b = back(seg(t, word('n11', 'comment') - .3, word('n11', 'comment') + .05), 2); for (const [lab, x, col] of [['YES', CX - 200, C.green], ['NO', CX + 200, C.red]]) { if (b <= 0) continue; X.save(); X.translate(x, 790); X.scale(b, b); rr(-150, -80, 300, 124, 62); X.fillStyle = 'rgba(10,10,8,.85)'; X.fill(); X.lineWidth = 7; X.strokeStyle = col; X.stroke(); tx(lab, 0, 16, 90, AN, col, 'center'); X.restore(); }
+  tx('comment below 👇', CX, 930, 52, `${BX}, ${EMO}`, C.ivory, 'center', 12); X.globalAlpha = 1;
+  const c = seg(t, T.q + 1.2, T.q + 1.6); if (c > 0) { X.globalAlpha = c * .9; ['Photos: Maurizio Pesce (CC BY 2.0) · Pronoia (CC0) · Peter DaSilva (CC BY 4.0)', 'NVIDIA Taiwan, K. McCarthy, C. Lender, T. Webster (CC BY 2.0)', 'Geekerwan (CC BY 3.0) · D. Coetzee (CC0) · Diliff (PD)', 'via Wikimedia Commons', 'Sources: Axios, CNN, NYT, NBC News, CNBC, Al Jazeera, IDC, Nvidia']
+    .forEach((s, i) => tx(s, CX, 1420 + i * 34, 21, MONO, C.ivory, 'center', 6)); X.globalAlpha = 1; } }
+
+// ================= captions (the subtitle is the graphic) =================
+function captions(t) { if (t >= T.q) return; const c = CAPS.find(c => t >= c.t0 && t < c.t1); if (!c) return;
+  const size = 96, y = 1330; X.font = `${size}px ${AN}`; const sp = X.measureText(' ').width; const parts = c.w.map(([w, h]) => [w.toUpperCase(), h, X.measureText(w.toUpperCase()).width]);
+  const tot = parts.reduce((a, p) => a + p[2], 0) + sp * (parts.length - 1); const sc = Math.min(1, 900 / tot); const pop = lerp(1.3, 1, back(seg(t, c.t0, c.t0 + .13), 1.6));
+  X.save(); X.translate(CX, y); X.scale(sc * pop, sc * pop); X.globalAlpha = clamp((t - c.t0) / .04); let x = -tot / 2;
+  for (const [w, h, ww] of parts) { if (h) { const k = eo(seg(t, c.t0 + .05, c.t0 + .17)); X.fillStyle = C.honey; X.fillRect(x - 12, -size * .9, (ww + 24) * k, size * 1.08); tx(w, x, 0, size, AN, k > .5 ? C.ink : C.ivory); }
+    else { X.shadowColor = 'rgba(0,0,0,.8)'; X.shadowBlur = 20; tx(w, x, 0, size, AN, C.ivory); X.shadowBlur = 0; } x += ww + sp; }
+  X.restore(); X.globalAlpha = 1; }
+
+// ================= frame =================
+const ST = {};
+function render(t) {
+  ST.flash = 0; ST.flashCol = '255,250,240'; X.globalAlpha = 1; X.setTransform(1, 0, 0, 1, 0, 0); X.clearRect(0, 0, W, H);
+  const s = SH.find(x => t >= x.t0 && t < x.t1) || SH[SH.length - 1]; ST.shot = s.name; CUR = { t, t0: s.t0, credit: null };
+  s.fn(clamp((t - s.t0) / (s.t1 - s.t0)), t, s);
+  grain(t); bug(t); credit(CUR.credit); captions(t);
+  if (ST.flash > 0) { X.fillStyle = `rgba(${ST.flashCol},${clamp(ST.flash)})`; X.fillRect(0, 0, W, H); }
+}
+async function boot() {
+  for (const [n, u] of FONTS) { const f = new FontFace(n, `url(${u})`); await f.load(); document.fonts.add(f); }
+  [F, CAPS, MAP] = await Promise.all(['film.json', 'caps.json', 'data/pacific.json'].map(u => fetch(u).then(r => r.json())));
+  await Promise.all(Object.values(PH).map(async p => { try { p.img = await load(p.f); } catch (e) { console.error('missing photo', e); p.img = null; } }));
+  timeline();
+  window.DUR = F.dur; window.EV = EV; window.T = T; window.SH = SH; window.ST = ST;
+  window.render = render; render(.5); window.READY = true;
+}
+boot();
+</script></body></html>

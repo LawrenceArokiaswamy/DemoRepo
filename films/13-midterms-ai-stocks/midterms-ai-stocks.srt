@@ -1,0 +1,75 @@
+1
+00:00:00,200 --> 00:00:01,490
+America just voted.
+
+2
+00:00:01,620 --> 00:00:02,840
+AI stocks just fell.
+
+3
+00:00:02,860 --> 00:00:03,490
+Connected?
+
+4
+00:00:03,510 --> 00:00:08,420
+Tuesday, Democrats won the House and Senate, AP says, with a few races still counting.
+
+5
+00:00:08,560 --> 00:00:11,090
+Thursday, the Nasdaq fell five and a half percent.
+
+6
+00:00:11,240 --> 00:00:16,250
+So why? Reason one: AI lives in giant computer warehouses, called data centers.
+
+7
+00:00:16,340 --> 00:00:19,120
+Investors fear the election could slow building them.
+
+8
+00:00:19,140 --> 00:00:21,280
+Fewer data centers, fewer chips sold.
+
+9
+00:00:21,300 --> 00:00:24,170
+Like a brick maker hearing the town might stop new houses.
+
+10
+00:00:24,350 --> 00:00:28,670
+Reason two: big tech is spending huge sums on AI, and profits look slower.
+
+11
+00:00:28,690 --> 00:00:32,020
+Like a lemonade stand that's worth less once sales slow down.
+
+12
+00:00:32,040 --> 00:00:34,590
+Reason three: worry about higher interest rates.
+
+13
+00:00:34,760 --> 00:00:37,910
+Safe savings pay more, so some money leaves risky stocks.
+
+14
+00:00:37,930 --> 00:00:41,500
+Like kids leaving the candy line when the ice-cream truck shows up.
+
+15
+00:00:41,530 --> 00:00:43,160
+So, did the election cause it?
+
+16
+00:00:43,460 --> 00:00:45,400
+Partly. It was Thursday's spark.
+
+17
+00:00:45,420 --> 00:00:47,790
+But the slide started before anyone voted.
+
+18
+00:00:48,110 --> 00:00:49,980
+Connected? Yes. But not the whole story.
+
+19
+00:00:50,160 --> 00:00:51,190
+Follow for more.

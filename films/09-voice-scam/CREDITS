@@ -1,0 +1,11 @@
+voice-scam: credits
+
+Voices: Kokoro TTS (kokoro-onnx, model kokoro-v1.0, voices am_fenrir and af_sky), Apache-2.0. https://github.com/thewh1teagle/kokoro-onnx / https://huggingface.co/hexgrad/Kokoro-82M
+Speech check: faster-whisper (MIT), Whisper models base.en / small.en (MIT).
+Music and sound effects: all synthesised in code for this film (numpy/scipy); no samples used. Mix helpers from the Lemo-Opuscar library core/audio/sfx.py (MIT).
+Rendering toolkit: Lemo-Opuscar core/render (MIT), headless Chromium via playwright-core (Apache-2.0), ffmpeg (LGPL/GPL).
+Fonts (SIL Open Font License 1.1, files and licences in fonts/):
+  Anton, by Vernon Adams
+  Archivo Black, by Omnibus-Type
+  IBM Plex Mono, by IBM
+Characters ("Sam", the mother) and every number, handle and phone number shown in the reconstruction are fictional, except the sourced facts listed in FACTS.md.

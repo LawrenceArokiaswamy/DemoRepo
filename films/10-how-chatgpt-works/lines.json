@@ -1,0 +1,77 @@
+[
+ {
+  "id": "n1",
+  "text": "The question you just asked ChatGPT set off billions of calculations, for every word of the answer.",
+  "asr": "The question you just asked chat GPT set off billions of calculations, for every word of the answer.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n2",
+  "text": "Let's slow it down.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n3",
+  "text": "Zero milliseconds. You hit Enter.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n4",
+  "text": "Your words get chopped into tokens, and each one becomes a number.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n5",
+  "text": "Each number lands on a map of meaning, where king sits right next to queen.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n6",
+  "text": "Your prompt races to a data centre. Thousands of chips light up.",
+  "asr": "Your prompt races to a data center. Thousands of chips light up.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n7",
+  "text": "Then, attention. Every word looks at the others, to work out what you mean.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n8",
+  "text": "It doesn't look up an answer. It guesses the next word.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n9",
+  "text": "It picks one, then guesses again, one piece at a time.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n10",
+  "text": "Here's the twist.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n11",
+  "text": "There's no answer stored inside. It's the world's most powerful autocomplete, trained on mountains of text from the internet.",
+  "voice": "am_puck",
+  "speed": 1.12,
+  "asr": "There's no answer stored inside. It's the world's most powerful auto-complete, trained on mountains of text from the internet."
+ },
+ {
+  "id": "n12",
+  "text": "That reply wasn't looked up. It was predicted. Follow for more.",
+  "voice": "am_puck",
+  "speed": 1.12
+ }
+]

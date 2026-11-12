@@ -1,0 +1,17 @@
+internet-1-day: credits and licences
+
+Picture: original code (three.js, MIT licence, https://threejs.org) rendered frame by frame in headless Chromium: the original brand-free city from film 18 with a 24-hour sky, a dark-Earth globe and hour-by-hour props (phone, card terminal, laptop, departures board with invented flights). No real brands or logos.
+
+Fonts (SIL Open Font License 1.1, files and licences in fonts/):
+  Anton (Vernon Adams), https://github.com/google/fonts/tree/main/ofl/anton
+  Barlow Condensed (Jeremy Tribby), https://github.com/google/fonts/tree/main/ofl/barlowcondensed
+  Playfair Display (Claus Eggers Sørensen), https://github.com/google/fonts/tree/main/ofl/playfairdisplay
+  IBM Plex Mono (IBM), https://github.com/google/fonts/tree/main/ofl/ibmplexmono
+
+Voice: Fish Audio text-to-speech (https://fish.audio), model s2-pro, public library voice "Explainer" (id 3e8a237e7b5d4eaab50bd9e05053d70e), generated through the Fish Audio API on the client's own account; the script is in fish_vo.json.
+Fallback scratch voice (./build.sh with no options): Kokoro-82M via kokoro-onnx, voice am_puck (Apache-2.0, https://huggingface.co/hexgrad/Kokoro-82M).
+Speech check and word timestamps: faster-whisper (MIT) with OpenAI Whisper small.en weights (MIT).
+
+Music and sound effects: original, synthesised in numpy/scipy for this film (no samples).
+Production toolkit: Lemo-Opuscar film library (LIB=/root/lemo-opuscar; see its LICENSE).
+Facts: Rogers 2022 outage, CrowdStrike 2024 outage, Atlas VPN / NetBlocks cost estimate (see FACTS.md).

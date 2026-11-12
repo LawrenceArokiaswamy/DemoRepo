@@ -1,0 +1,20 @@
+nvidia-ceo-affair-doc — documentary cut of the Nvidia CEO story (real photographs, captions-first news grammar)
+
+PHOTOGRAPHS (Wikimedia Commons; licence checked per file; full records in SOURCES.jsonl / SOURCES.md)
+- "Nvidia CEO Jensen Huang gestikuliert" — Maurizio Pesce, CC BY 2.0
+- "Jensen Huang - Nvidia Keynote - CES 2025 Las Vegas" (1), "RTX Blackwell" (2) — Pronoia, CC0
+- "GTC Taiwan 2016" (two photos) — NVIDIA Taiwan, CC BY 2.0
+- "Jensen Huang (cropped) (2024)" — Peter DaSilva, CC BY 4.0
+- "Nvidia HQ" — Kevin McCarthy, CC BY 2.0
+- "NVIDIA H100 (极客湾Geekerwan) 010" — 极客湾Geekerwan, CC BY 3.0
+- "Datacenter Server Racks" — Carl Lender, CC BY 2.0
+- "Server Rack" — Tony Webster, CC BY 2.0
+- "Rear of rack at NERSC data center - closeup" — Derrick Coetzee, CC0
+- "US Capitol Building at night Jan 2006" — Diliff, public domain
+Photos are graded, cropped and pushed in; graphics are drawn over them. No generated images.
+
+MAP: Natural Earth (public domain), land only, no borders drawn.
+FONTS: Anton, Barlow Condensed, IBM Plex Mono (SIL OFL, see fonts/).
+VOICE: Fish Audio (s2-pro, "Explainer" library voice).
+MUSIC & SOUND: synthesised in code (mix.py).
+FACTS: see FACTS.md (Axios, CNN, NYT, NBC News, CNBC, Al Jazeera, IDC, Nvidia board statement).

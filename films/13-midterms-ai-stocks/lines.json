@@ -1,0 +1,88 @@
+[
+ {
+  "id": "n1",
+  "text": "America just voted. AI stocks just fell. Connected?",
+  "voice": "am_puck",
+  "speed": 1.08
+ },
+ {
+  "id": "n2",
+  "text": "Tuesday, Democrats won the House and Senate, AP says, with a few races still counting.",
+  "voice": "am_puck",
+  "speed": 1.15
+ },
+ {
+  "id": "n3",
+  "text": "Thursday, the Nasdaq fell five and a half percent.",
+  "voice": "am_puck",
+  "speed": 1.08,
+  "asr": "Thursday, the Nasdaq fell 5.5%."
+ },
+ {
+  "id": "n4",
+  "text": "So why? Reason one: AI lives in giant computer warehouses, called data centers.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n5",
+  "text": "Investors fear the election could slow building them. Fewer data centers, fewer chips sold.",
+  "voice": "am_puck",
+  "speed": 1.15
+ },
+ {
+  "id": "n6",
+  "text": "Like a brick maker hearing the town might stop new houses.",
+  "voice": "am_puck",
+  "speed": 1.12,
+  "asr": "Like a brickmaker hearing the town might stop new houses."
+ },
+ {
+  "id": "n7",
+  "text": "Reason two: big tech is spending huge sums on AI, and profits look slower.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n8",
+  "text": "Like a lemonade stand that's worth less once sales slow down.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n9",
+  "text": "Reason three: worry about higher interest rates. Safe savings pay more, so some money leaves risky stocks.",
+  "voice": "am_puck",
+  "speed": 1.15
+ },
+ {
+  "id": "n10",
+  "text": "Like kids leaving the candy line when the ice-cream truck shows up.",
+  "voice": "am_puck",
+  "speed": 1.12
+ },
+ {
+  "id": "n11",
+  "text": "So, did the election cause it?",
+  "voice": "am_puck",
+  "speed": 1.0
+ },
+ {
+  "id": "n12",
+  "text": "Partly. It was Thursday's spark. But the slide started before anyone voted.",
+  "voice": "am_puck",
+  "speed": 1.05
+ },
+ {
+  "id": "n13",
+  "text": "Connected? Yes. But not the whole story.",
+  "voice": "am_puck",
+  "speed": 1.05
+ },
+ {
+  "id": "n14",
+  "text": "Follow for more.",
+  "voice": "am_puck",
+  "speed": 1.1
+ }
+]

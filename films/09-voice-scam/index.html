@@ -1,0 +1,359 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>voice-scam</title>
+<style>html,body{margin:0;background:#0B0C0E;overflow:hidden}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script>
+// "Your mom gets a call. It's your voice. It isn't you." Forensic reconstruction of one cloned-voice scam call.
+// Everything is a pure function of t (30 fps, 1080x1920). Timing lives in film.json / caps.json / env.json / beats.json.
+const cv = document.getElementById('c'), X = cv.getContext('2d');
+const W = cv.width = innerWidth, H = cv.height = innerHeight;
+const S = document.createElement('canvas'); S.width = W; S.height = H; const c = S.getContext('2d');
+const G = '#0B0C0E', PANEL = '#141619', HAIR = '#2E3238', TXT = '#ECEAE4', SEC = '#8B9097', TICK = '#4A4F57', RED = '#FF4A2E', PAPER = '#E4E0D4', INK = '#1D1D1B';
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, x) => a + (b - a) * x, seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - clamp(x), 3), eio = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2), eo5 = x => 1 - Math.pow(1 - clamp(x), 5);
+const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+let F, ENV, CAPS, BEATS, SHOTS, CH;
+const MONO = 'IBM Plex Mono', MONOB = 'PlexB', AN = 'Anton', AR = 'Archivo';
+
+async function boot() {
+  const fonts = [[AN, 'fonts/Anton-Regular.ttf'], [AR, 'fonts/ArchivoBlack-Regular.ttf'], [MONO, 'fonts/IBMPlexMono-Medium.ttf'], [MONOB, 'fonts/IBMPlexMono-Bold.ttf']];
+  for (const [n, u] of fonts) { const f = new FontFace(n, `url(${u})`); await f.load(); document.fonts.add(f); }
+  [F, ENV, CAPS, BEATS] = await Promise.all(['film.json', 'env.json', 'caps.json', 'beats.json'].map(u => fetch(u).then(r => r.json())));
+  SHOTS = F.shots.map(([id, t0], i) => ({ id, t0, t1: i + 1 < F.shots.length ? F.shots[i + 1][1] : F.dur }));
+  CH = chunks(CAPS);
+  window.DUR = F.dur;
+  window.READY = true;
+}
+// ---------- data helpers ----------
+function envAt(src, t) { const e = ENV[src], x = t * 60, i = Math.floor(x); if (i < 0 || i + 1 >= e.length) return 0; return lerp(e[i], e[i + 1], x - i); }
+function pulse(t, tau = .16) { let last = -9; for (const b of BEATS) { if (b <= t) last = b; else break; } return Math.exp(-(t - last) / tau); }
+function chunks(caps) {
+  const out = []; let cur = [];
+  caps.forEach((w, i) => {
+    cur.push(w); const nx = caps[i + 1];
+    if (!nx || /[.,?!]$/.test(w.w) || w.end || cur.length >= 3 || nx.line !== w.line || nx.t0 - w.t1 > .3) { out.push(cur); cur = []; }
+  });
+  out.forEach((ch, i) => { const nx = out[i + 1]; ch.a = ch[0].t0 - .04; ch.b = Math.min(nx ? nx[0].t0 - .02 : 99, ch[ch.length - 1].t1 + .45); });
+  return out;
+}
+// ---------- drawing helpers ----------
+function rr(x, y, w, h, r) { c.beginPath(); c.roundRect(x, y, w, h, r); }
+function txt(s, x, y, size, font, col, align = 'left', base = 'alphabetic') { c.font = `${size}px ${font}`; c.fillStyle = col; c.textAlign = align; c.textBaseline = base; c.fillText(s, x, y); }
+function tw(s, size, font) { c.font = `${size}px ${font}`; return c.measureText(s).width; }
+function tag(s, x, y, col = SEC) { c.fillStyle = RED; c.fillRect(x, y - 24, 10, 24); txt(s, x + 22, y, 30, MONO, col); }
+function panel(x, y, w, h, fill = PANEL) { c.fillStyle = fill; c.fillRect(x, y, w, h); c.strokeStyle = HAIR; c.lineWidth = 2; c.strokeRect(x + 1, y + 1, w - 2, h - 2); }
+function circleDraw(x, y, r, p, lw = 6, col = RED) { if (p <= 0) return; c.strokeStyle = col; c.lineWidth = lw; c.lineCap = 'round'; c.beginPath(); c.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * eo(p)); c.stroke(); }
+function ellipseDraw(x, y, rx, ry, p, lw = 6) { if (p <= 0) return; c.strokeStyle = RED; c.lineWidth = lw; c.lineCap = 'round'; c.beginPath(); c.ellipse(x, y, rx, ry, -.06, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2.05 * eo(p)); c.stroke(); }
+function stamp(s, x, y, size, t, t0, col = RED, font = AN, align = 'center') { // cut-in with a short slam
+  if (t < t0) return; const p = seg(t, t0, t0 + .1), sc = lerp(1.18, 1, eo5(p));
+  c.save(); c.translate(x, y); c.scale(sc, sc); c.globalAlpha = clamp(p * 3); txt(s, 0, 0, size, font, col, align, 'middle'); c.restore();
+}
+function hilite(x, y, w, h, p) { if (p <= 0) return; c.save(); c.globalCompositeOperation = 'screen'; c.fillStyle = 'rgba(255,74,46,.85)'; c.fillRect(x, y, w * eo(p), h); c.restore(); }
+function strike(x, y, w, p, lw = 12) { if (p <= 0) return; c.strokeStyle = RED; c.lineWidth = lw; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w * eo(p), y - 8 * eo(p)); c.stroke(); }
+function dashLine(x0, y0, x1, y1, p) { if (p <= 0) return; c.save(); c.setLineDash([18, 12]); c.strokeStyle = RED; c.lineWidth = 4; c.beginPath(); c.moveTo(x0, y0); c.lineTo(lerp(x0, x1, eo(p)), lerp(y0, y1, eo(p))); c.stroke(); c.restore(); }
+function check(x, y, s, p) { if (p <= 0) return; c.fillStyle = RED; c.fillRect(x, y, s, s); c.strokeStyle = '#fff'; c.lineWidth = s * .13; c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+  const q = eo(p), a = [x + s * .22, y + s * .52], b = [x + s * .42, y + s * .72], d = [x + s * .78, y + s * .3];
+  c.moveTo(...a); if (q < .4) c.lineTo(lerp(a[0], b[0], q / .4), lerp(a[1], b[1], q / .4)); else { c.lineTo(...b); c.lineTo(lerp(b[0], d[0], (q - .4) / .6), lerp(b[1], d[1], (q - .4) / .6)); } c.stroke(); }
+// live waveform: bars from the real voice envelope. t0..t1 = time span shown across w; playT = red play-line time
+function wave(src, x, y, w, h, t0, t1, opt = {}) {
+  const bw = opt.bw || 10, gap = opt.gap || 6, n = Math.floor(w / (bw + gap)), playT = opt.playT ?? 1e9;
+  for (let i = 0; i < n; i++) {
+    const ti = lerp(t0, t1, (i + .5) / n); let a = envAt(src, ti); a = Math.pow(a, .7) * (opt.gain || 1);
+    const bh = Math.max(4, a * h); const past = ti <= playT;
+    c.fillStyle = opt.col ? opt.col : (past ? (opt.pastCol || TXT) : TICK);
+    c.fillRect(x + i * (bw + gap), y - bh / 2, bw, bh);
+  }
+  if (opt.playLine) { const px = x + w * clamp((playT - t0) / (t1 - t0)); c.fillStyle = RED; c.fillRect(px - 3, y - h * .62, 6, h * 1.24); }
+}
+// a synthetic waveform for things that are not real audio (the social clip sample)
+function fakeWave(x, y, w, h, seed, col, bw = 8, gap = 5) { const n = Math.floor(w / (bw + gap)); c.fillStyle = col;
+  for (let i = 0; i < n; i++) { const a = .15 + .85 * Math.abs(Math.sin(i * .37 + seed) * Math.sin(i * .11 + seed * 2.1)) * (.6 + .4 * hash(i + seed)); c.fillRect(x + i * (bw + gap), y - a * h / 2, bw, a * h); } }
+function handset(x, y, r, rot, col) { c.save(); c.translate(x, y); c.rotate(rot); c.strokeStyle = col; c.lineCap = 'round'; c.lineWidth = r * .32; c.beginPath(); c.arc(0, r * .55, r * .78, Math.PI * 1.18, Math.PI * 1.82); c.stroke();
+  c.fillStyle = col; for (const s of [-1, 1]) { c.save(); c.translate(s * r * .62, r * .02); c.rotate(s * .5); rr(-r * .2, -r * .14, r * .4, r * .36, r * .1); c.fill(); c.restore(); } c.restore(); }
+function person(x, y, r, col = TICK, bg = HAIR) { // anonymous silhouette avatar (original, generic)
+  c.save(); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fillStyle = bg; c.fill(); c.clip();
+  c.fillStyle = col; c.beginPath(); c.arc(x, y - r * .18, r * .36, 0, Math.PI * 2); c.fill(); c.beginPath(); c.ellipse(x, y + r * .78, r * .66, r * .52, 0, 0, Math.PI * 2); c.fill(); c.restore(); }
+// the phone. mode 'ring' | 'call'
+function phone(cx, cy, s, t, o) {
+  c.save(); c.translate(cx, cy); c.scale(s, s);
+  const w = 560, h = 1120; c.shadowColor = 'rgba(255,74,46,' + (o.glow || 0) + ')'; c.shadowBlur = 80;
+  rr(-w / 2, -h / 2, w, h, 70); c.fillStyle = '#17191d'; c.fill(); c.shadowBlur = 0; c.lineWidth = 5; c.strokeStyle = '#3a3f46'; c.stroke();
+  rr(-w / 2 + 18, -h / 2 + 18, w - 36, h - 36, 54); const gr = c.createLinearGradient(0, -h / 2, 0, h / 2); gr.addColorStop(0, '#1d2025'); gr.addColorStop(1, '#0d0e10'); c.fillStyle = gr; c.fill();
+  rr(-60, -h / 2 + 34, 120, 30, 15); c.fillStyle = '#000'; c.fill();
+  txt('21:47', -w / 2 + 70, -h / 2 + 62, 28, MONO, SEC);
+  if (o.mode === 'ring') {
+    for (let k = 0; k < 3; k++) { const q = ((t * 1.4 + k / 3) % 1); c.strokeStyle = `rgba(255,74,46,${(1 - q) * .8})`; c.lineWidth = 6; c.beginPath(); c.arc(0, -250, 120 + q * 170, 0, Math.PI * 2); c.stroke(); }
+    person(0, -250, 120); txt(o.name, 0, -50, 120, AR, TXT, 'center'); txt(o.sub || 'mobile', 0, 6, 34, MONO, SEC, 'center');
+    txt('incoming call', 0, 120, 36, MONO, TXT, 'center');
+    c.beginPath(); c.arc(-140, 370, 70, 0, Math.PI * 2); c.fillStyle = RED; c.fill(); handset(-140, 368, 46, Math.PI * .75, '#fff');
+    const sw = o.swipe || 0; c.beginPath(); c.arc(140, 370 - sw * 40, 70, 0, Math.PI * 2); c.fillStyle = '#ECEAE4'; c.fill(); handset(140, 366 - sw * 40, 46, 0, '#111');
+  } else {
+    person(0, -330, 80); txt(o.name, 0, -190, 92, AR, TXT, 'center');
+    const ct = Math.max(0, t - .4); txt(`00:${String(Math.floor(ct)).padStart(2, '0')}`, 0, -130, 40, MONO, RED, 'center');
+    wave('scam', -230, 90, 460, 330, t - 2.2, t, { bw: 9, gap: 6, pastCol: TXT, gain: 1.1 });
+    c.fillStyle = RED; c.fillRect(226, -75, 6, 330);
+    if (!o.noBtn) { c.beginPath(); c.arc(0, 400, 70, 0, Math.PI * 2); c.fillStyle = RED; c.fill(); handset(0, 398, 46, Math.PI * .75, '#fff'); }
+  }
+  c.restore();
+}
+function bgGrid(t, glow) {
+  c.fillStyle = G; c.fillRect(-400, -400, W + 800, H + 800);
+  c.strokeStyle = '#121418'; c.lineWidth = 2; c.beginPath();
+  for (let x = -360; x < W + 400; x += 90) { c.moveTo(x, -400); c.lineTo(x, H + 400); }
+  for (let y = -360; y < H + 400; y += 90) { c.moveTo(-400, y); c.lineTo(W + 400, y); } c.stroke();
+  if (glow > 0) { const g = c.createRadialGradient(W / 2, H * .42, 50, W / 2, H * .42, H * .7); g.addColorStop(0, `rgba(255,74,46,${.22 * glow})`); g.addColorStop(1, 'rgba(255,74,46,0)'); c.fillStyle = g; c.fillRect(-400, -400, W + 800, H + 800); }
+}
+// ---------- shots: each draws in world space (1080x1920). lt = local time, d = shot length, t = film time ----------
+const TRANSCRIPT = [['00:00.4', 'Mom? It\'s me…'], ['00:01.4', 'I\'m in trouble.'], ['00:02.0', 'I need money. ', 'Right now!']];
+const SH = {
+  A1(t, lt) { // the hook: mom's phone ringing, SAM calling
+    const ring = t < .42, shake = ring ? Math.sin(t * 2 * Math.PI * 23) * 9 * (.6 + .4 * Math.sin(t * 9)) : 0;
+    txt('YOUR MOM', 540, 250, 150, AN, RED, 'center'); txt('GETS THIS CALL.', 540, 400, 124, AN, TXT, 'center');
+    const sw = eo(seg(t, .28, .42));
+    if (ring) phone(540 + shake, 950, .76, t, { mode: 'ring', name: 'SAM', sub: 'mobile ♥', swipe: sw, glow: .5 });
+    else { phone(540, 950, .76, t, { mode: 'call', noBtn: true, name: 'SAM', glow: .25 + .35 * envAt('scam', t) }); }
+  },
+  A2(t, lt) { phone(540, 760, 1.45, t, { mode: 'call', noBtn: true, name: 'SAM', glow: .4 * envAt('scam', t) }); },
+  A3(t, lt) { // extreme close on the voice itself
+    wave('scam', 30, 820, 1020, 900, t - 1.6, t + .0, { bw: 14, gap: 8, pastCol: TXT, gain: 1.15 }); c.fillStyle = RED; c.fillRect(1040, 360, 8, 920);
+    tag('CALLER · "SAM"', 70, 220, TXT);
+  },
+  B1(t, lt) { // hard cut: caller ID struck through
+    tag('CALLER ID', 90, 330); txt('SAM', 90, 640, 300, AN, TXT); strike(70, 520, 600, seg(t, 3.66, 3.86), 22);
+    wave('scam', 90, 940, 900, 260, .45, 3.25, { bw: 10, gap: 5, col: TICK });
+    stamp('NOT SAM.', 540, 1180, 120, t, 3.72, RED);
+  },
+  B2(t, lt) {
+    tag('VOICE ANALYSIS', 90, 330); wave('scam', 90, 620, 900, 380, .45, 3.25, { bw: 10, gap: 5, col: RED });
+    stamp('AI CLONE', 540, 1000, 230, t, 4.3, TXT); txt('SYNTHETIC VOICE', 540, 1150, 44, MONOB, RED, 'center');
+  },
+  C1(t, lt) { // 3 seconds of audio: bracket + stopwatch
+    tag('SAMPLE NEEDED', 90, 300);
+    const p = seg(t, 5.32, 6.3), sec = 3 * eio(p);
+    txt(sec.toFixed(1), 560, 760, 400, AN, TXT, 'right'); txt('SEC', 590, 760, 150, AN, RED);
+    const x0 = 90, ww = 900; wave('narr', x0, 1060, ww, 200, 5.2 - 1.5, 6.4 + 1.5, { bw: 8, gap: 5, col: TICK });
+    const bx = x0 + ww * .28, bw = ww * .44 * eio(p); c.fillStyle = 'rgba(255,74,46,.18)'; c.fillRect(bx, 940, bw, 240);
+    c.strokeStyle = RED; c.lineWidth = 6; c.strokeRect(bx, 940, bw, 240); txt('00:00 → 00:03', bx, 1230, 32, MONO, RED);
+  },
+  C2(t, lt) { // 85% match meter
+    tag('McAFEE STUDY · 2023', 90, 300);
+    const p = eo(seg(t, 6.45, 7.05)); txt(`${Math.round(85 * p)}%`, 540, 740, 380, AN, TXT, 'center'); txt('VOICE MATCH', 540, 860, 70, AN, RED, 'center');
+    panel(90, 960, 900, 70); c.fillStyle = RED; c.fillRect(96, 966, 888 * .85 * p, 58);
+    txt('ORIGINAL', 90, 1120, 30, MONO, SEC); fakeWave(250, 1110, 740, 70, 1.3, TXT, 7, 5);
+    txt('CLONE', 90, 1220, 30, MONO, RED); fakeWave(250, 1210, 740 * eo(seg(t, 6.5, 7.1)), 70, 1.36, RED, 7, 5);
+  },
+  C3(t, lt) { // one social clip is enough
+    tag('SOURCE · 1 PUBLIC CLIP', 90, 250);
+    panel(170, 320, 740, 700, '#16181c'); c.save(); c.beginPath(); c.rect(172, 322, 736, 696); c.clip();
+    const g = c.createLinearGradient(0, 320, 0, 1020); g.addColorStop(0, '#2a2d33'); g.addColorStop(1, '#101114'); c.fillStyle = g; c.fillRect(170, 320, 740, 700);
+    c.fillStyle = '#3d424a'; c.beginPath(); c.arc(540, 590, 120, 0, Math.PI * 2); c.fill(); c.beginPath(); c.ellipse(540, 930, 250, 210, 0, 0, Math.PI * 2); c.fill(); // speaker silhouette
+    c.restore();
+    const bar = seg(t, 7.3, 8.8); c.fillStyle = HAIR; c.fillRect(170, 1020, 740, 10); c.fillStyle = RED; c.fillRect(170, 1020, 740 * bar, 10);
+    txt('▶ 0:03', 200, 990, 36, MONOB, TXT); txt('♥ 214', 880, 990, 36, MONOB, TXT, 'right');
+    txt('@sam.weekend  “best trip ever lol”', 170, 1080, 32, MONO, SEC);
+    dashLine(540, 1100, 540, 1200, seg(t, 7.6, 8.0));
+    const q = seg(t, 7.95, 8.5); if (q > 0) { panel(170, 1200, 740, 130); fakeWave(200, 1265, 680 * eo(q), 80, 4.2, RED, 7, 5); txt('VOICE SAMPLE · 00:03', 190, 1235, 26, MONO, TXT); }
+  },
+  D1(t, lt) { transcript(t, 3); },
+  D2(t, lt) { transcript(t, 4); },
+  D3(t, lt) { // the two red flags
+    tag('RED FLAGS', 90, 330);
+    for (const [s, y, t0] of [['URGENCY', 640, 11.55], ['SECRECY', 940, 11.86]]) {
+      if (t < t0) continue; check(90, y - 105, 130, seg(t, t0 + .05, t0 + .3)); stamp(s, 260, y - 40, 200, t, t0, TXT, AN, 'left'); }
+    txt('"Right now!"', 260, 720, 44, MONO, SEC); if (t > 11.86) txt('"Don\'t tell Dad!"', 260, 1020, 44, MONO, SEC);
+  },
+  D4(t, lt) { transcript(t, 5); },
+  D5(t, lt) { // gift card + crypto, circled
+    tag('PAYMENT DEMANDED', 90, 300);
+    c.save(); c.translate(330, 700); c.rotate(-.08); rr(-230, -150, 460, 300, 26); c.fillStyle = PAPER; c.fill();
+    txt('GIFT CARD', -200, -90, 54, AN, INK); txt('$500', 200, -90, 54, AN, INK, 'right'); c.fillStyle = INK; for (let i = 0; i < 26; i++) c.fillRect(-200 + i * 15, 40, i % 3 ? 6 : 10, 80);
+    c.fillStyle = '#9a968c'; rr(-200, -40, 400, 50, 8); c.fill(); txt('SCRATCH · PIN', 0, -6, 26, MONOB, INK, 'center'); c.restore();
+    c.save(); c.translate(780, 1060); c.beginPath(); c.arc(0, 0, 180, 0, Math.PI * 2); c.fillStyle = '#1f2227'; c.fill(); c.lineWidth = 10; c.strokeStyle = TXT; c.stroke();
+    c.beginPath(); c.arc(0, 0, 140, 0, Math.PI * 2); c.lineWidth = 3; c.strokeStyle = SEC; c.stroke(); txt('CRYPTO', 0, 0, 64, AN, TXT, 'center', 'middle'); c.restore();
+    ellipseDraw(330, 700, 330, 230, seg(t, 14.2, 14.7)); ellipseDraw(780, 1060, 240, 240, seg(t, 14.4, 14.9));
+  },
+  D6(t, lt) { // the equation
+    const rows = [['URGENCY', 15.12], ['+ SECRECY', 15.3], ['+ GIFT CARDS / CRYPTO', 15.48]];
+    rows.forEach(([s, t0], i) => stamp(s, 90, 420 + i * 150, i == 2 ? 92 : 130, t, t0, TXT, AN, 'left'));
+    if (t > 15.7) { c.fillStyle = RED; c.fillRect(90, 830, 900 * eo(seg(t, 15.7, 15.95)), 10); }
+    stamp('= SCAM', 90, 1060, 300, t, 16.08, RED, AN, 'left');
+  },
+  E1(t, lt) { // the money
+    tag('REPORTED LOSSES · IMPOSTOR SCAMS', 90, 300);
+    const v = 3.5 * eo(seg(t, 16.85, 17.75)); txt('$' + v.toFixed(1), 540, 900, 460, AN, TXT, 'center');
+    txt('U.S. · 2025 · FTC', 540, 1040, 40, MONO, SEC, 'center');
+  },
+  E2(t, lt) {
+    txt('$3.5', 540, 560, 300, AN, TXT, 'center'); stamp('BILLION', 540, 700, 170, t, 18.42 - 0.2, RED);
+    // dot matrix: 1 dot = a slice of the losses, lighting up red
+    const cols = 24, rows = 16, s = 38, x0 = 540 - cols * s / 2 + s / 2, y0 = 860, n = cols * rows, lit = n * eo(seg(t, 18.35, 19.5));
+    for (let i = 0; i < n; i++) { const x = x0 + (i % cols) * s, y = y0 + Math.floor(i / cols) * s, o = clamp(lit - i);
+      c.fillStyle = o > 0 ? `rgba(255,74,46,${.35 + .65 * o})` : HAIR; c.beginPath(); c.arc(x, y, 12, 0, Math.PI * 2); c.fill(); }
+    tag('FTC · U.S. · 2025', 90, 1520 - 120, SEC);
+  },
+  E3(t, lt) { // riser: the dots rush at the camera
+    const p = seg(t, 19.6, 21.1);
+    for (let i = 0; i < 260; i++) { const a = hash(i) * Math.PI * 2, z = ((hash(i + 9) + p * (1.2 + 2.8 * p)) % 1), r = Math.pow(z, 2.2) * 1300;
+      c.fillStyle = `rgba(255,74,46,${z})`; c.beginPath(); c.arc(540 + Math.cos(a) * r, 860 + Math.sin(a) * r, 3 + z * 16, 0, Math.PI * 2); c.fill(); }
+    txt('$3.5 BILLION', 540, 860, 150 + 60 * p, AN, TXT, 'center', 'middle'); txt('LAST YEAR', 540, 980 + 30 * p, 60, MONOB, RED, 'center', 'middle');
+  },
+  SIL(t, lt) { // the held breath
+    c.fillStyle = HAIR; c.fillRect(140, 860, 800, 3); const px = 140 + 800 * seg(t, 21.1, 21.7); c.fillStyle = RED; c.fillRect(px - 3, 820, 6, 80);
+    txt('NARRATOR · 00:21', 140, 800, 28, MONO, TICK);
+  },
+  F1(t, lt) { // the twist: the narrator's own waveform
+    tag('VOICE ANALYSIS · NARRATOR', 90, 330);
+    wave('narr', 40, 820, 1000, 640, t - 1.4, t, { bw: 13, gap: 7, pastCol: TXT, gain: 1.1 }); c.fillStyle = RED; c.fillRect(1032, 470, 8, 700);
+    stamp('THIS VOICE?', 540, 1300 - 60, 130, t, 22.0, TXT);
+  },
+  F2(t, lt) {
+    wave('narr', 40, 820, 1000, 640, t - 1.4, t, { bw: 13, gap: 7, col: '#3a1a14', gain: 1.1 });
+    stamp('AI.', 540, 860, 560, t, 22.97, RED); txt('TEXT-TO-SPEECH · SYNTHETIC', 540, 1240, 38, MONOB, TXT, 'center');
+  },
+  F3(t, lt) {
+    tag('EVERY VOICE IN THIS VIDEO', 90, 360);
+    for (const [s, y, t0] of [['"SAM"', 620, 24.08], ['NARRATOR', 900, 24.4]]) {
+      if (t < t0) continue; stamp(s, 90, y, 170, t, t0, TXT, AN, 'left'); check(760, y - 90, 140, seg(t, t0 + .08, t0 + .35)); txt('AI', 960, y + 40, 60, AN, RED, 'center'); }
+    stamp('= AI', 90, 1180, 170, t, 24.7, RED, AN, 'left');
+  },
+  G1(t, lt) {
+    txt('FOOLED YOU?', 540, 260, 130, AN, TXT, 'center'); stamp('IT CAN FOOL HER.', 540, 390, 110, t, 25.82, RED);
+    phone(540 + Math.sin(t * 2 * Math.PI * 23) * 7, 930, .7, t, { mode: 'ring', name: 'SAM', sub: 'mobile ♥', glow: .45 });
+  },
+  H1(t, lt) { safeCard(t, false); },
+  H2(t, lt) { safeCard(t, true); },
+  I1(t, lt) { // no word? hang up
+    stamp('NO WORD?', 540, 380, 200, t, 29.32, TXT);
+    const pr = seg(t, 30.1, 30.25) - seg(t, 30.25, 30.45), r = 190 * (1 - .12 * pr);
+    c.beginPath(); c.arc(540, 800, r, 0, Math.PI * 2); c.fillStyle = RED; c.fill(); handset(540, 796, 120 * (1 - .12 * pr), Math.PI * .75, '#fff');
+    for (let k = 0; k < 2; k++) { const q = seg(t, 30.18 + k * .12, 30.7 + k * .12); if (q > 0 && q < 1) { c.strokeStyle = `rgba(255,74,46,${1 - q})`; c.lineWidth = 8; c.beginPath(); c.arc(540, 800, 200 + q * 260, 0, Math.PI * 2); c.stroke(); } }
+    stamp('HANG UP.', 540, 1150, 170, t, 30.16, TXT);
+  },
+  I2(t, lt) { // call back on a number you know
+    stamp('CALL BACK', 90, 330, 170, t, 30.56, TXT, AN, 'left');
+    panel(90, 430, 900, 480); person(250, 570, 100); txt('Sam', 400, 560, 80, AR, TXT); txt('saved contact', 400, 620, 34, MONO, SEC);
+    txt('+1 (416) 555-0147', 140, 780, 58, MONOB, TXT); txt('the number YOU know', 140, 850, 32, MONO, SEC);
+    check(820, 730, 130, seg(t, 31.25, 31.55));
+    c.beginPath(); c.arc(540, 1060, 80, 0, Math.PI * 2); c.fillStyle = TXT; c.fill(); handset(540, 1056, 52, 0, '#111');
+    for (let k = 0; k < 3; k++) { const q = ((t * 1.3 + k / 3) % 1); c.strokeStyle = `rgba(236,234,228,${(1 - q) * .5})`; c.lineWidth = 4; c.beginPath(); c.arc(540, 1060, 90 + q * 80, 0, Math.PI * 2); c.stroke(); }
+  },
+  J1(t, lt) { // share
+    stamp('SEND THIS', 540, 470, 210, t, 32.03, TXT); stamp('TO YOUR PARENTS.', 540, 650, 130, t, 32.5, RED);
+    const p = seg(t, 32.0, 33.25); c.save(); c.translate(540 + 40 * Math.sin(p * Math.PI), 1000 - 40 * p); c.rotate(-.35 + .1 * p);
+    c.fillStyle = TXT; c.beginPath(); c.moveTo(-170, 0); c.lineTo(190, -130); c.lineTo(60, 160); c.lineTo(10, 40); c.closePath(); c.fill();
+    c.fillStyle = TICK; c.beginPath(); c.moveTo(10, 40); c.lineTo(190, -130); c.lineTo(40, 70); c.closePath(); c.fill(); c.restore();
+    c.save(); c.setLineDash([16, 14]); c.strokeStyle = RED; c.lineWidth = 5; c.beginPath(); c.moveTo(170, 1240); c.quadraticCurveTo(300, 1060, 420 + 60 * p, 1050 - 40 * p); c.stroke(); c.restore();
+  },
+  J2(t, lt) { // end card loops back to the phone
+    stamp('FOLLOW', 540, 470, 260, t, 33.28, TXT); stamp('FOR MORE', 540, 680, 170, t, 33.5, RED);
+    txt('@lorenzo_ai_unplugged', 540, 820, 48, MONOB, SEC, 'center');
+    wave('narr', 140, 1050, 800, 220, 21.7, 34.0, { bw: 8, gap: 5, pastCol: RED, playT: t, playLine: true });
+    txt('EVERY VOICE HERE: AI', 540, 1250, 36, MONO, TXT, 'center');
+  },
+};
+function transcript(t, upto) { // the call log, typed live, with highlights wiping on the red-flag words
+  tag('CALL TRANSCRIPT · RECONSTRUCTED', 70, 240);
+  const rows = [['00:00.4', ["Mom? It's me…"]], ['00:01.4', ["I'm in trouble."]], ['00:02.0', ['I need money. ', 'Right now!']],
+    ['00:09.7', ['Please, ', "don't tell Dad!"]], ['00:12.5', ['Just buy ', 'gift cards.'], ['Or send ', 'crypto!']]];
+  const tIn = [8.95, 9.08, 9.21, 10.12, 12.88], hl = [null, null, [9.5, 'URGENCY'], [10.4, 'SECRECY'], [13.2, 'PAYMENT', 14.0]];
+  let y = 380;
+  for (let i = 0; i < upto; i++) {
+    const r = rows[i], p = seg(t, tIn[i], tIn[i] + .1), cur = i === upto - 1 && i >= 3;
+    const size = cur ? 76 : 50, font = cur ? AR : MONO; if (p <= 0) continue;
+    c.globalAlpha = p * (cur || upto <= 3 ? 1 : .55);
+    txt(r[0], 70, y, 30, MONO, RED);
+    const lines = r.length > 2 ? [r[1], r[2]] : [r[1]]; let yy = y + (cur ? 90 : 60);
+    lines.forEach((parts, li) => {
+      let x = 70; parts.forEach((s, k) => { const w = tw(s, size, font);
+        if (k === parts.length - 1 && hl[i]) { const t0 = li === 1 && hl[i][2] ? hl[i][2] : hl[i][0]; hilite(x - 6, yy - size * .82, w + 12, size * 1.02, seg(t, t0, t0 + .3)); }
+        txt(s, x, yy, size, font, TXT); x += w; });
+      yy += size * 1.15;
+    });
+    if (hl[i] && t > hl[i][0] + .25) { c.globalAlpha = p; txt(hl[i][1], 1010, y, 30, MONOB, RED, 'right'); }
+    c.globalAlpha = 1; y = yy + 40;
+  }
+}
+function safeCard(t, lock) { // the payoff card (paper = the only warm surface in the film)
+  const p = seg(t, 27.02, 27.2); c.save(); c.translate(540, 760); c.rotate(-.02); c.globalAlpha = clamp(p * 3);
+  rr(-460, -400, 920, 800, 30); c.fillStyle = PAPER; c.fill();
+  txt('FAMILY', -400, -250, 130, AN, INK); txt('SAFE WORD', -400, -100, 150, AN, RED);
+  c.fillStyle = INK; c.fillRect(-400, -40, 800, 6);
+  const word = 'PELICAN', sc = seg(t, 28.02, 28.5);
+  let s = ''; for (let i = 0; i < word.length; i++) { const done = sc * word.length > i + .5; s += lock ? (done ? '●' : 'ABCDEFGHJKLMNPRSTUVWXYZ'[Math.floor(hash(i + Math.floor(t * 30)) * 23)]) : '_'; s += ' '; }
+  txt(s.trim(), 0, 170, 110, MONOB, INK, 'center', 'middle');
+  txt(lock ? 'only your family knows it' : 'pick one tonight', 0, 320, 38, MONO, '#5a574f', 'center');
+  c.restore();
+}
+// ---------- camera: always moving. push / drift per shot, a whip on most cuts ----------
+const HARD = new Set(['B1', 'F1', 'SIL', 'A1']);
+function camera(sh, t) {
+  const i = SHOTS.indexOf(sh), lt = t - sh.t0, d = sh.t1 - sh.t0, p = lt / d, h = hash(i + 3);
+  const pushIn = i % 3 !== 1; let s = pushIn ? lerp(1.0, 1.085, p) : lerp(1.09, 1.01, p);
+  if (sh.id === 'A1') s = lerp(1.0, 1.06, eio(p)); if (sh.id === 'A2') s = lerp(1.0, 1.12, p); if (sh.id === 'E3') s = lerp(1.0, 1.45, Math.pow(p, 1.6)); if (sh.id === 'SIL') s = lerp(1.0, 1.03, p);
+  const dx = Math.sin(t * .9 + i) * 10 + (h - .5) * 40 * (p - .5), dy = Math.cos(t * .7 + i * 2) * 12 + (hash(i + 11) - .5) * 50 * (p - .5);
+  const rot = (Math.sin(t * .6 + i) * .004) + (hash(i + 5) - .5) * .02 * (p - .5);
+  // whip in from a side
+  let wx = 0, wy = 0, blur = 0; const dir = hash(i + 7) < .5 ? -1 : 1, vert = hash(i + 13) < .3;
+  if (!HARD.has(sh.id)) { const q = 1 - eo(seg(lt, 0, .16)); const off = dir * 520 * q; if (vert) wy = off; else wx = off; blur = q; }
+  // impact shake
+  let sk = 0; for (const [at, a] of IMPACTS) { const e = t - at; if (e >= 0 && e < .5) sk += a * Math.exp(-e / .1); }
+  const kx = Math.sin(t * 91) * sk * 14, ky = Math.cos(t * 77) * sk * 14;
+  const bump = 1 + .014 * pulse(t, .12) * (t < 21.1 ? 1 : .5);
+  return { s: s * bump, dx: dx + wx + kx, dy: dy + wy + ky, rot, blur, vert, dir };
+}
+const IMPACTS = [[3.3, 1], [4.3, .6], [11.55, .5], [11.86, .5], [16.08, .9], [18.22, .5], [21.7, 1.4], [22.97, 1], [30.16, .6]];
+const FLASH = { B1: ['w', .14], F1: ['w', .2], B2: ['r', .1], D6: ['w', .06], E1: ['w', .06], F2: ['r', .12], H1: ['w', .1], J1: ['w', .06], C1: ['w', .06], D3: ['w', .06] };
+// ---------- captions: word by word, big, readable muted ----------
+function captions(t) {
+  if (t >= F.silence[0] && t < F.silence[1]) return;
+  const ch = CH.find(k => t >= k.a && t < k.b); if (!ch) return;
+  const scam = ch[0].spk === 's', size = scam ? 84 : 116, font = scam ? AR : AN;
+  const words = ch.map(w => (scam ? w.w : w.w.toUpperCase()).replace(/[,]$/, '')), gap = size * .28;
+  const ws = words.map(w => { X.font = `${size}px ${font}`; return X.measureText(w).width; });
+  // wrap into lines of <= 960 px
+  const L = [[]]; let lw = 0; ws.forEach((w, i) => { if (lw + w > 960 && L[L.length - 1].length) { L.push([]); lw = 0; } L[L.length - 1].push(i); lw += w + gap; });
+  const y0 = 1480 - (L.length - 1) * size * .55;
+  if (scam) { // cloned-voice label
+    X.fillStyle = RED; X.fillRect(540 - 190, y0 - size - 34, 12, 30); X.font = `30px ${MONOB}`; X.fillStyle = RED; X.textAlign = 'left'; X.textBaseline = 'alphabetic'; X.fillText('CLONED VOICE', 540 - 166, y0 - size - 8);
+  }
+  L.forEach((ids, li) => {
+    const tot = ids.reduce((a, i) => a + ws[i], 0) + gap * (ids.length - 1); let x = 540 - tot / 2; const y = y0 + li * size * 1.08;
+    ids.forEach(i => {
+      const w = ch[i], k = seg(t, w.t0 - .05, w.t0 + .07); if (k <= 0) { x += ws[i] + gap; return; }
+      const active = t >= w.t0 - .05 && (i + 1 < ch.length ? t < ch[i + 1].t0 - .05 : true);
+      const sc = lerp(1.28, 1, eo(seg(t, w.t0 - .05, w.t0 + .1)));
+      X.save(); X.translate(x + ws[i] / 2, y - size * .36); X.scale(sc, sc); X.globalAlpha = clamp(k * 1.6);
+      if (active) { X.fillStyle = scam ? TXT : RED; X.fillRect(-ws[i] / 2 - 12, -size * .62, ws[i] + 24, size * 1.16); }
+      X.font = `${size}px ${font}`; X.textAlign = 'center'; X.textBaseline = 'middle';
+      X.lineWidth = 14; X.strokeStyle = 'rgba(0,0,0,.85)'; X.lineJoin = 'round'; if (!active) X.strokeText(words[i], 0, 4);
+      X.fillStyle = active ? (scam ? INK : '#fff') : (scam ? TXT : '#fff'); X.fillText(words[i], 0, 4); X.restore();
+      x += ws[i] + gap;
+    });
+  });
+}
+function readout(t) { // the in-picture clock: call time while the call is being reconstructed
+  if (t > 16.7 || t < 1.4) return; const ct = Math.max(0, t - .4);
+  X.font = `34px ${MONOB}`; X.textAlign = 'right'; X.textBaseline = 'alphabetic';
+  const s = `CALL ${String(Math.floor(ct / 60)).padStart(2, '0')}:${(ct % 60).toFixed(1).padStart(4, '0')}`;
+  X.fillStyle = 'rgba(11,12,14,.7)'; X.fillRect(1010 - X.measureText(s).width - 60, 94, X.measureText(s).width + 76, 54);
+  X.fillStyle = TXT; X.fillText(s, 1004, 133); X.fillStyle = RED; X.beginPath(); X.arc(1004 - X.measureText(s).width - 26, 121, 10 * (.7 + .3 * Math.cos(t * 6.3)), 0, Math.PI * 2); X.fill();
+}
+window.render = (t) => {
+  t = clamp(t, 0, F.dur - 1e-4);
+  const sh = SHOTS.find(s => t >= s.t0 && t < s.t1) || SHOTS[SHOTS.length - 1], lt = t - sh.t0;
+  const cam = camera(sh, t);
+  const glow = sh.id === 'SIL' ? 0 : (t < 21.1 ? .35 + .65 * pulse(t, .18) : t < 27.0 ? .25 + .5 * pulse(t, .2) : .15);
+  c.setTransform(1, 0, 0, 1, 0, 0);
+  c.save(); c.translate(W / 2 + cam.dx, H * .45 + cam.dy); c.rotate(cam.rot); c.scale(cam.s, cam.s); c.translate(-W / 2, -H * .45);
+  bgGrid(t, glow); SH[sh.id](t, lt, sh.t1 - sh.t0); c.restore();
+  // composite with directional motion blur during whips
+  X.setTransform(1, 0, 0, 1, 0, 0); X.globalAlpha = 1; X.fillStyle = G; X.fillRect(0, 0, W, H);
+  if (cam.blur > .02) { const n = 6, len = 160 * cam.blur * cam.dir; for (let k = 0; k < n; k++) { X.globalAlpha = k === 0 ? 1 : .35; const o = len * k / n; X.drawImage(S, cam.vert ? 0 : o, cam.vert ? o : 0); } X.globalAlpha = 1; }
+  else X.drawImage(S, 0, 0);
+  // vignette
+  const vg = X.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.55)'); X.fillStyle = vg; X.fillRect(0, 0, W, H);
+  readout(t); captions(t);
+  const fl = FLASH[sh.id]; if (fl && lt < fl[1]) { X.globalAlpha = .85 * (1 - lt / fl[1]); X.fillStyle = fl[0] === 'w' ? '#fff' : RED; X.fillRect(0, 0, W, H); X.globalAlpha = 1; }
+};
+boot();
+</script></body></html>
