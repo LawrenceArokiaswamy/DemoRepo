@@ -75,14 +75,18 @@ ScaledBorderAndShadow: yes
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Top,Inter,52,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,1090,1
 Style: TopUI,Inter,52,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,150,1
+Style: MidUp,Inter,64,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,50,50,245,1
 Style: Mid,Inter,64,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,50,50,1235,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
+# close-ups of the key objects (taped slippers, receipt, envelope) sit low in frame: lift both lines to the top there
+UP = [(0, 5), (64, 72)]
+up = lambda a: any(x <= a < y for x, y in UP)
 with open(os.path.join(HERE, "subs33.ass"), "w") as f:
     f.write(HEAD)
-    for a, b, t in TOP: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},Top,,0,0,0,,{{\\fad(200,200)}}{esc(t)}\n")
+    for a, b, t in TOP: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},{"TopUI" if up(a) else "Top"},,0,0,0,,{{\\fad(200,200)}}{esc(t)}\n")
     for a, b, t in TOPUI: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},TopUI,,0,0,0,,{{\\fad(200,200)}}{esc(t)}\n")
-    for a, b, t in MID: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},Mid,,0,0,0,,{{\\fad(150,150)}}{esc(t)}\n")
+    for a, b, t in MID: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},{"MidUp" if up(a) else "Mid"},,0,0,0,,{{\\fad(150,150)}}{esc(t)}\n")
 print("wrote subs33.ass")
