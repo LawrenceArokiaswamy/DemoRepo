@@ -62,14 +62,22 @@ Style: Letter,Playfair Display,72,&H00FFFFFF,&H000000FF,&H78000000,&H00000000,0,
 Style: Scene,Inter,50,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,1090,1
 Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,50,50,1225,1
 Style: End,Playfair Display,92,&H00FFFFFF,&H000000FF,&H00000000,&HA0000000,0,1,0,0,100,100,0,0,1,2,6,5,70,70,0,1
-Style: End2,Inter,54,&H0000E6FF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,0,0,1,2,5,8,80,80,1130,1
+Style: End2,Inter,54,&H0000E6FF,&H000000FF,&H40000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,80,80,1130,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 with open(os.path.join(HERE, "subs34.ass"), "w") as f:
     f.write(HEAD)
-    for a, b, t in LETTER: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},Letter,,0,0,0,,{{\\fad(450,350)}}{t}\n")
+    # close-ups where the face sits high: the letter drops below the subtitle pair so it never covers the eyes
+    LOW = [(21.7, 23.6), (36.0, 38.2), (50.0, 54.0)]
+    for a, b, t in LETTER:
+        cuts = sorted({a, b} | {x for w in LOW for x in w if a < x < b})
+        for i, (u, v) in enumerate(zip(cuts, cuts[1:])):
+            low = any(w0 <= u and v <= w1 for w0, w1 in LOW)
+            fi = 450 if i == 0 else 0; fo = 350 if v == b else 0
+            pos = "\\an8\\pos(540,1340)" if low else ""
+            f.write(f"Dialogue: 0,{ts(u)},{ts(v)},Letter,,0,0,0,,{{{pos}\\fad({fi},{fo})}}{t}\n")
     for a, b, t in SCENE: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},Scene,,0,0,0,,{{\\fad(200,200)}}{esc(t)}\n")
     for a, b, t in DIALOG: f.write(f"Dialogue: 0,{ts(a)},{ts(b)},Mid,,0,0,0,,{{\\fad(150,150)}}{esc(t)}\n")
     for a, b, t in END: f.write(f"Dialogue: 1,{ts(a)},{ts(b)},End,,0,0,0,,{{\\pos(540,780)\\fad(900,500)}}{t}\n")

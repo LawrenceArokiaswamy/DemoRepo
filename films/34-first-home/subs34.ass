@@ -7,22 +7,26 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Letter,Playfair Display,74,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,0,1,0,0,100,100,0,0,1,2.5,5,8,70,70,175,1
+Style: Letter,Playfair Display,72,&H00FFFFFF,&H000000FF,&H78000000,&H00000000,0,1,0,0,100,100,0,0,3,18,0,8,70,70,165,1
 Style: Scene,Inter,50,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,1090,1
 Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,50,50,1225,1
 Style: End,Playfair Display,92,&H00FFFFFF,&H000000FF,&H00000000,&HA0000000,0,1,0,0,100,100,0,0,1,2,6,5,70,70,0,1
-Style: End2,Inter,54,&H0000E6FF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,0,0,1,2,5,8,80,80,1130,1
+Style: End2,Inter,54,&H0000E6FF,&H000000FF,&H40000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,80,80,1130,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: 0,0:00:00.40,0:00:04.80,Letter,,0,0,0,,{\fad(450,350)}Before you…\Nshe was someone else.
 Dialogue: 0,0:00:05.60,0:00:09.90,Letter,,0,0,0,,{\fad(450,350)}Then you happened.
 Dialogue: 0,0:00:10.20,0:00:16.80,Letter,,0,0,0,,{\fad(450,350)}She gave you her body first.
-Dialogue: 0,0:00:17.30,0:00:23.50,Letter,,0,0,0,,{\fad(450,350)}Then hours of a pain doctors\Nrate above a broken bone.
+Dialogue: 0,0:00:17.30,0:00:21.70,Letter,,0,0,0,,{\fad(450,0)}Then hours of a pain doctors\Nrate above a broken bone.
+Dialogue: 0,0:00:21.70,0:00:23.50,Letter,,0,0,0,,{\an8\pos(540,1340)\fad(0,350)}Then hours of a pain doctors\Nrate above a broken bone.
 Dialogue: 0,0:00:26.40,0:00:31.80,Letter,,0,0,0,,{\fad(450,350)}And she forgot all of it.
-Dialogue: 0,0:00:32.40,0:00:39.80,Letter,,0,0,0,,{\fad(450,350)}She packed herself away.\NQuietly.
+Dialogue: 0,0:00:32.40,0:00:36.00,Letter,,0,0,0,,{\fad(450,0)}She packed herself away.\NQuietly.
+Dialogue: 0,0:00:36.00,0:00:38.20,Letter,,0,0,0,,{\an8\pos(540,1340)\fad(0,0)}She packed herself away.\NQuietly.
+Dialogue: 0,0:00:38.20,0:00:39.80,Letter,,0,0,0,,{\fad(0,350)}She packed herself away.\NQuietly.
 Dialogue: 0,0:00:40.30,0:00:46.30,Letter,,0,0,0,,{\fad(450,350)}Even her name\Nbecame “Mom”.
-Dialogue: 0,0:00:47.00,0:00:53.80,Letter,,0,0,0,,{\fad(450,350)}Everything she was…\Nshe gave to you.
+Dialogue: 0,0:00:47.00,0:00:50.00,Letter,,0,0,0,,{\fad(450,0)}Everything she was…\Nshe gave to you.
+Dialogue: 0,0:00:50.00,0:00:53.80,Letter,,0,0,0,,{\an8\pos(540,1340)\fad(0,350)}Everything she was…\Nshe gave to you.
 Dialogue: 0,0:00:01.00,0:00:04.80,Scene,,0,0,0,,{\fad(200,200)}{\i1}[She had dreams of her own.]{\i0}
 Dialogue: 0,0:00:10.30,0:00:12.30,Scene,,0,0,0,,{\fad(200,200)}{\i1}[Sick every morning.]{\i0}
 Dialogue: 0,0:00:12.50,0:00:14.70,Scene,,0,0,0,,{\fad(200,200)}{\i1}[Awake at 3 AM.]{\i0}
