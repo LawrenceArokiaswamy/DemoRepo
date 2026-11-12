@@ -1,0 +1,36 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Letter,Playfair Display,72,&H00FFFFFF,&H000000FF,&H78000000,&H00000000,0,1,0,0,100,100,0,0,3,18,0,8,70,70,165,1
+Style: Scene,Inter,50,&H0000E6FF,&H000000FF,&H10000000,&H00000000,-1,1,0,0,100,100,0,0,3,14,0,8,50,50,1090,1
+Style: Mid,Inter,60,&H00FFFFFF,&H000000FF,&H10000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,50,50,1225,1
+Style: End,Playfair Display,92,&H00FFFFFF,&H000000FF,&H00000000,&HA0000000,0,1,0,0,100,100,0,0,1,2,6,5,70,70,0,1
+Style: End2,Inter,54,&H0000E6FF,&H000000FF,&H40000000,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,8,80,80,1130,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:18.40,0:00:21.70,Letter,,0,0,0,,{\fad(450,350)}He taught each of them one thing.\NHe never told them why.
+Dialogue: 0,0:00:25.60,0:00:28.90,Letter,,0,0,0,,{\fad(450,350)}He had 5 months.\NHe spent every day getting them ready.
+Dialogue: 0,0:00:40.40,0:00:43.60,Letter,,0,0,0,,{\fad(450,350)}20 years later.
+Dialogue: 0,0:00:00.70,0:00:02.40,Mid,,0,0,0,,{\fad(150,150)}ANNA: {\i1}(laughing){\i0} Why do I need this?
+Dialogue: 0,0:00:02.50,0:00:03.90,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(smiling){\i0} Just in case.
+Dialogue: 0,0:00:04.40,0:00:07.80,Mid,,0,0,0,,{\fad(150,150)}DANIEL: Over, under, through. Now you try.
+Dialogue: 0,0:00:08.40,0:00:10.50,Mid,,0,0,0,,{\fad(150,150)}DANIEL: One, two, three…
+Dialogue: 0,0:00:10.60,0:00:13.00,Mid,,0,0,0,,{\fad(150,150)}MIA: {\i1}(giggling){\i0} You have to dance with me at my wedding!
+Dialogue: 0,0:00:15.30,0:00:17.80,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(quietly){\i0} …I promise.
+Dialogue: 0,0:00:22.00,0:00:23.30,Mid,,0,0,0,,{\fad(150,150)}ANNA: Who are you talking to?
+Dialogue: 0,0:00:23.40,0:00:24.80,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(too quickly){\i0} Practising a speech. Go to sleep.
+Dialogue: 0,0:00:30.60,0:00:34.60,Mid,,0,0,0,,{\fad(150,150)}SAM: {\i1}(whispering){\i0} Over, under, through.
+Dialogue: 0,0:00:44.35,0:00:46.50,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(recording){\i0} Hey, baby girl… I'm sorry I'm not there.
+Dialogue: 0,0:00:47.40,0:00:49.40,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(recording){\i0} But I promised you a dance.
+Dialogue: 0,0:00:50.00,0:00:52.90,Mid,,0,0,0,,{\fad(150,150)}MIA: {\i1}(whispering){\i0} One, two, three…
+Dialogue: 0,0:00:53.35,0:00:56.30,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(recording){\i0} Sam… take care of her for me.
+Dialogue: 0,0:00:56.50,0:00:58.60,Mid,,0,0,0,,{\fad(150,150)}DANIEL: {\i1}(recording){\i0} Anna… thank you for staying brave.
+Dialogue: 1,0:00:59.00,0:01:05.00,End,,0,0,0,,{\pos(540,780)\fad(900,500)}He couldn't stay.\NSo he made sure\Nthey'd be okay.
+Dialogue: 1,0:01:00.80,0:01:05.00,End2,,0,0,0,,{\fad(700,500)}Hug your dad today.\NSay it out loud.

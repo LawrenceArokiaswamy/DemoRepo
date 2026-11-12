@@ -69,3 +69,7 @@ __pycache__/
 35-look-smooth/out/
 35-just-in-case/refs/*.png
 35-just-in-case/stills/
+35-just-in-case/out/
+35-just-in-case/*.mp4
+35-just-in-case/remotion/public/
+35-just-in-case/remotion/node_modules

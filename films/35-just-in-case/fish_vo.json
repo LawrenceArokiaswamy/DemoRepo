@@ -1,0 +1,6 @@
+{"voice": "923d883ad6584ecab4f02e18f9f9d580", "model": "s2-pro", "speed": 0.9, "temperature": 0.75, "top_p": 0.7,
+ "lines": [
+  ["r1", "[weak, tender, smiling through tears] Hey, baby girl... I'm sorry I'm not there. But I promised you a dance.", 0.6],
+  ["r2", "[softly, breaking a little] Sam... take care of her for me.", 0.6],
+  ["r3", "[quiet, full of love] Anna... thank you for staying brave.", 0.6]
+ ]}
