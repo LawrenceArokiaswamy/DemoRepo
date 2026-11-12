@@ -73,3 +73,6 @@ __pycache__/
 35-just-in-case/*.mp4
 35-just-in-case/remotion/public/
 35-just-in-case/remotion/node_modules
+36-cute-test/audio/
+36-cute-test/remotion/public/*.wav
+36-cute-test/remotion/node_modules
