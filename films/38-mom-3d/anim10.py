@@ -176,6 +176,22 @@ FACE = face_rig.Face(ARM, MOMMESH)
 if True:                                                   # weld UV-seam splits, then smooth bunched skin (scene copy only; GLB untouched)
     import bmesh as _bm_
     _b = _bm_.new(); _b.from_mesh(MOMMESH.data); _bm_.ops.remove_doubles(_b, verts=_b.verts, dist=1e-5); _b.to_mesh(MOMMESH.data); _b.free()
+    # wrist fix: vertices behind the wrist joint (cuff side) must follow the forearm, not the hand
+    VG = {g.name: g for g in MOMMESH.vertex_groups}; Mm = MOMMESH.matrix_world; Ma = ARM.matrix_world
+    for hand, fore in (("LeftHand", "LeftForeArm"), ("RightHand", "RightForeArm")):
+        hb, fb = ARM.data.bones[hand], ARM.data.bones[fore]
+        wrist = Ma @ hb.head_local; elbow = Ma @ fb.head_local; axis = (wrist - elbow).normalized()
+        gh, gf = VG[hand], VG[fore]; moved = 0
+        for v in MOMMESH.data.vertices:
+            wh = next((g.weight for g in v.groups if g.group == gh.index), 0.0)
+            if wh <= 0: continue
+            d = (Mm @ v.co - wrist).dot(axis)                       # < 0: on the elbow side of the wrist
+            if d < 0.012:
+                k = min(1.0, (0.012 - d) / 0.03)                    # fade: fully forearm 1.8 cm behind the wrist
+                take = wh * k
+                gh.add([v.index], wh - take, 'REPLACE'); wf = next((g.weight for g in v.groups if g.group == gf.index), 0.0)
+                gf.add([v.index], wf + take, 'REPLACE'); moved += 1
+        print('wrist fix', hand, 'vertices re-weighted:', moved)
     cs = MOMMESH.modifiers.new('corrective', 'CORRECTIVE_SMOOTH'); cs.factor = 0.6; cs.iterations = 12; cs.scale = 1.0; cs.rest_source = 'ORCO'; cs.smooth_type = 'LENGTH_WEIGHTED'                       # built in the rest pose at the origin, then carried by the Head bone
 HIP0 = Vector((-0.004, -0.03, 0.884))                    # rest position of the Hips joint
 SEAT = Vector((-0.06, -0.2, 0.21))                       # where her hips sit on the floor
@@ -200,6 +216,25 @@ def orient_hand(name, finger, palm, rest_palm):
     Mw = (R @ Rw).to_4x4(); Mw.translation = (ARM.matrix_world @ pb.matrix).translation
     M = ARM.matrix_world.inverted() @ Mw
     pb.matrix = Matrix.LocRotScale(M.translation, M.to_quaternion(), pb.matrix.to_scale())
+def clamp_wrist(hand, fin, max_deg):
+    """keep the finger direction within max_deg of the forearm so the fused cuff mesh never folds at the wrist"""
+    bpy.context.view_layer.update()
+    fore = {"LeftHand": "LeftForeArm", "RightHand": "RightForeArm"}[hand]
+    a = (ARM.matrix_world @ PB[fore].head); b = (ARM.matrix_world @ PB[hand].head)
+    fd = (b - a).normalized(); fin = Vector(fin).normalized()
+    ang = fd.angle(fin)
+    if ang <= math.radians(max_deg): return fin
+    axis = fd.cross(fin).normalized()
+    return (Matrix.Rotation(math.radians(max_deg), 3, axis) @ fd).normalized()
+def cap_twist(name, max_deg):
+    """no twist bones on this rig: more than ~45 deg of hand roll against the forearm wrings the fused cuff, so cap it"""
+    bpy.context.view_layer.update()
+    pb = PB[name]; q = pb.matrix_basis.to_quaternion()
+    swing, tw = q.to_swing_twist('Y'); lim = math.radians(max_deg)
+    if abs(tw) <= lim: return
+    from mathutils import Quaternion
+    q2 = swing @ Quaternion((0, 1, 0), max(-lim, min(lim, tw)))
+    pb.rotation_mode = 'QUATERNION'; pb.rotation_quaternion = q2
 def rot_bone_world(name, axis, ang):
     """rotate a pose bone about a world axis through its head (armature space)"""
     bpy.context.view_layer.update()
@@ -210,7 +245,7 @@ cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); link(cam); sc.ca
 cam.data.dof.use_dof = True; cam.data.dof.aperture_fstop = 2.8; cam.data.sensor_width = 36
 w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.01, 0.01, 0.015)
 sc.render.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = int(arg("--spp", 32)); sc.cycles.use_denoising = True
-sc.cycles.max_bounces = 6; sc.cycles.diffuse_bounces = 3; sc.cycles.glossy_bounces = 2; sc.cycles.caustics_reflective = False; sc.cycles.caustics_refractive = False
+sc.render.use_persistent_data = True; sc.cycles.max_bounces = 6; sc.cycles.diffuse_bounces = 3; sc.cycles.glossy_bounces = 2; sc.cycles.caustics_reflective = False; sc.cycles.caustics_refractive = False
 sc.render.resolution_x, sc.render.resolution_y = 1080, 1920; sc.render.resolution_percentage = int(arg("--scale", 50))
 sc.view_settings.view_transform = "AgX"; sc.view_settings.look = "AgX - Medium High Contrast"; sc.view_settings.exposure = -0.55
 
@@ -247,10 +282,17 @@ def stage(f):
     for name, sx in (("LeftFoot", 1), ("RightFoot", -1)):
         orient_hand(name, Vector((sx * 0.18, -1.0, -0.12)), Vector((0, 0, -1)), Vector((0, 0, -1)))
     for name, sx in (("LeftHand", 1), ("RightHand", -1)):
-        fin = Vector((-sx * 0.25, -0.55, -0.8)); palm = Vector((0, 0.15, -1))
+        fin = Vector((-sx * 0.25, -0.55, -0.8)); palm = Vector((sx * 0.7, 0.1, -0.7))   # keeps the hand roll near its A-pose rest (palms toward the thighs)
         if name == "LeftHand":
             fin = fin.lerp(Vector((0.15, 0.0, 1.0)), reach); palm = palm.lerp(Vector((0, 1, 0)), reach)
-        orient_hand(name, fin, palm, Vector((-sx, 0, 0)))
+        orient_hand(name, clamp_wrist(name, fin, 25 + 10 * (reach if name == "LeftHand" else 0)), palm, Vector((-sx, 0, 0)))
+        cap_twist(name, 45)
+    if os.environ.get("DBG_WRIST"):
+        bpy.context.view_layer.update()
+        for h in ("LeftHand", "RightHand"):
+            q = PB[h].matrix_basis.to_quaternion(); ax, an = q.to_axis_angle()
+            sw = q.to_swing_twist('Y')
+            print("DBGW", f, h, "angle %.1f" % math.degrees(an), "twistY %.1f" % math.degrees(sw[1]), "swing %.1f" % math.degrees(sw[0].angle))
     # face: quiet worry -> eyes lead the turn to the door -> hope while touching -> the light goes out -> sadness
     blink = max(0.0, 1 - abs(t - 1.4) / 0.1) + max(0.0, 1 - abs(t - 4.9) / 0.1) + max(0.0, 1 - abs(t - 7.25) / 0.12)
     slow = K_(t, [(8.9, 0), (9.3, 0.85), (9.8, 0.55)])                             # a slow, heavy close at the end
@@ -270,6 +312,10 @@ def stage(f):
     cam.location = Vector((mix(1.55, 0.72, u), mix(-3.0, -1.5, u), mix(1.2, 0.98, u)))
     aim(cam, look); cam.data.lens = mix(24, 38, u)
     cam.data.dof.focus_distance = (hd - cam.location).length
+    if "--handcam" in argv:                                    # validation close-up on her left hand (the reaching one)
+        hw = ARM.matrix_world @ PB["LeftHand"].head
+        cam.location = hw + Vector((0.32, -0.42, 0.12)); aim(cam, hw + Vector((0.02, 0, -0.03))); cam.data.lens = 60
+        cam.data.dof.focus_distance = (hw - cam.location).length
 
 frames = list(range(N))
 if "--frames" in argv: frames = [int(x) for x in arg("--frames").split(",")]
@@ -280,5 +326,6 @@ for f in frames:
     p = os.path.join(OUT, f"{f + 1:04d}.png")
     if os.path.exists(p) and "--force" not in argv: continue
     sc.frame_set(f); stage(f); sc.render.filepath = p
+    if "--norender" in argv: continue
     bpy.ops.render.render(write_still=True)
 print("DONE", len(frames))
