@@ -186,13 +186,20 @@ QA results. Checked on the final render: crops of the face, hands and feet at fu
 | Mouth on the skin | PASS: it sits on the skin in every frame checked; no burial or floating. |
 | Hands at rest | PASS: palms down on the knees, wrists not pinched. |
 | Hand on the door | PASS: fingertips reach the frame and stay inside the shot. |
-| Hand lowering (7.4–8 s) | PASS with a note: the hand passes close to the chest on its way down. The fingers bunch (the mitten-finger limit, see section 6). |
+| Hand in transit (4.3–6 s, 7.3–8.8 s) | FAILED in the first final render, now fixed. The hand folded into a claw, knuckles to the camera, at about 8 s (frame 240), and also on the way up. |
+| Hand in transit, after the fix | PASS: the wrist stays straight while the arm moves. The roll changes by at most about 10° every 4 frames. The re-rendered frames (129–182, 219–266) join the old ones without a pop. |
 | Feet | PASS: flat on the rug and floor; no sliding seen on the contact sheet. |
 | Seat and back | PASS: on the floor and against the wall throughout. |
 | Light cue | PASS: the slit under the door goes out at 7.0 s (frame 210) and stays out. |
 | Pops | PASS: the largest frame-to-frame change (YDIF ≈ 5 of 255, frames 240–245) is a smooth ramp during the hand lowering, not a single jump. |
 | Render | PASS: no fireflies or denoiser smears seen in the crops. |
 | Sound | PASS: −14.1 LUFS, −1.6 dBFS sample peak, 10.0 s, in sync. |
+
+Why the hand twisted in transit:
+1. **The fingers swung through the camera.** The script blended the finger direction in a straight line from the rest pose (down to the knee) to the touch pose (up the door). Those directions are nearly opposite, so halfway the fingers pointed straight at the camera and the wrist clamp folded the hand.
+2. **The hand flipped its roll.** The palm direction crossed the forearm axis, so the 45° twist cap saturated on one side and then the other. The hand flipped about 80° of roll within about 12 frames.
+
+The fix, in `anim10.py`: in transit the fingers follow the forearm (a straight wrist). They ease into the rest pose below reach 0.3 and into the touch pose above 0.7. The roll follows one monotonic curve against the forearm, from −45° to +37°.
 
 Still visible in the final video:
 - Fingers move as one block (mitten).
