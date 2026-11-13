@@ -5,7 +5,7 @@
 # the door goes out; she stays. 10 s, 30 fps. Original characters and set (reference: REFERENCES.md, ref 1).
 # usage: blender python scene.py -- outdir [--frames a,b] [--range a b] [--scale pct] [--spp n] [--force]
 import bpy, bmesh, math, os, sys
-from mathutils import Vector, Matrix, Matrix
+from mathutils import Vector, Matrix, Quaternion
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "34-first-home", "blender"))
 from lib import img_mat, lin, mat, rbox as _rbox, plane, cyl, area, point, aim, piv, smooth, mix, clamp01
 
@@ -328,15 +328,31 @@ def stage(f):
     for name, sx in (("LeftHand", 1), ("RightHand", -1)):
         fin = Vector((-sx * 0.25, -0.55, -0.8)); palm = Vector((sx * 0.7, 0.1, -0.7))   # keeps the hand roll near its A-pose rest (palms toward the thighs)
         if name == "LeftHand":
-            fin = fin.lerp(Vector((0.15, 0.0, 1.0)), reach); palm = palm.lerp(Vector((0, 1, 0)), reach)
+            # the rest and touch finger directions are nearly opposite (down to the knee vs up the door), so a straight
+            # blend points the fingers at the camera halfway and folds the wrist. In transit the hand follows the forearm
+            # (straight wrist); it eases into the rest pose below reach 0.3 and into the touch pose above 0.7.
+            bpy.context.view_layer.update()
+            fd = ((ARM.matrix_world @ PB["LeftHand"].head) - (ARM.matrix_world @ PB["LeftForeArm"].head)).normalized()
+            def toward(a, b, w):
+                return (Quaternion().slerp(a.rotation_difference(b.normalized()), w) @ a).normalized()
+            w_rest = 1 - smooth(min(1, reach / 0.3)); w_touch = smooth(max(0, (reach - 0.7) / 0.3))
+            fin = toward(toward(fd, fin, w_rest), Vector((0.15, 0.0, 1.0)), w_touch)
+            palm = palm.lerp(Vector((0, 1, 0)), reach)
         orient_hand(name, clamp_wrist(name, fin, 25 + 10 * (reach if name == "LeftHand" else 0)), palm, Vector((-sx, 0, 0)))
         cap_twist(name, 45)
+        if name == "LeftHand":
+            # roll as one monotonic curve against the forearm (rest -45 deg -> touch +37 deg), never flipping in transit
+            bpy.context.view_layer.update()
+            q = PB[name].matrix_basis.to_quaternion(); sw, _tw = q.to_swing_twist('Y')
+            PB[name].rotation_mode = 'QUATERNION'; PB[name].rotation_quaternion = sw @ Quaternion((0, 1, 0), D(mix(-45, 37, reach)))
     if os.environ.get("DBG_WRIST"):
         bpy.context.view_layer.update()
         for h in ("LeftHand", "RightHand"):
             q = PB[h].matrix_basis.to_quaternion(); ax, an = q.to_axis_angle()
             sw = q.to_swing_twist('Y')
-            print("DBGW", f, h, "angle %.1f" % math.degrees(an), "twistY %.1f" % math.degrees(sw[1]), "swing %.1f" % math.degrees(sw[0].angle))
+            hy = (ARM.matrix_world.to_3x3() @ PB[h].matrix.to_3x3() @ Vector((0, 1, 0))).normalized()
+            fo = ((ARM.matrix_world @ PB[h].head) - (ARM.matrix_world @ PB[h.replace("Hand", "ForeArm")].head)).normalized()
+            print("DBGW", f, h, "bend %.1f" % math.degrees(fo.angle(hy)), "finY %.2f" % hy.y, "angle %.1f" % math.degrees(an), "twistY %.1f" % math.degrees(sw[1]), "swing %.1f" % math.degrees(sw[0].angle))
     # face: quiet worry -> eyes lead the turn to the door -> hope while touching -> the light goes out -> sadness
     blink = max(0.0, 1 - abs(t - 1.4) / 0.1) + max(0.0, 1 - abs(t - 4.9) / 0.1) + max(0.0, 1 - abs(t - 7.25) / 0.12)
     slow = K_(t, [(8.9, 0), (9.3, 0.85), (9.8, 0.55)])                             # a slow, heavy close at the end
