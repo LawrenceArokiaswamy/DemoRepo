@@ -176,7 +176,29 @@ The beats:
 
 Sound: soft piano and strings, plus touch and light-click effects, mastered to −14 LUFS and −1.6 dBTP.
 
-QA results (full-resolution face, hand and foot crops, plus a contact sheet; see `QA_A10.md`).
+QA results. Checked on the final render: crops of the face, hands and feet at full resolution, a contact sheet every 10–15 frames, and a frame-difference scan of all 300 frames.
+
+| Check | Result |
+|---|---|
+| Face, 0–2 s | PASS: worried brows and a small worried mouth. No smile. |
+| Face at the door (5–6 s) | PASS: a quiet neutral mouth. |
+| Face, 8–10 s | PASS: frown, heavy lids, eyes down, tear. Reads clearly sad. |
+| Mouth on the skin | PASS: it sits on the skin in every frame checked; no burial or floating. |
+| Hands at rest | PASS: palms down on the knees, wrists not pinched. |
+| Hand on the door | PASS: fingertips reach the frame and stay inside the shot. |
+| Hand lowering (7.4–8 s) | PASS with a note: the hand passes close to the chest on its way down. The fingers bunch (the mitten-finger limit, see section 6). |
+| Feet | PASS: flat on the rug and floor; no sliding seen on the contact sheet. |
+| Seat and back | PASS: on the floor and against the wall throughout. |
+| Light cue | PASS: the slit under the door goes out at 7.0 s (frame 210) and stays out. |
+| Pops | PASS: the largest frame-to-frame change (YDIF ≈ 5 of 255, frames 240–245) is a smooth ramp during the hand lowering, not a single jump. |
+| Render | PASS: no fireflies or denoiser smears seen in the crops. |
+| Sound | PASS: −14.1 LUFS, −1.6 dBFS sample peak, 10.0 s, in sync. |
+
+Still visible in the final video:
+- Fingers move as one block (mitten).
+- The cardigan bunches at the left shoulder during the reach.
+
+Both are in section 9.
 
 ## 9. What needs improving, in priority order
 
