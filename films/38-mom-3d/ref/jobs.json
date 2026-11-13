@@ -1,1 +1,10 @@
-{"mom_front": "48f3abe4-960d-441e-8f93-57cc462a161b", "model": "gpt_image_2_6"}
+{
+ "mom_front": "48f3abe4-960d-441e-8f93-57cc462a161b",
+ "model": "gpt_image_2_6",
+ "dad_front": "59024341-3d7b-4039-b4ca-c857848b0292",
+ "son_front": "4cc61bec-165c-4b8e-9d4d-bcde6c1e19ab",
+ "daughter_front": "ef9969dc-86a2-418b-95c4-04536eb2314d",
+ "grandpa_front": "d473cd86-d1a6-4a1f-90a2-7face4bb0c67",
+ "grandma_front": "f5c4e10e-5c08-4e5a-9e53-c65568e947bd",
+ "puppy_side": "b98321c0-ca97-4256-9291-4d6126f678e2"
+}
