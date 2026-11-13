@@ -16,3 +16,16 @@
   ends on the two of them at the table. Cuts at 0.5, 6.5, 7.4, 10, 13.5, 15.5, 17.5, 20.5, 23.5 s.
 - The arc: quiet sadness, persistence, one silly gesture breaks it, the laugh is the payoff the counter promised.
   Humour inside sadness. Close-ups only for the emotional peak (the laugh).
+- Part 3 (21 s): at the table mom slides over an old photo of HER mom with a pancake on her head:
+  "my mom did the same thing to me." / "she'd been exactly where you were." (girl leans her head on mom);
+  empty hallway, open bedroom door, warm light: "and she'd always be there.";
+  end card over the blurred hallway: the title again, a sourced stat in small caps ("Nearly 4 in 10 U.S. high schoolers felt
+  persistently sad or hopeless in 2023", CDC YRBS), a gold CTA "SEND THIS TO YOUR MOM", and a question for comments
+  ("What did your mom do when your heart got broken?"), then the logo. Cuts at 5.4, 10.4, 17.4 s. Whole reel about 77 s.
+- Blueprint to take (in our own stories):
+  1. Title hook on frame 1 (one word in gold) and the same title on the end card.
+  2. A counter that promises a payoff (days/years/times) and ticks with each beat.
+  3. One small, specific act per beat; one short lower-case italic line; long holds; no voice.
+  4. A silly loving gesture breaks the sadness; close-up only on the emotional peak.
+  5. Generational twist: the act was handed down ("my mom did the same thing to me").
+  6. A quiet, empty-room shot for the last line, then end card: sourced stat + "SEND THIS TO YOUR ___" + a comment question.
