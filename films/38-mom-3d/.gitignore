@@ -2,3 +2,11 @@ ref/*.png
 model/
 out/
 *.mp4
+validation/angles/
+validation/body/
+validation/walk/
+validation/face/
+validation/tex/
+validation/*.npy
+validation/walk.log
+model/face_rig/faceclean_mask.png

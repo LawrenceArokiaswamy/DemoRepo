@@ -1,0 +1,202 @@
+{
+ "objects": [
+  {
+   "name": "Armature",
+   "type": "ARMATURE",
+   "parent": null,
+   "dims_m": [
+    10.025,
+    9.19,
+    9.736
+   ]
+  },
+  {
+   "name": "char1",
+   "type": "MESH",
+   "parent": "Armature",
+   "dims_m": [
+    0.89,
+    0.333,
+    1.65
+   ]
+  },
+  {
+   "name": "Icosphere",
+   "type": "MESH",
+   "parent": null,
+   "dims_m": [
+    1.902,
+    2.0,
+    2.0
+   ]
+  }
+ ],
+ "mesh": {
+  "name": "char1",
+  "verts": 49861,
+  "faces": 62485,
+  "triangles": 62485,
+  "separate_parts": 2953,
+  "non_manifold_edges": 32323,
+  "open_boundary_edges": 32323,
+  "world_size_m (w,d,h)": [
+   0.89,
+   0.333,
+   1.65
+  ],
+  "uv_maps": [
+   "UVMap"
+  ],
+  "shape_keys": [],
+  "materials": [
+   "Material_0"
+  ]
+ },
+ "textures": [
+  {
+   "node": "Image Texture",
+   "image": "Image_3",
+   "size": [
+    2048,
+    2048
+   ],
+   "feeds": [
+    "Emission Color"
+   ]
+  },
+  {
+   "node": "Image Texture.001",
+   "image": "Image_0",
+   "size": [
+    2048,
+    2048
+   ],
+   "feeds": [
+    "Base Color"
+   ]
+  },
+  {
+   "node": "Image Texture.002",
+   "image": "Image_1",
+   "size": [
+    2048,
+    2048
+   ],
+   "feeds": [
+    "Color"
+   ]
+  },
+  {
+   "node": "Image Texture.003",
+   "image": "normal",
+   "size": [
+    2048,
+    2048
+   ],
+   "feeds": [
+    "Color"
+   ]
+  }
+ ],
+ "rig": {
+  "armature": "Armature",
+  "bones": 24,
+  "bone_names": [
+   "Hips",
+   "Spine02",
+   "Spine01",
+   "Spine",
+   "neck",
+   "Head",
+   "head_end",
+   "headfront",
+   "LeftShoulder",
+   "LeftArm",
+   "LeftForeArm",
+   "LeftHand",
+   "RightShoulder",
+   "RightArm",
+   "RightForeArm",
+   "RightHand",
+   "LeftUpLeg",
+   "LeftLeg",
+   "LeftFoot",
+   "LeftToeBase",
+   "RightUpLeg",
+   "RightLeg",
+   "RightFoot",
+   "RightToeBase"
+  ],
+  "hierarchy": {
+   "Hips": null,
+   "Spine02": "Hips",
+   "Spine01": "Spine02",
+   "Spine": "Spine01",
+   "neck": "Spine",
+   "Head": "neck",
+   "head_end": "Head",
+   "headfront": "Head",
+   "LeftShoulder": "Spine",
+   "LeftArm": "LeftShoulder",
+   "LeftForeArm": "LeftArm",
+   "LeftHand": "LeftForeArm",
+   "RightShoulder": "Spine",
+   "RightArm": "RightShoulder",
+   "RightForeArm": "RightArm",
+   "RightHand": "RightForeArm",
+   "LeftUpLeg": "Hips",
+   "LeftLeg": "LeftUpLeg",
+   "LeftFoot": "LeftLeg",
+   "LeftToeBase": "LeftFoot",
+   "RightUpLeg": "Hips",
+   "RightLeg": "RightUpLeg",
+   "RightFoot": "RightLeg",
+   "RightToeBase": "RightFoot"
+  },
+  "armature_modifier": [
+   "ARMATURE"
+  ],
+  "vertex_groups": 24,
+  "unweighted_vertices": 0,
+  "weight_sum_not_1": 0,
+  "max_influences_per_vertex": 4,
+  "influence_histogram": {
+   "1": 4069,
+   "2": 14093,
+   "3": 9459,
+   "4": 22240
+  },
+  "vertices_per_bone": {
+   "Head": 16700,
+   "neck": 13749,
+   "Hips": 10932,
+   "LeftUpLeg": 10599,
+   "RightUpLeg": 10462,
+   "LeftShoulder": 8557,
+   "RightShoulder": 8460,
+   "Spine02": 7846,
+   "LeftArm": 7039,
+   "RightArm": 6347,
+   "LeftForeArm": 6219,
+   "RightForeArm": 5206,
+   "LeftLeg": 4314,
+   "LeftHand": 4213,
+   "RightLeg": 4108,
+   "Spine01": 3895,
+   "RightHand": 3863,
+   "LeftFoot": 3643,
+   "RightFoot": 3567,
+   "headfront": 2950,
+   "RightToeBase": 2527,
+   "LeftToeBase": 2521,
+   "head_end": 1538,
+   "Spine": 337
+  },
+  "bones_without_weights": [],
+  "finger_bones": [],
+  "face_bones": [],
+  "actions_in_file": [
+   "Armature|clip0|baselayer"
+  ]
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "verts_before_weld": 49861,
+ "verts_after_weld": 31243,
+ "parts_after_weld": 1,
+ "largest_parts": [
+  31243
+ ],
+ "open_boundary_edges_after_weld": 10,
+ "non_manifold_edges_after_weld": 15
+}
