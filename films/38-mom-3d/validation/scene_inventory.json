@@ -1,0 +1,879 @@
+{
+ "meshes": [
+  {
+   "name": "bal0",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal1",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal2",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal3",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal4",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal5",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal6",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal7",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "bal8",
+   "verts": 64,
+   "faces": 34,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "brow-1",
+   "verts": 34,
+   "faces": 40,
+   "materials": [
+    "face_brow"
+   ],
+   "image_textures": [],
+   "parent": "Armature:Head"
+  },
+  {
+   "name": "brow1",
+   "verts": 34,
+   "faces": 40,
+   "materials": [
+    "face_brow"
+   ],
+   "image_textures": [],
+   "parent": "Armature:Head"
+  },
+  {
+   "name": "ceiling",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "ceil"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "ceramic_vase_01",
+   "verts": 6590,
+   "faces": 10296,
+   "materials": [
+    "ceramic_vase_01"
+   ],
+   "image_textures": [
+    "ceramic_vase_01_diff",
+    "ceramic_vase_01_metal-ceramic_vase_01_rough",
+    "ceramic_vase_01_nor_gl"
+   ],
+   "parent": "ceramic_vase_01_root"
+  },
+  {
+   "name": "char1",
+   "verts": 31243,
+   "faces": 62485,
+   "materials": [
+    "Material_0"
+   ],
+   "image_textures": [
+    "Image_0_faceclean.png",
+    "Image_1",
+    "Image_3",
+    "normal"
+   ],
+   "parent": "Armature"
+  },
+  {
+   "name": "ClassicConsole_01",
+   "verts": 5506,
+   "faces": 7566,
+   "materials": [
+    "ClassicConsole_01"
+   ],
+   "image_textures": [
+    "ClassicConsole_01_diff",
+    "ClassicConsole_01_metallic-ClassicConsole_01_roughness",
+    "ClassicConsole_01_nor_gl"
+   ],
+   "parent": "ClassicConsole_01_root"
+  },
+  {
+   "name": "door",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "door"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "dpan0",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "door"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "dpan1",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "door"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "eye-1",
+   "verts": 610,
+   "faces": 640,
+   "materials": [
+    "face_eye"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv-1"
+  },
+  {
+   "name": "eye1",
+   "verts": 610,
+   "faces": 640,
+   "materials": [
+    "face_eye"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv1"
+  },
+  {
+   "name": "floor",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "floor"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "fr20",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "frame"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "fr21",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "frame"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "fr22",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "frame"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "frame0",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "frame"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "frame1",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "frame"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "glint-1",
+   "verts": 86,
+   "faces": 96,
+   "materials": [
+    "face_glint"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv-1"
+  },
+  {
+   "name": "glint1",
+   "verts": 86,
+   "faces": 96,
+   "materials": [
+    "face_glint"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv1"
+  },
+  {
+   "name": "glint2-1",
+   "verts": 52,
+   "faces": 60,
+   "materials": [
+    "face_glint"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv-1"
+  },
+  {
+   "name": "glint21",
+   "verts": 52,
+   "faces": 60,
+   "materials": [
+    "face_glint"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv1"
+  },
+  {
+   "name": "handrail",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "rail"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "jl",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "jr",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "jtop",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "knob",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "brass"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "lamp",
+   "verts": 481,
+   "faces": 480,
+   "materials": [
+    "lampglass"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "lash-1",
+   "verts": 0,
+   "faces": 0,
+   "materials": [
+    "face_brow"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv-1"
+  },
+  {
+   "name": "lash1",
+   "verts": 0,
+   "faces": 0,
+   "materials": [
+    "face_brow"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv1"
+  },
+  {
+   "name": "lidL-1",
+   "verts": 610,
+   "faces": 640,
+   "materials": [
+    "face_skin"
+   ],
+   "image_textures": [],
+   "parent": "lidL_piv-1"
+  },
+  {
+   "name": "lidL1",
+   "verts": 610,
+   "faces": 640,
+   "materials": [
+    "face_skin"
+   ],
+   "image_textures": [],
+   "parent": "lidL_piv1"
+  },
+  {
+   "name": "lidU-1",
+   "verts": 610,
+   "faces": 640,
+   "materials": [
+    "face_skin"
+   ],
+   "image_textures": [],
+   "parent": "lidU_piv-1"
+  },
+  {
+   "name": "lidU1",
+   "verts": 610,
+   "faces": 640,
+   "materials": [
+    "face_skin"
+   ],
+   "image_textures": [],
+   "parent": "lidU_piv1"
+  },
+  {
+   "name": "mouth",
+   "verts": 74,
+   "faces": 80,
+   "materials": [
+    "face_mouth"
+   ],
+   "image_textures": [],
+   "parent": "Armature:Head"
+  },
+  {
+   "name": "newel",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "rail"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "over_door",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "wall"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "ph20",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "pm20"
+   ],
+   "image_textures": [
+    "p2.jpg"
+   ],
+   "parent": null
+  },
+  {
+   "name": "ph21",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "pm21"
+   ],
+   "image_textures": [
+    "p3.jpg"
+   ],
+   "parent": null
+  },
+  {
+   "name": "ph22",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "pm22"
+   ],
+   "image_textures": [
+    "p4.jpg"
+   ],
+   "parent": null
+  },
+  {
+   "name": "photo0",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "pm0"
+   ],
+   "image_textures": [
+    "p0.jpg"
+   ],
+   "parent": null
+  },
+  {
+   "name": "photo1",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "pm1"
+   ],
+   "image_textures": [
+    "p1.jpg"
+   ],
+   "parent": null
+  },
+  {
+   "name": "potted_plant_01_leaves",
+   "verts": 69846,
+   "faces": 106900,
+   "materials": [
+    "potted_plant_01_leaves"
+   ],
+   "image_textures": [
+    "potted_plant_01_leaves_diff.png",
+    "potted_plant_01_leaves_nor_gl.png",
+    "potted_plant_01_leaves_rough.png"
+   ],
+   "parent": "potted_plant_01_root"
+  },
+  {
+   "name": "potted_plant_01_pebbles",
+   "verts": 36575,
+   "faces": 56878,
+   "materials": [
+    "potted_plant_01_pot"
+   ],
+   "image_textures": [
+    "potted_plant_01_pot_diff",
+    "potted_plant_01_pot_nor_gl",
+    "potted_plant_01_pot_rough"
+   ],
+   "parent": "potted_plant_01_root"
+  },
+  {
+   "name": "potted_plant_01_pot",
+   "verts": 3229,
+   "faces": 5440,
+   "materials": [
+    "potted_plant_01_pot"
+   ],
+   "image_textures": [
+    "potted_plant_01_pot_diff",
+    "potted_plant_01_pot_nor_gl",
+    "potted_plant_01_pot_rough"
+   ],
+   "parent": "potted_plant_01_root"
+  },
+  {
+   "name": "potted_plant_01_stem",
+   "verts": 4301,
+   "faces": 7008,
+   "materials": [
+    "potted_plant_01_pot"
+   ],
+   "image_textures": [
+    "potted_plant_01_pot_diff",
+    "potted_plant_01_pot_nor_gl",
+    "potted_plant_01_pot_rough"
+   ],
+   "parent": "potted_plant_01_root"
+  },
+  {
+   "name": "runner",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "rug"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "sconce",
+   "verts": 922,
+   "faces": 960,
+   "materials": [
+    "sconce"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "slit",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "doorslit"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "tear-1",
+   "verts": 146,
+   "faces": 160,
+   "materials": [
+    "face_tear"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv-1"
+  },
+  {
+   "name": "tear1",
+   "verts": 146,
+   "faces": 160,
+   "materials": [
+    "face_tear"
+   ],
+   "image_textures": [],
+   "parent": "eye_piv1"
+  },
+  {
+   "name": "wl_base",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_cap",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_lo",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan0",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan1",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan2",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan3",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan4",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan5",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_pan6",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wl_up",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "wall"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_base",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_cap",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "trim"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_lo",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_pan0",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_pan1",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_pan2",
+   "verts": 8,
+   "faces": 6,
+   "materials": [
+    "wains"
+   ],
+   "image_textures": [],
+   "parent": null
+  },
+  {
+   "name": "wr_up",
+   "verts": 4,
+   "faces": 1,
+   "materials": [
+    "wall"
+   ],
+   "image_textures": [],
+   "parent": null
+  }
+ ],
+ "lights": [
+  {
+   "name": "bounce",
+   "type": "AREA",
+   "watts": 3.0
+  },
+  {
+   "name": "facefill",
+   "type": "AREA",
+   "watts": 7.0
+  },
+  {
+   "name": "fill",
+   "type": "AREA",
+   "watts": 3.0
+  },
+  {
+   "name": "lampL",
+   "type": "POINT",
+   "watts": 120.0
+  },
+  {
+   "name": "sconceL",
+   "type": "POINT",
+   "watts": 25.0
+  },
+  {
+   "name": "slitlight",
+   "type": "AREA",
+   "watts": 14.0
+  },
+  {
+   "name": "wash",
+   "type": "AREA",
+   "watts": 30.0
+  }
+ ],
+ "cameras": [
+  {
+   "name": "cam",
+   "lens_mm": 50.0,
+   "dof": true
+  }
+ ],
+ "empties": 17,
+ "armatures": [
+  {
+   "name": "Armature",
+   "bones": 24
+  }
+ ],
+ "emissive_materials": [
+  "doorslit",
+  "face_glint",
+  "glint",
+  "lampglass",
+  "Material_0",
+  "sconce"
+ ],
+ "flat_image_planes": [
+  "ph20",
+  "ph21",
+  "ph22",
+  "photo0",
+  "photo1"
+ ]
+}
