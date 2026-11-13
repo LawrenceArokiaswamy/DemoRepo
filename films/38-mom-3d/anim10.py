@@ -172,7 +172,46 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "
 import face_rig
 MOMMESH = [o for o in bpy.data.objects if o.type == 'MESH' and o.parent == ARM][0]
 face_rig.swap_texture(MOMMESH, os.path.join(os.path.dirname(os.path.abspath(__file__)), "model", "face_rig", "Image_0_faceclean.png"))
-FACE = face_rig.Face(ARM, MOMMESH)
+# Meshy carved a smiling mouth groove into the head geometry (not just the texture); with the head tipped down it reads as a
+# smile whatever the 3D mouth does. Merge the seam duplicates, then sand that groove flat so the movable mouth decides the expression.
+import bmesh as _bmz
+_b = _bmz.new(); _b.from_mesh(MOMMESH.data); _bmz.ops.remove_doubles(_b, verts=_b.verts, dist=1e-5)
+_Mw = MOMMESH.matrix_world; _N3 = _Mw.to_3x3()
+_zone = []
+for _v in _b.verts:
+    _w = _Mw @ _v.co; _n = (_N3 @ _v.normal).normalized()
+    _r2 = ((_w.x + 0.003) / 0.05) ** 2 + ((_w.z - 1.369) / 0.026) ** 2
+    if _r2 < 1.0 and _n.y < -0.2: _zone.append((_v, (1 - _r2) ** 0.7))
+for _it in range(30):
+    _new = []
+    for _v, _k in _zone:
+        _nb = [e.other_vert(_v).co for e in _v.link_edges]
+        _avg = sum(_nb, Vector()) / len(_nb); _new.append(_v.co.lerp(_avg, 0.5 * _k))
+    for (_v, _k), _c in zip(_zone, _new): _v.co = _c
+_b.to_mesh(MOMMESH.data); _b.free(); MOMMESH.data.update()
+print("mouth groove smoothed, vertices:", len(_zone))
+# the front of the face follows the Head bone 100% (Meshy blends ~5% neck in, which lets the skin slide over the face rig when the neck bends)
+_H = MOMMESH.vertex_groups["Head"]; _nf = 0
+for _v in MOMMESH.data.vertices:
+    _w = MOMMESH.matrix_world @ _v.co
+    if _w.y > -0.06 or _w.z < 1.32: continue
+    _k = min(1.0, (_w.z - 1.32) / 0.03)
+    for _g in _v.groups:
+        if _g.group != _H.index: _g.weight *= (1 - _k)
+    _hw = next((g.weight for g in _v.groups if g.group == _H.index), 0.0)
+    _H.add([_v.index], min(1.0, _hw + (1 - _hw) * _k), 'REPLACE'); _nf += 1
+print("face vertices locked to Head:", _nf)
+FACE = face_rig.Face(ARM, MOMMESH, lip_col="#6a2c24", lip_scale=1.35, lip_off=0.0012)   # bolder line: it must read at hallway distance
+if os.environ.get("DBG_MOUTH"):
+    FACE.set(); bpy.context.view_layer.update(); _dg = bpy.context.evaluated_depsgraph_get()
+    _mo = bpy.data.objects["mouth"].evaluated_get(_dg); _bd = MOMMESH.evaluated_get(_dg); _Bi = _bd.matrix_world.inverted()
+    _ds = []
+    for _v in _mo.data.vertices:
+        _vw = _mo.matrix_world @ _v.co; _ok, _cp, _cn, _ = _bd.closest_point_on_mesh(_Bi @ _vw)
+        _ds.append((_vw - _bd.matrix_world @ _cp).dot((_bd.matrix_world.to_3x3() @ _cn).normalized()) * 1000)
+    print("DBGB at build: mouth signed dist mm min %.2f max %.2f" % (min(_ds), max(_ds)))
+    _p, _n = FACE.surf(-0.003, 1.371, 0.0); print("DBGB surf point", tuple(round(x, 4) for x in _p), "normal", tuple(round(x, 2) for x in _n))
+    print("DBGB mouth obj loc", tuple(round(x, 4) for x in bpy.data.objects["mouth"].matrix_world.translation), "verts0", tuple(round(x, 4) for x in (_mo.matrix_world @ _mo.data.vertices[0].co)))
 if True:                                                   # weld UV-seam splits, then smooth bunched skin (scene copy only; GLB untouched)
     import bmesh as _bm_
     _b = _bm_.new(); _b.from_mesh(MOMMESH.data); _bm_.ops.remove_doubles(_b, verts=_b.verts, dist=1e-5); _b.to_mesh(MOMMESH.data); _b.free()
@@ -192,7 +231,12 @@ if True:                                                   # weld UV-seam splits
                 gh.add([v.index], wh - take, 'REPLACE'); wf = next((g.weight for g in v.groups if g.group == gf.index), 0.0)
                 gf.add([v.index], wf + take, 'REPLACE'); moved += 1
         print('wrist fix', hand, 'vertices re-weighted:', moved)
-    cs = MOMMESH.modifiers.new('corrective', 'CORRECTIVE_SMOOTH'); cs.factor = 0.6; cs.iterations = 12; cs.scale = 1.0; cs.rest_source = 'ORCO'; cs.smooth_type = 'LENGTH_WEIGHTED'                       # built in the rest pose at the origin, then carried by the Head bone
+    _vgH = MOMMESH.vertex_groups.get("Head"); _vgN = MOMMESH.vertex_groups.get("neck"); _cm = MOMMESH.vertex_groups.new(name="cs_mask")
+    for _v in MOMMESH.data.vertices:
+        _h = sum(g.weight for g in _v.groups if g.group in (_vgH.index, _vgN.index))
+        _cm.add([_v.index], max(0.0, 1.0 - 1.5 * _h), 'REPLACE')
+    cs = MOMMESH.modifiers.new('corrective', 'CORRECTIVE_SMOOTH'); cs.vertex_group = "cs_mask";   # the face stays exactly where the face rig was fitted
+    cs.factor = 0.6; cs.iterations = 12; cs.scale = 1.0; cs.rest_source = 'ORCO'; cs.smooth_type = 'LENGTH_WEIGHTED'                       # built in the rest pose at the origin, then carried by the Head bone
 HIP0 = Vector((-0.004, -0.03, 0.884))                    # rest position of the Hips joint
 SEAT = Vector((-0.06, -0.2, 0.21))                       # where her hips sit on the floor
 ARM.location = SEAT - HIP0
@@ -301,7 +345,7 @@ def stage(f):
     FACE.set(blink=min(1, max(blink, slow)), look=(gx, gz),
              brow_in=K_(t, [(0, 0.35), (4.5, 0.55), (6.4, 0.25), (7.2, 0.4), (8.4, 1.0)]),
              brow_out=K_(t, [(0, 0), (8.4, -0.3)]), sad=K_(t, [(0, 0.2), (6.0, 0.1), (7.3, 0.25), (8.6, 0.85)]),
-             smile=K_(t, [(0, -0.25), (6.0, -0.05), (7.3, -0.3), (8.6, -0.85)]), tear=K_(t, [(8.6, 0), (9.8, 0.42)]))
+             smile=K_(t, [(0, -0.25), (6.0, -0.05), (7.3, -0.45), (8.6, -1.1)]), tear=K_(t, [(8.6, 0), (9.8, 0.42)]))
     SLIT.node_tree.nodes["Principled BSDF"].inputs["Emission Strength"].default_value = 12.0 * (1 - out)
     slitlight.data.energy = 14 * (1 - out)
     bpy.context.view_layer.update()
@@ -310,6 +354,7 @@ def stage(f):
     hd = ARM.matrix_world @ PB["Head"].head
     look = Vector((mix(0.05, hd.x, u), mix(-0.2, hd.y, u), mix(0.85, hd.z - 0.1, u)))
     cam.location = Vector((mix(1.55, 0.72, u), mix(-3.0, -1.5, u), mix(1.2, 0.98, u)))
+    look.x += 0.15 * reach                                    # drift toward the door while she touches it, so her hand stays in frame
     aim(cam, look); cam.data.lens = mix(24, 38, u)
     cam.data.dof.focus_distance = (hd - cam.location).length
     if "--handcam" in argv:                                    # validation close-up on her left hand (the reaching one)
@@ -317,6 +362,11 @@ def stage(f):
         cam.location = hw + Vector((0.32, -0.42, 0.12)); aim(cam, hw + Vector((0.02, 0, -0.03))); cam.data.lens = 60
         cam.data.dof.focus_distance = (hw - cam.location).length
 
+if os.environ.get("DBG_NOMOUTH"): bpy.data.objects["mouth"].hide_render = True
+if os.environ.get("DBG_NOBODY"): bpy.data.objects["char1"].hide_render = True
+if os.environ.get("DBG_GREEN"):
+    _g = bpy.data.objects["mouth"].active_material; _bs = _g.node_tree.nodes["Principled BSDF"]
+    _bs.inputs["Emission Color"].default_value = (0, 1, 0, 1); _bs.inputs["Emission Strength"].default_value = 30
 frames = list(range(N))
 if "--frames" in argv: frames = [int(x) for x in arg("--frames").split(",")]
 if "--range" in argv:
@@ -325,7 +375,38 @@ os.makedirs(OUT, exist_ok=True)
 for f in frames:
     p = os.path.join(OUT, f"{f + 1:04d}.png")
     if os.path.exists(p) and "--force" not in argv: continue
-    sc.frame_set(f); stage(f); sc.render.filepath = p
+    sc.frame_set(f)
+    if os.environ.get("DBG_REST"):
+        for pb in PB: pb.rotation_quaternion = (1, 0, 0, 0); pb.location = (0, 0, 0)
+        for pb in PB:
+            for k in pb.constraints: k.mute = os.environ.get("DBG_REST") == "2"
+        bpy.context.view_layer.update()
+    else: stage(f)
+    sc.render.filepath = p
+    if os.environ.get("DBG_MOUTH"):
+        dg = bpy.context.evaluated_depsgraph_get(); mo = bpy.data.objects["mouth"].evaluated_get(dg)
+        vs = [mo.matrix_world @ v.co for v in mo.data.vertices]
+        c = sum(vs, Vector()) / max(1, len(vs)); print("DBGM nverts", len(vs), "center", tuple(round(x, 4) for x in c), "hide", mo.hide_render)
+        d = (c - cam.location); hit, loc, nor, idx, ob, _ = sc.ray_cast(dg, cam.location, d.normalized(), distance=d.length + 0.05)
+        print("DBGM first hit", ob.name if hit else None, "at dist", round((loc - cam.location).length, 4) if hit else None, "mouth dist", round(d.length, 4))
+        hb = ARM.pose.bones["Head"]; R = ((ARM.matrix_world @ hb.matrix) @ (ARM.matrix_world @ hb.bone.matrix_local).inverted()).to_3x3().normalized()
+        fwd = (R @ Vector((0, -1, 0))).normalized(); start = c + fwd * 0.06
+        hit, loc, nor, idx, ob, _ = sc.ray_cast(dg, start, -fwd, distance=0.12)
+        T = (ARM.matrix_world @ hb.matrix) @ (ARM.matrix_world @ hb.bone.matrix_local).inverted()
+        rp, _n = FACE.surf(-0.003, 1.371, 0.0) if False else (None, None)
+        print("DBGM ARM loc", tuple(round(x, 3) for x in ARM.location), "mouth parent", bpy.data.objects["mouth"].parent.name if bpy.data.objects["mouth"].parent else None,
+              "ptype", bpy.data.objects["mouth"].parent_type, "pbone", bpy.data.objects["mouth"].parent_bone, "cons", [k.type for k in bpy.data.objects["mouth"].constraints])
+        for nm in ("eye1", "eye-1", "mouth", "brow1", "brow-1"):
+            o = bpy.data.objects[nm].evaluated_get(dg); vv = [o.matrix_world @ v.co for v in o.data.vertices]; cc = sum(vv, Vector()) / len(vv)
+            print("DBGM", nm, "posed", tuple(round(x, 3) for x in cc), "rest-equivalent", tuple(round(x, 3) for x in (T.inverted() @ cc)))
+        body = bpy.data.objects["char1"].evaluated_get(dg); Bi = body.matrix_world.inverted(); ds = []
+        for vw in vs:
+            ok, cp, cn, _ = body.closest_point_on_mesh(Bi @ vw)
+            cpw = body.matrix_world @ cp; cnw = (body.matrix_world.to_3x3() @ cn).normalized()
+            ds.append((vw - cpw).dot(cnw) * 1000)
+        print("DBGM mouth signed dist to skin mm (+ outside): min %.2f max %.2f mean %.2f" % (min(ds), max(ds), sum(ds) / len(ds)))
+        ok, cp, cn, _ = body.closest_point_on_mesh(Bi @ c); print("DBGM", "frame", f)
+        print("DBGM along face normal: first hit", ob.name if hit else None, "skin-to-mouth offset (+ = mouth outside skin) mm", round(((loc - c).dot(-fwd)) * -1000, 2) if hit else None)
     if "--norender" in argv: continue
     bpy.ops.render.render(write_still=True)
 print("DONE", len(frames))

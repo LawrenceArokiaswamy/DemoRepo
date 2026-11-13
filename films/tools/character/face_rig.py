@@ -6,6 +6,7 @@
 # projected onto the head surface with ray casts, so the features sit on the face in any pose.
 import bpy, bmesh, math
 from mathutils import Vector, Matrix
+from mathutils.bvhtree import BVHTree
 
 def _lin(h):
     h = h.lstrip('#'); c = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
@@ -43,14 +44,19 @@ def _tube_into(me, pts, radii, flat=0.5, up=None, seg=8):
 
 class Face:
     def __init__(self, arm, mesh, eyes=((-0.049, 1.440), (0.041, 1.441)), eye_r=(0.0118, 0.0062, 0.0172),
-                 brow_z=1.497, mouth=(-0.003, 1.371, 0.026), skin="#fdc59c", brow_col="#4a2616", iris="#3a2418"):
+                 brow_z=1.497, mouth=(-0.003, 1.371, 0.026), skin="#fdc59c", brow_col="#4a2616", iris="#3a2418",
+                 lip_col="#8a4436", lip_scale=1.0, lip_off=0.0008):
         self.arm, self.mesh = arm, mesh
         self.head = arm.pose.bones["Head"]; self.HB = arm.data.bones["Head"]
         bpy.context.view_layer.update()
         self._rest_head = (arm.matrix_world @ self.HB.matrix_local).copy()       # rest world matrix of the head bone
+        # frozen rest-pose copy of the body surface: set() rebuilds the mouth and brows every frame, and must not ray-cast the
+        # posed or moved body (a miss used to drop the mouth to a fallback depth inside the head)
+        _bm = bmesh.new(); _bm.from_object(mesh, bpy.context.evaluated_depsgraph_get()); _bm.transform(mesh.matrix_world)
+        self._bvh = BVHTree.FromBMesh(_bm); _bm.free()
         self.SKIN = _mat("face_skin", skin, rough=0.5, sss=0.05); EYE = _mat("face_eye", iris, rough=0.05, coat=1.0)
         GL = _mat("face_glint", "#ffffff", emit=5.0); self.BROW = _mat("face_brow", brow_col, rough=0.7)
-        LIP = _mat("face_mouth", "#8a4436", rough=0.5); TEAR = _mat("face_tear", "#ffffff", rough=0.02, trans=1.0, coat=1.0)
+        LIP = _mat("face_mouth", lip_col, rough=0.5); self.lip_scale = lip_scale; self.lip_off = lip_off; TEAR = _mat("face_tear", "#ffffff", rough=0.02, trans=1.0, coat=1.0)
         self.objs = []; self.eyes = []
         for sx, (x, z) in zip((-1, 1), eyes):
             p, n = self.surf(x, z)
@@ -75,10 +81,9 @@ class Face:
 
     # ---- placement helpers (all built in the head's REST frame, then carried by the Head bone) ----
     def surf(self, x, z, off=0.0):
-        Mi = self.mesh.matrix_world.inverted(); o = Mi @ Vector((x, -1.0, z)); d = (Mi.to_3x3() @ Vector((0, 1, 0))).normalized()
-        ok, loc, nor, _ = self.mesh.ray_cast(o, d)
-        if not ok: return Vector((x, -0.13, z)), Vector((0, -1, 0))
-        w = self.mesh.matrix_world @ loc; nw = (self.mesh.matrix_world.to_3x3() @ nor).normalized()
+        w, nw, _i, _d = self._bvh.ray_cast(Vector((x, -1.0, z)), Vector((0, 1, 0)))
+        if w is None: raise RuntimeError(f"face_rig.surf: no face surface at x={x:.3f} z={z:.3f} (check the face coordinates)")
+        nw = nw.normalized()
         if nw.y > 0: nw = -nw
         return w + nw * off, nw
     def _empty(self, name, Mw):
@@ -132,8 +137,9 @@ class Face:
         mx, mz, w = self.mouth; pts, ups = [], []
         for i in range(9):
             u = -1 + 2 * i / 8; z = mz + smile * 0.0075 * (u * u) - smile * 0.0015 - abs(min(0, smile)) * 0.0
-            p, n = self.surf(mx + u * w * (1 + 0.15 * smile), z, 0.0008); pts.append(p); ups.append(-n)
+            p, n = self.surf(mx + u * w * (1 + 0.15 * smile), z, self.lip_off); pts.append(p); ups.append(-n)
         rad = [0.0010, 0.0014, 0.0017, 0.0019 + open_ * 0.002, 0.0020 + open_ * 0.003, 0.0019 + open_ * 0.002, 0.0017, 0.0014, 0.0010]
+        rad = [r * self.lip_scale for r in rad]
         _tube_into(self.mouth_me, pts, rad, flat=0.5 + open_ * 0.8, up=ups)
 
     def expression(self, name, k=1.0):

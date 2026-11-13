@@ -101,6 +101,20 @@ All of these are also used and animated in the 10-second test.
 
 For dialogue close-ups, the mouth would need a proper sculpted mouth with shape keys. For our non-speaking emotional beats, the current set is enough.
 
+**Found only in the full-resolution animation (the face sheet didn't show these). All three are fixed and re-tested:**
+
+1. **The smile is sculpted into the mesh.** Meshy carved a smiling mouth groove into the head geometry itself, not just the texture. Rendering with my 3D mouth hidden still showed a smile, so the texture cleanup couldn't remove it. In the hallway her "worried" and "sad" beats read as a smirk.
+   - **Fix (in the scene copy):** smooth the 132 vertices of that groove flat before the face rig is fitted. The original file is untouched.
+2. **Bug in my face rig: the mouth was buried inside the head.**
+   - **Cause:** the rig rebuilds the mouth and brows every frame by ray-casting the face at rest-pose coordinates. In the hallway, Mom's armature is moved to sit on the floor, so the rays missed her head and the code silently fell back to a default depth about 2.5 cm inside the face.
+   - **Measured:** mouth 8–18 mm under the skin in every posed frame, against 0.8–4.2 mm above it at build. A render with the body hidden showed the frown and brows were correct, just covered.
+   - **Fix (in `face_rig.py`):** the rig keeps a frozen copy of the rest-pose surface (a BVH tree) and casts against that. A miss now raises an error instead of guessing.
+   - **Re-measured:** 0.8–4.2 mm above the skin at frames 0, 150 and 299.
+3. **The face was 95% head and 5% neck.** When the neck bent, the skin slid a little over the head-mounted face parts.
+   - **Fix (in the scene copy):** the front of the face (2,486 vertices) follows the Head bone 100%, blending into the neck below the chin.
+
+Also, the mouth line is now thicker (×1.35) and darker so it reads at hallway distance.
+
 ## 5. Body animation — PASS with known issues
 
 Source: `body_tests.py` → **`body_poses.jpg`** (stand, head left, head right, sit, sit and reach); `walk_test.py` → **`walk_strip.jpg`** and **`walk_test.mp4`**.
