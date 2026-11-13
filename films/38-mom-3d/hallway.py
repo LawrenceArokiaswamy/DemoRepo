@@ -175,6 +175,19 @@ for side, bone in [("L", "LeftLeg"), ("R", "RightLeg"), ("Lh", "LeftForeArm"), (
     t = tgt("ik_" + side); p = tgt("pole_" + side)
     c = PB[bone].constraints.new('IK'); c.target = t; c.pole_target = p; c.chain_count = 2; c.pole_angle = math.radians(-90)
     IKT[side] = (t, p, c)
+def frame_from(f, n):
+    f = f.normalized(); n = (n - f * n.dot(f)).normalized(); return Matrix((f, n, f.cross(n))).transposed()
+REST_HAND = {}
+def orient_hand(name, finger, palm, rest_palm):
+    """turn a hand so its fingers point along `finger` and its palm faces `palm` (world), keeping the IK position"""
+    bpy.context.view_layer.update()
+    pb = PB[name]; b = ARM.data.bones[name]
+    Rw = (ARM.matrix_world @ b.matrix_local).to_3x3().normalized()
+    f0 = (Rw @ Vector((0, 1, 0))).normalized()                                  # rest finger direction (bone Y)
+    R = frame_from(Vector(finger), Vector(palm)) @ frame_from(f0, Vector(rest_palm)).transposed()
+    Mw = (R @ Rw).to_4x4(); Mw.translation = (ARM.matrix_world @ pb.matrix).translation
+    M = ARM.matrix_world.inverted() @ Mw
+    pb.matrix = Matrix.LocRotScale(M.translation, M.to_quaternion(), pb.matrix.to_scale())
 def rot_bone_world(name, axis, ang):
     """rotate a pose bone about a world axis through its head (armature space)"""
     bpy.context.view_layer.update()
@@ -223,6 +236,12 @@ def stage(f):
     rot_bone_world("Head", Vector((0, 0, 1)), D(20 * turn))
     rot_bone_world("Head", Vector((1, 0, 0)), D(8 + 10 * down - 4 * turn))
     rot_bone_world("Head", Vector((0, 1, 0)), D(-8 * turn))
+    # hands: palms resting flat on the knees, fingers over the kneecap; her left palm goes flat on the door
+    for name, sx in (("LeftHand", 1), ("RightHand", -1)):
+        fin = Vector((-sx * 0.25, -0.55, -0.8)); palm = Vector((0, 0.15, -1))
+        if name == "LeftHand":
+            fin = fin.lerp(Vector((0.15, 0.0, 1.0)), reach); palm = palm.lerp(Vector((0, 1, 0)), reach)
+        orient_hand(name, fin, palm, Vector((-sx, 0, 0)))
     SLIT.node_tree.nodes["Principled BSDF"].inputs["Emission Strength"].default_value = 12.0 * (1 - out)
     slitlight.data.energy = 14 * (1 - out)
     bpy.context.view_layer.update()
