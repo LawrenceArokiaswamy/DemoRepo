@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0"><canvas id="c" width="2400" height="1700"></canvas>
+<script type="module">
+import { drawCharacter, normalizeSpec, crowdSpec, FACE } from './chargen.js';
+import { CAST5 } from './cast.js';
+const g = document.getElementById('c').getContext('2d');
+const bg = g.createLinearGradient(0, 0, 0, 1700); bg.addColorStop(0, '#2f3a4a'); bg.addColorStop(1, '#151a22'); g.fillStyle = bg; g.fillRect(0, 0, 2400, 1700);
+g.fillStyle = 'rgba(255,255,255,0.05)'; g.fillRect(0, 1060, 2400, 640);
+const ids = ['elder', 'soldier', 'inventor', 'child', 'king'], yaws = [0.25, -0.15, 0.2, -0.1, 0];
+const poses = { elder: { armR: [18, -10], armL: [12, 30] }, soldier: { armR: [30, 40], armL: [14, 18] }, inventor: { armR: [40, 70], armL: [14, 18] }, child: { armL: [150, 10], handL: 'spread', armR: [16, 20] }, king: { armR: [20, 40], armL: [25, 60], handL: 'fist' } };
+const faces = { elder: FACE.neutral, soldier: FACE.notice, inventor: FACE.curious, child: FACE.laugh, king: FACE.suspicious };
+// height marks
+g.strokeStyle = 'rgba(255,255,255,0.08)'; g.lineWidth = 2; for (let y = 1040; y > 80; y -= 100) { g.beginPath(); g.moveTo(0, y); g.lineTo(2400, y); g.stroke(); }
+ids.forEach((id, i) => { const S = normalizeSpec(CAST5[id]); S.__norm = 1; g.save(); g.translate(i * 470 + 20, 200); g.scale(0.78, 0.78);
+  g.save(); g.scale(1, 1); g.translate(0, 0); drawCharacter(g, S, { face: faces[id], yaw: yaws[i], ...poses[id], propHand: S.propHand || 'R', light: { dir: 1 } }); g.restore(); g.restore();
+  g.fillStyle = '#f2e6d0'; g.font = 'bold 34px sans-serif'; g.textAlign = 'center'; g.fillText(S.name, i * 470 + 256, 1100);
+  g.fillStyle = '#9fb0c4'; g.font = '24px sans-serif'; g.fillText(`${S.age} · ${S.build} · ${S.personality.posture}`, i * 470 + 256, 1138); });
+// crowd row: seeded variations from the same generator (civilians + soldiers)
+g.fillStyle = '#9fb0c4'; g.font = 'bold 28px sans-serif'; g.textAlign = 'left'; g.fillText('crowd generator: 16 seeded extras (same rig, controlled random specs)', 30, 1200);
+for (let k = 0; k < 16; k++) { const S = normalizeSpec(crowdSpec(k + 3, k % 4 === 3 ? 'soldier' : 'civilian')); S.__norm = 1; g.save(); g.translate(k * 148 - 10, 1220); g.scale(0.44, 0.44);
+  drawCharacter(g, S, { face: [FACE.neutral, FACE.curious, FACE.notice, FACE.laugh, FACE.suspicious, FACE.fear][k % 6], yaw: ((k * 37) % 9 - 4) * 0.08, armL: [10, 10], armR: [12, 12], light: { dir: 1 } }); g.restore(); }
+window.ready = true;
+</script></body></html>

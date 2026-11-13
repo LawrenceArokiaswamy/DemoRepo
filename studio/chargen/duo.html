@@ -1,0 +1,6 @@
+<!doctype html><html><body style="margin:0;background:#000"><canvas id="c" width="1080" height="1920"></canvas>
+<script type="importmap">{"imports":{"three":"./lib/three.module.js","three/addons/":"./lib/jsm/"}}</script>
+<script type="module">
+window.onerror = (m) => { window.err = String(m); };
+import('./duo.js').catch((e) => { window.err = String(e && e.stack || e); });
+</script></body></html>
