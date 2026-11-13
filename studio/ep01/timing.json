@@ -1,0 +1,492 @@
+{
+ "duration": 30.036313,
+ "phrases": [
+  {
+   "text": "This Roman builder is about to ruin his concrete.",
+   "start": 0.0,
+   "end": 2.968
+  },
+  {
+   "text": "He tosses in burning-hot lime.",
+   "start": 3.137,
+   "end": 5.166
+  },
+  {
+   "text": "It hisses...",
+   "start": 5.327,
+   "end": 6.031
+  },
+  {
+   "text": "and leaves little white lumps all through the mix.",
+   "start": 6.218,
+   "end": 8.687
+  },
+  {
+   "text": "Ha!",
+   "start": 8.863,
+   "end": 9.113
+  },
+  {
+   "text": "Sloppy work!",
+   "start": 9.308,
+   "end": 10.331
+  },
+  {
+   "text": "Two thousand years later, his sea wall is still standing...",
+   "start": 10.488,
+   "end": 13.831
+  },
+  {
+   "text": "while the modern concrete beside it has crumbled.",
+   "start": 13.993,
+   "end": 16.339
+  },
+  {
+   "text": "Then a crack opens.",
+   "start": 16.522,
+   "end": 17.927
+  },
+  {
+   "text": "Seawater trickles in...",
+   "start": 18.103,
+   "end": 19.46
+  },
+  {
+   "text": "and the crack begins to seal itself.",
+   "start": 19.636,
+   "end": 21.508
+  },
+  {
+   "text": "Those lumps were tiny pockets of lime.",
+   "start": 21.669,
+   "end": 23.978
+  },
+  {
+   "text": "Water dissolves them, and they refill the crack with fresh stone.",
+   "start": 24.147,
+   "end": 27.442
+  },
+  {
+   "text": "Roman concrete...",
+   "start": 27.617,
+   "end": 28.776
+  },
+  {
+   "text": "heals itself.",
+   "start": 28.948,
+   "end": 29.911
+  }
+ ],
+ "words": [
+  {
+   "w": "This",
+   "start": 0.0,
+   "end": 0.228
+  },
+  {
+   "w": "Roman",
+   "start": 0.228,
+   "end": 0.685
+  },
+  {
+   "w": "builder",
+   "start": 0.685,
+   "end": 1.142
+  },
+  {
+   "w": "is",
+   "start": 1.142,
+   "end": 1.37
+  },
+  {
+   "w": "about",
+   "start": 1.37,
+   "end": 1.827
+  },
+  {
+   "w": "to",
+   "start": 1.827,
+   "end": 2.055
+  },
+  {
+   "w": "ruin",
+   "start": 2.055,
+   "end": 2.283
+  },
+  {
+   "w": "his",
+   "start": 2.283,
+   "end": 2.512
+  },
+  {
+   "w": "concrete.",
+   "start": 2.512,
+   "end": 2.968
+  },
+  {
+   "w": "He",
+   "start": 3.137,
+   "end": 3.39
+  },
+  {
+   "w": "tosses",
+   "start": 3.39,
+   "end": 3.898
+  },
+  {
+   "w": "in",
+   "start": 3.898,
+   "end": 4.151
+  },
+  {
+   "w": "burning-hot",
+   "start": 4.151,
+   "end": 4.912
+  },
+  {
+   "w": "lime.",
+   "start": 4.912,
+   "end": 5.166
+  },
+  {
+   "w": "It",
+   "start": 5.327,
+   "end": 5.562
+  },
+  {
+   "w": "hisses...",
+   "start": 5.562,
+   "end": 6.031
+  },
+  {
+   "w": "and",
+   "start": 6.218,
+   "end": 6.443
+  },
+  {
+   "w": "leaves",
+   "start": 6.443,
+   "end": 6.892
+  },
+  {
+   "w": "little",
+   "start": 6.892,
+   "end": 7.34
+  },
+  {
+   "w": "white",
+   "start": 7.34,
+   "end": 7.565
+  },
+  {
+   "w": "lumps",
+   "start": 7.565,
+   "end": 7.789
+  },
+  {
+   "w": "all",
+   "start": 7.789,
+   "end": 8.014
+  },
+  {
+   "w": "through",
+   "start": 8.014,
+   "end": 8.238
+  },
+  {
+   "w": "the",
+   "start": 8.238,
+   "end": 8.462
+  },
+  {
+   "w": "mix.",
+   "start": 8.462,
+   "end": 8.687
+  },
+  {
+   "w": "Ha!",
+   "start": 8.863,
+   "end": 9.113
+  },
+  {
+   "w": "Sloppy",
+   "start": 9.308,
+   "end": 9.99
+  },
+  {
+   "w": "work!",
+   "start": 9.99,
+   "end": 10.331
+  },
+  {
+   "w": "Two",
+   "start": 10.488,
+   "end": 10.745
+  },
+  {
+   "w": "thousand",
+   "start": 10.745,
+   "end": 11.259
+  },
+  {
+   "w": "years",
+   "start": 11.259,
+   "end": 11.516
+  },
+  {
+   "w": "later,",
+   "start": 11.516,
+   "end": 12.031
+  },
+  {
+   "w": "his",
+   "start": 12.031,
+   "end": 12.288
+  },
+  {
+   "w": "sea",
+   "start": 12.288,
+   "end": 12.545
+  },
+  {
+   "w": "wall",
+   "start": 12.545,
+   "end": 12.802
+  },
+  {
+   "w": "is",
+   "start": 12.802,
+   "end": 13.059
+  },
+  {
+   "w": "still",
+   "start": 13.059,
+   "end": 13.317
+  },
+  {
+   "w": "standing...",
+   "start": 13.317,
+   "end": 13.831
+  },
+  {
+   "w": "while",
+   "start": 13.993,
+   "end": 14.354
+  },
+  {
+   "w": "the",
+   "start": 14.354,
+   "end": 14.534
+  },
+  {
+   "w": "modern",
+   "start": 14.534,
+   "end": 14.895
+  },
+  {
+   "w": "concrete",
+   "start": 14.895,
+   "end": 15.256
+  },
+  {
+   "w": "beside",
+   "start": 15.256,
+   "end": 15.617
+  },
+  {
+   "w": "it",
+   "start": 15.617,
+   "end": 15.798
+  },
+  {
+   "w": "has",
+   "start": 15.798,
+   "end": 15.978
+  },
+  {
+   "w": "crumbled.",
+   "start": 15.978,
+   "end": 16.339
+  },
+  {
+   "w": "Then",
+   "start": 16.522,
+   "end": 16.803
+  },
+  {
+   "w": "a",
+   "start": 16.803,
+   "end": 17.084
+  },
+  {
+   "w": "crack",
+   "start": 17.084,
+   "end": 17.365
+  },
+  {
+   "w": "opens.",
+   "start": 17.365,
+   "end": 17.927
+  },
+  {
+   "w": "Seawater",
+   "start": 18.103,
+   "end": 18.782
+  },
+  {
+   "w": "trickles",
+   "start": 18.782,
+   "end": 19.234
+  },
+  {
+   "w": "in...",
+   "start": 19.234,
+   "end": 19.46
+  },
+  {
+   "w": "and",
+   "start": 19.636,
+   "end": 19.844
+  },
+  {
+   "w": "the",
+   "start": 19.844,
+   "end": 20.052
+  },
+  {
+   "w": "crack",
+   "start": 20.052,
+   "end": 20.26
+  },
+  {
+   "w": "begins",
+   "start": 20.26,
+   "end": 20.676
+  },
+  {
+   "w": "to",
+   "start": 20.676,
+   "end": 20.884
+  },
+  {
+   "w": "seal",
+   "start": 20.884,
+   "end": 21.092
+  },
+  {
+   "w": "itself.",
+   "start": 21.092,
+   "end": 21.508
+  },
+  {
+   "w": "Those",
+   "start": 21.669,
+   "end": 21.926
+  },
+  {
+   "w": "lumps",
+   "start": 21.926,
+   "end": 22.182
+  },
+  {
+   "w": "were",
+   "start": 22.182,
+   "end": 22.439
+  },
+  {
+   "w": "tiny",
+   "start": 22.439,
+   "end": 22.952
+  },
+  {
+   "w": "pockets",
+   "start": 22.952,
+   "end": 23.465
+  },
+  {
+   "w": "of",
+   "start": 23.465,
+   "end": 23.722
+  },
+  {
+   "w": "lime.",
+   "start": 23.722,
+   "end": 23.978
+  },
+  {
+   "w": "Water",
+   "start": 24.147,
+   "end": 24.586
+  },
+  {
+   "w": "dissolves",
+   "start": 24.586,
+   "end": 25.245
+  },
+  {
+   "w": "them,",
+   "start": 25.245,
+   "end": 25.465
+  },
+  {
+   "w": "and",
+   "start": 25.465,
+   "end": 25.685
+  },
+  {
+   "w": "they",
+   "start": 25.685,
+   "end": 25.904
+  },
+  {
+   "w": "refill",
+   "start": 25.904,
+   "end": 26.344
+  },
+  {
+   "w": "the",
+   "start": 26.344,
+   "end": 26.563
+  },
+  {
+   "w": "crack",
+   "start": 26.563,
+   "end": 26.783
+  },
+  {
+   "w": "with",
+   "start": 26.783,
+   "end": 27.002
+  },
+  {
+   "w": "fresh",
+   "start": 27.002,
+   "end": 27.222
+  },
+  {
+   "w": "stone.",
+   "start": 27.222,
+   "end": 27.442
+  },
+  {
+   "w": "Roman",
+   "start": 27.617,
+   "end": 28.197
+  },
+  {
+   "w": "concrete...",
+   "start": 28.197,
+   "end": 28.776
+  },
+  {
+   "w": "heals",
+   "start": 28.948,
+   "end": 29.269
+  },
+  {
+   "w": "itself.",
+   "start": 29.269,
+   "end": 29.911
+  }
+ ]
+}

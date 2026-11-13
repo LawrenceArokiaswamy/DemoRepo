@@ -1,0 +1,17 @@
+<!doctype html><html><body style="margin:0;background:#9db4c8"><canvas id="c" width="2400" height="2000"></canvas>
+<script type="module">
+import { drawChar, CAST } from './chars.js';
+const g = document.getElementById('c').getContext('2d');
+const items = [
+ ['builder', { expr: 'sly', look: [0.6, -0.2], armR: [150, 10], prop: { type: 'shovel', angle: -25, load: 1 }, armL: [20, 40] }],
+ ['builder', { expr: 'effort', armR: [100, 40], armL: [60, 70], prop: { type: 'shovel', angle: 60, load: 1 }, lean: 8 }],
+ ['builder', { expr: 'worried', look: [-0.7, 0], armL: [30, 60], armR: [10, 10], step: 0.25 }],
+ ['builder', { expr: 'proud', armL: [160, 20], armR: [10, 5] }],
+ ['foreman', { expr: 'laugh', armR: [95, -10], armL: [25, 95], lean: -6, mustacheLift: 0.25 }],
+ ['foreman', { expr: 'smug', armL: [35, 80], armR: [20, 60], prop: { type: 'tablet' }, propHand: 'R' }],
+ ['foreman', { expr: 'surprised', armL: [120, 30], armR: [120, 30] }],
+ ['worker', { expr: 'focus', armL: [10, 5], armR: [40, 80], step: 0.6 }],
+];
+items.forEach(([who, pose], i) => { g.save(); g.translate((i % 4) * 600, Math.floor(i / 4) * 1000); drawChar(g, CAST[who], pose); g.restore(); });
+window.ready = true;
+</script></body></html>

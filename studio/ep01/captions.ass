@@ -1,0 +1,47 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Inter Display,92,&H00FFFFFF,&H00FFFFFF,&H00141010,&H96000000,-1,0,0,0,100,100,0,0,1,7,4,5,40,40,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.14,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}This Roman builder
+Dialogue: 0,0:00:01.14,0:00:02.06,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}is about to
+Dialogue: 0,0:00:02.06,0:00:03.14,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}{\c&H0048D6FF&}ruin{\c&H00FFFFFF&} his concrete.
+Dialogue: 0,0:00:03.14,0:00:04.15,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}He tosses in
+Dialogue: 0,0:00:04.15,0:00:05.33,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}burning-hot {\c&H0048D6FF&}lime.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:05.33,0:00:06.22,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}It hisses…
+Dialogue: 0,0:00:06.22,0:00:07.34,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}and leaves little
+Dialogue: 0,0:00:07.34,0:00:08.01,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}white {\c&H0048D6FF&}lumps{\c&H00FFFFFF&} all
+Dialogue: 0,0:00:08.01,0:00:08.86,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}through the mix.
+Dialogue: 0,0:00:08.86,0:00:09.31,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Ha!
+Dialogue: 0,0:00:09.31,0:00:10.49,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}{\c&H0048D6FF&}Sloppy{\c&H00FFFFFF&} work!
+Dialogue: 0,0:00:10.49,0:00:11.52,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Two {\c&H0048D6FF&}thousand{\c&H00FFFFFF&} years
+Dialogue: 0,0:00:11.52,0:00:12.03,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}later,
+Dialogue: 0,0:00:12.03,0:00:12.80,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}his sea wall
+Dialogue: 0,0:00:12.80,0:00:13.99,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}is still standing…
+Dialogue: 0,0:00:13.99,0:00:14.89,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}while the modern
+Dialogue: 0,0:00:14.89,0:00:15.62,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}concrete beside
+Dialogue: 0,0:00:15.62,0:00:16.52,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}it has {\c&H0048D6FF&}crumbled.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:16.52,0:00:17.36,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Then a {\c&H0048D6FF&}crack{\c&H00FFFFFF&}
+Dialogue: 0,0:00:17.36,0:00:18.10,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}opens.
+Dialogue: 0,0:00:18.10,0:00:19.23,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Seawater trickles
+Dialogue: 0,0:00:19.23,0:00:19.64,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}in…
+Dialogue: 0,0:00:19.64,0:00:20.26,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}and the {\c&H0048D6FF&}crack{\c&H00FFFFFF&}
+Dialogue: 0,0:00:20.26,0:00:21.09,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}begins to {\c&H0048D6FF&}seal{\c&H00FFFFFF&}
+Dialogue: 0,0:00:21.09,0:00:21.67,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}itself.
+Dialogue: 0,0:00:21.67,0:00:22.44,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Those {\c&H0048D6FF&}lumps{\c&H00FFFFFF&} were
+Dialogue: 0,0:00:22.44,0:00:23.72,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}tiny {\c&H0048D6FF&}pockets{\c&H00FFFFFF&} of
+Dialogue: 0,0:00:23.72,0:00:24.15,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}{\c&H0048D6FF&}lime.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:24.15,0:00:25.25,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Water {\c&H0048D6FF&}dissolves{\c&H00FFFFFF&}
+Dialogue: 0,0:00:25.25,0:00:25.46,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}them,
+Dialogue: 0,0:00:25.46,0:00:26.34,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}and they refill
+Dialogue: 0,0:00:26.34,0:00:27.00,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}the {\c&H0048D6FF&}crack{\c&H00FFFFFF&} with
+Dialogue: 0,0:00:27.00,0:00:27.62,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}{\c&H0048D6FF&}fresh{\c&H00FFFFFF&} {\c&H0048D6FF&}stone.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:27.62,0:00:28.95,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}Roman concrete…
+Dialogue: 0,0:00:28.95,0:00:30.31,Cap,,0,0,0,,{\pos(540,1290)\fscx86\fscy86\t(0,90,\fscx100\fscy100)}{\c&H0048D6FF&}heals{\c&H00FFFFFF&} itself.
