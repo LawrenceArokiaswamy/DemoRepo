@@ -1,0 +1,13 @@
+<!doctype html><html><body style="margin:0;background:#8fa6bb"><canvas id="c" width="2400" height="2100"></canvas>
+<script type="module">
+import { drawToon, CAST, FACE } from './toon.js';
+const g = document.getElementById('c').getContext('2d'); g.font = 'bold 34px sans-serif';
+const names = ['neutral','notice','curious','suspicious','disbelief','laugh','shock','fear','angry','sad','confused','realize'];
+names.forEach((n, i) => { const x = (i % 6) * 400, y = Math.floor(i / 6) * 700; g.save(); g.translate(x - 50, y + 10); g.scale(0.83, 0.83);
+  g.save(); g.beginPath(); g.rect(0, 0, 600, 640); g.clip();
+  drawToon(g, CAST.tinker, { face: FACE[n], yaw: [0, 0.35, -0.3, 0.5, 0.2, 0, -0.2, 0.3, 0, -0.3, 0.4, 0][i], armL: [10, 10], armR: [10, 10], light: { dir: 1 } }); g.restore(); g.restore();
+  g.fillStyle = '#111'; g.fillText(n, x + 20, y + 40); });
+// row 3: yaw sweep with laugh + full body pose
+[-0.6, -0.3, 0, 0.3, 0.6].forEach((yw, i) => { g.save(); g.translate(i * 400 + 10, 1410); g.scale(0.66, 0.66); drawToon(g, CAST.tinker, { face: FACE.curious, yaw: yw, armL: [30, 60], armR: [120, 30], handR: 'point', light: { dir: -1 } }); g.restore(); });
+window.ready = true;
+</script></body></html>
