@@ -229,13 +229,15 @@ def stage(f):
         goal = rest.lerp(Vector((DX0 + 0.1, -0.035, 0.58)), reach) if side == "Lh" else rest
         t_.location = goal; p_.location = SEAT + Vector((sx * 0.6, 0.1, 0.1))
     # torso against the wall, breathing; head toward the door (her left, +x), then down
-    for nm in ("LeftFoot", "RightFoot"): rot_bone_world(nm, Vector((1, 0, 0)), D(55))
     rot_bone_world("Spine02", Vector((1, 0, 0)), D(-6 + 1.0 * br))
     rot_bone_world("Spine", Vector((0, 0, 1)), D(6 * turn))
     rot_bone_world("neck", Vector((0, 0, 1)), D(16 * turn))
     rot_bone_world("Head", Vector((0, 0, 1)), D(20 * turn))
     rot_bone_world("Head", Vector((1, 0, 0)), D(8 + 10 * down - 4 * turn))
     rot_bone_world("Head", Vector((0, 1, 0)), D(-8 * turn))
+    # feet: soles flat on the floor, toes forward and slightly out
+    for name, sx in (("LeftFoot", 1), ("RightFoot", -1)):
+        orient_hand(name, Vector((sx * 0.18, -1.0, -0.12)), Vector((0, 0, -1)), Vector((0, 0, -1)))
     # hands: palms resting flat on the knees, fingers over the kneecap; her left palm goes flat on the door
     for name, sx in (("LeftHand", 1), ("RightHand", -1)):
         fin = Vector((-sx * 0.25, -0.55, -0.8)); palm = Vector((0, 0.15, -1))
