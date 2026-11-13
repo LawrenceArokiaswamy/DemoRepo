@@ -1,0 +1,10 @@
+# Stories already made (one per line). /find-story skips these; /make-video adds every new one.
+The Clock That Saved Sailors (John Harrison, longitude)
+Sprouting Cows (Edward Jenner, cowpox, the first vaccine)
+The Map Nobody Believed (Alfred Wegener, continental drift)
+# Already everywhere on Shorts, skip unless the person insists:
+Semmelweis and handwashing
+The ancient Chinese earthquake detector jar
+Railroad expansion gaps
+Sailors pouring oil on stormy seas
+The grave bell / buried alive

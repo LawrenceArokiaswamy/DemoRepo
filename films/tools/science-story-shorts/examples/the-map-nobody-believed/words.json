@@ -1,0 +1,567 @@
+[
+{
+"text": "In",
+"start": 0.08,
+"end": 0.16
+},
+{
+"text": "nineteen",
+"start": 0.2,
+"end": 0.7
+},
+{
+"text": "twelve,",
+"start": 0.7,
+"end": 1.2
+},
+{
+"text": "a",
+"start": 1.58,
+"end": 1.6
+},
+{
+"text": "weatherman",
+"start": 1.68,
+"end": 2.24
+},
+{
+"text": "looked",
+"start": 2.3,
+"end": 2.48
+},
+{
+"text": "at",
+"start": 2.5,
+"end": 2.58
+},
+{
+"text": "a",
+"start": 2.62,
+"end": 2.7
+},
+{
+"text": "map",
+"start": 2.76,
+"end": 2.94
+},
+{
+"text": "of",
+"start": 2.98,
+"end": 3.06
+},
+{
+"text": "the",
+"start": 3.12,
+"end": 3.16
+},
+{
+"text": "world\u2026",
+"start": 3.26,
+"end": 3.66
+},
+{
+"text": "and",
+"start": 4.24,
+"end": 4.32
+},
+{
+"text": "saw",
+"start": 4.48,
+"end": 4.96
+},
+{
+"text": "a",
+"start": 5.04,
+"end": 5.2
+},
+{
+"text": "jigsaw",
+"start": 5.3,
+"end": 5.72
+},
+{
+"text": "puzzle.",
+"start": 5.82,
+"end": 6.16
+},
+{
+"text": "Look.",
+"start": 6.7,
+"end": 6.94
+},
+{
+"text": "South",
+"start": 7.58,
+"end": 7.8
+},
+{
+"text": "America\u2026",
+"start": 7.86,
+"end": 8.44
+},
+{
+"text": "slides",
+"start": 8.8,
+"end": 9.12
+},
+{
+"text": "right",
+"start": 9.32,
+"end": 9.5
+},
+{
+"text": "into",
+"start": 9.54,
+"end": 9.74
+},
+{
+"text": "Africa.",
+"start": 9.84,
+"end": 10.28
+},
+{
+"text": "The",
+"start": 10.7,
+"end": 10.78
+},
+{
+"text": "same",
+"start": 10.86,
+"end": 11.06
+},
+{
+"text": "fossils",
+"start": 11.24,
+"end": 11.68
+},
+{
+"text": "on",
+"start": 11.74,
+"end": 11.96
+},
+{
+"text": "both",
+"start": 12.0,
+"end": 12.24
+},
+{
+"text": "sides",
+"start": 12.3,
+"end": 12.52
+},
+{
+"text": "of",
+"start": 12.56,
+"end": 12.6
+},
+{
+"text": "the",
+"start": 12.64,
+"end": 12.72
+},
+{
+"text": "ocean.",
+"start": 12.78,
+"end": 13.14
+},
+{
+"text": "The",
+"start": 13.54,
+"end": 13.64
+},
+{
+"text": "same",
+"start": 13.72,
+"end": 13.94
+},
+{
+"text": "rocks.",
+"start": 14.1,
+"end": 14.56
+},
+{
+"text": "His",
+"start": 15.06,
+"end": 15.2
+},
+{
+"text": "idea?",
+"start": 15.28,
+"end": 15.6
+},
+{
+"text": "The",
+"start": 16.14,
+"end": 16.26
+},
+{
+"text": "continents",
+"start": 16.32,
+"end": 16.94
+},
+{
+"text": "are",
+"start": 16.98,
+"end": 17.08
+},
+{
+"text": "moving.",
+"start": 17.22,
+"end": 17.68
+},
+{
+"text": "Geologists",
+"start": 18.52,
+"end": 19.2
+},
+{
+"text": "laughed.",
+"start": 19.38,
+"end": 19.8
+},
+{
+"text": "Continents",
+"start": 20.16,
+"end": 20.68
+},
+{
+"text": "can't",
+"start": 20.74,
+"end": 20.96
+},
+{
+"text": "plow",
+"start": 21.04,
+"end": 21.28
+},
+{
+"text": "through",
+"start": 21.34,
+"end": 21.58
+},
+{
+"text": "solid",
+"start": 21.66,
+"end": 21.96
+},
+{
+"text": "rock!",
+"start": 22.1,
+"end": 22.44
+},
+{
+"text": "He",
+"start": 22.86,
+"end": 22.96
+},
+{
+"text": "couldn't",
+"start": 23.0,
+"end": 23.28
+},
+{
+"text": "say",
+"start": 23.38,
+"end": 23.58
+},
+{
+"text": "what",
+"start": 23.76,
+"end": 23.96
+},
+{
+"text": "pushed",
+"start": 24.02,
+"end": 24.26
+},
+{
+"text": "them.",
+"start": 24.32,
+"end": 24.52
+},
+{
+"text": "In",
+"start": 25.02,
+"end": 25.1
+},
+{
+"text": "nineteen",
+"start": 25.14,
+"end": 25.54
+},
+{
+"text": "thirty,",
+"start": 25.54,
+"end": 25.94
+},
+{
+"text": "he",
+"start": 26.34,
+"end": 26.48
+},
+{
+"text": "died",
+"start": 26.54,
+"end": 26.84
+},
+{
+"text": "on",
+"start": 26.9,
+"end": 26.96
+},
+{
+"text": "the",
+"start": 26.98,
+"end": 27.06
+},
+{
+"text": "Greenland",
+"start": 27.1,
+"end": 27.46
+},
+{
+"text": "ice\u2026",
+"start": 27.56,
+"end": 27.84
+},
+{
+"text": "still",
+"start": 28.5,
+"end": 28.66
+},
+{
+"text": "a",
+"start": 28.72,
+"end": 28.78
+},
+{
+"text": "joke.",
+"start": 28.84,
+"end": 29.12
+},
+{
+"text": "Decades",
+"start": 29.62,
+"end": 30.02
+},
+{
+"text": "later,",
+"start": 30.1,
+"end": 30.4
+},
+{
+"text": "ships",
+"start": 30.72,
+"end": 31.02
+},
+{
+"text": "mapped",
+"start": 31.1,
+"end": 31.38
+},
+{
+"text": "the",
+"start": 31.42,
+"end": 31.52
+},
+{
+"text": "ocean",
+"start": 31.58,
+"end": 31.8
+},
+{
+"text": "floor\u2026",
+"start": 31.94,
+"end": 32.28
+},
+{
+"text": "and",
+"start": 32.56,
+"end": 32.64
+},
+{
+"text": "found",
+"start": 32.78,
+"end": 33.0
+},
+{
+"text": "a",
+"start": 33.08,
+"end": 33.2
+},
+{
+"text": "giant",
+"start": 33.32,
+"end": 33.7
+},
+{
+"text": "crack",
+"start": 33.8,
+"end": 34.22
+},
+{
+"text": "down",
+"start": 34.26,
+"end": 34.42
+},
+{
+"text": "the",
+"start": 34.46,
+"end": 34.52
+},
+{
+"text": "middle.",
+"start": 34.58,
+"end": 34.84
+},
+{
+"text": "Hot",
+"start": 35.28,
+"end": 35.52
+},
+{
+"text": "rock",
+"start": 35.58,
+"end": 35.82
+},
+{
+"text": "rises",
+"start": 35.98,
+"end": 36.4
+},
+{
+"text": "there",
+"start": 36.46,
+"end": 36.68
+},
+{
+"text": "and",
+"start": 36.72,
+"end": 36.8
+},
+{
+"text": "spreads",
+"start": 37.02,
+"end": 37.34
+},
+{
+"text": "out,",
+"start": 37.44,
+"end": 37.62
+},
+{
+"text": "pushing",
+"start": 37.9,
+"end": 38.24
+},
+{
+"text": "the",
+"start": 38.28,
+"end": 38.38
+},
+{
+"text": "ocean",
+"start": 38.44,
+"end": 38.68
+},
+{
+"text": "apart.",
+"start": 38.72,
+"end": 39.14
+},
+{
+"text": "The",
+"start": 39.44,
+"end": 39.52
+},
+{
+"text": "continents",
+"start": 39.58,
+"end": 40.2
+},
+{
+"text": "just",
+"start": 40.28,
+"end": 40.56
+},
+{
+"text": "ride",
+"start": 40.64,
+"end": 40.84
+},
+{
+"text": "on",
+"start": 40.88,
+"end": 41.0
+},
+{
+"text": "top.",
+"start": 41.06,
+"end": 41.38
+},
+{
+"text": "So",
+"start": 41.9,
+"end": 42.06
+},
+{
+"text": "right",
+"start": 42.12,
+"end": 42.36
+},
+{
+"text": "now\u2026",
+"start": 42.42,
+"end": 42.78
+},
+{
+"text": "you're",
+"start": 43.42,
+"end": 43.62
+},
+{
+"text": "moving",
+"start": 43.68,
+"end": 43.94
+},
+{
+"text": "too.",
+"start": 44.1,
+"end": 44.36
+},
+{
+"text": "About",
+"start": 44.84,
+"end": 45.06
+},
+{
+"text": "as",
+"start": 45.1,
+"end": 45.24
+},
+{
+"text": "fast",
+"start": 45.32,
+"end": 45.68
+},
+{
+"text": "as",
+"start": 45.74,
+"end": 45.82
+},
+{
+"text": "your",
+"start": 45.86,
+"end": 46.0
+},
+{
+"text": "fingernails",
+"start": 46.06,
+"end": 46.62
+},
+{
+"text": "grow.",
+"start": 46.66,
+"end": 46.92
+}
+]
