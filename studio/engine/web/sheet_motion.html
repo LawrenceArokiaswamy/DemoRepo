@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0"><canvas id="c" width="2400" height="2500"></canvas>
+<script type="module">
+import { drawCharacter, normalizeSpec, checkPeriod, periodExtra, FACE } from './chargen.js';
+import { makePerformer } from './acting.js';
+import { VIS } from './lipsync.js';
+import { CAST_ROMAN } from './cast_examples.js';
+const g = document.getElementById('c').getContext('2d'); g.fillStyle = '#26303c'; g.fillRect(0, 0, 2400, 2500);
+const label = (s, x, y) => { g.fillStyle = '#f2e6d0'; g.font = 'bold 26px sans-serif'; g.fillText(s, x, y); };
+const cell = (spec, pose, x, y, sc = 0.36) => { const c = document.createElement('canvas'); c.width = 600; c.height = 1000; const r = drawCharacter(c.getContext('2d'), spec, pose); g.drawImage(c, x, y, 600 * sc, 1000 * sc); return r; };
+const F = normalizeSpec(CAST_ROMAN.felix); F.__norm = 1; const Gs = normalizeSpec(CAST_ROMAN.gaius); Gs.__norm = 1;
+// row 1: walk cycle (Felix bouncy) ; row 2: Gaius shuffle walk
+const pf = makePerformer(CAST_ROMAN.felix, { beats: [{ t: 0, act: 'idle' }], path: [{ t: 0, x: 0, z: 0 }, { t: 4, x: 4, z: 0, ease: 'linear' }] });
+const pg2 = makePerformer(CAST_ROMAN.gaius, { beats: [{ t: 0, act: 'idle' }], path: [{ t: 0, x: 0, z: 0 }, { t: 6, x: 3, z: 0, ease: 'linear' }] });
+const prun = makePerformer(CAST_ROMAN.felix, { beats: [{ t: 0, act: 'idle' }], path: [{ t: 0, x: 0, z: 0 }, { t: 2, x: 5, z: 0, ease: 'linear' }] });
+label('Felix walk (bouncy) — 8 frames of one cycle', 20, 40); label('Gaius walk (shuffle)', 20, 420); label('Felix run', 20, 800);
+for (let i = 0; i < 8; i++) { cell(F, pf.poseAt(1.5 + i * 0.08, { camRight: [1, 0] }), 20 + i * 290, 50); cell(Gs, pg2.poseAt(2 + i * 0.14, { camRight: [1, 0] }), 20 + i * 290, 430); cell(F, prun.poseAt(0.8 + i * 0.045, { camRight: [1, 0] }), 20 + i * 290, 810); }
+// row 4: actions
+label('actions: recoil · stumble · fall (sit) · dazed · reach IK (target dot) · point · look-around · laugh', 20, 1180);
+const acts = [['recoil', 0.25], ['stumble', 0.3], ['fallSit', 0.5], ['dazed', 1.0]];
+acts.forEach(([a, tt], i) => { const p = makePerformer(CAST_ROMAN.felix, { beats: [{ t: 0, act: 'idle' }, { t: 1, act: a, body: { yaw: -0.3 } }] }); cell(F, p.poseAt(1 + tt), 20 + i * 290, 1190); });
+const tgt = [0.78, 0.42]; const pr = makePerformer(CAST_ROMAN.felix, { beats: [{ t: 0, act: 'idle' }, { t: 1, act: 'idle', reachR: tgt, body: { yaw: 0.3 } }] }); cell(F, pr.poseAt(2), 20 + 4 * 290, 1190);
+g.beginPath(); g.arc(20 + 4 * 290 + tgt[0] * 216, 1190 + tgt[1] * 360, 8, 0, 7); g.fillStyle = '#ff4060'; g.fill();
+const pp = makePerformer(CAST_ROMAN.gaius, { beats: [{ t: 0, act: 'point', body: { yaw: 0.35 } }] }); cell(Gs, pp.poseAt(1), 20 + 5 * 290, 1190);
+const pl = makePerformer(CAST_ROMAN.felix, { beats: [{ t: 0, act: 'lookAround' }] }); cell(F, pl.poseAt(0.9), 20 + 6 * 290, 1190);
+const pla = makePerformer(CAST_ROMAN.gaius, { beats: [{ t: 0, act: 'laugh', body: { yaw: 0.2 } }] }); cell(Gs, pla.poseAt(0.5), 20 + 7 * 290, 1190);
+// row 5: visemes on Gaius (head crops)
+label('lip-sync mouth shapes (visemes) — Gaius', 20, 1600); const names = Object.keys(VIS);
+names.forEach((v, i) => { const face = JSON.parse(JSON.stringify(FACE.neutral)); Object.assign(face.mouth, { ...VIS[v], w: 34 * (VIS[v].w ?? 1) }); const c = document.createElement('canvas'); c.width = 600; c.height = 1000;
+  drawCharacter(c.getContext('2d'), Gs, { face, yaw: 0.1 }); const x = 20 + (i % 7) * 340, y = 1620 + Math.floor(i / 7) * 430; g.drawImage(c, 120, 280, 360, 400, x, y, 300, 333); label(v, x + 10, y + 360); });
+console.log('period check gaius', JSON.stringify(checkPeriod(CAST_ROMAN.gaius, 'roman')), 'goggles test', JSON.stringify(checkPeriod({ name: 'x', headwear: { type: 'goggles' }, outfit: { top: 'coat' } }, 'roman')));
+window.ready = true;
+</script></body></html>

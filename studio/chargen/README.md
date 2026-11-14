@@ -44,3 +44,6 @@ In the test, the soldier's shock is a large, fast squash/stretch jolt. The elder
 - Walking is a simple leg-swing cycle, not a full walk.
 - Hands are simple shapes, as in the style.
 - Characters are flat cards. They can turn about ±0.6 yaw but cannot go to full profile or back view.
+
+---
+**Superseded:** the maintained version now lives in `studio/engine/web/`. It adds IK arms, a walk/run gait, falls, lip-sync, period wardrobes and the story director. This folder keeps the first demo (lineup + duo test) for reference.

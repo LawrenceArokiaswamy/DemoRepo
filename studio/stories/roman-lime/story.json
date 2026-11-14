@@ -1,0 +1,721 @@
+{
+ "title": "Roman concrete: the sloppy builder (scene test)",
+ "period": "roman",
+ "set": "roman_harbour",
+ "fps": 30,
+ "duration": 12.5,
+ "business": "business.js",
+ "ambience": [
+  "sea",
+  "wind",
+  "masons"
+ ],
+ "audio": {
+  "voice": "audio/voice.wav",
+  "voiceOffset": 0.5,
+  "music": "audio/music.mp3",
+  "musicLUFS": -24
+ },
+ "dialogue": [
+  {
+   "speaker": "gaius",
+   "words": "audio/words.json",
+   "env": "build/env.json",
+   "offset": 0.5,
+   "script": "This Roman builder is about to ruin his concrete. He tosses in burning-hot lime. It hisses... and leaves little white lumps all through the mix. Ha! Sloppy work!"
+  }
+ ],
+ "cast": {
+  "gaius": {
+   "spec": {
+    "name": "Gaius (foreman, 60s)",
+    "period": "roman",
+    "age": "elder",
+    "build": "average",
+    "height": 0.9,
+    "belly": 0.9,
+    "shoulders": 0.92,
+    "skin": "#d9a77c",
+    "cheek": "#e0806c",
+    "head": {
+     "shape": "pear",
+     "width": 1.06,
+     "jaw": 0.9
+    },
+    "eyes": {
+     "size": 0.9,
+     "spacing": 0.92,
+     "lid": 0.12
+    },
+    "nose": "big",
+    "ears": 1.18,
+    "wrinkles": 1,
+    "hair": {
+     "style": "wild",
+     "color": "#ece8e0"
+    },
+    "brows": {
+     "thick": 1.45,
+     "bushy": true
+    },
+    "facialHair": {
+     "type": "beard",
+     "color": "#ece8e0"
+    },
+    "outfit": {
+     "top": "tunic",
+     "color": "#c9a27a",
+     "clavi": "#7a2a3a",
+     "legs": "skin",
+     "sandals": true,
+     "boots": "#6b4426",
+     "belt": true,
+     "beltColor": "#5a3a24"
+    },
+    "prop": {
+     "type": "vitis"
+    },
+    "propHand": "L",
+    "personality": {
+     "energy": 0.45,
+     "tempo": 0.8,
+     "posture": "hunched",
+     "exaggeration": 0.75,
+     "walk": "shuffle"
+    }
+   },
+   "x": -0.22,
+   "z": 0.75,
+   "seed": 3
+  },
+  "felix": {
+   "spec": {
+    "name": "Felix (apprentice, 17)",
+    "period": "roman",
+    "age": "teen",
+    "build": "slim",
+    "height": 1.1,
+    "shoulders": 0.88,
+    "skin": "#e8b48a",
+    "cheek": "#e88a72",
+    "freckles": 1,
+    "head": {
+     "shape": "long",
+     "width": 0.9,
+     "jaw": 0.35
+    },
+    "eyes": {
+     "size": 1.12,
+     "spacing": 1.04
+    },
+    "nose": "long",
+    "ears": 1.25,
+    "hair": {
+     "style": "caesar",
+     "color": "#3a2418"
+    },
+    "brows": {
+     "thick": 0.9
+    },
+    "facialHair": {
+     "type": "none"
+    },
+    "outfit": {
+     "top": "tunic",
+     "color": "#8a6a4a",
+     "clavi": null,
+     "legs": "skin",
+     "sandals": true,
+     "boots": "#6b4426",
+     "belt": true,
+     "beltColor": "#4a3020",
+     "apron": "#4f3524"
+    },
+    "personality": {
+     "energy": 0.95,
+     "tempo": 1.15,
+     "posture": "upright",
+     "exaggeration": 1,
+     "walk": "bouncy"
+    }
+   },
+   "x": 0.9,
+   "z": -0.58,
+   "seed": 7
+  }
+ },
+ "extras": [
+  {
+   "seed": 11,
+   "role": "worker",
+   "x": 0.25,
+   "z": -2.9,
+   "beats": [
+    {
+     "t": 0,
+     "act": "effort",
+     "reachL": [
+      0.38,
+      0.63
+     ],
+     "reachR": [
+      0.62,
+      0.63
+     ]
+    }
+   ],
+   "path": [
+    {
+     "t": 0,
+     "x": 0.25,
+     "z": -2.9
+    },
+    {
+     "t": 6,
+     "x": 1.45,
+     "z": -2.9,
+     "ease": "linear"
+    },
+    {
+     "t": 12.5,
+     "x": 0.3,
+     "z": -2.9,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "seed": 4,
+   "role": "worker",
+   "x": 2.35,
+   "z": -2.9,
+   "beats": [
+    {
+     "t": 0,
+     "act": "lookAround"
+    }
+   ]
+  }
+ ],
+ "performances": {
+  "gaius": {
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.4
+     },
+     "speak": false
+    },
+    {
+     "t": 0.42,
+     "act": "talk",
+     "body": {
+      "yaw": 0.12
+     },
+     "look": "cam",
+     "gesture": "R"
+    },
+    {
+     "t": 1.05,
+     "act": "point",
+     "body": {
+      "yaw": 0.3,
+      "armR": [
+       92,
+       -4
+      ]
+     },
+     "look": "cam",
+     "pointDir": 1
+    },
+    {
+     "t": 2.15,
+     "act": "talk",
+     "face": {
+      "preset": "suspicious"
+     },
+     "body": {
+      "yaw": 0.12,
+      "headTilt": -4
+     },
+     "look": "cam",
+     "gesture": "R"
+    },
+    {
+     "t": 3.4,
+     "act": "idle",
+     "body": {
+      "yaw": 0.45
+     },
+     "speak": false
+    },
+    {
+     "t": 9.3,
+     "act": "laugh",
+     "body": {
+      "yaw": 0.15
+     },
+     "look": "cam"
+    },
+    {
+     "t": 9.72,
+     "act": "point",
+     "face": {
+      "preset": "laugh"
+     },
+     "body": {
+      "yaw": 0.32,
+      "armR": [
+       92,
+       -4
+      ],
+      "lean": -5
+     },
+     "look": "cam",
+     "pointDir": 1
+    },
+    {
+     "t": 10.95,
+     "act": "laugh",
+     "body": {
+      "yaw": 0.35
+     },
+     "speak": false
+    }
+   ]
+  },
+  "felix": {
+   "beats": [
+    {
+     "t": 0,
+     "act": "carry",
+     "reachL": [
+      0.335,
+      0.66
+     ],
+     "reachR": [
+      0.665,
+      0.66
+     ],
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.55
+      }
+     }
+    },
+    {
+     "t": 2.7,
+     "act": "carry",
+     "reachL": [
+      0.335,
+      0.66
+     ],
+     "reachR": [
+      0.665,
+      0.66
+     ],
+     "face": {
+      "preset": "curious"
+     },
+     "body": {
+      "yaw": -0.3
+     }
+    },
+    {
+     "t": 3.75,
+     "act": "effort",
+     "reachL": [
+      0.33,
+      0.6
+     ],
+     "reachR": [
+      0.6,
+      0.58
+     ],
+     "body": {
+      "yaw": -0.32,
+      "squash": 0.12
+     }
+    },
+    {
+     "t": 4.28,
+     "act": "idle",
+     "reachL": [
+      0.06,
+      0.6
+     ],
+     "reachR": [
+      0.3,
+      0.55
+     ],
+     "face": {
+      "preset": "laugh"
+     },
+     "body": {
+      "yaw": -0.35,
+      "lean": -9,
+      "squash": -0.06
+     }
+    },
+    {
+     "t": 4.85,
+     "act": "idle",
+     "reachL": [
+      0.37,
+      0.67
+     ],
+     "reachR": [
+      0.63,
+      0.66
+     ],
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.9
+      },
+      "cheek": 0.6
+     },
+     "body": {
+      "yaw": -0.15,
+      "headTilt": -7
+     }
+    },
+    {
+     "t": 5.65,
+     "act": "curious",
+     "reachL": [
+      0.33,
+      0.67
+     ],
+     "reachR": [
+      0.59,
+      0.66
+     ],
+     "body": {
+      "yaw": -0.35,
+      "lean": -4
+     }
+    },
+    {
+     "t": 6.5,
+     "act": "recoil",
+     "body": {
+      "yaw": -0.3
+     }
+    },
+    {
+     "t": 6.95,
+     "act": "stumble",
+     "body": {
+      "yaw": -0.3
+     },
+     "faceTravel": false
+    },
+    {
+     "t": 7.45,
+     "act": "fallSit",
+     "body": {
+      "yaw": -0.25
+     },
+     "faceTravel": false
+    },
+    {
+     "t": 8.3,
+     "act": "dazed",
+     "body": {
+      "yaw": -0.2
+     },
+     "faceTravel": false
+    },
+    {
+     "t": 10.9,
+     "act": "sheepish",
+     "body": {
+      "sit": 1,
+      "yaw": -0.1
+     },
+     "faceTravel": false
+    }
+   ],
+   "path": [
+    {
+     "t": 0.25,
+     "x": 2.05,
+     "z": -0.62
+    },
+    {
+     "t": 2.7,
+     "x": 0.9,
+     "z": -0.58
+    },
+    {
+     "t": 6.95,
+     "x": 0.9,
+     "z": -0.58
+    },
+    {
+     "t": 7.5,
+     "x": 1.32,
+     "z": -0.3
+    }
+   ]
+  }
+ },
+ "shots": [
+  {
+   "name": "S1 wide: Gaius to camera, Felix walks in",
+   "a": 0,
+   "b": 3.55,
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      0.34,
+      1.26,
+      4.75
+     ],
+     "look": [
+      0.3,
+      0.84,
+      -0.2
+     ],
+     "fov": 40,
+     "focus": 4.0,
+     "ap": 0.0005
+    },
+    {
+     "t": 3.55,
+     "pos": [
+      0.3,
+      1.22,
+      4.3
+     ],
+     "look": [
+      0.28,
+      0.84,
+      -0.2
+     ],
+     "fov": 40,
+     "focus": 3.6,
+     "ap": 0.0005
+    }
+   ]
+  },
+  {
+   "name": "S2 medium: the toss",
+   "a": 3.55,
+   "b": 5.72,
+   "keys": [
+    {
+     "t": 3.55,
+     "pos": [
+      1.25,
+      1.0,
+      2.45
+     ],
+     "look": [
+      0.7,
+      0.84,
+      -0.5
+     ],
+     "fov": 40,
+     "focus": 3.0,
+     "ap": 0.0007
+    },
+    {
+     "t": 5.72,
+     "pos": [
+      1.2,
+      0.98,
+      2.2
+     ],
+     "look": [
+      0.6799999999999999,
+      0.84,
+      -0.5
+     ],
+     "fov": 40,
+     "focus": 2.75,
+     "ap": 0.0007
+    }
+   ]
+  },
+  {
+   "name": "S3 insert: it hisses",
+   "a": 5.72,
+   "b": 6.45,
+   "keys": [
+    {
+     "t": 5.72,
+     "pos": [
+      0.12,
+      1.08,
+      0.72
+     ],
+     "look": [
+      0.2,
+      0.38,
+      -0.25
+     ],
+     "fov": 40,
+     "focus": 1.12,
+     "ap": 0.0016
+    },
+    {
+     "t": 6.45,
+     "pos": [
+      0.13,
+      1.02,
+      0.6
+     ],
+     "look": [
+      0.2,
+      0.4,
+      -0.25
+     ],
+     "fov": 39,
+     "focus": 1.0,
+     "ap": 0.0016
+    }
+   ]
+  },
+  {
+   "name": "S4 medium: recoil, stumble, fall",
+   "a": 6.45,
+   "b": 9.3,
+   "keys": [
+    {
+     "t": 6.45,
+     "pos": [
+      0.05,
+      0.92,
+      2.55
+     ],
+     "look": [
+      0.95,
+      0.74,
+      -0.45
+     ],
+     "fov": 42,
+     "focus": 3.0,
+     "ap": 0.0007
+    },
+    {
+     "t": 9.3,
+     "pos": [
+      0.08,
+      0.9,
+      2.4
+     ],
+     "look": [
+      1.0,
+      0.66,
+      -0.4
+     ],
+     "fov": 41,
+     "focus": 2.85,
+     "ap": 0.0007
+    }
+   ]
+  },
+  {
+   "name": "S5 close: Ha! Sloppy work!",
+   "a": 9.3,
+   "b": 10.95,
+   "keys": [
+    {
+     "t": 9.3,
+     "pos": [
+      0.0,
+      1.12,
+      2.5
+     ],
+     "look": [
+      -0.22,
+      0.97,
+      0.75
+     ],
+     "fov": 36,
+     "focus": 1.78,
+     "ap": 0.0011
+    },
+    {
+     "t": 10.95,
+     "pos": [
+      -0.02,
+      1.12,
+      2.3
+     ],
+     "look": [
+      -0.22,
+      0.99,
+      0.75
+     ],
+     "fov": 35,
+     "focus": 1.58,
+     "ap": 0.0011
+    }
+   ]
+  },
+  {
+   "name": "S6 wide: the harbour",
+   "a": 10.95,
+   "b": 12.5,
+   "keys": [
+    {
+     "t": 10.95,
+     "pos": [
+      0.62,
+      1.95,
+      5.4
+     ],
+     "look": [
+      0.5,
+      0.62,
+      -0.6
+     ],
+     "fov": 40,
+     "focus": 5.0,
+     "ap": 0.0004
+    },
+    {
+     "t": 12.5,
+     "pos": [
+      0.66,
+      2.15,
+      6.0
+     ],
+     "look": [
+      0.5,
+      0.65,
+      -0.7
+     ],
+     "fov": 40,
+     "focus": 5.6,
+     "ap": 0.0004
+    }
+   ]
+  }
+ ],
+ "kicks": [
+  {
+   "t": 5.8,
+   "a": 0.006
+  },
+  {
+   "t": 6.52,
+   "a": 0.012
+  },
+  {
+   "t": 7.67,
+   "a": 0.02
+  },
+  {
+   "t": 9.36,
+   "a": 0.008
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+engine/web/lib
+engine/web/assets
+engine/tools/node_modules
+stories/*/build
