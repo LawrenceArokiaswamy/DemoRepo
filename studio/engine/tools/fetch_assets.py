@@ -13,8 +13,8 @@ MODELS = ['WoodenTable_03','bench_vice_01','hand_plane_no4','vintage_hand_drill'
           'wooden_stool_01','brass_pot_01','wooden_candlestick','standing_chalkboard_01','seadogs_compass','wooden_bucket_01','vintage_grandfather_clock_01','pocket_watch','brass_goblets','spinning_wheel_01',
           'antique_ceramic_vase_01','ceramic_vase_01','ceramic_vase_02','ceramic_vase_03','jug_01','wooden_bucket_02','trowel_01','rusted_spade_01','wicker_basket_02','wooden_crate_02','coast_rocks_01','coast_rocks_02','stone_01','wooden_bowl_01','planter_pot_clay','rock_07']
 TEXTURES = [('brown_planks_05', '1k'), ('brick_wall_02', '1k'), ('dark_planks', '1k'), ('plastered_wall', '1k'), ('large_sandstone_blocks', '2k'), ('coast_sand_01', '2k'),
-            ('seaworn_sandstone_brick', '1k'), ('wood_planks', '1k'), ('dirty_concrete', '1k'), ('gravelly_sand', '1k')]
-HDRIS = [('artist_workshop', '1k'), ('qwantani_morning_puresky', '2k')]
+            ('seaworn_sandstone_brick', '1k'), ('wood_planks', '1k'), ('dirty_concrete', '1k'), ('gravelly_sand', '1k'), ('castle_wall_varriation', '2k'), ('rock_face_02', '1k') , ('dark_wooden_planks', '1k'), ('rough_wood', '1k')]
+HDRIS = [('artist_workshop', '1k'), ('qwantani_morning_puresky', '2k'), ('qwantani_sunrise_puresky', '2k'), ('kloofendal_misty_morning_puresky', '2k')]
 for m in MODELS:
     if os.path.exists(f'{OUT}/models/{m}/{m}.gltf'): continue
     try:

@@ -1,0 +1,189 @@
+<title>The Claw of Syracuse</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a production storyboard. Header, emotional arc strip, then a grid of 9:16 frames with notes, then script, fact check and approvals. */
+:root {
+  --bg:#eef2f3; --panel:#ffffff; --ink:#14212a; --muted:#566771; --line:#d3dcdf; --bronze:#9a6526; --sea:#1d5566;
+  --doc:#2f6d4f; --rec:#9a6526; --dram:#5b5f9a; --inv:#a3402f; --dev:#566771;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif; --body:"Inter", system-ui, sans-serif; --mono:"JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0e1519; --panel:#152027; --ink:#e3ebee; --muted:#93a5ad; --line:#26353d; --bronze:#d39a55; --sea:#6fb3c4; --doc:#6cc39a; --rec:#d39a55; --dram:#9ea3e0; --inv:#e08a76; --dev:#93a5ad; color-scheme:dark } }
+:root[data-theme="dark"] { --bg:#0e1519; --panel:#152027; --ink:#e3ebee; --muted:#93a5ad; --line:#26353d; --bronze:#d39a55; --sea:#6fb3c4; --doc:#6cc39a; --rec:#d39a55; --dram:#9ea3e0; --inv:#e08a76; --dev:#93a5ad; color-scheme:dark }
+body { background:var(--bg); color:var(--ink); font:15px/1.55 var(--body); }
+.wrap { max-width:1180px; margin:0 auto; padding-block:28px 64px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:grid; gap:40px; }
+h1,h2,h3 { font-family:var(--display); text-wrap:balance; margin:0; }
+h1 { font-size:clamp(30px,5vw,48px); font-weight:800; letter-spacing:-0.01em; }
+h2 { font-size:22px; font-weight:700; }
+.eyebrow { font:500 12px var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--bronze); }
+header { display:grid; gap:10px; }
+header p { margin:0; max-width:68ch; color:var(--muted); }
+.facts { display:flex; flex-wrap:wrap; gap:8px 20px; font:500 13px var(--mono); color:var(--muted); }
+.arc { display:grid; grid-template-columns:4fr 23fr 25fr; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.arc div { padding:12px 14px; display:grid; gap:2px; min-width:0; }
+.arc div + div { border-left:1px solid var(--line); }
+.arc b { font-family:var(--display); font-size:18px; }
+.arc span { font:500 12px var(--mono); color:var(--muted); }
+.arc .a1 b { color:var(--inv); } .arc .a2 b { color:var(--bronze); } .arc .a3 b { color:var(--doc); }
+.legend { display:flex; flex-wrap:wrap; gap:8px 18px; font-size:13px; color:var(--muted); }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:22px; }
+.shot { display:grid; gap:10px; align-content:start; min-width:0; }
+.shot figure { margin:0; aspect-ratio:9/16; max-width:100%; border-radius:4px; overflow:hidden; background:var(--line); }
+.shot img { width:100%; height:100%; object-fit:cover; display:block; }
+.meta { display:grid; gap:6px; min-width:0; }
+.row1 { display:flex; justify-content:space-between; gap:8px; font:500 12px var(--mono); }
+.num { color:var(--bronze); } .tc { color:var(--muted); font-variant-numeric:tabular-nums; }
+.meta h3 { font-size:16px; font-weight:700; }
+.vo { margin:0; font-weight:500; } .vo::before { content:"VO "; font:500 11px var(--mono); color:var(--sea); letter-spacing:0.06em; }
+.act { margin:0; color:var(--muted); font-size:14px; }
+.src { margin:0; font-size:12.5px; color:var(--muted); }
+.tag { display:inline-block; font:500 11px var(--mono); padding:1px 7px; border-radius:99px; border:1px solid currentColor; margin-right:4px; }
+.t-doc { color:var(--doc); } .t-rec { color:var(--rec); } .t-dram { color:var(--dram); } .t-inv { color:var(--inv); } .t-dev { color:var(--dev); }
+section { display:grid; gap:14px; }
+.two { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:28px; align-items:start; }
+.script { list-style:none; margin:0; padding:0; display:grid; gap:6px; }
+.script li { display:grid; grid-template-columns:62px 1fr; gap:10px; }
+.script .tc { font:500 12px var(--mono); padding-top:3px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:16px 18px; display:grid; gap:10px; min-width:0; }
+.panel p { margin:0; }
+table { border-collapse:collapse; width:100%; font-size:14px; }
+th,td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font:500 11px var(--mono); letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+td.n { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.tablewrap { overflow-x:auto; }
+ul.plain { margin:0; padding-left:18px; display:grid; gap:6px; }
+blockquote { margin:0; padding-left:12px; border-left:2px solid var(--bronze); color:var(--muted); font-size:14px; }
+@media (max-width:560px) { .arc { grid-template-columns:1fr; } .arc div + div { border-left:0; border-top:1px solid var(--line); } }
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Pilot 01 · storyboard v1 · awaiting approval</div>
+  <h1>The Claw of Syracuse</h1>
+  <p>Every frame below is a still from the real 3D scene, not a sketch. The characters, ships, wall and claw machine are the production assets. I'm asking you to approve composition, story and pacing. I have not started the full render or spent any credits.</p>
+  <div class="facts"><span>62 s · 21 shots</span><span>1080 × 1920</span><span>Narration ≈ 177 words</span><span>Sources: Polybius 8.3–8.7, Plutarch Marcellus 14–19</span></div>
+</header>
+<div class="arc" aria-label="Emotional arc">
+  <div class="a1"><b>WHAT?!</b><span>0:00–0:04 · a city wall lifts a warship</span></div>
+  <div class="a2"><b>OH NO!</b><span>0:04–0:37 · night approach, the creak, the claw, the lift, the drop</span></div>
+  <div class="a3"><b>WHOA!</b><span>0:37–1:02 · it was a 74-year-old mathematician, and Rome ran from sticks</span></div>
+</div>
+<section>
+  <h2>Storyboard</h2>
+  <div class="legend"><span><span class="tag t-doc">Documented</span>stated in an ancient source</span><span><span class="tag t-rec">Reconstruction</span>our design of an undocumented detail, labelled on screen</span><span><span class="tag t-dram">Dramatised</span>plausible staging</span><span><span class="tag t-inv">Invented</span>comic beat</span></div>
+  <div class="grid"><article class="shot"><figure><img src="img/s01.jpg" alt="S01: Hook: the ship stands up" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S01</span><span class="tc">0:00.0–0:03.6</span></div><h3>Hook: the ship stands up</h3>
+<p class="vo">This is a Roman warship… and a city wall is picking it up.</p><p class="act">Chain groaning, water pouring off the hull, sailors yelling. Low drum hit.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s02.jpg" alt="S02: Rewind" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S02</span><span class="tc">0:03.6–0:04.4</span></div><h3>Rewind</h3>
+<p class="vo">Rewind.</p><p class="act">The world plays backwards: the ship drops and rows out. Rewind whoosh.</p><p class="src"><span class="tag t-dev">Device</span> Storytelling device</p></div></article><article class="shot"><figure><img src="img/s03.jpg" alt="S03: Before dawn, the fleet creeps in" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S03</span><span class="tc">0:04.4–0:09.4</span></div><h3>Before dawn, the fleet creeps in</h3>
+<p class="vo">Syracuse, 213 BC. Before dawn, Rome&#x27;s fleet creeps toward the city walls.</p><p class="act">On-screen text: SYRACUSE · SICILY · 213 BC. Oars dipping, torches on the wall.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.4</p></div></article><article class="shot"><figure><img src="img/s04.jpg" alt="S04: Marcellus&#x27; plan" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S04</span><span class="tc">0:09.4–0:11.0</span></div><h3>Marcellus&#x27; plan</h3>
+<p class="vo">The plan: get so close that the city&#x27;s catapults…</p><p class="act">Marcellus whispers, smug. Officers nod.</p><p class="src"><span class="tag t-doc">Documented</span> Plutarch, Marcellus 15.5</p></div></article><article class="shot"><figure><img src="img/s05.jpg" alt="S05: Stones fly overhead" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S05</span><span class="tc">0:11.0–0:13.9</span></div><h3>Stones fly overhead</h3>
+<p class="vo">…shoot right over their heads. And it works.</p><p class="act">Stones whistle over the mast and splash far behind. The crew ducks, then grins.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.4–5 (simplified)</p></div></article><article class="shot"><figure><img src="img/s06.jpg" alt="S06: Something creaks" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S06</span><span class="tc">0:13.9–0:16.4</span></div><h3>Something creaks</h3>
+<p class="vo">Then, above them… something creaks.</p><p class="act">Silence. Timber creak. Titus&#x27;s eyes drift up.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s07.jpg" alt="S07: The beam swings out" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S07</span><span class="tc">0:16.4–0:20.4</span></div><h3>The beam swings out</h3>
+<p class="vo">A huge beam swings out over the wall… and lowers an iron hand on a chain.</p><p class="act">Rope strain, pulley clacks, chain rattling down.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.8, 8.6.2</p></div></article><article class="shot"><figure><img src="img/s08.jpg" alt="S08: The iron hand bites" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S08</span><span class="tc">0:20.4–0:22.4</span></div><h3>The iron hand bites</h3>
+<p class="vo">It grabs the ship by the nose.</p><p class="act">Iron on timber. Wood splinters.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.2</p></div></article><article class="shot"><figure><img src="img/s09.jpg" alt="S09: Behind the wall: the lever" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S09</span><span class="tc">0:22.4–0:25.9</span></div><h3>Behind the wall: the lever</h3>
+<p class="vo">Behind the wall, the far end of the beam is pushed down, like a seesaw…</p><p class="act">Crew heave at the windlass, the counterweight drops, Archimedes directs. On-screen label: RECONSTRUCTION.</p><p class="src"><span class="tag t-rec">Reconstruction</span> Principle: Polybius 8.6.2. Machine design: ours</p></div></article><article class="shot"><figure><img src="img/s10.jpg" alt="S10: The bow rises" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S10</span><span class="tc">0:25.9–0:28.0</span></div><h3>The bow rises</h3>
+<p class="vo">…and the front of the ship rises.</p><p class="act">Oars dangle, water pours off the hull, the hull groans.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s11.jpg" alt="S11: The deck tilts" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S11</span><span class="tc">0:28.0–0:29.4</span></div><h3>The deck tilts</h3>
+<p class="vo">Higher…</p><p class="act">Crew and barrels slide toward the stern.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s12.jpg" alt="S12: Marcellus watches" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S12</span><span class="tc">0:29.4–0:31.6</span></div><h3>Marcellus watches</h3>
+<p class="vo">…until it&#x27;s standing on its stern.</p><p class="act">Marcellus aghast in the foreground, his ship standing upright behind him. Sunrise.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s13.jpg" alt="S13: Then they let go" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S13</span><span class="tc">0:31.6–0:33.0</span></div><h3>Then they let go</h3>
+<p class="vo">Then… they let go.</p><p class="act">Archimedes raises a finger. Pulley release snap.</p><p class="src"><span class="tag t-doc">Documented</span> Release: Polybius 8.6.3. Archimedes on the wall: dramatisation</p></div></article><article class="shot"><figure><img src="img/s14.jpg" alt="S14: The drop" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S14</span><span class="tc">0:33.0–0:36.0</span></div><h3>The drop</h3>
+<p class="vo">(no narration)</p><p class="act">Half a second of silence, then the impact: a wall of spray, then the roar of water.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.4</p></div></article><article class="shot"><figure><img src="img/s15.jpg" alt="S15: Swamped" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S15</span><span class="tc">0:36.0–0:37.5</span></div><h3>Swamped</h3>
+<p class="vo">Some ships capsized. Most just filled with water.</p><p class="act">The wreck settles, crew bobbing in the water.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.4</p></div></article><article class="shot"><figure><img src="img/s16.jpg" alt="S16: The mathematician" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S16</span><span class="tc">0:37.5–0:42.5</span></div><h3>The mathematician</h3>
+<p class="vo">The genius behind it wasn&#x27;t a general. He was a mathematician in his seventies: Archimedes.</p><p class="act">Music opens up. Archimedes by his sand diagram, smiling at camera.</p><p class="src"><span class="tag t-doc">Documented</span> Age: Tzetzes (c. 75 at death). Diagram: Plutarch, Marcellus 19</p></div></article><article class="shot"><figure><img src="img/s17.jpg" alt="S17: Marcellus jokes" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S17</span><span class="tc">0:42.5–0:46.5</span></div><h3>Marcellus jokes</h3>
+<p class="vo">The Roman commander joked that Archimedes was using his ships to scoop up seawater…</p><p class="act">Soaked Marcellus forces a laugh.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.6; Plutarch 17.1</p></div></article><article class="shot"><figure><img src="img/s18.jpg" alt="S18: Nobody laughs" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S18</span><span class="tc">0:46.5–0:49.5</span></div><h3>Nobody laughs</h3>
+<p class="vo">…his men didn&#x27;t laugh.</p><p class="act">Deadpan soldier. Water drips.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s19.jpg" alt="S19: Days later: &#x27;There it is!&#x27;" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S19</span><span class="tc">0:49.5–0:53.5</span></div><h3>Days later: &#x27;There it is!&#x27;</h3>
+<p class="vo">One ancient writer says that whenever a rope or a stick poked over the wall, they screamed…</p><p class="act">Titus, lip-synced: &quot;THERE IT IS!&quot; The crew panics and backs water.</p><p class="src"><span class="tag t-doc">Documented</span> Plutarch, Marcellus 17.3</p></div></article><article class="shot"><figure><img src="img/s20.jpg" alt="S20: It was a stick" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S20</span><span class="tc">0:53.5–0:55.5</span></div><h3>It was a stick</h3>
+<p class="vo">…and fled.</p><p class="act">Archimedes chuckles, holding a stick, as the ships flee behind him.</p><p class="src"><span class="tag t-inv">Invented</span> Invented visual joke illustrating Plutarch 17.3</p></div></article><article class="shot"><figure><img src="img/s21.jpg" alt="S21: Rome waits" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S21</span><span class="tc">0:55.5–1:02.0</span></div><h3>Rome waits</h3>
+<p class="vo">Rome stopped attacking the walls. It just waited… because of one old man.</p><p class="act">The fleet anchored far out. Archimedes on the wall. Final music swell.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.7.5–9; Plutarch 17.3</p></div></article></div>
+</section>
+<div class="two">
+<section>
+  <h2>Narration script</h2>
+  <ol class="script"><li><span class="tc">0:00.0</span><span>This is a Roman warship… and a city wall is picking it up.</span></li>
+<li><span class="tc">0:03.6</span><span>Rewind.</span></li>
+<li><span class="tc">0:04.4</span><span>Syracuse, 213 BC. Before dawn, Rome&#x27;s fleet creeps toward the city walls.</span></li>
+<li><span class="tc">0:09.4</span><span>The plan: get so close that the city&#x27;s catapults…</span></li>
+<li><span class="tc">0:11.0</span><span>…shoot right over their heads. And it works.</span></li>
+<li><span class="tc">0:13.9</span><span>Then, above them… something creaks.</span></li>
+<li><span class="tc">0:16.4</span><span>A huge beam swings out over the wall… and lowers an iron hand on a chain.</span></li>
+<li><span class="tc">0:20.4</span><span>It grabs the ship by the nose.</span></li>
+<li><span class="tc">0:22.4</span><span>Behind the wall, the far end of the beam is pushed down, like a seesaw…</span></li>
+<li><span class="tc">0:25.9</span><span>…and the front of the ship rises.</span></li>
+<li><span class="tc">0:28.0</span><span>Higher…</span></li>
+<li><span class="tc">0:29.4</span><span>…until it&#x27;s standing on its stern.</span></li>
+<li><span class="tc">0:31.6</span><span>Then… they let go.</span></li>
+<li><span class="tc">0:36.0</span><span>Some ships capsized. Most just filled with water.</span></li>
+<li><span class="tc">0:37.5</span><span>The genius behind it wasn&#x27;t a general. He was a mathematician in his seventies: Archimedes.</span></li>
+<li><span class="tc">0:42.5</span><span>The Roman commander joked that Archimedes was using his ships to scoop up seawater…</span></li>
+<li><span class="tc">0:46.5</span><span>…his men didn&#x27;t laugh.</span></li>
+<li><span class="tc">0:49.5</span><span>One ancient writer says that whenever a rope or a stick poked over the wall, they screamed…</span></li>
+<li><span class="tc">0:53.5</span><span>…and fled.</span></li>
+<li><span class="tc">0:55.5</span><span>Rome stopped attacking the walls. It just waited… because of one old man.</span></li></ol>
+  <p class="src">Titus (on screen, lip-synced): "THERE IT IS!" in S19.</p>
+</section>
+<section>
+  <h2>What the sources say</h2>
+  <div class="panel">
+    <blockquote>"…when he had got hold of her by the prow, would press down the opposite end of the machine which was inside the wall. Then when he had thus by lifting up the ship's prow made her stand upright on her stern … let the chain and hand suddenly drop." (Polybius 8.6)</blockquote>
+    <blockquote>"…whenever they saw a bit of rope or a stick of timber projecting a little over the wall, 'There it is,' they cried … and turned their backs and fled." (Plutarch, Marcellus 17)</blockquote>
+    <blockquote>"…every hope of capturing the town at once if one old man of Syracuse were removed." (Polybius 8.7)</blockquote>
+  </div>
+  <div class="panel">
+    <p><b>What we deliberately leave out or soften</b></p>
+    <ul class="plain">
+      <li>Plutarch has ships whirled through mid-air. Polybius, the earlier and more careful source, says the prow was lifted until the ship stood on its stern, then dropped. We show Polybius's version.</li>
+      <li>The machine's dimensions, counterweight and windlass are not described anywhere. That shot is labelled "RECONSTRUCTION".</li>
+      <li>Modern tests (BBC 1999, Discovery 2005) show the idea was feasible, not that it was built this way.</li>
+      <li>A real quinquereme was about 45 m long. Ours is stylised at 30 m to read on a phone.</li>
+      <li>No burning mirrors: that's a later legend.</li>
+    </ul>
+  </div>
+</section>
+</div>
+<div class="two">
+<section>
+  <h2>Approvals needed</h2>
+  <div class="panel tablewrap"><table>
+    <thead><tr><th>Item</th><th>Tool</th><th>Estimate</th></tr></thead>
+    <tbody>
+      <tr><td>Narration, about 62 s, one voice</td><td>ElevenLabs via Higgsfield</td><td class="n">≈ 5 credits</td></tr>
+      <tr><td>Character lines: "THERE IT IS!" plus a whisper</td><td>ElevenLabs via Higgsfield</td><td class="n">≈ 1 credit</td></tr>
+      <tr><td>Original score, about 62 s</td><td>Music generation via Higgsfield</td><td class="n">≈ 9 credits</td></tr>
+      <tr><td>3D render, captions, sound effects, mix</td><td>Our pipeline</td><td class="n">free</td></tr>
+      <tr><td><b>Total</b></td><td></td><td class="n"><b>≈ 15 credits (about $0.60)</b></td></tr>
+    </tbody></table>
+    <p class="src">Estimates come from earlier price checks. I'll show the exact quote and wait for your yes before generating anything. A full render pass takes about 1.5–2 hours, and I expect two or three passes.</p>
+  </div>
+</section>
+<section>
+  <h2>Known issues to fix in production</h2>
+  <div class="panel"><ul class="plain">
+    <li>S14: the impact spray reads as fog. It needs water sheets, droplets and a white column.</li>
+    <li>S09: the lever principle needs to be clearer, with a camera move along the beam or a brief diagram overlay.</li>
+    <li>S11 and S19: the crew are too small in frame.</li>
+    <li>S15: the crew in the water aren't visible yet.</li>
+    <li>S20 and S21 look too similar. S21 will become a wide over the wall to the waiting fleet.</li>
+    <li>Ships, deck and wall need wear and texture variation to look less clean.</li>
+    <li>Lip-sync will be checked against the recorded narration and the "THERE IT IS!" line, frame by frame.</li>
+  </ul></div>
+</section>
+</div>
+</div>

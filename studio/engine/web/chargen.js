@@ -193,6 +193,7 @@ function drawProp(g, P, hand) {
   if (P.type === 'staff') { limb(g, [[x - 4, 968], [x + 10, y - 200]], 16, '#7a5030'); g.beginPath(); g.arc(x + 10, y - 210, 22, 0, 7); inked(g, P.color || '#c9a24a', 5); }
   if (P.type === 'scroll') { g.beginPath(); g.roundRect(x - 50, y - 20, 100, 40, 14); inked(g, '#efe2c2', 5); }
   if (P.type === 'vitis') { limb(g, [[x - 2, y + 150], [x + 6, y + 40], [x - 4, y - 70], [x + 4, y - 170]], 12, P.color || '#7a5030'); }
+  if (P.type === 'stick') { const d = P.dir || 1; limb(g, [[x - 70 * d, y + 30], [x + 250 * d, y - 80]], 12, P.color || '#8a6a48'); }
   if (P.type === 'flask') { g.beginPath(); g.moveTo(x - 12, y - 70); g.lineTo(x + 12, y - 70); g.lineTo(x + 12, y - 40); g.lineTo(x + 34, y + 10); g.quadraticCurveTo(x, y + 30, x - 34, y + 10); g.lineTo(x - 12, y - 40); g.closePath(); inked(g, '#8fe0b0', 5); }
   if (P.type === 'shield') { g.beginPath(); if (P.shape === 'scutum') g.roundRect(x - 78, y - 130, 156, 260, 30); else { g.moveTo(x - 70, y - 80); g.lineTo(x + 70, y - 80); g.quadraticCurveTo(x + 70, y + 60, x, y + 110); g.quadraticCurveTo(x - 70, y + 60, x - 70, y - 80); } inked(g, P.color || '#a8322c', 7);
     if (P.emblem === 'boss') { g.beginPath(); g.arc(x, y, 26, 0, 7); inked(g, '#d9b25a', 5); g.strokeStyle = '#d9b25a'; g.lineWidth = 8; for (const a of [0.6, 2.5, 3.8, 5.6]) { g.beginPath(); g.moveTo(x + Math.cos(a) * 34, y + Math.sin(a) * 34); g.lineTo(x + Math.cos(a) * 64, y + Math.sin(a) * 64); g.stroke(); } }
@@ -340,6 +341,6 @@ export function periodExtra(seed, period = 'roman', role = 'civilian') {
   base.hair.style = age === 'elder' ? pick(r, P.elderHair) : pick(r, P.hair); base.headwear = { type: pick(r, P.headwear) };
   base.outfit = { top: adultish ? pick(r, P.tops) : 'tunic', color: pick(r, P.cloth), color2: pick(r, P.cloth), clavi: pick(r, P.clavi), legs: P.legs, sandals: P.sandals, boots: P.boots, belt: r() < 0.6, beltColor: '#6b4426' };
   if (role === 'worker') { base.age = 'adult'; base.hair.style = pick(r, P.hair); base.wrinkles = 0; base.eyes.size = 1; base.outfit.apron = r() < 0.5 ? '#8a5636' : null; base.outfit.top = 'tunic'; base.build = pick(r, ['average', 'muscular', 'stout']); }
-  if (role === 'soldier') { const s = P.soldier; base.outfit = { ...base.outfit, top: s.top, color: s.color, color2: s.color2 }; base.headwear = { type: s.headwear, color: '#b8a070', crest: r() < 0.3 ? '#a8322c' : null, cheek: true }; base.prop = { type: pick(r, s.props) }; if (age === 'child') base.age = 'teen'; }
+  if (role === 'soldier') { base.age = age === 'child' ? 'teen' : 'adult'; base.wrinkles = 0; if (/bald|wild/.test(base.hair.style)) base.hair.style = 'caesar'; if (base.hair.color === '#ece8e0' || base.hair.color === '#9a948c') base.hair.color = '#4a2e1c'; const s = P.soldier; base.outfit = { ...base.outfit, top: s.top, color: s.color, color2: s.color2 }; base.headwear = { type: s.headwear, color: '#b8a070', crest: r() < 0.3 ? '#a8322c' : null, cheek: true }; base.prop = { type: pick(r, s.props) }; if (age === 'child') base.age = 'teen'; }
   return base;
 }
