@@ -2,7 +2,7 @@
 // Documented (Polybius 8.5-8.7): night approach; ships close in under the wall; beam projecting over the wall; iron hand on a
 // chain grips the prow; the operator presses down the inner end, the ship stands upright on its stern; the chain is let go
 // suddenly; ships capsize or fill. Reconstruction (ours): machine dimensions, counterweight + windlass, timings, the ship's look.
-const K = { STONES: [11.0, 11.8, 12.6], CREAK: 14.4, SWING0: 16.2, SWING1: 19.6, LOWER0: 18.8, BITE: 21.0, LIFT0: 22.6, LIFT1: 31.0, REL: 32.6, DAYS: 49.5, POKE: 51.4, JUMP0: 52.3, JUMP1: 53.0, BITEFISH: 52.4, YANK: 53.0, CAUGHT: 53.45 };
+const K = { STONES: [11.0, 11.8, 12.6], CREAK: 14.4, SWING0: 16.2, SWING1: 19.6, LOWER0: 18.8, BITE: 21.0, LIFT0: 22.6, LIFT1: 31.0, REL: 32.6, DAYS: 49.5, POKE: 55.4, JUMP0: 56.3, JUMP1: 57.0, BITEFISH: 56.4, YANK: 57.0, CAUGHT: 57.45 };
 const lerp = (a, b, k) => a + (b - a) * k, cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), ramp = (w, a, b) => cl((w - a) / (b - a));
 const ss = (x) => { x = cl(x); return x * x * (3 - 2 * x); }, s5 = (x) => { x = cl(x); return x * x * x * (x * (6 * x - 15) + 10); };
 const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); };
@@ -102,10 +102,10 @@ function poseShips(w, C) {
   let fx = -15, fz = lerp(96, 44, s5(ramp(w, 0, 15))), fro = 'row', back = 0;
   if (w > 15) fro = 'rest';
   if (w >= K.DAYS) { fx = -4; fz = lerp(40, 27, ss(ramp(w, K.DAYS, K.POKE))); fro = w < K.POKE ? 'row' : 'row'; if (w > K.POKE + 0.9) { back = (w - K.POKE - 0.9); fz += back * back * 2.2 + back * 2; } }
-  if (w >= 55.5) { fx = 20; fz = 130; }
-  F.root.position.set(fx, sea.heightAt(fx, fz, w), fz); F.root.rotation.set(0, Math.PI / 2 + (w >= K.DAYS && w < 55.5 ? 0.12 : -0.05), 0); const fs = sea.slopeAt(fx, fz, w); F.root.rotateZ(-fs[1] * 0.35); F.root.rotateX(fs[0] * 0.25);
+  if (w >= 59.5) { fx = 20; fz = 130; }
+  F.root.position.set(fx, sea.heightAt(fx, fz, w), fz); F.root.rotation.set(0, Math.PI / 2 + (w >= K.DAYS && w < 59.5 ? 0.12 : -0.05), 0); const fs = sea.slopeAt(fx, fz, w); F.root.rotateZ(-fs[1] * 0.35); F.root.rotateX(fs[0] * 0.25);
   F.setOars(w * (back > 0 ? -1.4 : 0.55), fro);
-  for (const s of SY.fleet) { const p = s.root.position; s.root.position.y = sea.heightAt(p.x, p.z, w); s.setOars(w * 0.5 + p.x * 0.1, w < 15 ? 'row' : 'rest'); if (!s.z0) s.z0 = p.z; p.z = s.z0 + (w < 15 ? lerp(40, 0, s5(ramp(w, 0, 15))) : 0) + (w >= 55.5 ? 60 : 0); }
+  for (const s of SY.fleet) { const p = s.root.position; s.root.position.y = sea.heightAt(p.x, p.z, w); s.setOars(w * 0.5 + p.x * 0.1, w < 15 ? 'row' : 'rest'); if (!s.z0) s.z0 = p.z; p.z = s.z0 + (w < 15 ? lerp(40, 0, s5(ramp(w, 0, 15))) : 0) + (w >= 59.5 ? 30 : 0); }
   // machine
   const phi = beamAngle(w, SY, st.lift), eSnap = w - (K.LIFT0 - 0.1); SY.beam.rotation.x = -phi + (w > K.LIFT0 - 0.1 && w < K.REL + 0.25 ? 0.004 * Math.sin(w * 41) + 0.02 * Math.exp(-Math.max(0, eSnap) * 4) * Math.sin(Math.max(0, eSnap) * 30) : 0); SY.beam.visible = true;
   const tip = beamTip(phi, SY); H.lift.updateWorldMatrix(true, true);
@@ -131,7 +131,7 @@ function poseShips(w, C) {
 const ON = { titus: ['hero', 0.8, 0.25], crew1: ['hero', 0.62, -0.35], crew2: ['hero', 0.5, 0.35], crew3: ['hero', 0.34, -0.15], crew4: ['hero', 0.72, -0.5], crew5: ['hero', 0.44, 0.5], crew6: ['hero', 0.27, 0.2], marcellus: ['flag', 0.16, 0.1], officer1: ['flag', 0.26, -0.45], officer2: ['flag', 0.3, 0.45] };
 export function placeActor(id, w, pose, C) {
   const { THREE } = S, SY = S.SY; if (S.lastW !== w) { poseShips(w, C); S.lastW = w; }
-  if (id === 'archimedes') { if (w >= 55.5) return { x: -4.5, y: SY.wallTop + 0.3, z: -1.5 }; return { x: -4.5, y: SY.wallTop + 0.3, z: -1.6 }; }
+  if (id === 'archimedes') { if (w >= 59.5) return { x: -4.5, y: SY.wallTop + 0.3, z: -1.5 }; return { x: -4.5, y: SY.wallTop + 0.3, z: -1.6 }; }
   if (id.startsWith('worker')) { const i = +id.slice(-1); return { x: -1.4 + i * 1.4, y: SY.wallTop + 0.3, z: -5.9 }; }
   const on = ON[id]; if (!on) return null;
   let [ship, u, v] = on; if (w >= K.DAYS && ship === 'hero') { ship = 'flag'; u = { titus: 0.72, crew1: 0.62, crew2: 0.53, crew3: 0.4, crew4: 0.45, crew5: 0.33, crew6: 0.26 }[id]; v = { crew4: 0.9 }[id] ?? v;

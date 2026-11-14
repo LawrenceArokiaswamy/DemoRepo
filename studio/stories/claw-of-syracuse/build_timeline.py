@@ -33,7 +33,7 @@ for i, p in enumerate(P):
 dur = [len(c) / SR for c in clips]
 
 # world-time anchors for each line (storyboard V2): line i starts 0.25 s after the shot at world time Wl[i] begins
-Wl = {3: 4.4, 4: 9.4, 5: 13.9, 6: 16.4, 7: 20.55, 8: 22.4, 9: 28.0, 10: 32.0, 11: 36.0, 12: 37.5, 13: 42.5, 14: 49.5, 15: 51.6, 16: 52.6, 17: 55.5}
+Wl = {3: 4.4, 4: 9.4, 5: 13.9, 6: 16.4, 7: 20.55, 8: 22.4, 9: 28.0, 10: 32.0, 11: 36.0, 12: 37.5, 13: 42.5, 14: 49.5, 15: 55.6, 16: 56.6, 17: 59.5}
 LEAD, GAP, MAXS = 0.22, 0.28, 1.12
 tm = [(0.0, 29.0)]; start = {1: 0.25}
 hook_end = 0.25 + dur[0] + 0.25; tm.append((hook_end, 31.2)); start[2] = hook_end + 0.05
@@ -42,10 +42,12 @@ for i in range(4, 18):
     need = start[prevI] + dur[prevI - 1] + GAP - LEAD
     if i == 11:   # the drop: silent slow-motion fall and impact between "let go" and "capsized"
         v0 = max(need, V + (32.95 - prevW) / MAXS); tm.append((v0, 32.95)); tm.append((v0 + 1.7, 33.75)); tm.append((v0 + 3.2, 36.0)); V, prevW = v0 + 3.2, 36.0; start[11] = V + LEAD; prevI = 11; continue
-    Vi = max(need, V + (Wl[i] - prevW) / MAXS) if i != 15 else V + (Wl[i] - prevW)   # Titus's scream lands on his beat in real time
+    Vi = max(need, V + (Wl[i] - prevW) / MAXS) if i != 15 else max(need - 0.1, V + (Wl[i] - prevW))   # Titus screams right after "they screamed...", never over the narrator
+    wi = Wl[i]
+    if i == 16: Vi = need; wi = prevW + (Vi - V)   # Titus's line plays 1:1 in world time so his lip-sync matches the audio exactly
     if i == 17: Vi = max(Vi, V + 3.7)   # the fishing payoff (catch + laugh + wink) needs room
-    tm.append((Vi, Wl[i])); start[i] = Vi + (LEAD if i not in (15,) else 0.05); V, prevW, prevI = Vi, Wl[i], i
-end = start[17] + dur[16] + 1.8; tm.append((end, prevW + (end - V))); tm[-1] = (end, min(62.5, tm[-1][1]))
+    Wl[i] = wi; tm.append((Vi, wi)); start[i] = Vi + (LEAD if i not in (15,) else 0.05); V, prevW, prevI = Vi, Wl[i], i
+end = start[17] + dur[16] + 1.8; tm.append((end, prevW + (end - V))); tm[-1] = (end, min(66.5, tm[-1][1]))
 DUR = round(end + 0.2, 2)
 
 # voice track (Titus's line goes in the voice track too; his clip also drives lip-sync)
@@ -95,7 +97,7 @@ for i, p in enumerate(P):
         if len(chunk) >= 5 or j == len(ws) - 1 or x['w'].endswith(('.', ',', ':', '?', '!')):
             ce = start[i + 1] + (x['end'] - p['start']) * scale + 0.12; ev.append(('Cap', cs, ce, ' '.join(chunk).replace('...', '…'))); chunk, cs = [], None
 lab = [('Label', start[3], start[3] + 3.4, 'SYRACUSE · SICILY · 213 BC'), ('Note', w2v(22.4), w2v(28.0), 'RECONSTRUCTION — machine design is our interpretation'),
-       ('Note', w2v(49.5), w2v(55.5), 'DRAMATIZATION — the fishing rod is a joke, not history')]
+       ('Note', w2v(54.5), w2v(59.5), 'DRAMATIZATION — the fishing rod is a joke, not history')]
 hdr = """[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080

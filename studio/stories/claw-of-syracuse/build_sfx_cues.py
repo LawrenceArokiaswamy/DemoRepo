@@ -27,6 +27,6 @@ for w in (26.9, 28.0, 28.5, 29.7, 30.3, 31.0, 31.6, 32.1): at(w, type='plop', ga
 at(32.85, type='snap', gain=0.8); at(32.9, type='whoosh', dur=0.9, gain=1.3)                    # released, falls
 at(33.7, type='thud', gain=2.2); at(33.7, type='pour', dur=2.2, decay=1.4, gain=1.6); at(33.72, type='roll', gain=1.4); at(33.9, type='pour', dur=4.0, decay=0.5, gain=1.0)   # impact
 for _ in range(18): at(round(random.uniform(34.2, 37.5), 3), type='bubble')
-for w in (52.4, 52.9, 53.4, 53.9, 54.4, 54.9): at(w, type='plop', gain=1.1)                       # marines back water in panic
-at(53.0, type='plop', gain=3.2); at(53.0, type='whoosh', dur=0.4, hi=True, gain=0.5)               # marine jumps overboard / fish yanked out
+for w in (56.4, 56.9, 57.4, 57.9, 58.4, 58.9): at(w, type='plop', gain=1.1)                       # marines back water in panic
+at(57.0, type="plop", gain=3.2); at(57.0, type='whoosh', dur=0.4, hi=True, gain=0.5)               # marine jumps overboard / fish yanked out
 json.dump({'duration': S['duration'], 'events': sorted(E, key=lambda e: e['t'])}, open('build/cues.json', 'w')); print(len(E), 'cues')
