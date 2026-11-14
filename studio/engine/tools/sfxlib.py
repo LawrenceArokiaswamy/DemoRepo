@@ -38,6 +38,24 @@ def S_chisel(e): n = int(0.12 * SR); return partials(1900 + rng.uniform(-150, 15
 def S_tick(e): n = int(0.05 * SR); return filt(nz(n), 2100, True) * env(n, 0.0005, 0.006) + np.sin(2 * np.pi * 3000 * np.arange(n) / SR) * env(n, 0.0005, 0.01) * 0.4, 0.18, 0
 def S_bell(e): return partials(1180, 0.8, [(1, 1), (2.76, 0.5), (5.4, 0.25), (8.9, 0.12)], 3) / 1.9, 0.4, 0
 def S_clank(e): return partials(620, 0.25, [(1, 1), (1.53, 0.7), (2.41, 0.5), (3.9, 0.3)], 18), 0.3, 0.3
+def S_chain(e):   # chain rattling while it pays out or sways: many small inharmonic link clinks
+    d = e.get('dur', 0.8); n = int(d * SR); out = np.zeros(n)
+    for k in range(int(d * 26)): i = int(rng.uniform(0, n - 4000)); c = partials(2600 + rng.uniform(-500, 900), 0.06, [(1, 1), (1.6, 0.5), (2.9, 0.3)], 90); out[i:i + len(c)] += c[:n - i] * rng.uniform(0.3, 1)
+    return out * np.minimum(1, np.arange(n) / (0.05 * SR)), 0.2, 0.2
+def S_snap(e):    # chain snapping taut under load: twang + metallic crack + low thump
+    n = int(0.9 * SR); t = np.arange(n) / SR; tw = np.sin(2 * np.pi * (180 + 40 * np.exp(-t * 6)) * t) * np.exp(-t * 5) * (1 + 0.5 * np.sin(2 * np.pi * 9 * t))
+    return tw * 0.8 + partials(1400, 0.9, [(1, 1), (2.3, 0.6), (3.7, 0.4)], 22) * 0.6 + np.sin(2 * np.pi * 60 * t) * np.exp(-t * 9) * 1.2 + band(nz(n), 1500, 6000) * env(n, 0.001, 0.02) * 0.8, 0.5, 0.0
+def S_creak(e):   # timber creak: resonant band noise, stick-slip pulses
+    d = e.get('dur', 1.2); n = int(d * SR); t = np.arange(n) / SR; f0 = e.get('f', 220) * (1 + 0.15 * np.sin(2 * np.pi * 0.7 * t))
+    pulses = (np.sin(2 * np.pi * np.cumsum(f0 * 0.12) / SR) > 0.6).astype(float); x = band(nz(n) * (0.3 + pulses), f0.mean() * 0.8, f0.mean() * 4)
+    return x * np.sin(np.linspace(0, np.pi, n)) ** 0.7, 0.32, -0.2
+def S_groan(e):   # deep structural strain (the beam and hull under load)
+    d = e.get('dur', 1.6); n = int(d * SR); t = np.arange(n) / SR; f = 70 + 25 * np.sin(2 * np.pi * 0.5 * t)
+    return (np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.6 + band(nz(n), 80, 400) * 0.8) * np.sin(np.linspace(0, np.pi, n)) ** 1.2, 0.45, 0.0
+def S_pour(e):    # water pouring off a hull: broadband rushing, level follows the event's envelope
+    d = e.get('dur', 4); n = int(d * SR); t = np.arange(n) / SR; lv = np.minimum(1, t / 0.4) * np.exp(-t * e.get('decay', 0.12)) * (0.8 + 0.2 * np.sin(2 * np.pi * 1.3 * t))
+    return (band(nz(n), 300, 5000) * 0.7 + filt(nz(n), 400) * 0.5) * lv, 0.35, 0.1
+def S_drip(e): m = int(0.07 * SR); tb = np.arange(m) / SR; return np.sin(2 * np.pi * (900 + 900 * rng.random()) * tb * (1 - tb * 4)) * env(m, 0.001, 0.015), 0.08, rng.uniform(-0.4, 0.4)
 # ambience presets
 if 'sea' in AMB:
     sw = 0.55 + 0.45 * np.sin(2 * np.pi * tt / 6.5) ** 2; sea = filt(nz(N), 500) * sw + filt(nz(N), 1800, True) * 0.08 * sw ** 3; sea /= np.abs(sea).max()

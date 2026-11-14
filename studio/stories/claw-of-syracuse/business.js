@@ -32,6 +32,15 @@ export async function init(C) {
     g.beginPath(); g.moveTo(190, 64); g.lineTo(240, 30); g.lineTo(240, 98); g.closePath(); g.fillStyle = '#5f90a4'; g.fill(); g.stroke(); g.beginPath(); g.arc(78, 56, 13, 0, 7); g.fillStyle = '#fff'; g.fill(); g.stroke(); g.beginPath(); g.arc(80, 57, 6, 0, 7); g.fillStyle = '#2a1b17'; g.fill();
     g.beginPath(); g.moveTo(44, 72); g.quadraticCurveTo(58, 80, 64, 70); g.stroke(); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
     S.fish = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true })); S.fish.scale.set(0.9, 0.45, 1); scene.add(S.fish); }
+  S.splinters = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.25 + rnd(i, 21) * 0.3), new THREE.MeshStandardMaterial({ color: '#8a6a4a', roughness: 0.8 })); m.visible = false; scene.add(m);
+    S.splinters.push({ m, v: [(rnd(i, 22) - 0.5) * 6, 2 + rnd(i, 23) * 4, (rnd(i, 24) - 0.2) * 5], r: 10 + rnd(i, 25) * 20 }); }
+  S.dust = []; for (let i = 0; i < 60; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: S.tex, color: '#b9a88e', transparent: true, depthWrite: false, opacity: 0 })); sp.scale.set(0.25 + rnd(i, 31) * 0.4, 0.25 + rnd(i, 31) * 0.4, 1); sp.visible = false; scene.add(sp);
+    S.dust.push({ s: sp, o: [(rnd(i, 32) - 0.5) * 2.5, (rnd(i, 33) - 0.6) * 3, (rnd(i, 34) - 0.5) * 12 + 4], drift: (rnd(i, 35) - 0.5) * 0.6, delay: rnd(i, 36) * 0.3 }); }
+  { const c = document.createElement('canvas'); c.width = 32; c.height = 128; const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.35, 'rgba(235,245,248,0.9)'); gr.addColorStop(1, 'rgba(235,245,248,0.15)');
+    g.fillStyle = gr; g.beginPath(); g.ellipse(16, 64, 9, 62, 0, 0, 7); g.fill(); S.streak = new THREE.CanvasTexture(c); S.streak.colorSpace = THREE.SRGBColorSpace; }
+  S.drops = []; for (let i = 0; i < 260; i++) { const drip = i % 3 === 0, sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: S.streak, color: '#eaf3f5', transparent: true, depthWrite: false, opacity: 0 })); sp.visible = false; scene.add(sp);
+    S.drops.push({ sp, drip, keel: rnd(i, 41) > 0.35, u: i % 7 === 1 ? 0.9 + rnd(i, 42) * 0.1 : 0.52 + rnd(i, 42) * 0.48, side: rnd(i, 43) > 0.5 ? 1 : -1, per: 0.8 + rnd(i, 44) * 0.9, ph: rnd(i, 45), w: drip ? 0.035 + rnd(i, 46) * 0.03 : (i % 7 === 1 ? 0.6 + rnd(i, 46) * 0.5 : 0.1 + rnd(i, 46) * 0.16) }); }
+  S.dropSplash = makeSplash(THREE, scene, S.tex, { count: 120, seed: 17 });
   // catapult stones (fly over the ships and land far behind)
   S.stones = K.STONES.map((t0, i) => { const m = new THREE.Mesh(new THREE.DodecahedronGeometry(0.45, 1), new THREE.MeshStandardMaterial({ color: '#8f8576', roughness: 1 })); m.castShadow = true; scene.add(m);
     return { m, t0, from: new THREE.Vector3(-6 + i * 5, 15, -3), to: new THREE.Vector3(-10 + i * 9, 0, 70 + i * 12), fl: 1.9 }; });
@@ -55,7 +64,9 @@ function heroState(w, SY) {
   cz = lerp(82, 31.4, s5(ramp(w, 0, 14.2))); if (w > 14.2) cz = 31.4 - 0.5 * ss(ramp(w, 14.2, 21));
   if (w > 12.5) rowMode = 'rest';
   // lift: angle eased with small jerks (the crew heaving), beam derived from the ship so the chain stays taut
-  let th = 0; if (w >= K.LIFT0) { const k = ramp(w, K.LIFT0, K.LIFT1); th = 68 * D2R * (s5(k) + 0.012 * Math.sin(k * 40) * (1 - k)); }
+  let th = 0; if (w >= K.LIFT0) { const d = w - K.LIFT0, hold = 0.6;   // the sea holds the hull a moment (suction), then it breaks free and rises in heaves
+    const k = cl((d - hold) / (K.LIFT1 - K.LIFT0 - hold)), ke = cl(k - (0.8 / (2 * Math.PI * 6)) * Math.sin(2 * Math.PI * 6 * k));
+    th = 68 * D2R * s5(ke) + (d < hold ? 0.7 * D2R * Math.sin(d / hold * Math.PI) : 0); sink = Math.sin(th) * 0.7; }
   if (w >= K.REL) { const d = w - K.REL - 0.25; if (d < 0) th = 68 * D2R; else if (d < 0.85) th = 68 * D2R * (1 - (d / 0.85) ** 2); else { const e = d - 0.85; th = -17 * D2R * Math.exp(-e * 1.3) * Math.cos(e * 3.6) - 4 * D2R * (1 - Math.exp(-e)); sink = cl(e * 0.5) * 1.9 + 0.8 * Math.exp(-e * 2) * Math.sin(e * 6); roll = 18 * D2R * ss(cl(e / 3)); } }
   lift = th; const bowRise = Math.sin(th) * Lb;
   // drag toward the wall while standing up, so the bow stays under the beam tip
@@ -94,7 +105,7 @@ function poseShips(w, C) {
   F.setOars(w * (back > 0 ? -1.4 : 0.55), fro);
   for (const s of SY.fleet) { const p = s.root.position; s.root.position.y = sea.heightAt(p.x, p.z, w); s.setOars(w * 0.5 + p.x * 0.1, w < 15 ? 'row' : 'rest'); if (!s.z0) s.z0 = p.z; p.z = s.z0 + (w < 15 ? lerp(40, 0, s5(ramp(w, 0, 15))) : 0) + (w >= 55.5 ? 60 : 0); }
   // machine
-  const phi = beamAngle(w, SY, st.lift); SY.beam.rotation.x = -phi; SY.beam.visible = true;
+  const phi = beamAngle(w, SY, st.lift), eSnap = w - (K.LIFT0 - 0.1); SY.beam.rotation.x = -phi + (w > K.LIFT0 - 0.1 && w < K.REL + 0.25 ? 0.004 * Math.sin(w * 41) + 0.02 * Math.exp(-Math.max(0, eSnap) * 4) * Math.sin(Math.max(0, eSnap) * 30) : 0); SY.beam.visible = true;
   const tip = beamTip(phi, SY); H.lift.updateWorldMatrix(true, true);
   const grip = H.bowGrip.clone().applyMatrix4(H.body.matrixWorld);
   let handP; if (w < K.BITE) handP = new THREE.Vector3(tip.x, tip.y - chainLen(w), tip.z); else if (w < K.REL + 0.25) handP = grip; else { const d = w - K.REL - 0.25; handP = new THREE.Vector3(tip.x, Math.max(tip.y - 9, grip.y + 0.4 * Math.max(0, 0.6 - d)), tip.z + d * 0.4); }
@@ -102,7 +113,11 @@ function poseShips(w, C) {
   SY.hand.position.copy(handP); SY.hand.rotation.set(0, 0, w > K.BITE && w < K.REL + 0.25 ? -st.lift * 0.6 : Math.sin(w * 1.3) * 0.08);
   // chain links from tip to hand
   const A = new THREE.Vector3(tip.x, tip.y, tip.z), B = handP.clone().add(new THREE.Vector3(0, 0.4, 0)), n = Math.min(119, Math.floor(A.distanceTo(B) / 0.24)), M = new THREE.Matrix4(), Q = new THREE.Quaternion(), dir = B.clone().sub(A).normalize();
-  const slack = w < K.BITE ? 0.0 : w > K.REL + 0.25 ? 0.6 : 0; for (let i = 0; i < 120; i++) { if (i >= n) { M.makeScale(0, 0, 0); SY.chain.setMatrixAt(i, M); continue; } const k = i / n, P = A.clone().lerp(B, k); P.y -= Math.sin(k * Math.PI) * slack;
+  const SNAP = K.LIFT0 - 0.1, load = w > SNAP && w < K.REL + 0.25 ? 1 : 0; let slack = 0, vib = 0;
+  if (w >= K.BITE && w < SNAP) slack = 1.5 * (1 - ss(ramp(w, K.BITE + 0.5, SNAP)));
+  if (w >= SNAP && w < K.REL + 0.25) { const e = w - SNAP; vib = 0.28 * Math.exp(-e * 4.5) * Math.sin(e * 62) + 0.025 * Math.sin(w * 93); }
+  if (w > K.REL + 0.25) slack = 0.6;
+  for (let i = 0; i < 120; i++) { if (i >= n) { M.makeScale(0, 0, 0); SY.chain.setMatrixAt(i, M); continue; } const k = i / n, P = A.clone().lerp(B, k); P.y -= Math.sin(k * Math.PI) * slack; P.x += Math.sin(k * Math.PI) * vib;
     Q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir); if (i % 2) Q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2)); M.compose(P, Q, new THREE.Vector3(1, 1, 1)); SY.chain.setMatrixAt(i, M); }
   SY.chain.instanceMatrix.needsUpdate = true; SY.winch.rotation.x = (w > K.LIFT0 ? (Math.min(w, K.REL) - K.LIFT0) * 2.2 : 0);
   // sliding cargo
@@ -125,13 +140,15 @@ export function placeActor(id, w, pose, C) {
     const k = { titus: 0, crew1: 1, crew2: 2, crew3: 3, crew4: 4, crew5: 5, crew6: 6 }[id], x = st.x + (k % 2 ? -1 : 1) * (4.2 + k * 0.6), z = st.cz + 3 + k * 2.3;
     return { x, y: SY.sea.heightAt(x, z, w) - 0.95, z, noShadow: true };
   }
-  let lean = 0; if (ship === 'hero' && st.lift > 0.02) { const slide = cl(Math.sin(st.lift) * 1.2 - 0.1) * (u - 0.1) * 0.5; u -= slide; lean = -st.lift / D2R * 0.3; }
+  let lean = 0; if (ship === 'hero' && st.lift > 0.02) { const sl = (L) => cl(Math.sin(L) * 1.2 - 0.1) * (u - 0.1) * 0.5, slide = sl(st.lift), prev = sl(heroState(w - 0.08, SY).lift), spd = Math.abs(slide - prev) / 0.08 * 30;
+    u -= slide; lean = -Math.min(14, st.lift / D2R * 0.22); if (spd > 0.05 && pose) pose.gait = { phase: slide * 9, amt: Math.min(1, spd * 0.6), run: false, dir: -1, lift: 1, stride: 1 }; }
   const p = S0.deckPoint(u, v).applyMatrix4(S0.body.matrixWorld); return { x: p.x, y: p.y, z: p.z, lean, noShadow: true, hide: ship === 'hero' && S.st.hidden };
 }
 
 export function prepare(C) {
   if (S.prepared) return; S.prepared = true; const { THREE } = S, SY = S.SY;
   for (const d of S.debris) { poseShips(d.t0, C); const H = SY.hero; d.p0 = H.deckPoint(d.u, d.side * 1.05).applyMatrix4(H.body.matrixWorld); d.v0 = new THREE.Vector3(d.side * 1.6, 0.8, 2.2); }
+  poseShips(K.BITE + 0.02, C); S.biteP = S.grip.clone();
   poseShips(K.JUMP0, C); S.jumpFrom = SY.flag.deckPoint(0.45, 0.9).applyMatrix4(SY.flag.body.matrixWorld); poseShips(K.JUMP1, C); S.jumpTo = new THREE.Vector3(3.6, 0, 0).applyMatrix4(SY.flag.root.matrixWorld).setY(0);
   S.lastW = null;
 }
@@ -154,7 +171,7 @@ export function frame(w, C, t) {
   S.splash.update(w, ev);
   const hit = K.REL + 1.1, bz = S.impactZ ?? (S.impactZ = bowZ);
   S.impact.update(w, [{ t0: hit, pos: [1.0, 0.3, bz + 0.5], power: 1.4, scale: 2.4, spread: [1.3, 1.0] }, { t0: hit + 0.12, pos: [1.0, 0.3, bz + 5], power: 1.1, scale: 2.0, spread: [1.6, 0.8] }, { t0: hit + 0.2, pos: [1.0, 0.3, bz + 10], power: 0.8, scale: 1.6, spread: [1.8, 0.8] }]);
-  S.rings.forEach((m, i) => { const a = w - hit - i * 0.25; m.visible = a > 0 && a < 4.5 && w < K.DAYS; if (!m.visible) return; const r = 4 + a * (6 - i); m.scale.set(r * 2, r * 2 * (1 + i * 0.3), 1); m.position.set(1.0, SY.sea.heightAt(1, bz + 4 + i * 3, w) + 0.12, bz + 4 + i * 3); m.material.opacity = 0.75 * (1 - a / 4.5); });
+  S.rings.forEach((m, i) => { if (w < hit && S.sternZ) { const a = w - K.LIFT0 - 0.6 - i * 0.4; m.visible = a > 0 && a < 4; if (!m.visible) return; const r = 3 + a * (5.5 - i); m.scale.set(r * 2, r * 2, 1); m.position.set(1.0, SY.sea.heightAt(1, S.sternZ, w) + 0.1, S.sternZ); m.material.opacity = 0.55 * (1 - a / 4); return; } const a = w - hit - i * 0.25; m.visible = a > 0 && a < 4.5 && w < K.DAYS; if (!m.visible) return; const r = 4 + a * (6 - i); m.scale.set(r * 2, r * 2 * (1 + i * 0.3), 1); m.position.set(1.0, SY.sea.heightAt(1, bz + 4 + i * 3, w) + 0.12, bz + 4 + i * 3); m.material.opacity = 0.75 * (1 - a / 4.5); });
   // the impact: crater + expanding wave in the sea surface, a crown of water columns, debris splashes
   if (!S.impactSet && S.impactZ != null) { SY.sea.setImpact(1.0, S.impactZ + 4, hit, 1.6); S.impactSet = true; }
   S.crown.update(w, [{ t0: hit, pos: [1.0, 0.0, bz + 1.5], r0: 3.6, H: 19, dur: 1.7, stretch: [1.5, 1.0] }, { t0: hit + 0.12, pos: [1.0, 0.0, bz + 8], r0: 2.6, H: 10, dur: 1.3, stretch: [1.6, 0.9] }, { t0: hit + 0.22, pos: [1.0, 0.0, bz + 15], r0: 2.0, H: 6, dur: 1.1 }]);
@@ -173,7 +190,23 @@ export function frame(w, C, t) {
   SY.sunGlow.material.opacity = 0.55 * sunUp * (w >= K.DAYS ? 0.4 : 1); SY.surf.material.map.offset.x = w * 0.02; SY.surf.material.opacity = 0.55 + 0.25 * Math.sin(w * 1.1);
   C.grade.uniforms.con.value = 0.27; C.grade.uniforms.vig.value = 0.38;
   S.spray2.update(w, [{ t0: K.LIFT0 + 0.2, pos: [1, 0.2, (S.grip?.z || 15) + 0.5], power: 0.8, spread: [0.6, 0.6] }, { t0: K.DAYS + 3.1, pos: [-4, 0.2, 27], power: 0.6 }]);
-  // cascading water from the rising hull
+  // the stern digs in as the bow rises: a displacement wave
+  if (!S.sternSet) { SY.sea.setImpact(1.0, (S.st?.cz ?? 31) + 13, K.LIFT0 + 0.6, 1.0, 1); S.sternZ = (S.st?.cz ?? 31) + 13; S.sternSet = true; }
+  // splinters when the iron hand bites; dust shaken off the beam and A-frame at the snap and on each heave
+  for (const p of S.splinters) { const a = w - K.BITE; p.m.visible = a > 0 && a < 1.4 && !!S.biteP; if (!p.m.visible) continue; p.m.position.set(S.biteP.x + p.v[0] * a, S.biteP.y + p.v[1] * a - 4.9 * a * a, S.biteP.z + p.v[2] * a); p.m.rotation.set(a * p.r, a * p.r * 0.7, 0); }
+  for (const d of S.dust) { const t0s = [K.LIFT0 - 0.1, K.LIFT0 + 1.9, K.LIFT0 + 3.3, K.LIFT0 + 4.6], ages = t0s.map((t0) => w - t0 - d.delay).filter((a) => a > 0 && a < 2.2); const a = ages.length ? Math.min(...ages) : -1;
+    d.s.visible = a >= 0; if (!d.s.visible) continue; d.s.position.set(SY.pivot.x + d.o[0] + d.drift * a, SY.pivot.y + d.o[1] - 2.2 * a * a, SY.pivot.z + d.o[2]); d.s.material.opacity = 0.5 * (1 - a / 2.2); }
+  // water draining off the rising hull: falling streams + drips (no fog), splashes where they land
+  const Hh = SY.hero, active = st.lift > 0.03 && w < K.REL + 1 && !st.hidden, drainK = Math.exp(-Math.max(0, w - K.LIFT0) * 0.12); const landings = [];
+  for (const d of S.drops) { d.sp.visible = false; if (!active) continue; const per = d.per, tau = ((w * 1.0 + d.ph * per) % per);
+    const p0 = Hh.deckPoint(d.u, d.side * 0.35).setY(-Hh.draft * (d.keel ? 0.85 : 0.2) + (d.keel ? 0 : 0.6)).applyMatrix4(Hh.body.matrixWorld); const sea0 = SY.sea.heightAt(p0.x, p0.z, w);
+    if (p0.y < sea0 + 0.4) continue; const y = p0.y - 4.905 * tau * tau; if (y < sea0) { if (tau - Math.sqrt(2 * (p0.y - sea0) / 9.81) < 0.05) landings.push([p0.x, sea0, p0.z]); continue; }
+    d.sp.visible = true; const v = 9.81 * tau; d.sp.position.set(p0.x + d.side * 0.25, y - Math.min(1.6, v * 0.08) * 0.5, p0.z); d.sp.scale.set(d.w, d.drip ? d.w * 4 : Math.max(0.25, Math.min(d.w > 0.5 ? 3.2 : 2.2, v * (d.w > 0.5 ? 0.3 : 0.16))), 1); d.sp.material.opacity = (d.drip ? 0.85 : d.w > 0.5 ? 0.8 * Math.exp(-Math.max(0, w - K.LIFT0 - 0.6) * 0.45) : 0.7) * drainK; }
+  S.dropSplash.update(w, landings.slice(0, 12).map((p, i) => ({ t0: w - 0.05 - (i % 4) * 0.04, pos: p, power: 0.22 })));
+  // (legacy cascade puffs disabled: they read as fog)
+  if (S.cascade) for (const c of S.cascade) c.sp.visible = false;
+  if (false) {
   const H = SY.hero; for (const c of S.cascade) { const on = st.lift > 0.05 && w < K.REL + 1 && !st.hidden; c.sp.visible = on; if (!on) continue;
     const p = H.deckPoint(c.u, c.side * 1.1).setY(0.4).applyMatrix4(H.body.matrixWorld), ph = (w * 1.6 + c.ph) % 1; c.sp.position.set(p.x + c.side * 0.4, Math.max(0.1, p.y - ph * ph * 9), p.z); c.sp.scale.set(c.sz, c.sz * 2.6, 1); c.sp.material.opacity = 0.55 * (1 - ph) * cl(st.lift * 3); }
+  }
 }

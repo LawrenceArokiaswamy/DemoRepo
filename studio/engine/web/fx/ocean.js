@@ -4,18 +4,18 @@
 export function makeOcean(THREE, scene, { center = [0, 0], near = 140, seg = 280, color = '#1d4d5e', deep = '#0d2a36', foam = '#dfe9ea', y = 0,
   waves = [[1, 0.25, 0.18, 14], [0.6, 0.8, 0.14, 9], [-0.4, 1, 0.1, 5.5], [0.9, -0.4, 0.08, 3.2]], amp = 1, detail = 0.35 } = {}) {
   const W = waves.map(([dx, dz, st, L]) => { const l = Math.hypot(dx, dz), k = 2 * Math.PI / L; return { d: [dx / l, dz / l], k, c: Math.sqrt(9.81 / k), a: st / k, st }; });
-  const U = { uImp: { value: new THREE.Vector4(0, 0, 1e9, 0) }, uT: { value: 0 }, uAmp: { value: amp }, uC: { value: new THREE.Vector2(...center) }, uR: { value: near * 0.42 }, uFoam: { value: new THREE.Color(foam) }, uDeep: { value: new THREE.Color(deep) } };
+  const U = { uImp: { value: new THREE.Vector4(0, 0, 1e9, 0) }, uImp2: { value: new THREE.Vector4(0, 0, 1e9, 0) }, uT: { value: 0 }, uAmp: { value: amp }, uC: { value: new THREE.Vector2(...center) }, uR: { value: near * 0.42 }, uFoam: { value: new THREE.Color(foam) }, uDeep: { value: new THREE.Color(deep) } };
   const glslW = W.map((w) => `G(p, vec2(${w.d[0].toFixed(4)}, ${w.d[1].toFixed(4)}), ${w.k.toFixed(5)}, ${w.c.toFixed(5)}, ${w.a.toFixed(5)}, d, tn, bn);`).join('\n');
-  const vHead = `uniform float uT, uAmp, uR; uniform vec2 uC; uniform vec4 uImp; varying float vH; varying float vDist; varying float vRing;
-    float ringH(vec2 p, out vec2 grad) { grad = vec2(0.0); float dt = uT - uImp.z; if (dt <= 0.0 || uImp.w <= 0.0) return 0.0;
+  const vHead = `uniform float uT, uAmp, uR; uniform vec2 uC; uniform vec4 uImp, uImp2; varying float vH; varying float vDist; varying float vRing;
+    float ringH(vec2 p, vec4 uImp, out vec2 grad) { grad = vec2(0.0); float dt = uT - uImp.z; if (dt <= 0.0 || uImp.w <= 0.0) return 0.0;
       vec2 d = p - uImp.xy; float r = length(d) + 1e-3, c = dt * 7.0, wdt = 2.0 + dt * 1.2, env = uImp.w * exp(-dt * 0.55) * exp(-pow((r - c) / wdt, 2.0)), ph = (r - c) * 0.9;
       float crater = uImp.w * 1.3 * exp(-dt * 2.6) * exp(-r * r / 22.0); float h = env * cos(ph) - crater;
-      float dh = -env * 0.9 * sin(ph) + env * cos(ph) * (-2.0 * (r - c) / (wdt * wdt)) + crater * 2.0 * r / 22.0; grad = d / r * dh; vRing = max(0.0, env * cos(ph)) / uImp.w; return h; }
+      float dh = -env * 0.9 * sin(ph) + env * cos(ph) * (-2.0 * (r - c) / (wdt * wdt)) + crater * 2.0 * r / 22.0; grad = d / r * dh; vRing = max(vRing, max(0.0, env * cos(ph)) / max(uImp.w, 0.6)); return h; }
     void G(vec3 p, vec2 dir, float k, float c, float a, inout vec3 d, inout vec3 tn, inout vec3 bn) {
       float f = k * (dot(dir, p.xz) - c * uT); float aa = a * uAmp * (1.0 - smoothstep(uR * 0.8, uR, length(p.xz - uC)));
       d += vec3(dir.x * aa * cos(f), aa * sin(f), dir.y * aa * cos(f));
       float s = k * aa; tn += vec3(-dir.x * dir.x * s * sin(f), dir.x * s * cos(f), -dir.x * dir.y * s * sin(f)); bn += vec3(-dir.x * dir.y * s * sin(f), dir.y * s * cos(f), -dir.y * dir.y * s * sin(f)); }
-    vec3 gerst(vec3 p, out vec3 n) { vRing = 0.0; vec3 d = vec3(0.0), tn = vec3(1.0, 0.0, 0.0), bn = vec3(0.0, 0.0, 1.0); ${glslW} n = normalize(cross(bn, tn)); vec2 gr; d.y += ringH(p.xz, gr); n = normalize(n + vec3(-gr.x, 0.0, -gr.y)); return p + d; }`;
+    vec3 gerst(vec3 p, out vec3 n) { vRing = 0.0; vec3 d = vec3(0.0), tn = vec3(1.0, 0.0, 0.0), bn = vec3(0.0, 0.0, 1.0); ${glslW} n = normalize(cross(bn, tn)); vec2 gr, gr2; d.y += ringH(p.xz, uImp, gr) + ringH(p.xz, uImp2, gr2); gr += gr2; n = normalize(n + vec3(-gr.x, 0.0, -gr.y)); return p + d; }`;
   const mk = (geo, displaced) => { const m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.13, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.2, envMapIntensity: 0.72, normalMap: detailNormals(THREE), normalScale: new THREE.Vector2(detail, detail) });
     m.normalMap.repeat.set(geo.parameters?.width ? geo.parameters.width / 11.3 : 300, geo.parameters?.height ? geo.parameters.height / 9.7 : 300); m.normalMap.rotation = 0.37;
     m.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, U); m.userData.shader = sh;
@@ -31,10 +31,10 @@ export function makeOcean(THREE, scene, { center = [0, 0], near = 140, seg = 280
   const fg = new THREE.RingGeometry(near * 0.4, 4000, 96, 4); fg.rotateX(-Math.PI / 2); fg.translate(center[0], -0.02, center[1]); const farMesh = mk(fg, false); farMesh.material.normalMap.repeat.set(700, 700);
   const heightAt = (x, z, t) => { let h = 0; const fade = 1 - smooth(U.uR.value * 0.8, U.uR.value, Math.hypot(x - center[0], z - center[1]));
     for (const w of W) { const f = w.k * (w.d[0] * x + w.d[1] * z - w.c * t); h += w.a * U.uAmp.value * fade * Math.sin(f); }
-    const I = U.uImp.value, dt = t - I.z; if (dt > 0 && I.w > 0) { const r = Math.hypot(x - I.x, z - I.y) + 1e-3, c = dt * 7, wdt = 2 + dt * 1.2, env = I.w * Math.exp(-dt * 0.55) * Math.exp(-(((r - c) / wdt) ** 2)); h += env * Math.cos((r - c) * 0.9) - I.w * 1.3 * Math.exp(-dt * 2.6) * Math.exp(-r * r / 22); }
+    for (const I of [U.uImp.value, U.uImp2.value]) { const dt = t - I.z; if (dt > 0 && I.w > 0) { const r = Math.hypot(x - I.x, z - I.y) + 1e-3, c = dt * 7, wdt = 2 + dt * 1.2, env = I.w * Math.exp(-dt * 0.55) * Math.exp(-(((r - c) / wdt) ** 2)); h += env * Math.cos((r - c) * 0.9) - I.w * 1.3 * Math.exp(-dt * 2.6) * Math.exp(-r * r / 22); } }
     return y + h; };
   const slopeAt = (x, z, t) => { const e = 0.5; return [(heightAt(x + e, z, t) - heightAt(x - e, z, t)) / (2 * e), (heightAt(x, z + e, t) - heightAt(x, z - e, t)) / (2 * e)]; };
-  return { near: nearMesh, far: farMesh, U, heightAt, slopeAt, setImpact(x, z, t0, a) { U.uImp.value.set(x, z, t0, a); }, update(t) { U.uT.value = t; for (const m of [nearMesh.material, farMesh.material]) m.normalMap.offset.set(t * 0.011, t * 0.017); } };
+  return { near: nearMesh, far: farMesh, U, heightAt, slopeAt, setImpact(x, z, t0, a, slot = 0) { (slot ? U.uImp2 : U.uImp).value.set(x, z, t0, a); }, update(t) { U.uT.value = t; for (const m of [nearMesh.material, farMesh.material]) m.normalMap.offset.set(t * 0.011, t * 0.017); } };
 }
 const smooth = (a, b, x) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
 let _dn = null;
