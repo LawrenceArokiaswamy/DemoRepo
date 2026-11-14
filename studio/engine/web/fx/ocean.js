@@ -4,31 +4,37 @@
 export function makeOcean(THREE, scene, { center = [0, 0], near = 140, seg = 280, color = '#1d4d5e', deep = '#0d2a36', foam = '#dfe9ea', y = 0,
   waves = [[1, 0.25, 0.18, 14], [0.6, 0.8, 0.14, 9], [-0.4, 1, 0.1, 5.5], [0.9, -0.4, 0.08, 3.2]], amp = 1, detail = 0.35 } = {}) {
   const W = waves.map(([dx, dz, st, L]) => { const l = Math.hypot(dx, dz), k = 2 * Math.PI / L; return { d: [dx / l, dz / l], k, c: Math.sqrt(9.81 / k), a: st / k, st }; });
-  const U = { uT: { value: 0 }, uAmp: { value: amp }, uC: { value: new THREE.Vector2(...center) }, uR: { value: near * 0.42 }, uFoam: { value: new THREE.Color(foam) }, uDeep: { value: new THREE.Color(deep) } };
+  const U = { uImp: { value: new THREE.Vector4(0, 0, 1e9, 0) }, uT: { value: 0 }, uAmp: { value: amp }, uC: { value: new THREE.Vector2(...center) }, uR: { value: near * 0.42 }, uFoam: { value: new THREE.Color(foam) }, uDeep: { value: new THREE.Color(deep) } };
   const glslW = W.map((w) => `G(p, vec2(${w.d[0].toFixed(4)}, ${w.d[1].toFixed(4)}), ${w.k.toFixed(5)}, ${w.c.toFixed(5)}, ${w.a.toFixed(5)}, d, tn, bn);`).join('\n');
-  const vHead = `uniform float uT, uAmp, uR; uniform vec2 uC; varying float vH; varying float vDist;
+  const vHead = `uniform float uT, uAmp, uR; uniform vec2 uC; uniform vec4 uImp; varying float vH; varying float vDist; varying float vRing;
+    float ringH(vec2 p, out vec2 grad) { grad = vec2(0.0); float dt = uT - uImp.z; if (dt <= 0.0 || uImp.w <= 0.0) return 0.0;
+      vec2 d = p - uImp.xy; float r = length(d) + 1e-3, c = dt * 7.0, wdt = 2.0 + dt * 1.2, env = uImp.w * exp(-dt * 0.55) * exp(-pow((r - c) / wdt, 2.0)), ph = (r - c) * 0.9;
+      float crater = uImp.w * 1.3 * exp(-dt * 2.6) * exp(-r * r / 22.0); float h = env * cos(ph) - crater;
+      float dh = -env * 0.9 * sin(ph) + env * cos(ph) * (-2.0 * (r - c) / (wdt * wdt)) + crater * 2.0 * r / 22.0; grad = d / r * dh; vRing = max(0.0, env * cos(ph)) / uImp.w; return h; }
     void G(vec3 p, vec2 dir, float k, float c, float a, inout vec3 d, inout vec3 tn, inout vec3 bn) {
       float f = k * (dot(dir, p.xz) - c * uT); float aa = a * uAmp * (1.0 - smoothstep(uR * 0.8, uR, length(p.xz - uC)));
       d += vec3(dir.x * aa * cos(f), aa * sin(f), dir.y * aa * cos(f));
       float s = k * aa; tn += vec3(-dir.x * dir.x * s * sin(f), dir.x * s * cos(f), -dir.x * dir.y * s * sin(f)); bn += vec3(-dir.x * dir.y * s * sin(f), dir.y * s * cos(f), -dir.y * dir.y * s * sin(f)); }
-    vec3 gerst(vec3 p, out vec3 n) { vec3 d = vec3(0.0), tn = vec3(1.0, 0.0, 0.0), bn = vec3(0.0, 0.0, 1.0); ${glslW} n = normalize(cross(bn, tn)); return p + d; }`;
+    vec3 gerst(vec3 p, out vec3 n) { vRing = 0.0; vec3 d = vec3(0.0), tn = vec3(1.0, 0.0, 0.0), bn = vec3(0.0, 0.0, 1.0); ${glslW} n = normalize(cross(bn, tn)); vec2 gr; d.y += ringH(p.xz, gr); n = normalize(n + vec3(-gr.x, 0.0, -gr.y)); return p + d; }`;
   const mk = (geo, displaced) => { const m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.13, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.2, envMapIntensity: 0.72, normalMap: detailNormals(THREE), normalScale: new THREE.Vector2(detail, detail) });
     m.normalMap.repeat.set(geo.parameters?.width ? geo.parameters.width / 11.3 : 300, geo.parameters?.height ? geo.parameters.height / 9.7 : 300); m.normalMap.rotation = 0.37;
     m.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, U); m.userData.shader = sh;
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\n' + vHead)
-        .replace('#include <beginnormal_vertex>', displaced ? 'vec3 gN; vec3 gP = gerst((modelMatrix * vec4(position, 1.0)).xyz, gN); vec3 objectNormal = gN; vH = gP.y; vDist = length(gP.xz - uC);' : 'vec3 objectNormal = vec3(0.0, 1.0, 0.0); vH = 0.0; vDist = 1e4;')
+        .replace('#include <beginnormal_vertex>', displaced ? 'vec3 gN; vec3 gP = gerst((modelMatrix * vec4(position, 1.0)).xyz, gN); vec3 objectNormal = gN; vH = gP.y; vDist = length(gP.xz - uC);' : 'vec3 objectNormal = vec3(0.0, 1.0, 0.0); vH = 0.0; vDist = 1e4; vRing = 0.0;')
         .replace('#include <begin_vertex>', displaced ? 'vec3 transformed = (inverse(modelMatrix) * vec4(gP, 1.0)).xyz;' : 'vec3 transformed = vec3(position);');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform vec3 uFoam, uDeep; uniform float uAmp; varying float vH; varying float vDist;')
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform vec3 uFoam, uDeep; uniform float uAmp; varying float vH; varying float vDist; varying float vRing;')
         .replace('#include <color_fragment>', `#include <color_fragment>
-          float foamK = smoothstep(0.22 * uAmp, 0.55 * uAmp, vH); diffuseColor.rgb = mix(diffuseColor.rgb, uDeep, 0.35 * smoothstep(0.0, -0.4 * uAmp, vH)); diffuseColor.rgb = mix(diffuseColor.rgb, uFoam, foamK * 0.55);`); };
+          float foamK = smoothstep(0.22 * uAmp, 0.55 * uAmp, vH); diffuseColor.rgb = mix(diffuseColor.rgb, uDeep, 0.35 * smoothstep(0.0, -0.4 * uAmp, vH)); diffuseColor.rgb = mix(diffuseColor.rgb, uFoam, clamp(foamK * 0.55 + smoothstep(0.25, 0.8, vRing) * 0.85, 0.0, 1.0));`); };
     const mesh = new THREE.Mesh(geo, m); mesh.receiveShadow = true; mesh.position.y = y; scene.add(mesh); return mesh; };
   const ng = new THREE.PlaneGeometry(near, near, seg, seg); ng.rotateX(-Math.PI / 2); ng.translate(center[0], 0, center[1]);
   const nearMesh = mk(ng, true);
   const fg = new THREE.RingGeometry(near * 0.4, 4000, 96, 4); fg.rotateX(-Math.PI / 2); fg.translate(center[0], -0.02, center[1]); const farMesh = mk(fg, false); farMesh.material.normalMap.repeat.set(700, 700);
   const heightAt = (x, z, t) => { let h = 0; const fade = 1 - smooth(U.uR.value * 0.8, U.uR.value, Math.hypot(x - center[0], z - center[1]));
-    for (const w of W) { const f = w.k * (w.d[0] * x + w.d[1] * z - w.c * t); h += w.a * U.uAmp.value * fade * Math.sin(f); } return y + h; };
+    for (const w of W) { const f = w.k * (w.d[0] * x + w.d[1] * z - w.c * t); h += w.a * U.uAmp.value * fade * Math.sin(f); }
+    const I = U.uImp.value, dt = t - I.z; if (dt > 0 && I.w > 0) { const r = Math.hypot(x - I.x, z - I.y) + 1e-3, c = dt * 7, wdt = 2 + dt * 1.2, env = I.w * Math.exp(-dt * 0.55) * Math.exp(-(((r - c) / wdt) ** 2)); h += env * Math.cos((r - c) * 0.9) - I.w * 1.3 * Math.exp(-dt * 2.6) * Math.exp(-r * r / 22); }
+    return y + h; };
   const slopeAt = (x, z, t) => { const e = 0.5; return [(heightAt(x + e, z, t) - heightAt(x - e, z, t)) / (2 * e), (heightAt(x, z + e, t) - heightAt(x, z - e, t)) / (2 * e)]; };
-  return { near: nearMesh, far: farMesh, U, heightAt, slopeAt, update(t) { U.uT.value = t; for (const m of [nearMesh.material, farMesh.material]) m.normalMap.offset.set(t * 0.011, t * 0.017); } };
+  return { near: nearMesh, far: farMesh, U, heightAt, slopeAt, setImpact(x, z, t0, a) { U.uImp.value.set(x, z, t0, a); }, update(t) { U.uT.value = t; for (const m of [nearMesh.material, farMesh.material]) m.normalMap.offset.set(t * 0.011, t * 0.017); } };
 }
 const smooth = (a, b, x) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
 let _dn = null;
@@ -57,5 +63,17 @@ export function makeSplash(THREE, scene, tex, { count = 160, seed = 1, color = '
       for (let j = 0; j < n; j++, i++) { const p = P[i], sc = e.scale || 1, a = t - e.t0 - p.delay * sc; if (a < 0 || a > p.life * Math.sqrt(sc)) continue; const k = a / (p.life * Math.sqrt(sc)), pw = (e.power || 1) * sc, sp = e.spread || [1, 1], dir = e.dir || [0, 0];
         const vx = (Math.cos(p.ang) * p.out * sp[0] + dir[0]) * 4 * pw, vz = (Math.sin(p.ang) * p.out * sp[1] + dir[1]) * 4 * pw, vy = p.up * 9 * pw * (p.big ? 0.45 : 1);
         const x = e.pos[0] + vx * a * (p.big ? 0.5 : 1), z = e.pos[2] + vz * a * (p.big ? 0.5 : 1), yy = Math.max(e.pos[1] - 0.2, e.pos[1] + vy * a - 0.5 * 9.81 * a * a * (p.big ? 0.25 : 1));
-        p.s.visible = true; p.s.position.set(x, yy, z); const sz = p.size * pw * (p.big ? 1.6 : 1) * (1 + k * (p.big ? 2.5 : 0.6)); p.s.scale.set(sz, sz, 1); p.s.material.opacity = (p.big ? 0.42 : 0.85) * (1 - k) * Math.min(1, a * 12); } } } };
+        p.s.visible = true; p.s.position.set(x, yy, z); const sz = p.size * pw * (p.big ? 1.6 : 1) * (1 + k * (p.big ? 2.5 : 0.6)); p.s.scale.set(sz, sz, 1); p.s.material.opacity = (p.big ? 0.26 * (e.mist ?? 1) : 0.9) * (1 - k) * Math.min(1, a * 12); } } } };
+}
+
+// CROWN SPLASH: a ring of tall water columns that shoot up and collapse (the big-impact look), plus a central geyser
+export function makeCrown(THREE, scene, tex, { count = 70, seed = 2 } = {}) {
+  const rnd = (i, k) => { const x = Math.sin((i + seed * 17.3) * 91.7 + k * 271.3) * 43758.5453; return x - Math.floor(x); };
+  const C = []; for (let i = 0; i < count; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, color: '#f4f8f8', transparent: true, depthWrite: false, opacity: 0 })); s.visible = false; scene.add(s); C.push({ s, a: rnd(i, 1) * Math.PI * 2, h: 0.55 + rnd(i, 2) * 0.45, w: 0.7 + rnd(i, 3) * 0.8, d: rnd(i, 4) * 0.12, core: i < count * 0.15 }); }
+  /** events: [{ t0, pos:[x,y,z], r0, H, dur, stretch:[sx,sz] }] */
+  return { update(t, events) { for (const c of C) c.s.visible = false; let i = 0; const per = Math.floor(C.length / Math.max(1, events.length));
+    for (const e of events) for (let j = 0; j < per; j++, i++) { const c = C[i], a = t - e.t0 - c.d; if (a < 0 || a > e.dur * 1.6) continue; const k = a / e.dur, st = e.stretch || [1, 1];
+      const rise = Math.sin(Math.min(1, k) * Math.PI * 0.5), fall = k > 1 ? 1 - (k - 1) / 0.6 : 1, H = e.H * c.h * (c.core ? 1.35 : 1) * rise * Math.max(0, fall);
+      const r = c.core ? e.r0 * 0.25 : e.r0 + a * 2.6; c.s.visible = H > 0.05; c.s.position.set(e.pos[0] + Math.cos(c.a) * r * st[0], e.pos[1] + H * 0.5, e.pos[2] + Math.sin(c.a) * r * st[1]);
+      c.s.scale.set((c.core ? 3.2 : 1.5) * c.w * (1 + a * 0.6), Math.max(0.5, H), 1); c.s.material.opacity = 0.85 * Math.min(1, a * 10) * (k > 1 ? Math.max(0, fall) : 1); } } };
 }

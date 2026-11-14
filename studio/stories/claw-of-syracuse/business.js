@@ -2,7 +2,7 @@
 // Documented (Polybius 8.5-8.7): night approach; ships close in under the wall; beam projecting over the wall; iron hand on a
 // chain grips the prow; the operator presses down the inner end, the ship stands upright on its stern; the chain is let go
 // suddenly; ships capsize or fill. Reconstruction (ours): machine dimensions, counterweight + windlass, timings, the ship's look.
-const K = { STONES: [11.0, 11.8, 12.6], CREAK: 14.4, SWING0: 16.2, SWING1: 19.6, LOWER0: 18.8, BITE: 21.0, LIFT0: 22.6, LIFT1: 31.0, REL: 32.6, DAYS: 49.5, POKE: 51.4 };
+const K = { STONES: [11.0, 11.8, 12.6], CREAK: 14.4, SWING0: 16.2, SWING1: 19.6, LOWER0: 18.8, BITE: 21.0, LIFT0: 22.6, LIFT1: 31.0, REL: 32.6, DAYS: 49.5, POKE: 51.4, JUMP0: 52.3, JUMP1: 53.0, BITEFISH: 52.4, YANK: 53.0, CAUGHT: 53.45 };
 const lerp = (a, b, k) => a + (b - a) * k, cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), ramp = (w, a, b) => cl((w - a) / (b - a));
 const ss = (x) => { x = cl(x); return x * x * (3 - 2 * x); }, s5 = (x) => { x = cl(x); return x * x * x * (x * (6 * x - 15) + 10); };
 const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); };
@@ -11,18 +11,34 @@ let S = null;
 
 export async function init(C) {
   const { THREE, scene, SET } = C; S = { THREE, SY: SET };
-  const { makeSplash, makeSprayTexture } = await import('/engine/web/fx/ocean.js');
+  const { makeSplash, makeSprayTexture, makeCrown } = await import('/engine/web/fx/ocean.js');
   S.tex = makeSprayTexture(THREE); S.splash = makeSplash(THREE, scene, S.tex, { count: 240, seed: 3 }); S.impact = makeSplash(THREE, scene, S.tex, { count: 420, seed: 5 });
   const rc = document.createElement('canvas'); rc.width = rc.height = 256; const rg = rc.getContext('2d'), grd = rg.createRadialGradient(128, 128, 60, 128, 128, 128); grd.addColorStop(0, 'rgba(255,255,255,0)'); grd.addColorStop(0.55, 'rgba(255,255,255,0.85)'); grd.addColorStop(0.75, 'rgba(255,255,255,0.35)'); grd.addColorStop(1, 'rgba(255,255,255,0)'); rg.fillStyle = grd; rg.fillRect(0, 0, 256, 256);
   for (let i = 0; i < 900; i++) { rg.fillStyle = 'rgba(255,255,255,' + Math.random() * 0.5 + ')'; const a = Math.random() * 6.28, r = 70 + Math.random() * 55; rg.fillRect(128 + Math.cos(a) * r, 128 + Math.sin(a) * r, 3, 3); }
   const rt = new THREE.CanvasTexture(rc); rt.colorSpace = THREE.SRGBColorSpace; S.rings = [0, 1, 2].map(() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: rt, transparent: true, depthWrite: false, opacity: 0, color: '#f2f6f6' })); m.rotation.x = -Math.PI / 2; scene.add(m); return m; }); S.spray2 = makeSplash(THREE, scene, S.tex, { count: 120, seed: 9 });
+  S.crown = makeCrown(THREE, scene, S.tex, { count: 90, seed: 4 }); S.debrisSplash = makeSplash(THREE, scene, S.tex, { count: 220, seed: 12 });
+  // debris that tumbles off the tilting ship (shields, oars, helmets, a barrel): start states captured in prepare()
+  const shM = new THREE.MeshStandardMaterial({ color: '#a8322c', roughness: 0.55 }), brz = new THREE.MeshStandardMaterial({ color: '#b08a4a', metalness: 0.8, roughness: 0.35 }), oarM = new THREE.MeshStandardMaterial({ color: '#8a6a48', roughness: 0.7 });
+  const mkShield = () => { const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.0, 0.06), shM)); const b = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), brz); b.position.z = 0.05; g.add(b); return g; };
+  const mkOar = () => { const g = new THREE.Group(); const o = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 6.5, 6), oarM); g.add(o); const bl = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.1, 0.42), oarM); bl.position.y = -3.4; g.add(bl); return g; };
+  const mkHelm = () => new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), brz);
+  S.debris = [[mkShield, 25.6, 0.62, 1], [mkShield, 26.8, 0.5, -1], [mkOar, 27.2, 0.55, 1], [mkHelm, 27.9, 0.7, -1], [mkShield, 28.5, 0.4, 1], [mkOar, 29.1, 0.35, -1], [mkHelm, 29.8, 0.45, 1], [mkShield, 30.3, 0.66, -1], [mkOar, 30.9, 0.6, 1]]
+    .map(([mk, t0, u, side], i) => { const m = mk(); m.traverse((o) => { if (o.isMesh) o.castShadow = true; }); m.visible = false; scene.add(m); return { m, t0, u, side, spin: [rnd(i, 1) * 6 - 3, rnd(i, 2) * 6 - 3, rnd(i, 3) * 6 - 3] }; });
+  // fishing gag props: line, bobber, fish (invented visual joke illustrating Plutarch 17.3)
+  S.line = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 1, 4), new THREE.MeshBasicMaterial({ color: '#e8e2d0' })); scene.add(S.line);
+  S.bobber = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), new THREE.MeshStandardMaterial({ color: '#c0302a', roughness: 0.4 })); scene.add(S.bobber);
+  { const c = document.createElement('canvas'); c.width = 256; c.height = 128; const g = c.getContext('2d'); g.lineJoin = 'round'; g.lineWidth = 7; g.strokeStyle = '#2a1b17';
+    g.beginPath(); g.moveTo(40, 64); g.quadraticCurveTo(110, 8, 190, 64); g.quadraticCurveTo(110, 120, 40, 64); g.closePath(); g.fillStyle = '#7fb0c0'; g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(190, 64); g.lineTo(240, 30); g.lineTo(240, 98); g.closePath(); g.fillStyle = '#5f90a4'; g.fill(); g.stroke(); g.beginPath(); g.arc(78, 56, 13, 0, 7); g.fillStyle = '#fff'; g.fill(); g.stroke(); g.beginPath(); g.arc(80, 57, 6, 0, 7); g.fillStyle = '#2a1b17'; g.fill();
+    g.beginPath(); g.moveTo(44, 72); g.quadraticCurveTo(58, 80, 64, 70); g.stroke(); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    S.fish = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true })); S.fish.scale.set(0.9, 0.45, 1); scene.add(S.fish); }
   // catapult stones (fly over the ships and land far behind)
   S.stones = K.STONES.map((t0, i) => { const m = new THREE.Mesh(new THREE.DodecahedronGeometry(0.45, 1), new THREE.MeshStandardMaterial({ color: '#8f8576', roughness: 1 })); m.castShadow = true; scene.add(m);
     return { m, t0, from: new THREE.Vector3(-6 + i * 5, 15, -3), to: new THREE.Vector3(-10 + i * 9, 0, 70 + i * 12), fl: 1.9 }; });
   // water cascading off the rising hull: falling streak sprites
   S.cascade = []; for (let i = 0; i < 90; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: S.tex, color: '#e8f0f2', transparent: true, depthWrite: false, opacity: 0 })); scene.add(sp); S.cascade.push({ sp, u: 0.45 + rnd(i, 1) * 0.55, side: rnd(i, 2) > 0.5 ? 1 : -1, ph: rnd(i, 3), sz: 0.25 + rnd(i, 4) * 0.5 }); }
   // deck cargo that slides when the ship tilts
-  S.barrels = []; for (let i = 0; i < 3; i++) { const b = await C.loadModel('Barrel_02'); const bb = new THREE.Box3().setFromObject(b); b.scale.setScalar(0.9 / (bb.max.y - bb.min.y)); const g = new THREE.Group(); g.add(b); { const b2 = new THREE.Box3().setFromObject(b), c = b2.getCenter(new THREE.Vector3()); b.position.set(-c.x, -b2.min.y, -c.z); } SET.hero.body.add(g); S.barrels.push({ g, u: 0.55 + i * 0.09, v: (i - 1) * 0.45 }); }
+  S.barrels = []; for (let i = 0; i < 3; i++) { const b = await C.loadModel(i % 2 ? 'ceramic_vase_02' : 'ceramic_vase_01'); b.traverse((o) => { if (o.isMesh) { o.material = o.material.clone(); o.material.map = null; o.material.color.set(['#b0603a', '#a5583a', '#bd6f45'][i]); o.material.roughness = 0.88; } }); const bb = new THREE.Box3().setFromObject(b); b.scale.setScalar(0.75 / (bb.max.y - bb.min.y)); const g = new THREE.Group(); g.add(b); { const b2 = new THREE.Box3().setFromObject(b), c = b2.getCenter(new THREE.Vector3()); b.position.set(-c.x, -b2.min.y, -c.z); } SET.hero.body.add(g); S.barrels.push({ g, u: 0.55 + i * 0.09, v: (i - 1) * 0.45 }); }
   // sand tray with a geometric diagram (Plutarch: he died absorbed in a diagram); sits at Archimedes' feet in the reveal
   const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d'); g.fillStyle = '#d8c39a'; g.fillRect(0, 0, 512, 512); for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(${120 + Math.random() * 60},${100 + Math.random() * 50},70,0.25)`; g.fillRect(Math.random() * 512, Math.random() * 512, 2, 2); }
   g.strokeStyle = 'rgba(90,70,40,0.9)'; g.lineWidth = 6; g.beginPath(); g.arc(256, 256, 150, 0, 7); g.stroke(); g.strokeRect(106, 106, 300, 300); g.beginPath(); g.moveTo(106, 406); g.lineTo(256, 106); g.lineTo(406, 406); g.stroke(); g.beginPath(); g.moveTo(60, 470); g.lineTo(470, 300); g.stroke(); g.beginPath(); g.arc(300, 360, 8, 0, 7); g.fill();
@@ -95,23 +111,30 @@ function poseShips(w, C) {
 }
 
 // actors on decks / walls / in the water
-const ON = { titus: ['hero', 0.8, 0.25], crew1: ['hero', 0.62, -0.35], crew2: ['hero', 0.5, 0.35], crew3: ['hero', 0.34, -0.15], marcellus: ['flag', 0.16, 0.1], officer1: ['flag', 0.26, -0.45], officer2: ['flag', 0.3, 0.45] };
+const ON = { titus: ['hero', 0.8, 0.25], crew1: ['hero', 0.62, -0.35], crew2: ['hero', 0.5, 0.35], crew3: ['hero', 0.34, -0.15], crew4: ['hero', 0.72, -0.5], crew5: ['hero', 0.44, 0.5], crew6: ['hero', 0.27, 0.2], marcellus: ['flag', 0.16, 0.1], officer1: ['flag', 0.26, -0.45], officer2: ['flag', 0.3, 0.45] };
 export function placeActor(id, w, pose, C) {
   const { THREE } = S, SY = S.SY; if (S.lastW !== w) { poseShips(w, C); S.lastW = w; }
   if (id === 'archimedes') { if (w >= 55.5) return { x: -4.5, y: SY.wallTop + 0.3, z: -1.5 }; return { x: -4.5, y: SY.wallTop + 0.3, z: -1.6 }; }
   if (id.startsWith('worker')) { const i = +id.slice(-1); return { x: -1.4 + i * 1.4, y: SY.wallTop + 0.3, z: -5.9 }; }
   const on = ON[id]; if (!on) return null;
-  let [ship, u, v] = on; if (w >= K.DAYS && ship === 'hero') { ship = 'flag'; u = { titus: 0.72, crew1: 0.6, crew2: 0.5, crew3: 0.4 }[id]; }
+  let [ship, u, v] = on; if (w >= K.DAYS && ship === 'hero') { ship = 'flag'; u = { titus: 0.72, crew1: 0.62, crew2: 0.53, crew3: 0.4, crew4: 0.45, crew5: 0.33, crew6: 0.26 }[id]; v = { crew4: 0.9 }[id] ?? v;
+    if (id === 'crew4' && w >= K.JUMP0) { if (!S.jumpFrom) prepare(C); const k = cl((w - K.JUMP0) / (K.JUMP1 - K.JUMP0)); if (k < 1) { const p = S.jumpFrom.clone().lerp(S.jumpTo, k); p.y = lerp(S.jumpFrom.y, SY.sea.heightAt(S.jumpTo.x, S.jumpTo.z, w) - 0.9, k) + Math.sin(k * Math.PI) * 2.2; return { x: p.x, y: p.y, z: p.z, lean: -40 * k, noShadow: true }; }
+      return { x: S.jumpTo.x, y: SY.sea.heightAt(S.jumpTo.x, S.jumpTo.z, w) - 0.95, z: S.jumpTo.z, noShadow: true }; } }
   const S0 = ship === 'flag' ? SY.flag : SY.hero, st = S.st;
   if (ship === 'hero' && w > K.REL + 1.0 && w < K.DAYS) {   // in the water around the swamped hull
-    const k = { titus: 0, crew1: 1, crew2: 2, crew3: 3 }[id], x = st.x + 3.4 + k * 1.3 * (k % 2 ? -1 : 1) * 1.8, z = st.cz - 6 + k * 3.1;
+    const k = { titus: 0, crew1: 1, crew2: 2, crew3: 3, crew4: 4, crew5: 5, crew6: 6 }[id], x = st.x + (k % 2 ? -1 : 1) * (4.2 + k * 0.6), z = st.cz + 3 + k * 2.3;
     return { x, y: SY.sea.heightAt(x, z, w) - 0.95, z, noShadow: true };
   }
-  let lean = 0; if (ship === 'hero' && st.lift > 0.02) { const slide = cl(Math.sin(st.lift) * 1.2 - 0.1) * (u - 0.1); u -= slide; lean = -st.lift / D2R * 0.35; }
+  let lean = 0; if (ship === 'hero' && st.lift > 0.02) { const slide = cl(Math.sin(st.lift) * 1.2 - 0.1) * (u - 0.1) * 0.5; u -= slide; lean = -st.lift / D2R * 0.3; }
   const p = S0.deckPoint(u, v).applyMatrix4(S0.body.matrixWorld); return { x: p.x, y: p.y, z: p.z, lean, noShadow: true, hide: ship === 'hero' && S.st.hidden };
 }
 
-export function prepare(C) {}
+export function prepare(C) {
+  if (S.prepared) return; S.prepared = true; const { THREE } = S, SY = S.SY;
+  for (const d of S.debris) { poseShips(d.t0, C); const H = SY.hero; d.p0 = H.deckPoint(d.u, d.side * 1.05).applyMatrix4(H.body.matrixWorld); d.v0 = new THREE.Vector3(d.side * 1.6, 0.8, 2.2); }
+  poseShips(K.JUMP0, C); S.jumpFrom = SY.flag.deckPoint(0.45, 0.9).applyMatrix4(SY.flag.body.matrixWorld); poseShips(K.JUMP1, C); S.jumpTo = new THREE.Vector3(3.6, 0, 0).applyMatrix4(SY.flag.root.matrixWorld).setY(0);
+  S.lastW = null;
+}
 export function frame(w, C, t) {
   const { THREE } = S, SY = S.SY; if (S.lastW !== w) { poseShips(w, C); S.lastW = w; }
   SY.sea.update(w);
@@ -132,6 +155,23 @@ export function frame(w, C, t) {
   const hit = K.REL + 1.1, bz = S.impactZ ?? (S.impactZ = bowZ);
   S.impact.update(w, [{ t0: hit, pos: [1.0, 0.3, bz + 0.5], power: 1.4, scale: 2.4, spread: [1.3, 1.0] }, { t0: hit + 0.12, pos: [1.0, 0.3, bz + 5], power: 1.1, scale: 2.0, spread: [1.6, 0.8] }, { t0: hit + 0.2, pos: [1.0, 0.3, bz + 10], power: 0.8, scale: 1.6, spread: [1.8, 0.8] }]);
   S.rings.forEach((m, i) => { const a = w - hit - i * 0.25; m.visible = a > 0 && a < 4.5 && w < K.DAYS; if (!m.visible) return; const r = 4 + a * (6 - i); m.scale.set(r * 2, r * 2 * (1 + i * 0.3), 1); m.position.set(1.0, SY.sea.heightAt(1, bz + 4 + i * 3, w) + 0.12, bz + 4 + i * 3); m.material.opacity = 0.75 * (1 - a / 4.5); });
+  // the impact: crater + expanding wave in the sea surface, a crown of water columns, debris splashes
+  if (!S.impactSet && S.impactZ != null) { SY.sea.setImpact(1.0, S.impactZ + 4, hit, 1.6); S.impactSet = true; }
+  S.crown.update(w, [{ t0: hit, pos: [1.0, 0.0, bz + 1.5], r0: 3.6, H: 19, dur: 1.7, stretch: [1.5, 1.0] }, { t0: hit + 0.12, pos: [1.0, 0.0, bz + 8], r0: 2.6, H: 10, dur: 1.3, stretch: [1.6, 0.9] }, { t0: hit + 0.22, pos: [1.0, 0.0, bz + 15], r0: 2.0, H: 6, dur: 1.1 }]);
+  const dEv = []; for (const d of S.debris) { if (!d.p0) { d.m.visible = false; continue; } const a = w - d.t0; d.m.visible = a > 0 && w < K.DAYS; if (!d.m.visible) continue;
+    const g = 9.81, p = d.p0.clone().addScaledVector(d.v0, a); p.y -= 0.5 * g * a * a; const sh = SY.sea.heightAt(p.x, p.z, w);
+    if (p.y > sh) { d.m.position.copy(p); d.m.rotation.set(d.spin[0] * a, d.spin[1] * a, d.spin[2] * a); } else { const tHit = (d.v0.y + Math.sqrt(d.v0.y * d.v0.y + 2 * g * Math.max(0, d.p0.y - sh))) / g; d.m.position.set(p.x, sh + 0.02, p.z); d.m.rotation.set(Math.PI / 2 + Math.sin(w) * 0.1, d.spin[1] * tHit, 0); dEv.push({ t0: d.t0 + tHit, pos: [p.x, sh, p.z], power: 0.55 }); } }
+  S.debrisSplash.update(w, dEv.concat([{ t0: K.JUMP1, pos: S.jumpTo ? [S.jumpTo.x, 0.2, S.jumpTo.z] : [0, -50, 0], power: 0.8 }, { t0: K.YANK, pos: [-4.2, 0.2, 4.8], power: 0.45 }]));
+  // fishing gag (days later)
+  const A = C.ACT.archimedes, fishing = w >= K.DAYS && A?.out?.propTip; S.line.visible = S.bobber.visible = S.fish.visible = !!fishing;
+  if (fishing) { const tip = C.cardToWorld(A, A.out.propTip, 0.06), water = new THREE.Vector3(tip.x + 0.4, SY.sea.heightAt(tip.x + 0.4, 4.8, w) + 0.04, 4.8);
+    const bob = w > K.BITEFISH && w < K.YANK ? Math.sin(w * 30) * 0.08 - 0.06 : Math.sin(w * 2) * 0.02; let end = water.clone(); end.y += bob;
+    if (w >= K.YANK) { const k = cl((w - K.YANK) / (K.CAUGHT - K.YANK)), hang = tip.clone().add(new THREE.Vector3(0, -0.7, 0.1)); end = water.clone().lerp(hang, ss(k)); end.y += Math.sin(k * Math.PI) * 3; }
+    S.bobber.position.copy(end); S.bobber.visible = w < K.YANK; const mid = tip.clone().add(end).multiplyScalar(0.5), len = tip.distanceTo(end); S.line.position.copy(mid); S.line.scale.set(1, len, 1); S.line.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), end.clone().sub(tip).normalize());
+    S.fish.visible = w >= K.YANK; S.fish.position.copy(end).add(new THREE.Vector3(0, -0.25, 0)); S.fish.material.rotation = w < K.CAUGHT ? (w - K.YANK) * 14 : Math.PI / 2 + Math.sin(w * 18) * 0.5; }
+  // atmosphere: sun glow at dawn, surf along the rocks, stronger grade
+  SY.sunGlow.material.opacity = 0.55 * sunUp * (w >= K.DAYS ? 0.4 : 1); SY.surf.material.map.offset.x = w * 0.02; SY.surf.material.opacity = 0.55 + 0.25 * Math.sin(w * 1.1);
+  C.grade.uniforms.con.value = 0.27; C.grade.uniforms.vig.value = 0.38;
   S.spray2.update(w, [{ t0: K.LIFT0 + 0.2, pos: [1, 0.2, (S.grip?.z || 15) + 0.5], power: 0.8, spread: [0.6, 0.6] }, { t0: K.DAYS + 3.1, pos: [-4, 0.2, 27], power: 0.6 }]);
   // cascading water from the rising hull
   const H = SY.hero; for (const c of S.cascade) { const on = st.lift > 0.05 && w < K.REL + 1 && !st.hidden; c.sp.visible = on; if (!on) continue;

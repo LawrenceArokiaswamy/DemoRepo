@@ -20,6 +20,18 @@
    4.4
   ],
   [
+   33.0,
+   33.0
+  ],
+  [
+   34.6,
+   33.8
+  ],
+  [
+   36.0,
+   36.0
+  ],
+  [
    62,
    62
   ]
@@ -79,15 +91,15 @@
      "boots": "#6b4426"
     },
     "prop": {
-     "type": "stick",
+     "type": "rod",
      "dir": 1
     },
     "propHand": "R",
     "personality": {
-     "energy": 0.8,
-     "tempo": 0.95,
+     "energy": 0.9,
+     "tempo": 1.0,
      "posture": "upright",
-     "exaggeration": 0.9,
+     "exaggeration": 1.0,
      "walk": "shuffle"
     }
    },
@@ -218,18 +230,18 @@
      }
     },
     {
-     "t": 11.17,
+     "t": 11.16,
      "act": "shock",
      "body": {
       "yaw": 0.1
      }
     },
     {
-     "t": 12.47,
+     "t": 12.46,
      "act": "laugh"
     },
     {
-     "t": 14.67,
+     "t": 14.66,
      "act": "notice",
      "body": {
       "headTilt": -14
@@ -242,7 +254,7 @@
      }
     },
     {
-     "t": 16.67,
+     "t": 16.66,
      "act": "fear",
      "face": {
       "pupil": [
@@ -252,24 +264,36 @@
      }
     },
     {
-     "t": 21.17,
+     "t": 21.16,
      "act": "shock"
     },
     {
-     "t": 23.07,
+     "t": 23.06,
      "act": "stumble",
      "faceTravel": false
     },
     {
-     "t": 25.07,
-     "act": "fear"
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
     },
     {
-     "t": 32.77,
+     "t": 32.760000000000005,
      "act": "shock"
     },
     {
-     "t": 34.07,
+     "t": 34.06,
      "act": "fear"
     },
     {
@@ -287,11 +311,11 @@
      }
     },
     {
-     "t": 51.77,
+     "t": 51.71,
      "act": "shock"
     },
     {
-     "t": 52.37,
+     "t": 52.260000000000005,
      "act": "fear"
     },
     {
@@ -315,18 +339,18 @@
      }
     },
     {
-     "t": 11.24,
+     "t": 11.219999999999999,
      "act": "shock",
      "body": {
       "yaw": 0.1
      }
     },
     {
-     "t": 12.540000000000001,
+     "t": 12.52,
      "act": "laugh"
     },
     {
-     "t": 14.74,
+     "t": 14.719999999999999,
      "act": "notice",
      "body": {
       "headTilt": -14
@@ -339,7 +363,7 @@
      }
     },
     {
-     "t": 16.740000000000002,
+     "t": 16.720000000000002,
      "act": "fear",
      "face": {
       "pupil": [
@@ -349,24 +373,36 @@
      }
     },
     {
-     "t": 21.240000000000002,
+     "t": 21.220000000000002,
      "act": "shock"
     },
     {
-     "t": 23.14,
+     "t": 23.12,
      "act": "stumble",
      "faceTravel": false
     },
     {
-     "t": 25.14,
-     "act": "fear"
+     "t": 24.720000000000002,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
     },
     {
-     "t": 32.84,
+     "t": 32.82,
      "act": "shock"
     },
     {
-     "t": 34.14,
+     "t": 34.12,
      "act": "fear"
     },
     {
@@ -384,11 +420,11 @@
      }
     },
     {
-     "t": 51.84,
+     "t": 51.769999999999996,
      "act": "shock"
     },
     {
-     "t": 52.44,
+     "t": 52.32,
      "act": "fear"
     },
     {
@@ -412,18 +448,18 @@
      }
     },
     {
-     "t": 11.17,
+     "t": 11.16,
      "act": "shock",
      "body": {
       "yaw": 0.1
      }
     },
     {
-     "t": 12.47,
+     "t": 12.46,
      "act": "laugh"
     },
     {
-     "t": 14.67,
+     "t": 14.66,
      "act": "notice",
      "body": {
       "headTilt": -14
@@ -436,7 +472,7 @@
      }
     },
     {
-     "t": 16.67,
+     "t": 16.66,
      "act": "fear",
      "face": {
       "pupil": [
@@ -446,24 +482,36 @@
      }
     },
     {
-     "t": 21.17,
+     "t": 21.16,
      "act": "shock"
     },
     {
-     "t": 23.07,
+     "t": 23.06,
      "act": "stumble",
      "faceTravel": false
     },
     {
-     "t": 25.07,
-     "act": "fear"
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
     },
     {
-     "t": 32.77,
+     "t": 32.760000000000005,
      "act": "shock"
     },
     {
-     "t": 34.07,
+     "t": 34.06,
      "act": "fear"
     },
     {
@@ -481,11 +529,11 @@
      }
     },
     {
-     "t": 51.77,
+     "t": 51.71,
      "act": "shock"
     },
     {
-     "t": 52.37,
+     "t": 52.260000000000005,
      "act": "fear"
     },
     {
@@ -509,18 +557,18 @@
      }
     },
     {
-     "t": 11.17,
+     "t": 11.16,
      "act": "shock",
      "body": {
       "yaw": 0.1
      }
     },
     {
-     "t": 12.47,
+     "t": 12.46,
      "act": "laugh"
     },
     {
-     "t": 14.67,
+     "t": 14.66,
      "act": "notice",
      "body": {
       "headTilt": -14
@@ -533,7 +581,7 @@
      }
     },
     {
-     "t": 16.67,
+     "t": 16.66,
      "act": "fear",
      "face": {
       "pupil": [
@@ -543,24 +591,36 @@
      }
     },
     {
-     "t": 21.17,
+     "t": 21.16,
      "act": "shock"
     },
     {
-     "t": 23.07,
+     "t": 23.06,
      "act": "stumble",
      "faceTravel": false
     },
     {
-     "t": 25.07,
-     "act": "fear"
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
     },
     {
-     "t": 32.77,
+     "t": 32.760000000000005,
      "act": "shock"
     },
     {
-     "t": 34.07,
+     "t": 34.06,
      "act": "fear"
     },
     {
@@ -578,11 +638,11 @@
      }
     },
     {
-     "t": 51.77,
+     "t": 51.71,
      "act": "shock"
     },
     {
-     "t": 52.37,
+     "t": 52.260000000000005,
      "act": "fear"
     },
     {
@@ -606,18 +666,18 @@
      }
     },
     {
-     "t": 11.379999999999999,
+     "t": 11.34,
      "act": "shock",
      "body": {
       "yaw": 0.1
      }
     },
     {
-     "t": 12.68,
+     "t": 12.64,
      "act": "laugh"
     },
     {
-     "t": 14.879999999999999,
+     "t": 14.84,
      "act": "notice",
      "body": {
       "headTilt": -14
@@ -630,7 +690,7 @@
      }
     },
     {
-     "t": 16.880000000000003,
+     "t": 16.84,
      "act": "fear",
      "face": {
       "pupil": [
@@ -640,24 +700,36 @@
      }
     },
     {
-     "t": 21.380000000000003,
+     "t": 21.34,
      "act": "shock"
     },
     {
-     "t": 23.28,
+     "t": 23.24,
      "act": "stumble",
      "faceTravel": false
     },
     {
-     "t": 25.28,
-     "act": "fear"
+     "t": 24.84,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
     },
     {
-     "t": 32.980000000000004,
+     "t": 32.940000000000005,
      "act": "shock"
     },
     {
-     "t": 34.28,
+     "t": 34.24,
      "act": "fear"
     },
     {
@@ -675,11 +747,11 @@
      }
     },
     {
-     "t": 51.980000000000004,
+     "t": 51.89,
      "act": "shock"
     },
     {
-     "t": 52.58,
+     "t": 52.440000000000005,
      "act": "fear"
     },
     {
@@ -807,6 +879,342 @@
      "act": "idle"
     }
    ]
+  },
+  {
+   "id": "crew4",
+   "seed": 62,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.219999999999999,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.52,
+     "act": "laugh"
+    },
+    {
+     "t": 14.719999999999999,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.720000000000002,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.220000000000002,
+     "act": "shock"
+    },
+    {
+     "t": 23.12,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.720000000000002,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.82,
+     "act": "shock"
+    },
+    {
+     "t": 34.12,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle"
+    },
+    {
+     "t": 51.7,
+     "act": "shock"
+    },
+    {
+     "t": 52.3,
+     "act": "fear",
+     "body": {
+      "armL": [
+       170,
+       10
+      ],
+      "armR": [
+       170,
+       10
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 53.1,
+     "act": "fear"
+    }
+   ]
+  },
+  {
+   "id": "crew5",
+   "seed": 66,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 51.71,
+     "act": "shock"
+    },
+    {
+     "t": 52.260000000000005,
+     "act": "fear"
+    },
+    {
+     "t": 55.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "crew6",
+   "seed": 71,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 51.71,
+     "act": "shock"
+    },
+    {
+     "t": 52.260000000000005,
+     "act": "fear"
+    },
+    {
+     "t": 55.5,
+     "act": "sad"
+    }
+   ]
   }
  ],
  "performances": {
@@ -916,7 +1324,19 @@
     {
      "t": 51.6,
      "act": "shock",
-     "speak": true
+     "speak": true,
+     "body": {
+      "armL": [
+       160,
+       30
+      ],
+      "armR": [
+       160,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
     },
     {
      "t": 52.2,
@@ -1032,34 +1452,77 @@
      "showProp": false
     },
     {
-     "t": 16.0,
-     "act": "point",
+     "t": 15.8,
+     "act": "notice",
      "body": {
-      "yaw": 0.35,
-      "armR": [
-       110,
-       -20
-      ]
+      "yaw": 0.4
+     },
+     "face": {
+      "mouth": {
+       "smile": 0.5
+      }
+     },
+     "showProp": false
+    },
+    {
+     "t": 17.0,
+     "act": "talk",
+     "gesture": "R",
+     "face": {
+      "preset": "curious",
+      "mouth": {
+       "smile": 0.7
+      }
+     },
+     "body": {
+      "yaw": 0.35
      },
      "showProp": false
     },
     {
      "t": 22.4,
-     "act": "talk",
+     "act": "point",
      "body": {
-      "yaw": 0.25
+      "yaw": 0.35,
+      "armR": [
+       125,
+       -25
+      ]
      },
-     "gesture": "R",
      "face": {
-      "preset": "curious"
+      "preset": "angry",
+      "mouth": {
+       "smile": 0.5
+      }
+     },
+     "showProp": false
+    },
+    {
+     "t": 25.0,
+     "act": "laugh",
+     "body": {
+      "yaw": 0.3
      },
      "showProp": false
     },
     {
      "t": 31.6,
-     "act": "realize",
+     "act": "idle",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.85
+      },
+      "cheek": 0.5
+     },
      "body": {
-      "yaw": 0.3
+      "yaw": 0.3,
+      "headTilt": -6,
+      "armR": [
+       160,
+       -70
+      ],
+      "handR": "point"
      },
      "showProp": false
     },
@@ -1069,7 +1532,7 @@
      "face": {
       "preset": "neutral",
       "mouth": {
-       "smile": 0.7
+       "smile": 0.8
       }
      },
      "body": {
@@ -1082,123 +1545,230 @@
      "act": "curious",
      "body": {
       "yaw": -0.2,
-      "headTilt": 12
+      "headTilt": 14
      },
      "reachR": [
       0.62,
-      0.82
+      0.84
      ],
      "face": {
+      "pupil": [
+       0.3,
+       1
+      ],
       "mouth": {
-       "smile": 0.6
+       "smile": 0.3
       }
      },
      "showProp": false
     },
     {
-     "t": 40.6,
+     "t": 40.4,
      "act": "idle",
      "look": "cam",
      "face": {
       "preset": "neutral",
+      "lidT": [
+       1.0,
+       0.08
+      ],
       "mouth": {
-       "smile": 0.85
+       "smile": 0.95
       },
-      "cheek": 0.5
+      "cheek": 0.7
      },
      "body": {
-      "yaw": -0.1
+      "yaw": -0.1,
+      "headTilt": 9
      },
      "showProp": false
     },
     {
      "t": 49.5,
-     "act": "lookAround",
+     "act": "idle",
+     "body": {
+      "yaw": 0.35,
+      "armR": [
+       72,
+       -28
+      ]
+     },
+     "face": {
+      "lidT": [
+       0.38,
+       0.38
+      ],
+      "mouth": {
+       "smile": 0.45
+      }
+     },
+     "showProp": true
+    },
+    {
+     "t": 52.4,
+     "act": "notice",
      "body": {
       "yaw": 0.35,
       "armR": [
        78,
-       -10
+       -30
       ]
      },
      "showProp": true
     },
     {
-     "t": 52.6,
-     "act": "confused",
+     "t": 53.0,
+     "act": "effort",
      "body": {
-      "yaw": 0.4,
+      "yaw": 0.3,
       "armR": [
-       78,
-       -10
-      ]
+       150,
+       -40
+      ],
+      "lean": -6
      },
      "showProp": true
     },
     {
-     "t": 54.2,
+     "t": 53.45,
      "act": "laugh",
      "body": {
-      "yaw": 0.3
+      "yaw": 0.3,
+      "armR": [
+       140,
+       -30
+      ]
+     },
+     "showProp": true
+    },
+    {
+     "t": 54.6,
+     "act": "idle",
+     "look": "cam",
+     "face": {
+      "preset": "neutral",
+      "lidT": [
+       1.0,
+       0.08
+      ],
+      "mouth": {
+       "smile": 0.95
+      },
+      "cheek": 0.7
+     },
+     "body": {
+      "yaw": 0.2,
+      "armR": [
+       140,
+       -30
+      ]
      },
      "showProp": true
     },
     {
      "t": 55.5,
      "act": "idle",
+     "body": {
+      "yaw": 0.35,
+      "armR": [
+       72,
+       -28
+      ]
+     },
      "face": {
-      "preset": "neutral",
+      "lidT": [
+       0.38,
+       0.38
+      ],
       "mouth": {
-       "smile": 0.8
+       "smile": 0.6
       }
      },
-     "body": {
-      "yaw": 0.4
-     },
-     "showProp": false
+     "showProp": true
     }
    ]
   }
  },
  "shots": [
   {
-   "name": "S01 HOOK: the ship stands up",
+   "name": "S01a HOOK: a city wall lifts a warship",
    "a": 0,
-   "b": 3.6,
+   "b": 1.9,
    "keys": [
     {
      "t": 0,
      "pos": [
-      40,
-      3.2,
+      7.5,
+      4.6,
+      47
+     ],
+     "look": [
+      1,
+      13.5,
+      17
+     ],
+     "fov": 52,
+     "focus": 28,
+     "ap": 0.0002
+    },
+    {
+     "t": 1.9,
+     "pos": [
+      7.2,
+      4.8,
       46
      ],
      "look": [
       1,
-      12,
-      15
+      14.5,
+      17
      ],
-     "fov": 44,
-     "focus": 46,
-     "ap": 0.0001
+     "fov": 51,
+     "focus": 27,
+     "ap": 0.0002
+    }
+   ]
+  },
+  {
+   "name": "S01b HOOK: sailors clinging to the standing deck",
+   "a": 1.9,
+   "b": 3.6,
+   "keys": [
+    {
+     "t": 1.9,
+     "pos": [
+      -12.6,
+      4.4,
+      0.5
+     ],
+     "look": [
+      8,
+      8.5,
+      0
+     ],
+     "fov": 64,
+     "focus": 5,
+     "ap": 0.0004
     },
     {
      "t": 3.6,
      "pos": [
-      38,
-      3.4,
-      44
+      -12.4,
+      4.5,
+      0.5
      ],
      "look": [
-      1,
-      13,
-      15
+      9,
+      9.0,
+      0
      ],
-     "fov": 43,
-     "focus": 44,
-     "ap": 0.0001
+     "fov": 63,
+     "focus": 5,
+     "ap": 0.0004
     }
-   ]
+   ],
+   "attach": "hero",
+   "attachUp": 0.0
   },
   {
    "name": "S02 rewind",
@@ -1399,44 +1969,43 @@
    "attach": "hero"
   },
   {
-   "name": "S07 the beam swings out",
+   "name": "S07 the beam swings out (from the wall top)",
    "a": 16.4,
    "b": 20.4,
    "keys": [
     {
      "t": 16.4,
      "pos": [
-      12.8,
-      4.9,
-      -1.2
+      1.6,
+      23.8,
+      -6.0
      ],
      "look": [
-      22,
-      17,
-      0
+      1,
+      7,
+      19
      ],
-     "fov": 60,
-     "focus": 16,
+     "fov": 58,
+     "focus": 18,
      "ap": 0.0002
     },
     {
      "t": 20.4,
      "pos": [
-      12.6,
-      4.9,
-      -1.2
+      1.4,
+      23.6,
+      -5.6
      ],
      "look": [
-      21,
-      14,
-      0
+      1,
+      6,
+      19
      ],
-     "fov": 59,
-     "focus": 15,
+     "fov": 57,
+     "focus": 18,
      "ap": 0.0002
     }
-   ],
-   "attach": "hero"
+   ]
   },
   {
    "name": "S08 the iron hand bites",
@@ -1478,123 +2047,123 @@
    ]
   },
   {
-   "name": "S09 behind the wall: the lever (RECONSTRUCTION)",
+   "name": "S09 the lever, side-on (RECONSTRUCTION)",
    "a": 22.4,
    "b": 25.9,
    "keys": [
     {
      "t": 22.4,
      "pos": [
-      5.0,
-      18.2,
-      -14.5
+      15,
+      25,
+      -21
      ],
      "look": [
-      -3.2,
-      15.8,
-      -1
+      0,
+      16.5,
+      4
      ],
-     "fov": 54,
-     "focus": 14,
-     "ap": 0.0003
+     "fov": 48,
+     "focus": 26,
+     "ap": 0.0001
     },
     {
      "t": 25.9,
      "pos": [
-      4.4,
-      18.0,
-      -13.4
+      14,
+      24.5,
+      -20
      ],
      "look": [
-      -3.2,
-      16.3,
-      -1
+      0,
+      17,
+      4
      ],
-     "fov": 53,
-     "focus": 13,
-     "ap": 0.0003
+     "fov": 47,
+     "focus": 25,
+     "ap": 0.0001
     }
    ]
   },
   {
-   "name": "S10 the bow rises",
+   "name": "S10 the bow rises out of the sea",
    "a": 25.9,
    "b": 28.0,
    "keys": [
     {
      "t": 25.9,
      "pos": [
-      27,
-      3.2,
-      42
+      10,
+      2.2,
+      10.5
      ],
      "look": [
       1,
-      9,
-      17
+      10,
+      14
      ],
-     "fov": 44,
-     "focus": 32,
-     "ap": 0.0001
+     "fov": 56,
+     "focus": 10,
+     "ap": 0.0003
     },
     {
      "t": 28.0,
      "pos": [
-      26,
-      3.4,
-      41
+      9.6,
+      2.2,
+      10.6
      ],
      "look": [
       1,
-      12,
-      17
+      13,
+      14
      ],
-     "fov": 43,
-     "focus": 31,
-     "ap": 0.0001
+     "fov": 55,
+     "focus": 10,
+     "ap": 0.0003
     }
    ]
   },
   {
-   "name": "S11 the crew slides (deck tilting)",
+   "name": "S11 vertigo: the crew slides",
    "a": 28.0,
    "b": 29.4,
    "keys": [
     {
      "t": 28.0,
      "pos": [
-      -1.5,
-      6.6,
-      6.2
+      5.5,
+      5.6,
+      1.7
      ],
      "look": [
-      -8.5,
-      3.8,
-      0
+      -9,
+      2.4,
+      -0.6
      ],
-     "fov": 50,
-     "focus": 8,
-     "ap": 0.0006
+     "fov": 58,
+     "focus": 6,
+     "ap": 0.0005
     },
     {
      "t": 29.4,
      "pos": [
-      -1.7,
-      6.6,
-      6.0
+      5.4,
+      5.6,
+      1.6
      ],
      "look": [
-      -8.8,
-      3.8,
-      0
+      -9,
+      2.2,
+      -0.6
      ],
-     "fov": 49,
-     "focus": 8,
-     "ap": 0.0006
+     "fov": 57,
+     "focus": 6,
+     "ap": 0.0005
     }
    ],
    "attach": "hero",
-   "attachUp": 0.65
+   "attachUp": 0.8
   },
   {
    "name": "S12 Marcellus watches his ship stand up",
@@ -1676,46 +2245,46 @@
    ]
   },
   {
-   "name": "S14 the drop",
+   "name": "S14 the drop (slow motion)",
    "a": 33.0,
    "b": 36.0,
    "keys": [
     {
      "t": 33.0,
      "pos": [
-      24,
-      5.5,
-      28
+      31,
+      6.5,
+      46
      ],
      "look": [
       0,
       6,
-      14
+      16
      ],
      "fov": 46,
-     "focus": 27,
+     "focus": 34,
      "ap": 0.0001
     },
     {
      "t": 36.0,
      "pos": [
-      23,
-      5,
-      29
+      30,
+      6,
+      45
      ],
      "look": [
       0,
-      3.5,
-      16
+      4,
+      17
      ],
      "fov": 45,
-     "focus": 26,
+     "focus": 33,
      "ap": 0.0001
     }
    ]
   },
   {
-   "name": "S15 aftermath",
+   "name": "S15 swamped: crew and debris in the water",
    "a": 36.0,
    "b": 37.5,
    "keys": [
@@ -1723,33 +2292,33 @@
      "t": 36.0,
      "pos": [
       12,
-      2.2,
-      34
+      1.3,
+      32
      ],
      "look": [
-      0,
-      1.2,
-      18
+      1,
+      0.7,
+      19
      ],
-     "fov": 40,
-     "focus": 18,
-     "ap": 0.0003
+     "fov": 46,
+     "focus": 13,
+     "ap": 0.0005
     },
     {
      "t": 37.5,
      "pos": [
-      11.5,
-      2.2,
-      33.5
+      11.6,
+      1.3,
+      31.6
      ],
      "look": [
-      0,
-      1.4,
-      18
+      1,
+      0.8,
+      19
      ],
-     "fov": 39,
-     "focus": 18,
-     "ap": 0.0003
+     "fov": 45,
+     "focus": 13,
+     "ap": 0.0005
     }
    ]
   },
@@ -1880,33 +2449,33 @@
     {
      "t": 49.5,
      "pos": [
-      -6.5,
-      5.4,
-      1.4
+      -10.5,
+      4.9,
+      3.1
      ],
      "look": [
-      14,
-      10.5,
-      0
+      20,
+      12.5,
+      -1.6
      ],
-     "fov": 52,
-     "focus": 8,
+     "fov": 50,
+     "focus": 12,
      "ap": 0.0003
     },
     {
      "t": 53.5,
      "pos": [
-      -6.2,
-      5.4,
-      1.3
+      -10.3,
+      4.9,
+      3.0
      ],
      "look": [
-      14,
-      10.8,
-      0
+      20,
+      12.8,
+      -1.6
      ],
-     "fov": 51,
-     "focus": 8,
+     "fov": 49,
+     "focus": 12,
      "ap": 0.0003
     }
    ],
@@ -1952,41 +2521,41 @@
    ]
   },
   {
-   "name": "S21 Rome waits",
+   "name": "S21 Rome waits; the old man fishes",
    "a": 55.5,
    "b": 62.0,
    "keys": [
     {
      "t": 55.5,
      "pos": [
-      -6.5,
-      15.4,
-      -6.5
+      6,
+      7,
+      64
      ],
      "look": [
-      -1,
-      12.5,
-      14
+      -4.4,
+      14.4,
+      0
      ],
-     "fov": 46,
-     "focus": 5.2,
-     "ap": 0.0003
+     "fov": 15,
+     "focus": 62,
+     "ap": 8e-05
     },
     {
      "t": 62.0,
      "pos": [
-      -7.3,
-      16.2,
-      -7.6
+      6,
+      7.2,
+      62
      ],
      "look": [
-      -1,
-      12.5,
-      14
+      -4.4,
+      14.5,
+      0
      ],
-     "fov": 45,
-     "focus": 6.4,
-     "ap": 0.0003
+     "fov": 14,
+     "focus": 60,
+     "ap": 8e-05
     }
    ]
   }

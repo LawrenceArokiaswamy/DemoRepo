@@ -193,6 +193,7 @@ function drawProp(g, P, hand) {
   if (P.type === 'staff') { limb(g, [[x - 4, 968], [x + 10, y - 200]], 16, '#7a5030'); g.beginPath(); g.arc(x + 10, y - 210, 22, 0, 7); inked(g, P.color || '#c9a24a', 5); }
   if (P.type === 'scroll') { g.beginPath(); g.roundRect(x - 50, y - 20, 100, 40, 14); inked(g, '#efe2c2', 5); }
   if (P.type === 'vitis') { limb(g, [[x - 2, y + 150], [x + 6, y + 40], [x - 4, y - 70], [x + 4, y - 170]], 12, P.color || '#7a5030'); }
+  if (P.type === 'rod') { const d = P.dir || 1; limb(g, [[x - 40 * d, y + 25], [x + 160 * d, y - 120], [x + 310 * d, y - 170]], 7, P.color || '#7a5a3a'); return [x + 310 * d, y - 170]; }
   if (P.type === 'stick') { const d = P.dir || 1; limb(g, [[x - 70 * d, y + 30], [x + 250 * d, y - 80]], 12, P.color || '#8a6a48'); }
   if (P.type === 'flask') { g.beginPath(); g.moveTo(x - 12, y - 70); g.lineTo(x + 12, y - 70); g.lineTo(x + 12, y - 40); g.lineTo(x + 34, y + 10); g.quadraticCurveTo(x, y + 30, x - 34, y + 10); g.lineTo(x - 12, y - 40); g.closePath(); inked(g, '#8fe0b0', 5); }
   if (P.type === 'shield') { g.beginPath(); if (P.shape === 'scutum') g.roundRect(x - 78, y - 130, 156, 260, 30); else { g.moveTo(x - 70, y - 80); g.lineTo(x + 70, y - 80); g.quadraticCurveTo(x + 70, y + 60, x, y + 110); g.quadraticCurveTo(x - 70, y + 60, x - 70, y - 80); } inked(g, P.color || '#a8322c', 7);
@@ -268,7 +269,7 @@ export function drawCharacter(g, spec, P) {
   if (sit >= 0.3) drawLegs();
   // near arm goes behind the head unless raised to face height (keeps hanging arms off the chin)
   const nearPts = farR ? aL : aR, nearHand = farR ? P.handL : P.handR, raised = P.armFront ?? (nearPts[2][1] < chestY + 10 || nearPts[1][1] < chestY - 10);
-  const drawNear = () => { if (S.prop.type !== 'none' && P.showProp !== false) drawProp(g, S.prop, (P.propHand || 'R') === 'R' ? aR[2] : aL[2]); limb(g, nearPts, limbW, armCol); hand(nearPts[2], nearHand); };
+  const drawNear = () => { if (S.prop.type !== 'none' && P.showProp !== false) { const tip = drawProp(g, S.prop, (P.propHand || 'R') === 'R' ? aR[2] : aL[2]); if (tip) out.propTip = toCard(...tip); } limb(g, nearPts, limbW, armCol); hand(nearPts[2], nearHand); };
   if (!raised) drawNear();
   // ---- head (turns independently: hyaw = body yaw + headYaw)
   const ry = 168 * hs * (S.head.shape === 'long' ? 1.06 : 1), rx = 152 * hs * S.head.width * (S.head.shape === 'oval' ? 0.88 : S.head.shape === 'round' ? 1.04 : 1);

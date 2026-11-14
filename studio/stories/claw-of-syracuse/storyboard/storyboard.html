@@ -1,6 +1,6 @@
 <title>The Claw of Syracuse</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
 /* Layout: a production storyboard. Header, emotional arc strip, then a grid of 9:16 frames with notes, then script, fact check and approvals. */
 :root {
@@ -54,70 +54,92 @@ td.n { font-variant-numeric:tabular-nums; white-space:nowrap; }
 ul.plain { margin:0; padding-left:18px; display:grid; gap:6px; }
 blockquote { margin:0; padding-left:12px; border-left:2px solid var(--bronze); color:var(--muted); font-size:14px; }
 @media (max-width:560px) { .arc { grid-template-columns:1fr; } .arc div + div { border-left:0; border-top:1px solid var(--line); } }
+.ba { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:22px; }
+.pair { display:grid; gap:8px; min-width:0; }
+.pair .imgs { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.pair figure { margin:0; display:grid; gap:4px; }
+.pair img { width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:3px; display:block; }
+.pair figcaption { font:500 11px var(--mono); color:var(--muted); }
+.pair h3 { font-size:15px; } .pair p { margin:0; font-size:13.5px; color:var(--muted); }
+.new { color:var(--doc); }
 </style>
 <div class="wrap">
 <header>
-  <div class="eyebrow">Pilot 01 · storyboard v1 · awaiting approval</div>
+  <div class="eyebrow">Pilot 01 · storyboard v2 · awaiting approval</div>
   <h1>The Claw of Syracuse</h1>
-  <p>Every frame below is a still from the real 3D scene, not a sketch. The characters, ships, wall and claw machine are the production assets. I'm asking you to approve composition, story and pacing. I have not started the full render or spent any credits.</p>
-  <div class="facts"><span>62 s · 21 shots</span><span>1080 × 1920</span><span>Narration ≈ 177 words</span><span>Sources: Polybius 8.3–8.7, Plutarch Marcellus 14–19</span></div>
+  <p>This revision answers your notes on the hook, the claw mechanism, the impact, Archimedes and the ending, and the 3D world. Every frame is a still from the real 3D scene. I haven't started the full render, generated any audio or spent any credits.</p>
+  <div class="facts"><span>62 s · 22 shots</span><span>1080 × 1920</span><span>Narration ≈ 177 words</span><span>Sources: Polybius 8.3–8.7, Plutarch Marcellus 14–19</span></div>
 </header>
 <div class="arc" aria-label="Emotional arc">
   <div class="a1"><b>WHAT?!</b><span>0:00–0:04 · a city wall lifts a warship</span></div>
   <div class="a2"><b>OH NO!</b><span>0:04–0:37 · night approach, the creak, the claw, the lift, the drop</span></div>
-  <div class="a3"><b>WHOA!</b><span>0:37–1:02 · it was a 74-year-old mathematician, and Rome ran from sticks</span></div>
+  <div class="a3"><b>WHOA!</b><span>0:37–1:02 · a 74-year-old mathematician, and Rome ran from his fishing rod</span></div>
 </div>
 <section>
+  <h2>What changed</h2>
+  <div class="ba"><div class="pair"><h3>Hook (S01)</h3><div class="imgs"><figure><img src="img/old_s01.jpg" alt="Before"><figcaption>Before</figcaption></figure><figure><img src="img/s01a.jpg" alt="After"><figcaption class="new">After</figcaption></figure></div><p>Two cuts now instead of one frame: the full scale of a 30 m ship standing on its stern with sailors clinging all the way up, then their faces as they slide toward camera.</p></div><div class="pair"><h3>The lever (S09)</h3><div class="imgs"><figure><img src="img/old_s09.jpg" alt="Before"><figcaption>Before</figcaption></figure><figure><img src="img/s09.jpg" alt="After"><figcaption class="new">After</figcaption></figure></div><p>Seen from behind and above, the mechanism reads as a seesaw: counterweight end down, beam over the wall, chain to the ship.</p></div><div class="pair"><h3>The impact (S14)</h3><div class="imgs"><figure><img src="img/old_s14.jpg" alt="Before"><figcaption>Before</figcaption></figure><figure><img src="img/s14.jpg" alt="After"><figcaption class="new">After</figcaption></figure></div><p>Slow motion. A displacement crater and expanding wave ring in the sea surface, a tower of spray, debris splashing. It was a small puff before.</p></div><div class="pair"><h3>The payoff (S20)</h3><div class="imgs"><figure><img src="img/old_s20.jpg" alt="Before"><figcaption>Before</figcaption></figure><figure><img src="img/s20.jpg" alt="After"><figcaption class="new">After</figcaption></figure></div><p>The stick is a fishing rod. He lands a fish and winks while Rome's marines flee. It was a generic laugh before.</p></div><div class="pair"><h3>The ending (S21)</h3><div class="imgs"><figure><img src="img/old_s21.jpg" alt="Before"><figcaption>Before</figcaption></figure><figure><img src="img/s21.jpg" alt="After"><figcaption class="new">After</figcaption></figure></div><p>Telephoto from the fleet: the wall, the claw at rest and one tiny old man fishing. It was a glare shot before.</p></div></div>
+  <div class="panel"><p><b>World upgrades across every shot</b></p><ul class="plain">
+    <li>The sea surface physically reacts to the impact (crater and expanding wave ring), and floating debris rides the waves.</li>
+    <li>Weathered walls with a wet algae line and surf on the rocks. Wall-top catapults, banners, stores, the city of Syracuse behind the wall, distant hills and Etna on the horizon.</li>
+    <li>Dawn light that builds through the attack, a low sun glow and a stronger colour grade.</li>
+    <li>Falling shields, oars, helmets and amphorae during the lift. Three more crew. A marine leaps overboard in the panic.</li>
+    <li>Fixed an anachronism: the deck cargo was a modern plastic drum. It's now terracotta amphorae.</li>
+  </ul></div>
+</section>
+<section>
   <h2>Storyboard</h2>
-  <div class="legend"><span><span class="tag t-doc">Documented</span>stated in an ancient source</span><span><span class="tag t-rec">Reconstruction</span>our design of an undocumented detail, labelled on screen</span><span><span class="tag t-dram">Dramatised</span>plausible staging</span><span><span class="tag t-inv">Invented</span>comic beat</span></div>
-  <div class="grid"><article class="shot"><figure><img src="img/s01.jpg" alt="S01: Hook: the ship stands up" loading="lazy" width="540" height="960"></figure>
-<div class="meta"><div class="row1"><span class="num">S01</span><span class="tc">0:00.0–0:03.6</span></div><h3>Hook: the ship stands up</h3>
-<p class="vo">This is a Roman warship… and a city wall is picking it up.</p><p class="act">Chain groaning, water pouring off the hull, sailors yelling. Low drum hit.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s02.jpg" alt="S02: Rewind" loading="lazy" width="540" height="960"></figure>
+  <div class="legend"><span><span class="tag t-doc">Documented</span>stated in an ancient source</span><span><span class="tag t-rec">Reconstruction</span>our design, labelled on screen</span><span><span class="tag t-dram">Dramatised</span>plausible staging</span><span><span class="tag t-inv">Invented</span>comic beat</span></div>
+  <div class="grid"><article class="shot"><figure><img src="img/s01a.jpg" alt="S01a: Hook: a city wall lifts a warship" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S01a</span><span class="tc">0:00.0–0:01.9</span></div><h3>Hook: a city wall lifts a warship</h3>
+<p class="vo">This is a Roman warship…</p><p class="act">The whole ship stands on its stern against the wall, chain taut from the beam. Sailors cling all the way up the deck. Water pours off the hull. Chain groans, low drum hit.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s01b.jpg" alt="S01b: Hook: the sailors" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S01b</span><span class="tc">0:01.9–0:03.6</span></div><h3>Hook: the sailors</h3>
+<p class="vo">…and a city wall is picking it up.</p><p class="act">Looking up the standing deck: sailors slide toward camera, terrified, amphorae tumbling past.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s02.jpg" alt="S02: Rewind" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S02</span><span class="tc">0:03.6–0:04.4</span></div><h3>Rewind</h3>
 <p class="vo">Rewind.</p><p class="act">The world plays backwards: the ship drops and rows out. Rewind whoosh.</p><p class="src"><span class="tag t-dev">Device</span> Storytelling device</p></div></article><article class="shot"><figure><img src="img/s03.jpg" alt="S03: Before dawn, the fleet creeps in" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S03</span><span class="tc">0:04.4–0:09.4</span></div><h3>Before dawn, the fleet creeps in</h3>
-<p class="vo">Syracuse, 213 BC. Before dawn, Rome&#x27;s fleet creeps toward the city walls.</p><p class="act">On-screen text: SYRACUSE · SICILY · 213 BC. Oars dipping, torches on the wall.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.4</p></div></article><article class="shot"><figure><img src="img/s04.jpg" alt="S04: Marcellus&#x27; plan" loading="lazy" width="540" height="960"></figure>
+<p class="vo">Syracuse, 213 BC. Before dawn, Rome&#x27;s fleet creeps toward the city walls.</p><p class="act">On-screen text: SYRACUSE · SICILY · 213 BC. Torches, mist, catapults on the wall.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.4</p></div></article><article class="shot"><figure><img src="img/s04.jpg" alt="S04: Marcellus&#x27; plan" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S04</span><span class="tc">0:09.4–0:11.0</span></div><h3>Marcellus&#x27; plan</h3>
-<p class="vo">The plan: get so close that the city&#x27;s catapults…</p><p class="act">Marcellus whispers, smug. Officers nod.</p><p class="src"><span class="tag t-doc">Documented</span> Plutarch, Marcellus 15.5</p></div></article><article class="shot"><figure><img src="img/s05.jpg" alt="S05: Stones fly overhead" loading="lazy" width="540" height="960"></figure>
+<p class="vo">The plan: get so close that the city&#x27;s catapults…</p><p class="act">Marcellus whispers, smug.</p><p class="src"><span class="tag t-doc">Documented</span> Plutarch, Marcellus 15.5</p></div></article><article class="shot"><figure><img src="img/s05.jpg" alt="S05: Stones fly overhead" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S05</span><span class="tc">0:11.0–0:13.9</span></div><h3>Stones fly overhead</h3>
 <p class="vo">…shoot right over their heads. And it works.</p><p class="act">Stones whistle over the mast and splash far behind. The crew ducks, then grins.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.4–5 (simplified)</p></div></article><article class="shot"><figure><img src="img/s06.jpg" alt="S06: Something creaks" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S06</span><span class="tc">0:13.9–0:16.4</span></div><h3>Something creaks</h3>
 <p class="vo">Then, above them… something creaks.</p><p class="act">Silence. Timber creak. Titus&#x27;s eyes drift up.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s07.jpg" alt="S07: The beam swings out" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S07</span><span class="tc">0:16.4–0:20.4</span></div><h3>The beam swings out</h3>
-<p class="vo">A huge beam swings out over the wall… and lowers an iron hand on a chain.</p><p class="act">Rope strain, pulley clacks, chain rattling down.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.8, 8.6.2</p></div></article><article class="shot"><figure><img src="img/s08.jpg" alt="S08: The iron hand bites" loading="lazy" width="540" height="960"></figure>
+<p class="vo">A huge beam swings out over the wall… and lowers an iron hand on a chain.</p><p class="act">From the wall top, looking down the beam as it swings out over the ship far below.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.5.8, 8.6.2</p></div></article><article class="shot"><figure><img src="img/s08.jpg" alt="S08: The iron hand bites" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S08</span><span class="tc">0:20.4–0:22.4</span></div><h3>The iron hand bites</h3>
-<p class="vo">It grabs the ship by the nose.</p><p class="act">Iron on timber. Wood splinters.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.2</p></div></article><article class="shot"><figure><img src="img/s09.jpg" alt="S09: Behind the wall: the lever" loading="lazy" width="540" height="960"></figure>
-<div class="meta"><div class="row1"><span class="num">S09</span><span class="tc">0:22.4–0:25.9</span></div><h3>Behind the wall: the lever</h3>
-<p class="vo">Behind the wall, the far end of the beam is pushed down, like a seesaw…</p><p class="act">Crew heave at the windlass, the counterweight drops, Archimedes directs. On-screen label: RECONSTRUCTION.</p><p class="src"><span class="tag t-rec">Reconstruction</span> Principle: Polybius 8.6.2. Machine design: ours</p></div></article><article class="shot"><figure><img src="img/s10.jpg" alt="S10: The bow rises" loading="lazy" width="540" height="960"></figure>
+<p class="vo">It grabs the ship by the nose.</p><p class="act">Iron on timber. Wood splinters.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.2</p></div></article><article class="shot"><figure><img src="img/s09.jpg" alt="S09: The lever" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S09</span><span class="tc">0:22.4–0:25.9</span></div><h3>The lever</h3>
+<p class="vo">Behind the wall, the far end of the beam is pushed down, like a seesaw…</p><p class="act">From behind and above the machine: the counterweight end drops, the crew heave, the beam rises over the wall, the chain runs down to the ship. On-screen label: RECONSTRUCTION.</p><p class="src"><span class="tag t-rec">Reconstruction</span> Principle: Polybius 8.6.2. Machine design: ours</p></div></article><article class="shot"><figure><img src="img/s10.jpg" alt="S10: The bow rises" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S10</span><span class="tc">0:25.9–0:28.0</span></div><h3>The bow rises</h3>
-<p class="vo">…and the front of the ship rises.</p><p class="act">Oars dangle, water pours off the hull, the hull groans.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s11.jpg" alt="S11: The deck tilts" loading="lazy" width="540" height="960"></figure>
-<div class="meta"><div class="row1"><span class="num">S11</span><span class="tc">0:28.0–0:29.4</span></div><h3>The deck tilts</h3>
-<p class="vo">Higher…</p><p class="act">Crew and barrels slide toward the stern.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s12.jpg" alt="S12: Marcellus watches" loading="lazy" width="540" height="960"></figure>
+<p class="vo">…and the front of the ship rises.</p><p class="act">The bow and chain against the sky, oars dangling, water streaming.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s11.jpg" alt="S11: Vertigo" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S11</span><span class="tc">0:28.0–0:29.4</span></div><h3>Vertigo</h3>
+<p class="vo">Higher…</p><p class="act">Looking down the tilting deck: the crew and cargo slide away. Shields and oars start to fall.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s12.jpg" alt="S12: Marcellus watches" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S12</span><span class="tc">0:29.4–0:31.6</span></div><h3>Marcellus watches</h3>
 <p class="vo">…until it&#x27;s standing on its stern.</p><p class="act">Marcellus aghast in the foreground, his ship standing upright behind him. Sunrise.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.3</p></div></article><article class="shot"><figure><img src="img/s13.jpg" alt="S13: Then they let go" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S13</span><span class="tc">0:31.6–0:33.0</span></div><h3>Then they let go</h3>
-<p class="vo">Then… they let go.</p><p class="act">Archimedes raises a finger. Pulley release snap.</p><p class="src"><span class="tag t-doc">Documented</span> Release: Polybius 8.6.3. Archimedes on the wall: dramatisation</p></div></article><article class="shot"><figure><img src="img/s14.jpg" alt="S14: The drop" loading="lazy" width="540" height="960"></figure>
-<div class="meta"><div class="row1"><span class="num">S14</span><span class="tc">0:33.0–0:36.0</span></div><h3>The drop</h3>
-<p class="vo">(no narration)</p><p class="act">Half a second of silence, then the impact: a wall of spray, then the roar of water.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.4</p></div></article><article class="shot"><figure><img src="img/s15.jpg" alt="S15: Swamped" loading="lazy" width="540" height="960"></figure>
+<p class="vo">Then… they let go.</p><p class="act">Archimedes, sly grin, gives the signal. Pulley snap.</p><p class="src"><span class="tag t-doc">Documented</span> Release: Polybius 8.6.3. Archimedes on the wall: dramatisation</p></div></article><article class="shot"><figure><img src="img/s14.jpg" alt="S14: The drop, in slow motion" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S14</span><span class="tc">0:33.0–0:36.0</span></div><h3>The drop, in slow motion</h3>
+<p class="vo">(no narration)</p><p class="act">Half-speed fall, then the impact: a tower of spray, a crater in the sea and a wave ring rolling outward. Silence, then the roar.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.4</p></div></article><article class="shot"><figure><img src="img/s15.jpg" alt="S15: Swamped" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S15</span><span class="tc">0:36.0–0:37.5</span></div><h3>Swamped</h3>
-<p class="vo">Some ships capsized. Most just filled with water.</p><p class="act">The wreck settles, crew bobbing in the water.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.4</p></div></article><article class="shot"><figure><img src="img/s16.jpg" alt="S16: The mathematician" loading="lazy" width="540" height="960"></figure>
+<p class="vo">Some ships capsized. Most just filled with water.</p><p class="act">Waterline view: the swamped hull, sailors bobbing, shields and oars floating.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.4</p></div></article><article class="shot"><figure><img src="img/s16.jpg" alt="S16: The mathematician" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S16</span><span class="tc">0:37.5–0:42.5</span></div><h3>The mathematician</h3>
-<p class="vo">The genius behind it wasn&#x27;t a general. He was a mathematician in his seventies: Archimedes.</p><p class="act">Music opens up. Archimedes by his sand diagram, smiling at camera.</p><p class="src"><span class="tag t-doc">Documented</span> Age: Tzetzes (c. 75 at death). Diagram: Plutarch, Marcellus 19</p></div></article><article class="shot"><figure><img src="img/s17.jpg" alt="S17: Marcellus jokes" loading="lazy" width="540" height="960"></figure>
+<p class="vo">The genius behind it wasn&#x27;t a general. He was a mathematician in his seventies: Archimedes.</p><p class="act">Absorbed in his sand diagram, he looks up and winks at camera.</p><p class="src"><span class="tag t-doc">Documented</span> Age: Tzetzes. Diagram: Plutarch 19. The wink: our acting</p></div></article><article class="shot"><figure><img src="img/s17.jpg" alt="S17: Marcellus jokes" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S17</span><span class="tc">0:42.5–0:46.5</span></div><h3>Marcellus jokes</h3>
 <p class="vo">The Roman commander joked that Archimedes was using his ships to scoop up seawater…</p><p class="act">Soaked Marcellus forces a laugh.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.6.6; Plutarch 17.1</p></div></article><article class="shot"><figure><img src="img/s18.jpg" alt="S18: Nobody laughs" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S18</span><span class="tc">0:46.5–0:49.5</span></div><h3>Nobody laughs</h3>
 <p class="vo">…his men didn&#x27;t laugh.</p><p class="act">Deadpan soldier. Water drips.</p><p class="src"><span class="tag t-dram">Dramatised</span> Dramatisation</p></div></article><article class="shot"><figure><img src="img/s19.jpg" alt="S19: Days later: &#x27;There it is!&#x27;" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S19</span><span class="tc">0:49.5–0:53.5</span></div><h3>Days later: &#x27;There it is!&#x27;</h3>
-<p class="vo">One ancient writer says that whenever a rope or a stick poked over the wall, they screamed…</p><p class="act">Titus, lip-synced: &quot;THERE IT IS!&quot; The crew panics and backs water.</p><p class="src"><span class="tag t-doc">Documented</span> Plutarch, Marcellus 17.3</p></div></article><article class="shot"><figure><img src="img/s20.jpg" alt="S20: It was a stick" loading="lazy" width="540" height="960"></figure>
-<div class="meta"><div class="row1"><span class="num">S20</span><span class="tc">0:53.5–0:55.5</span></div><h3>It was a stick</h3>
-<p class="vo">…and fled.</p><p class="act">Archimedes chuckles, holding a stick, as the ships flee behind him.</p><p class="src"><span class="tag t-inv">Invented</span> Invented visual joke illustrating Plutarch 17.3</p></div></article><article class="shot"><figure><img src="img/s21.jpg" alt="S21: Rome waits" loading="lazy" width="540" height="960"></figure>
+<p class="vo">One ancient writer says that whenever a rope or a stick poked over the wall, they screamed…</p><p class="act">Titus, lip-synced: &quot;THERE IT IS!&quot; Shields up, one marine leaps overboard, oars back water.</p><p class="src"><span class="tag t-doc">Documented</span> Plutarch, Marcellus 17.3. The leap: invented</p></div></article><article class="shot"><figure><img src="img/s20.jpg" alt="S20: It was a fishing rod" loading="lazy" width="540" height="960"></figure>
+<div class="meta"><div class="row1"><span class="num">S20</span><span class="tc">0:53.5–0:55.5</span></div><h3>It was a fishing rod</h3>
+<p class="vo">…and fled.</p><p class="act">Reverse angle: the dreaded stick is Archimedes&#x27; fishing rod. He lands a fish and winks as the fleet flees.</p><p class="src"><span class="tag t-inv">Invented</span> Invented joke illustrating Plutarch 17.3</p></div></article><article class="shot"><figure><img src="img/s21.jpg" alt="S21: Rome waits" loading="lazy" width="540" height="960"></figure>
 <div class="meta"><div class="row1"><span class="num">S21</span><span class="tc">0:55.5–1:02.0</span></div><h3>Rome waits</h3>
-<p class="vo">Rome stopped attacking the walls. It just waited… because of one old man.</p><p class="act">The fleet anchored far out. Archimedes on the wall. Final music swell.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.7.5–9; Plutarch 17.3</p></div></article></div>
+<p class="vo">Rome stopped attacking the walls. It just waited… because of one old man.</p><p class="act">Telephoto from the fleet: the great wall, the claw at rest, and one tiny old man fishing in a gap in the battlements.</p><p class="src"><span class="tag t-doc">Documented</span> Polybius 8.7.5–9; Plutarch 17.3</p></div></article></div>
 </section>
 <div class="two">
 <section>
   <h2>Narration script</h2>
-  <ol class="script"><li><span class="tc">0:00.0</span><span>This is a Roman warship… and a city wall is picking it up.</span></li>
+  <ol class="script"><li><span class="tc">0:00.0</span><span>This is a Roman warship…</span></li>
+<li><span class="tc">0:01.9</span><span>…and a city wall is picking it up.</span></li>
 <li><span class="tc">0:03.6</span><span>Rewind.</span></li>
 <li><span class="tc">0:04.4</span><span>Syracuse, 213 BC. Before dawn, Rome&#x27;s fleet creeps toward the city walls.</span></li>
 <li><span class="tc">0:09.4</span><span>The plan: get so close that the city&#x27;s catapults…</span></li>
@@ -146,16 +168,12 @@ blockquote { margin:0; padding-left:12px; border-left:2px solid var(--bronze); c
     <blockquote>"…whenever they saw a bit of rope or a stick of timber projecting a little over the wall, 'There it is,' they cried … and turned their backs and fled." (Plutarch, Marcellus 17)</blockquote>
     <blockquote>"…every hope of capturing the town at once if one old man of Syracuse were removed." (Polybius 8.7)</blockquote>
   </div>
-  <div class="panel">
-    <p><b>What we deliberately leave out or soften</b></p>
-    <ul class="plain">
-      <li>Plutarch has ships whirled through mid-air. Polybius, the earlier and more careful source, says the prow was lifted until the ship stood on its stern, then dropped. We show Polybius's version.</li>
-      <li>The machine's dimensions, counterweight and windlass are not described anywhere. That shot is labelled "RECONSTRUCTION".</li>
-      <li>Modern tests (BBC 1999, Discovery 2005) show the idea was feasible, not that it was built this way.</li>
-      <li>A real quinquereme was about 45 m long. Ours is stylised at 30 m to read on a phone.</li>
-      <li>No burning mirrors: that's a later legend.</li>
-    </ul>
-  </div>
+  <div class="panel"><p><b>Labelled as not historical</b></p><ul class="plain">
+    <li>The fishing rod, the fish and the marine leaping overboard are comic inventions that illustrate Plutarch's line.</li>
+    <li>The machine's dimensions, counterweight and windlass are our reconstruction.</li>
+    <li>We stage Polybius's account (prow lifted, ship stood on its stern, then dropped), not Plutarch's mid-air whirling.</li>
+    <li>The ship is stylised at 30 m. A real quinquereme was about 45 m.</li>
+  </ul></div>
 </section>
 </div>
 <div class="two">
@@ -170,19 +188,17 @@ blockquote { margin:0; padding-left:12px; border-left:2px solid var(--bronze); c
       <tr><td>3D render, captions, sound effects, mix</td><td>Our pipeline</td><td class="n">free</td></tr>
       <tr><td><b>Total</b></td><td></td><td class="n"><b>≈ 15 credits (about $0.60)</b></td></tr>
     </tbody></table>
-    <p class="src">Estimates come from earlier price checks. I'll show the exact quote and wait for your yes before generating anything. A full render pass takes about 1.5–2 hours, and I expect two or three passes.</p>
+    <p class="src">After you approve the visuals, I'll get the exact quote from Higgsfield and show it to you before generating anything.</p>
   </div>
 </section>
 <section>
-  <h2>Known issues to fix in production</h2>
+  <h2>Still to polish during production</h2>
   <div class="panel"><ul class="plain">
-    <li>S14: the impact spray reads as fog. It needs water sheets, droplets and a white column.</li>
-    <li>S09: the lever principle needs to be clearer, with a camera move along the beam or a brief diagram overlay.</li>
-    <li>S11 and S19: the crew are too small in frame.</li>
-    <li>S15: the crew in the water aren't visible yet.</li>
-    <li>S20 and S21 look too similar. S21 will become a wide over the wall to the waiting fleet.</li>
-    <li>Ships, deck and wall need wear and texture variation to look less clean.</li>
-    <li>Lip-sync will be checked against the recorded narration and the "THERE IT IS!" line, frame by frame.</li>
+    <li>S14: the spray is bigger and taller but still a little foggy. I'll add sharper droplet sheets.</li>
+    <li>S10 is an abstract low angle. If it doesn't cut well in the animatic, I'll swap it for a side angle.</li>
+    <li>S19: the mast and yard crowd the frame. I'll add a quick close-up of Titus screaming.</li>
+    <li>S21: the city buildings behind the wall are plain. I'll add doorways, windows and roof detail.</li>
+    <li>Lip-sync will be checked frame by frame against the recorded narration and Titus's line.</li>
   </ul></div>
 </section>
 </div>

@@ -60,6 +60,29 @@ export async function build() {
   for (let i = 0; i < 6; i++) for (const zz of [-12, 12]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.62, 7, 16), marble); c.position.set(TX - 6.2 + i * 2.48, TY + 4.9, TZ + zz); c.castShadow = true; scene.add(c); }
   const ped = new THREE.Mesh(new THREE.CylinderGeometry(9.2, 9.2, 26.5, 3, 1), roofM); ped.rotation.set(Math.PI / 2, 0, Math.PI / 2); ped.scale.set(0.42, 1, 1); ped.position.set(TX, TY + 9.6, TZ); ped.castShadow = true; scene.add(ped);
   const leaf = new THREE.MeshStandardMaterial({ color: '#4a5e34', roughness: 0.9 }); for (let i = 0; i < 40; i++) { const x = -100 + r2(i, 9) * 200, z = -14 - r2(i, 10) * 120, cy = new THREE.Mesh(new THREE.ConeGeometry(0.9, 6 + r2(i, 11) * 3, 8), leaf); cy.position.set(x, T - 0.35 + 3.5, z); cy.castShadow = true; scene.add(cy); }
+  // ---- weathering: wet algae line where the sea washes the wall, surf foam along the rocks
+  const wetM = new THREE.MeshStandardMaterial({ color: '#2f3a2c', roughness: 0.3, metalness: 0.05 }); box(240, 1.0, 0.1, wetM, 0, 2.2, 0.05); box(240, 0.25, 5.1, wetM, 0, 1.68, 1.2);
+  const fc = document.createElement('canvas'); fc.width = 512; fc.height = 64; const fg2 = fc.getContext('2d'); for (let i = 0; i < 1600; i++) { const x = Math.random() * 512, y = Math.random() * 64, r = 1 + Math.random() * 5; fg2.fillStyle = `rgba(255,255,255,${0.15 + Math.random() * 0.5 * (1 - y / 64)})`; fg2.beginPath(); fg2.arc(x, y, r, 0, 7); fg2.fill(); }
+  const ft = new THREE.CanvasTexture(fc); ft.wrapS = THREE.RepeatWrapping; ft.repeat.set(30, 1); SY.surf = new THREE.Mesh(new THREE.PlaneGeometry(240, 3.2), new THREE.MeshBasicMaterial({ map: ft, transparent: true, depthWrite: false, opacity: 0.8, color: '#f0f4f4' }));
+  SY.surf.rotation.x = -Math.PI / 2; SY.surf.position.set(0, 0.22, 4.9); scene.add(SY.surf);
+  // ---- defences and clutter on the walkway: torsion catapults (Archimedes' artillery, Polybius 8.5), banners, stores
+  const tim2 = pbr('rough_wood', [1, 1], { roughness: 0.85, color: '#a07a56' }), rope2 = new THREE.MeshStandardMaterial({ color: '#4a3a28', roughness: 0.9 });
+  for (const cx of [-21, -12, 9, 18, 30]) { const g = new THREE.Group(); const base = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.35, 2.6), tim2); base.position.y = 0.3; g.add(base);
+    for (const sx of [-0.55, 0.55]) { const up = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.3, 0.18), tim2); up.position.set(sx, 0.95, 0.4); g.add(up); }
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 2.4), tim2); arm.position.set(0, 1.25, -0.1); arm.rotation.x = -0.55; g.add(arm); const sk = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 1.0, 10), rope2); sk.rotation.z = Math.PI / 2; sk.position.set(0, 0.95, 0.4); g.add(sk);
+    g.traverse((o) => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); g.position.set(cx, T + 0.2, -3.0); scene.add(g); }
+  const bnM = new THREE.MeshStandardMaterial({ color: '#8a2b2b', roughness: 0.9, side: THREE.DoubleSide }), bnG = new THREE.MeshStandardMaterial({ color: '#c9a24a', roughness: 0.7, side: THREE.DoubleSide });
+  for (const bx of [-34, 36]) for (const off of [-2.5, 2.5]) { const b = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 4.2, 1, 6), bnM); const pa = b.geometry.attributes.position; for (let i = 0; i < pa.count; i++) pa.setZ(i, Math.sin(pa.getY(i) * 1.3 + bx) * 0.12); b.geometry.computeVertexNormals();
+    b.position.set(bx + off, T + 3.2, 2.66); b.castShadow = true; scene.add(b); const st = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.3), bnG); st.position.set(bx + off, T + 1.3, 2.67); scene.add(st); }
+  for (const [id, x, z, h, ry] of [['wooden_crate_02', 3.2, -4.6, 0.5, 0.3], ['wooden_crate_01', 4.4, -4.9, 0.55, 1.1], ['ceramic_vase_01', 5.3, -3.6, 0.7, 0], ['ceramic_vase_02', 5.9, -4.2, 0.55, 1], ['wicker_basket_02', -7.2, -3.3, 0.4, 0.5]]) {
+    try { const m = await put(id, x, T + 0.2, z, { h, ry }); if (id.startsWith('ceramic')) m.traverse((o) => { if (o.isMesh) { o.material = o.material.clone(); o.material.map = null; o.material.color.set('#b0603a'); o.material.roughness = 0.88; } }); } catch (e) {} }
+  // ---- distant land: hills north along the coast and Etna on the horizon (visible from Syracuse on clear days)
+  const hillM = new THREE.MeshStandardMaterial({ color: '#6f7a72', roughness: 1 }); for (const [x, z, r, h] of [[260, -80, 140, 26], [330, 60, 120, 18], [-260, -160, 160, 30], [180, -260, 150, 40]]) { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 12), hillM); m.scale.set(1, h / r, 0.6); m.position.set(x, -2, z); scene.add(m); }
+  const etna = new THREE.Mesh(new THREE.ConeGeometry(260, 120, 40), new THREE.MeshBasicMaterial({ color: '#9aa2ae', fog: false })); etna.position.set(520, 30, -520); scene.add(etna);
+  const snow = new THREE.Mesh(new THREE.ConeGeometry(70, 32, 40), new THREE.MeshBasicMaterial({ color: '#d9dde4', fog: false })); snow.position.set(520, 76, -520); scene.add(snow); SY.etna = [etna, snow];
+  // ---- the low sun's glow on the horizon (additive), and a stronger grade
+  const glowT = makeSprayTexture(THREE); SY.sunGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowT, color: '#ffb46a', blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, fog: false, opacity: 0.0 }));
+  SY.sunGlow.position.copy(SY.sunDir.clone().multiplyScalar(380).setY(10)); SY.sunGlow.scale.set(260, 120, 1); scene.add(SY.sunGlow);
   // ---- torches along the battlements (flame sprites + a few lights)
   const fl = makeSprayTexture(THREE); SY.torches = [];
   for (const x of [-26, -14, 12, 24, 44, -50]) { const pole = box(0.12, 1.4, 0.12, new THREE.MeshStandardMaterial({ color: '#3a2a1a' }), x, T + 1.9, -0.2);
