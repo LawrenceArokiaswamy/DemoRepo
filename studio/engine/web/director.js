@@ -62,4 +62,5 @@ window.cues = () => { const out = { fps: FPS, duration: DUR, events: [] };
   for (const [id, A] of Object.entries(ACT)) { let last = null; for (let t = 0; t < DUR; t += 1 / 240) { camera.position.set(0, 1.2, 4); camera.lookAt(0, 0.9, 0); camera.updateMatrixWorld();
     const p = A.P.poseAt(t, { camRight: camRight() }); if (p.gait) { const c = Math.floor(p.gait.phase * 2); if (last !== null && c !== last) out.events.push({ type: 'step', t: +t.toFixed(3), who: id, gain: id.startsWith('extra') ? 0.25 : 1 }); last = c; } else last = null; } }
   if (biz.prepare) biz.prepare(CTX); if (biz.cues) out.events.push(...biz.cues(CTX)); out.events.sort((a, b) => a.t - b.t); return out; };
+window.CTX = CTX; window.biz = biz;   // debug access for probes
 window.ready = true;
