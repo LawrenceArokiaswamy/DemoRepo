@@ -54,6 +54,15 @@ export async function init(C) {
   const tt = new THREE.CanvasTexture(c); tt.colorSpace = THREE.SRGBColorSpace; const tray = new THREE.Group(); const top = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshStandardMaterial({ map: tt, roughness: 1 })); top.rotation.x = -Math.PI / 2; top.position.y = 0.32; tray.add(top);
   const frameM = new THREE.MeshStandardMaterial({ color: '#6b4a30', roughness: 0.8 }); for (const [w2, d2, x2, z2] of [[1.4, 0.1, 0, 0.7], [1.4, 0.1, 0, -0.7], [0.1, 1.4, 0.7, 0], [0.1, 1.4, -0.7, 0]]) { const b = new THREE.Mesh(new THREE.BoxGeometry(w2, 0.36, d2), frameM); b.position.set(x2, 0.18, z2); b.castShadow = true; tray.add(b); }
   tray.position.set(-5.4, SET.wallTop + 0.2, -2.6); scene.add(tray); S.tray = tray;
+  // extra distant fleet (story.extraFleet): low-detail hulls behind the main fleet so 'sixty warships' reads as a mass
+  if (C.story.extraFleet) { const { buildWarship } = await import('/engine/web/props/warship.js'); const n = C.story.extraFleet;
+    for (let i = 0; i < n; i++) { const s = buildWarship(THREE, { L: 30, B: 5, H: 3, pbr: null, eye: false, oarsPerSide: 8, seed: 40 + i }), row = Math.floor(i / 6), col = i % 6;
+      s.root.position.set(-110 + col * 44 + (row % 2) * 22 + (rnd(i, 51) - 0.5) * 10, 0, 175 + row * 32 + rnd(i, 52) * 10); s.root.rotation.y = Math.PI / 2 + (rnd(i, 53) - 0.5) * 0.2; scene.add(s.root); SET.fleet.push(s); } }
+  // rope gag (story.ropeGag): a short pole swings out over the battlement like a tiny claw-arm, a rope dangling from it (Plutarch, Marcellus 17)
+  if (C.story.ropeGag) { const R = C.story.ropeGag, wood = new THREE.MeshStandardMaterial({ color: '#7a5636', roughness: 0.85 }), hemp = new THREE.MeshStandardMaterial({ color: '#8a6a3e', roughness: 0.95 });
+    const piv = new THREE.Group(); piv.position.set(...R.pivot); scene.add(piv); const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.16, R.len, 8), wood); pole.rotation.x = Math.PI / 2; pole.position.z = R.len / 2; pole.castShadow = true; piv.add(pole);
+    const segs = []; for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.42, 6), hemp); m.castShadow = true; scene.add(m); segs.push(m); }
+    S.rope = { R, piv, segs, tip: new THREE.Vector3() }; }
 }
 
 // ---------------- ship + machine state ----------------
@@ -130,6 +139,7 @@ function poseShips(w, C) {
 // actors on decks / walls / in the water
 const ON = { titus: ['hero', 0.8, 0.25], crew1: ['hero', 0.62, -0.35], crew2: ['hero', 0.5, 0.35], crew3: ['hero', 0.34, -0.15], crew4: ['hero', 0.72, -0.5], crew5: ['hero', 0.44, 0.5], crew6: ['hero', 0.27, 0.2], marcellus: ['flag', 0.16, 0.1], officer1: ['flag', 0.26, -0.45], officer2: ['flag', 0.3, 0.45] };
 export function placeActor(id, w, pose, C) {
+  const HA = C.story.hideAfter; if (HA && w >= HA.w && HA.ids.includes(id)) return { x: 0, y: -50, z: 0, hide: true };   // story option: actors leave the stage
   const { THREE } = S, SY = S.SY; if (S.lastW !== w) { poseShips(w, C); S.lastW = w; }
   if (id === 'archimedes') { if (w >= 59.5) return { x: -4.5, y: SY.wallTop + 0.3, z: -1.5 }; return { x: -4.5, y: SY.wallTop + 0.3, z: -1.6 }; }
   if (id.startsWith('worker')) { const i = +id.slice(-1); return { x: -1.4 + i * 1.4, y: SY.wallTop + 0.3, z: -5.9 }; }
@@ -186,10 +196,14 @@ export function frame(w, C, t) {
   for (const T of SY.torches) { const fl = 1 + 0.15 * Math.sin(w * 23 + T.x) + 0.1 * Math.sin(w * 37 + T.x * 2); T.f.scale.set(0.9 * fl, 1.4 * fl, 1); T.f.material.opacity = lerp(1, 0.35, day); if (T.L) T.L.intensity = 30 * fl * lerp(1, 0.25, day); }
   SY.mist.forEach((m, i) => { m.material.opacity = lerp(0.35, 0.2, day); m.material.color.setRGB(lerp(0.16, 0.92, day), lerp(0.2, 0.88, day), lerp(0.28, 0.84, day)); m.material.map.offset.x = w * 0.004 * (i + 1); });
   // stones
-  for (const s of S.stones) { const a = (w - s.t0) / s.fl; s.m.visible = a > 0 && a < 1; if (s.m.visible) { s.m.position.lerpVectors(s.from, s.to, a); s.m.position.y += Math.sin(a * Math.PI) * 14; s.m.rotation.set(a * 9, a * 7, 0); } }
+  if (S.rope) { const { R, piv, segs } = S.rope, on = w >= K.DAYS, k = ss(ramp(w, R.t0, R.t0 + R.swing)); piv.visible = on; piv.rotation.x = lerp(-1.35, -0.12, k) + Math.sin(w * 2.1) * 0.03 * k;   // pole tips out over the sea
+    piv.updateMatrixWorld(true); const tip = new THREE.Vector3(0, 0, R.len).applyMatrix4(piv.matrixWorld); let prev = tip.clone(); const sw = Math.sin((w - R.t0) * 2.4) * 0.35 * (1 - 0.5 * k) * k;
+    segs.forEach((m, i) => { m.visible = on && k > 0.02; const a = (i + 1) / segs.length, nx = tip.x + Math.sin(sw * a * 1.6) * 0.42 * (i + 1) * 0.35, ny = tip.y - 0.4 * (i + 1) * k, nz = tip.z + Math.sin(sw * a) * 0.42 * (i + 1) * 0.6;
+      const p = new THREE.Vector3(nx, ny, nz), mid = prev.clone().add(p).multiplyScalar(0.5); m.position.copy(mid); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p.clone().sub(prev).normalize()); prev = p; }); }
+  for (const s of S.stones) { const a = (w - s.t0) / s.fl; s.m.visible = !C.story.noStones && a > 0 && a < 1; if (s.m.visible) { s.m.position.lerpVectors(s.from, s.to, a); s.m.position.y += Math.sin(a * Math.PI) * 14; s.m.rotation.set(a * 9, a * 7, 0); } }
   // splashes: stones landing, hand biting, bow slam, hull slap, swamping
   const st = S.st, ev = [];
-  for (const s of S.stones) ev.push({ t0: s.t0 + s.fl, pos: [s.to.x, 0, s.to.z], power: 0.9 });
+  if (!C.story.noStones) for (const s of S.stones) ev.push({ t0: s.t0 + s.fl, pos: [s.to.x, 0, s.to.z], power: 0.9 });
   const bowZ = S.grip ? S.grip.z : 15; ev.push({ t0: K.REL + 1.1, pos: [1.0, 0.2, bowZ + 1], power: 2.4, spread: [1.6, 1.2] }); ev.push({ t0: K.REL + 1.25, pos: [3.5, 0.2, bowZ + 6], power: 1.6, spread: [1.4, 1] }); ev.push({ t0: K.REL + 1.25, pos: [-1.5, 0.2, bowZ + 6], power: 1.6, spread: [1.4, 1] });
   ev.push({ t0: K.REL + 1.5, pos: [1, 0.2, bowZ + 13], power: 1.2 });
   S.splash.update(w, ev);

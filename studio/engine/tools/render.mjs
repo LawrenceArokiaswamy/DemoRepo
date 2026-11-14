@@ -11,7 +11,7 @@ await new Promise((r) => srv.on('listening', r));
 const b = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const pg = await b.newPage({ viewport: { width: 1080, height: 1920 } });
 pg.on('pageerror', (e) => console.log('PAGE ERROR', e.message)); pg.on('console', (m) => { if (m.type() === 'error' || process.env.LOG) console.log('CONSOLE', m.text()); });
-await pg.goto(`http://127.0.0.1:${srv.address().port}/engine/web/director.html?story=/stories/${slug}`);
+await pg.goto(`http://127.0.0.1:${srv.address().port}/engine/web/director.html?story=/stories/${slug}&scale=${process.env.SCALE || 1}`);
 await pg.waitForFunction(() => window.ready || window.err, null, { timeout: 300000 });
 const err = await pg.evaluate(() => window.err); if (err) { console.log('LOAD ERROR', err); process.exit(1); }
 const done = async () => { await b.close(); srv.close(); };
