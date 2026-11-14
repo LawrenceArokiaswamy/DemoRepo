@@ -17,10 +17,13 @@
    "working_title": "The Claw of Syracuse",
    "category": "Extraordinary history",
    "story_folder": "studio/stories/claw-of-syracuse",
-   "production_status": "In Production",
+   "production_status": "QA",
    "credits_spent": 13.62,
    "publication_url": null,
-   "performance": null
+   "performance": null,
+   "duration_s": 79.13,
+   "deliverable": "renders/claw_of_syracuse_ep.mp4",
+   "notes": "Master (CRF 19, 241 MB) kept locally in build/out, not in git. Awaiting owner review before publication."
   }
  ],
  "backlog": [
