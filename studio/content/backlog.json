@@ -1,0 +1,875 @@
+{
+ "version": 1,
+ "updated": "2026-11-14",
+ "status_flow": [
+  "Idea",
+  "Researching",
+  "Script",
+  "Storyboard",
+  "Approved",
+  "In Production",
+  "QA",
+  "Published"
+ ],
+ "in_production": [
+  {
+   "id": "EP00",
+   "working_title": "The Claw of Syracuse",
+   "category": "Extraordinary history",
+   "story_folder": "studio/stories/claw-of-syracuse",
+   "production_status": "In Production",
+   "credits_spent": 13.62,
+   "publication_url": null,
+   "performance": null
+  }
+ ],
+ "backlog": [
+  {
+   "id": "EP01",
+   "working_title": "The Day a City Drowned in Molasses",
+   "category": "Unbelievable true story",
+   "premise": "Boston, 15 January 1919: a 50-ft storage tank holding about 2.3 million US gallons of molasses bursts. A brown wave reported at up to 25 ft high and about 35 mph floods the North End.",
+   "hooks": [
+    "This city was hit by a wave of molasses.",
+    "Twenty-one people died in a flood of something sweet.",
+    "The warm January day that turned a sticky tank into a killer."
+   ],
+   "target_duration_s": "50-70",
+   "emotional_arc": [
+    "WHAT?! a brown wave tearing down a city street",
+    "OH NO! rivets popping, the tank groaning on an unusually warm day",
+    "WHOA! the molasses thickened as it cooled, trapping rescuers and victims; the harbor stayed brown for months"
+   ],
+   "key_visual_moments": [
+    "Tank bursting, rivets firing like bullets",
+    "Wave crushing the elevated railway",
+    "Rescuers wading waist-deep at dusk as it sets"
+   ],
+   "characters": [
+    "dock worker (adult)",
+    "child on the street",
+    "firefighters / sailors (rescuers)",
+    "company owner (adult, suit)"
+   ],
+   "environments": [
+    "1919 Boston North End street",
+    "tank yard by the harbor",
+    "elevated railway"
+   ],
+   "props_and_effects": [
+    "viscous fluid wave (new effect)",
+    "rivets",
+    "debris",
+    "horse-drawn wagons"
+   ],
+   "reusable_assets": [
+    "character generator (victorian/edwardian wardrobe)",
+    "ocean module for the harbor"
+   ],
+   "research_sources": [
+    "Stephen Puleo, Dark Tide (2003)",
+    "Sharp, Kim et al., APS Division of Fluid Dynamics 2016 (cooling viscosity analysis)",
+    "Boston Public Library / Massachusetts Historical Society archives"
+   ],
+   "factual_caveats": [
+    "21 deaths and ~150 injured are the commonly cited figures; wave height and speed are contemporary estimates",
+    "Treat victims respectfully: no comedic beats about deaths"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 4,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Needs a new viscous-fluid effect and a 1919 street set; highest technical risk."
+  },
+  {
+   "id": "EP02",
+   "working_title": "The Warship That Sank Before It Could Fight",
+   "category": "Extraordinary history",
+   "premise": "Stockholm, 10 August 1628: the royal warship Vasa sails on her maiden voyage before a crowd, heels over in a light gust and sinks within about 1,300 m.",
+   "hooks": [
+    "They spent years building this warship. It sank on its first voyage.",
+    "The most powerful warship in Sweden lasted twenty minutes.",
+    "A stability test failed. They launched it anyway."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "WHAT?! a magnificent warship tipping over in calm water",
+    "OH NO! water pouring through open gunports",
+    "WHOA! raised almost intact in 1961 and now in a museum"
+   ],
+   "key_visual_moments": [
+    "Gilded stern and carvings",
+    "The heel and water through gunports",
+    "The ship rising from the seabed 333 years later"
+   ],
+   "characters": [
+    "shipwright",
+    "captain",
+    "sailors",
+    "King Gustavus Adolphus (absent; letters)"
+   ],
+   "environments": [
+    "Stockholm harbor 1628",
+    "Vasa Museum (modern)"
+   ],
+   "props_and_effects": [
+    "ship heeling physics",
+    "water ingress",
+    "crowd on shore"
+   ],
+   "reusable_assets": [
+    "warship builder (needs a 17th-century hull variant)",
+    "ocean module",
+    "crowd generator"
+   ],
+   "research_sources": [
+    "Vasa Museum (vasamuseet.se) research publications",
+    "Fred Hocker, Vasa (2011)"
+   ],
+   "factual_caveats": [
+    "Death toll is uncertain (often given as 30-50)",
+    "Stability explanations simplified: top-heavy, narrow hull, too little ballast"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP03",
+   "working_title": "The Glass That Survives a Hammer but Explodes From a Tiny Snap",
+   "category": "Mind-blowing science",
+   "premise": "Prince Rupert's drops: molten glass dripped into water forms a tadpole whose head resists hammer blows, because its surface is locked in compression, while snapping the thin tail releases the internal tension and the whole drop bursts.",
+   "hooks": [
+    "A hammer can't break this glass. But snapping its tail can.",
+    "This glass laughs at a hammer and dies from a pinch.",
+    "Why does this tiny glass bomb explode?"
+   ],
+   "target_duration_s": "25-40",
+   "emotional_arc": [
+    "WHAT?! a hammer bouncing off glass",
+    "OH NO! a tiny snap at the tail",
+    "WHOA! the explosion races through the glass faster than sound in air"
+   ],
+   "key_visual_moments": [
+    "Slow-motion hammer strikes",
+    "The crack front racing up the tail",
+    "Cutaway: compression skin around a tense core"
+   ],
+   "characters": [
+    "curious scientist",
+    "skeptical assistant"
+   ],
+   "environments": [
+    "17th-century laboratory or modern lab"
+   ],
+   "props_and_effects": [
+    "glass shards",
+    "slow motion",
+    "stress-field cutaway"
+   ],
+   "reusable_assets": [
+    "workshop set",
+    "character generator"
+   ],
+   "research_sources": [
+    "Chandrasekar & Chaudhri, Phil. Mag. B (1994)",
+    "Aben et al., Applied Physics Letters (2017)",
+    "Royal Society history (1661 demonstrations)"
+   ],
+   "factual_caveats": [
+    "Crack speed is roughly 1.5-1.9 km/s in reported high-speed studies; check exact values before scripting",
+    "Do not encourage viewers to make drops at home without safety warnings"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 2,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Short, punchy, low production cost."
+  },
+  {
+   "id": "EP04",
+   "working_title": "The Man Who Refused to Believe a Nuclear Attack Warning",
+   "category": "Incredible human story",
+   "premise": "26 September 1983: at the Serpukhov-15 bunker, Lt. Col. Stanislav Petrov's early-warning system reports US missile launches. He judges it a false alarm and does not pass it up the chain as an attack.",
+   "hooks": [
+    "His computer said nuclear missiles were coming. He didn't believe it.",
+    "One man had minutes to decide if the world would end.",
+    "The screen said LAUNCH. He said: wait."
+   ],
+   "target_duration_s": "50-70",
+   "emotional_arc": [
+    "WHAT?! sirens and a LAUNCH warning",
+    "OH NO! more missiles appear on screen, minutes tick away",
+    "WHOA! sunlight reflecting off clouds had fooled the satellite"
+   ],
+   "key_visual_moments": [
+    "Red LAUNCH banner in a dark bunker",
+    "Petrov's face lit by screens",
+    "The satellite and the sunlit clouds"
+   ],
+   "characters": [
+    "Stanislav Petrov (44)",
+    "duty officers",
+    "generals on the phone (off-screen)"
+   ],
+   "environments": [
+    "Soviet early-warning bunker (1983)",
+    "orbit view with satellite"
+   ],
+   "props_and_effects": [
+    "CRT screens",
+    "sirens",
+    "space shot"
+   ],
+   "reusable_assets": [
+    "character generator (modern military uniforms)",
+    "new bunker set"
+   ],
+   "research_sources": [
+    "David E. Hoffman, The Dead Hand (2009)",
+    "Interviews with Petrov (e.g. BBC 2013)",
+    "Coverage of the 2013 Dresden Peace Prize"
+   ],
+   "factual_caveats": [
+    "How decisive his single choice was is debated by historians",
+    "Avoid inventing dialogue; mark dramatization"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP05",
+   "working_title": "The Ancient Temple Doors That Opened Without Anyone Touching Them",
+   "category": "Ancient engineering",
+   "premise": "Hero of Alexandria (1st century AD) described doors that open when a fire is lit on an altar: heated air pushes water into a bucket whose weight turns the door posts, and they close when the fire dies.",
+   "hooks": [
+    "Nearly 2,000 years ago, someone designed automatic doors.",
+    "They lit a fire. The temple doors opened by themselves.",
+    "This ancient magic trick was pure physics."
+   ],
+   "target_duration_s": "35-55",
+   "emotional_arc": [
+    "WHAT?! doors opening untouched",
+    "OH NO! the crowd believes it is a god",
+    "WHOA! a hidden machine of air, water and rope below the floor"
+   ],
+   "key_visual_moments": [
+    "Doors swinging open in firelight",
+    "X-ray cutaway to the hidden mechanism",
+    "Fire dying and the doors closing"
+   ],
+   "characters": [
+    "priest",
+    "worshippers (crowd)",
+    "Hero (inventor)"
+   ],
+   "environments": [
+    "Greek/Roman temple interior",
+    "underground machine room cutaway"
+   ],
+   "props_and_effects": [
+    "fire",
+    "water flow",
+    "ropes and pulleys"
+   ],
+   "reusable_assets": [
+    "roman wardrobe",
+    "Syracuse set pieces (marble, sandstone)"
+   ],
+   "research_sources": [
+    "Hero of Alexandria, Pneumatica (Woodcroft translation, 1851)",
+    "A. G. Drachmann, The Mechanical Technology of Greek and Roman Antiquity"
+   ],
+   "factual_caveats": [
+    "Hero DESCRIBED the mechanism; installation in an actual temple is not established",
+    "Label the reconstruction on screen"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 2,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP06",
+   "working_title": "The Lake That Released an Invisible Killer",
+   "category": "Nature and true disaster",
+   "premise": "Lake Nyos, Cameroon, 21 August 1986: a sudden limnic eruption released a huge cloud of carbon dioxide that flowed down the valleys and suffocated about 1,700 people and thousands of cattle.",
+   "hooks": [
+    "The lake didn't flood. It released something nobody could see.",
+    "A silent cloud rolled out of this lake in the night.",
+    "Why did a peaceful lake kill 1,700 people in one night?"
+   ],
+   "target_duration_s": "50-70",
+   "emotional_arc": [
+    "WHAT?! a calm lake suddenly foaming",
+    "OH NO! an invisible cloud flowing downhill in the dark",
+    "WHOA! gas dissolved in deep water, like a shaken soda; now pipes vent it safely"
+   ],
+   "key_visual_moments": [
+    "Lake surface erupting",
+    "Visualized CO2 flowing down valleys (clearly marked as visualization)",
+    "Degassing fountain today"
+   ],
+   "characters": [
+    "villagers (respectfully)",
+    "scientists"
+   ],
+   "environments": [
+    "Lake Nyos crater valley at night and day"
+   ],
+   "props_and_effects": [
+    "water fountain",
+    "heavy-gas flow visualization"
+   ],
+   "reusable_assets": [
+    "ocean/water module",
+    "crowd generator"
+   ],
+   "research_sources": [
+    "Kling et al., Science 236 (1987)",
+    "USGS reports on Lake Nyos",
+    "Cameroon degassing project publications"
+   ],
+   "factual_caveats": [
+    "About 1,746 deaths is the commonly cited figure",
+    "Tragedy: no comedy; show respect for victims",
+    "Gas volume estimates vary"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Requires careful, respectful tone."
+  },
+  {
+   "id": "EP07",
+   "working_title": "The Chess Robot That Fooled the World",
+   "category": "Mystery and invention",
+   "premise": "1770: Wolfgang von Kempelen presents the Mechanical Turk, a chess-playing automaton that tours Europe and America for decades. The secret was a human chess master hidden inside.",
+   "hooks": [
+    "This machine beat humans at chess. Except it wasn't really thinking.",
+    "For 84 years, this robot fooled the world.",
+    "How did a machine from 1770 play chess?"
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "WHAT?! a mechanical Turk making a chess move",
+    "OH NO! skeptics try to expose it and fail",
+    "WHOA! the sliding-seat trick that hid a person inside"
+   ],
+   "key_visual_moments": [
+    "Doors opened to show 'machinery'",
+    "Cutaway: the hidden operator sliding as doors open",
+    "Lamplight chess game"
+   ],
+   "characters": [
+    "von Kempelen",
+    "Empress Maria Theresa",
+    "hidden chess master",
+    "challengers"
+   ],
+   "environments": [
+    "Habsburg court salon",
+    "touring exhibition hall"
+   ],
+   "props_and_effects": [
+    "automaton cabinet with gears",
+    "candlelight"
+   ],
+   "reusable_assets": [
+    "victorian/18th-century wardrobe",
+    "workshop set"
+   ],
+   "research_sources": [
+    "Tom Standage, The Turk (2002)",
+    "Gerald M. Levitt, The Turk, Chess Automaton (2000)"
+   ],
+   "factual_caveats": [
+    "Famous games against Napoleon and Franklin are reported but details are uncertain",
+    "Destroyed by fire in Philadelphia, 1854"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP08",
+   "working_title": "The 2,000-Year-Old Computer Found Underwater",
+   "category": "Ancient technology",
+   "premise": "1901: sponge divers off Antikythera recover a corroded lump from a Roman-era shipwreck. CT scans revealed a geared bronze device that modeled the sky and predicted eclipses.",
+   "hooks": [
+    "Divers found a lump of metal that turned out to be an ancient astronomical computer.",
+    "This rock is hiding 2,000-year-old gears.",
+    "Nobody built anything like it again for over a thousand years."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "WHAT?! gears inside a sea-worn rock",
+    "OH NO! it sat ignored for decades",
+    "WHOA! a hand-cranked model of the cosmos predicting eclipses"
+   ],
+   "key_visual_moments": [
+    "Divers on the seabed, 1901",
+    "CT-scan reveal of gear teeth",
+    "Restored mechanism turning with planets"
+   ],
+   "characters": [
+    "sponge divers",
+    "archaeologist",
+    "ancient Greek astronomer"
+   ],
+   "environments": [
+    "Aegean seabed wreck",
+    "museum lab",
+    "ancient workshop"
+   ],
+   "props_and_effects": [
+    "bronze gears",
+    "X-ray/CT reveal"
+   ],
+   "reusable_assets": [
+    "ocean module",
+    "workshop set",
+    "roman/greek wardrobe"
+   ],
+   "research_sources": [
+    "Freeth et al., Nature 444 (2006)",
+    "Freeth et al., Scientific Reports 11 (2021)",
+    "National Archaeological Museum, Athens"
+   ],
+   "factual_caveats": [
+    "Date of the device is debated (roughly 2nd-1st century BC)",
+    "Not a 'computer' in the modern sense: an analog calculator; say so"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP09",
+   "working_title": "How Three Astronauts Survived a Broken Spaceship",
+   "category": "Survival and engineering",
+   "premise": "April 1970: an oxygen tank explodes aboard Apollo 13 on the way to the Moon. The crew use the lunar module as a lifeboat and improvise a carbon-dioxide filter fix to get home.",
+   "hooks": [
+    "Their spaceship broke on the way to the Moon. Nobody could come rescue them.",
+    "Houston, we've had a problem.",
+    "They fixed a spaceship with tape and a sock."
+   ],
+   "target_duration_s": "60-90",
+   "emotional_arc": [
+    "WHAT?! a bang and venting gas in deep space",
+    "OH NO! power, heat and air running out",
+    "WHOA! a square filter forced into a round hole and a safe splashdown"
+   ],
+   "key_visual_moments": [
+    "Explosion venting from the service module",
+    "Freezing cabin, frost on windows",
+    "The improvised filter adapter"
+   ],
+   "characters": [
+    "Lovell",
+    "Swigert",
+    "Haise",
+    "Mission Control engineers"
+   ],
+   "environments": [
+    "spacecraft interior",
+    "space exterior",
+    "Mission Control"
+   ],
+   "props_and_effects": [
+    "venting gas",
+    "cold breath",
+    "duct tape and cardboard"
+   ],
+   "reusable_assets": [
+    "character generator (astronaut suits)",
+    "new spacecraft set"
+   ],
+   "research_sources": [
+    "NASA Apollo 13 Review Board report (1970)",
+    "Jim Lovell & Jeffrey Kluger, Lost Moon (1994)",
+    "NASA History Office transcripts"
+   ],
+   "factual_caveats": [
+    "The famous line was 'Houston, we've had a problem'",
+    "Avoid copying the 1995 film's look or dialogue"
+   ],
+   "estimated_credits": 16,
+   "estimated_production_days": 5,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Space set is new work; strong category test for 'survival'."
+  },
+  {
+   "id": "EP10",
+   "working_title": "The Tiny Shrimp That Punches Like a Bullet",
+   "category": "Nature and physics",
+   "premise": "The peacock mantis shrimp strikes so fast (about 23 m/s, with accelerations reported over 10,000 g) that it creates cavitation bubbles which collapse with a flash of heat and a second impact.",
+   "hooks": [
+    "This tiny animal punches so fast it creates collapsing bubbles.",
+    "This shrimp hits its prey twice with one punch.",
+    "The fastest punch in the ocean boils the water."
+   ],
+   "target_duration_s": "25-45",
+   "emotional_arc": [
+    "WHAT?! a shrimp smashing a snail shell",
+    "OH NO! the crab doesn't stand a chance",
+    "WHOA! the bubble collapse is a second punch"
+   ],
+   "key_visual_moments": [
+    "Ultra-slow-motion strike",
+    "Cavitation bubble collapse",
+    "Spring-loaded saddle cutaway"
+   ],
+   "characters": [
+    "mantis shrimp (stylized creature)",
+    "snail / crab"
+   ],
+   "environments": [
+    "coral reef"
+   ],
+   "props_and_effects": [
+    "cavitation bubbles",
+    "slow motion",
+    "underwater caustics"
+   ],
+   "reusable_assets": [
+    "ocean module (underwater variant)"
+   ],
+   "research_sources": [
+    "Patek, Korff & Caldwell, Nature 428 (2004)",
+    "Patek & Caldwell, J. Exp. Biol. 208 (2005)"
+   ],
+   "factual_caveats": [
+    "'Like a bullet' compares ACCELERATION, not speed; be precise",
+    "Species: Odontodactylus scyllarus"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Needs a creature design in the pebble-folk spirit."
+  },
+  {
+   "id": "EP11",
+   "working_title": "The Soldiers Who Couldn't Stop an Army of Emus",
+   "category": "Bizarre history and comedy",
+   "premise": "November-December 1932, Western Australia: soldiers with Lewis machine guns are sent to cull about 20,000 emus damaging wheat farms. The birds scatter, the guns jam, and the operation largely fails.",
+   "hooks": [
+    "Australia sent soldiers with machine guns to fight birds.",
+    "The birds won.",
+    "A war against emus. Guess who lost."
+   ],
+   "target_duration_s": "40-60",
+   "emotional_arc": [
+    "WHAT?! soldiers aiming machine guns at birds",
+    "OH NO! the emus split up and run",
+    "WHOA! the operation was called off; the emus kept the wheat"
+   ],
+   "key_visual_moments": [
+    "Emu stampede across wheat fields",
+    "A truck chasing emus over rough ground",
+    "Soldiers' faces as the emus vanish"
+   ],
+   "characters": [
+    "Major G.P.W. Meredith",
+    "two gunners",
+    "farmers",
+    "emus"
+   ],
+   "environments": [
+    "Western Australian wheat belt"
+   ],
+   "props_and_effects": [
+    "dust",
+    "machine gun (no gore)",
+    "truck"
+   ],
+   "reusable_assets": [
+    "character generator",
+    "crowd generator for emus (new creature)"
+   ],
+   "research_sources": [
+    "Murray Johnson, 'Feathered foes', Journal of Australian Studies (2006)",
+    "National Archives of Australia records"
+   ],
+   "factual_caveats": [
+    "Kill counts vary by report",
+    "No graphic violence; keep it comedic and factual"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP12",
+   "working_title": "The Tiny Animal That Can Survive Outer Space",
+   "category": "Nature and science",
+   "premise": "Tardigrades in a dried 'tun' state survived exposure to space vacuum and, in some cases, solar ultraviolet radiation on the 2007 FOTON-M3 mission.",
+   "hooks": [
+    "This microscopic creature can survive exposure to the vacuum of space.",
+    "This animal went to space without a spacesuit.",
+    "How does a water bear survive almost anything?"
+   ],
+   "target_duration_s": "30-45",
+   "emotional_arc": [
+    "WHAT?! a tiny animal on a spacecraft's exterior",
+    "OH NO! vacuum, cold, radiation",
+    "WHOA! it dries itself into a tun and wakes up with water"
+   ],
+   "key_visual_moments": [
+    "Water bear walking on moss",
+    "Drying into a tun",
+    "Rehydrating and walking away"
+   ],
+   "characters": [
+    "tardigrade (stylized creature)",
+    "scientist"
+   ],
+   "environments": [
+    "moss world (macro)",
+    "low Earth orbit"
+   ],
+   "props_and_effects": [
+    "macro depth of field",
+    "space"
+   ],
+   "reusable_assets": [
+    "new creature design",
+    "space set (shared with EP09)"
+   ],
+   "research_sources": [
+    "Jönsson et al., Current Biology 18 (2008)",
+    "Reviews on tardigrade cryptobiosis"
+   ],
+   "factual_caveats": [
+    "Survival in space was limited, especially with full solar UV",
+    "Not indestructible; hydrated tardigrades are fragile"
+   ],
+   "estimated_credits": 12,
+   "estimated_production_days": 2,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP13",
+   "working_title": "The Passenger Jet That Ran Out of Fuel in Midair",
+   "category": "Incredible true story",
+   "premise": "23 July 1983: Air Canada Flight 143, a new Boeing 767, runs out of fuel at 41,000 ft after a fuelling miscalculation between pounds and kilograms. The crew glide it to a former air base at Gimli.",
+   "hooks": [
+    "Both engines stopped. And there were 69 people aboard.",
+    "A jet ran out of fuel because of a math mistake.",
+    "The pilot had one advantage: he flew gliders."
+   ],
+   "target_duration_s": "50-70",
+   "emotional_arc": [
+    "WHAT?! silence as both engines stop",
+    "OH NO! no power, gliding toward a runway with people on it",
+    "WHOA! a sideslip landing, and no one died"
+   ],
+   "key_visual_moments": [
+    "Engines spooling down",
+    "Ram-air turbine deploying",
+    "Sideslip over the old runway"
+   ],
+   "characters": [
+    "Captain Robert Pearson",
+    "First Officer Maurice Quintal",
+    "fuellers",
+    "passengers"
+   ],
+   "environments": [
+    "airliner cockpit and cabin",
+    "sky",
+    "Gimli runway (racing day)"
+   ],
+   "props_and_effects": [
+    "clouds",
+    "runway",
+    "nose gear collapse sparks"
+   ],
+   "reusable_assets": [
+    "character generator (modern uniforms)",
+    "new aircraft set"
+   ],
+   "research_sources": [
+    "Board of Inquiry report (Lockhart, 1985)",
+    "Transportation Safety Board of Canada references",
+    "William & Marilyn Hoffer, Freefall (1989)"
+   ],
+   "factual_caveats": [
+    "61 passengers + 8 crew = 69 aboard; minor injuries only",
+    "Units mix-up details must be explained accurately"
+   ],
+   "estimated_credits": 16,
+   "estimated_production_days": 4,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP14",
+   "working_title": "How People Made Ice in the Desert Before Electricity",
+   "category": "Ancient engineering",
+   "premise": "Persian yakhchāls: on winter nights water froze in shaded shallow pools by radiating heat to the clear sky; the ice was stored through summer under thick domes of insulating mud-brick mortar.",
+   "hooks": [
+    "No electricity. No refrigerator. Yet they had ice in the desert.",
+    "Summer in the desert, and this dome is full of ice.",
+    "How do you make ice without a freezer?"
+   ],
+   "target_duration_s": "40-60",
+   "emotional_arc": [
+    "WHAT?! ice in desert heat",
+    "OH NO! how could it survive summer?",
+    "WHOA! the night sky itself was the freezer"
+   ],
+   "key_visual_moments": [
+    "The giant cone dome at sunset",
+    "Night: water freezing under stars",
+    "Cutaway: insulation and the ice pit"
+   ],
+   "characters": [
+    "ice keeper",
+    "children with sherbet",
+    "merchant"
+   ],
+   "environments": [
+    "Persian desert village with yakhchāl"
+   ],
+   "props_and_effects": [
+    "frost",
+    "heat shimmer",
+    "night sky"
+   ],
+   "reusable_assets": [
+    "new desert set",
+    "character generator"
+   ],
+   "research_sources": [
+    "Mahdavinejad & Javanrudi, 'Assessment of ancient fridges' (2012)",
+    "UNESCO / Iranian heritage documentation"
+   ],
+   "factual_caveats": [
+    "Exact origins and early dates are uncertain; surviving examples are a few centuries old",
+    "Radiative cooling explanation must be clear and correct"
+   ],
+   "estimated_credits": 14,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  },
+  {
+   "id": "EP15",
+   "working_title": "What If Earth Suddenly Stopped Spinning?",
+   "category": "Scientific hypothetical",
+   "premise": "Assume Earth's crust stopped rotating instantly while the atmosphere and oceans kept moving (stated assumption). At the equator the ground moves at about 465 m/s; everything not fixed would keep going.",
+   "hooks": [
+    "Imagine the ground suddenly stopped moving beneath you.",
+    "Earth stops spinning. Here's the first second.",
+    "What happens if the planet hits the brakes?"
+   ],
+   "target_duration_s": "50-75",
+   "emotional_arc": [
+    "WHAT?! the world stops",
+    "OH NO! winds and oceans keep going east at supersonic speed",
+    "WHOA! over time the oceans move to the poles and a day lasts a year"
+   ],
+   "key_visual_moments": [
+    "Air and water sweeping across continents",
+    "Ocean migration map",
+    "One sunrise per year"
+   ],
+   "characters": [
+    "scientist narrator character",
+    "bystanders (no gore)"
+   ],
+   "environments": [
+    "planet view",
+    "city",
+    "coast"
+   ],
+   "props_and_effects": [
+    "wind and water sweeps",
+    "globe"
+   ],
+   "reusable_assets": [
+    "ocean module",
+    "globe set (new)"
+   ],
+   "research_sources": [
+    "NASA Earth science explainers on rotation",
+    "W. Fraczek, ESRI (2007) ocean redistribution analysis"
+   ],
+   "factual_caveats": [
+    "Clearly HYPOTHETICAL; physically impossible to stop instantly",
+    "Results depend on stated assumptions; say so on screen",
+    "Avoid graphic depictions of casualties"
+   ],
+   "estimated_credits": 16,
+   "estimated_production_days": 4,
+   "editorial_score": null,
+   "research_status": "Unvalidated",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": ""
+  }
+ ]
+}
