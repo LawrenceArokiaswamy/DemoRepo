@@ -11,32 +11,32 @@ const ramp = (t, a, b) => Math.max(0, Math.min(1, (t - a) / (b - a)));
 await buildSet();
 const CARD_H = 1.62, CW = 900, CH = 1500;
 // shot list references characters by id; specs come from the story's cast bible
-const ELDER = makePerformer(CAST5.elder, [
+const ELDER = makePerformer(CAST5.elder, { seed: 3, beats: [
   { t: 0, act: 'idle', body: { yaw: 0.3, armR: [18, -10] } },
   { t: 1.45, act: 'notice', body: { yaw: 0.4, armR: [18, -10] } },                         // notices late
   { t: 2.1, act: 'curious', body: { yaw: 0.45, armR: [18, -10], armL: [70, 20], handL: 'point', handR: 'open' } },
   { t: 3.5, act: 'shock', body: { yaw: 0.3, armR: [18, -10], armL: [60, 40], handL: 'spread' } },   // small startle (persona amp 0.42)
   { t: 4.45, act: 'laugh', body: { yaw: 0.5, armR: [18, -10], armL: [92, 6], handL: 'point', handR: 'open' } },   // wheezes, points at the soldier
-], 3);
-const SOLDIER = makePerformer(CAST5.soldier, [
+] });
+const SOLDIER = makePerformer(CAST5.soldier, { seed: 7, path: [{ t: 3.95, x: 0.38, z: 0.58 }, { t: 4.5, x: 0.5, z: 0.58 }], beats: [
   { t: 0, act: 'idle', body: { yaw: -0.25, armR: [20, 40] } },
   { t: 1.05, act: 'notice', body: { yaw: -0.4, armR: [24, 46] } },                         // notices instantly
   { t: 1.7, act: 'suspicious', body: { yaw: -0.4, armR: [70, 80], armL: [40, 100], handL: 'fist' } },  // shield up, guarded
   { t: 3.42, act: 'shock', body: { yaw: -0.2 } },                                           // big jolt
-  { t: 3.95, act: 'fear', body: { yaw: -0.3, dx: 0.14, armR: [96, 70], armL: [120, 120] } },     // backs off behind the shield
-  { t: 6.3, act: 'sad', body: { yaw: -0.35, dx: 0.14, armR: [30, 40], armL: [150, 60], handL: 'open' }, face: { blush: 1, cheek: 0.4, pupil: [-0.6, 0.4] } },  // sheepish, scratches helmet
-], 7);
+  { t: 3.95, act: 'fear', faceTravel: false, body: { yaw: -0.3, armR: [96, 70], armL: [120, 120] } },     // backs off behind the shield
+  { t: 6.3, act: 'sad', faceTravel: false, body: { yaw: -0.35, armR: [30, 40], armL: [150, 60], handL: 'open' }, face: { blush: 1, cheek: 0.4, pupil: [-0.6, 0.4] } },  // sheepish, scratches helmet
+] });
 const ACTORS = [{ P: ELDER, x: -0.4, z: 0.62, light: -1 }, { P: SOLDIER, x: 0.38, z: 0.58, light: -1 }].map((a) => {
   const c = document.createElement('canvas'); c.width = CW; c.height = CH; const card = makeCard(CARD_H * 0.6, CARD_H, c); card.mesh.material.emissive.setRGB(0.3, 0.29, 0.28);
   const sh = new THREE.Mesh(new THREE.CircleGeometry(0.28, 32), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: 0.38, depthWrite: false })); sh.rotation.x = -Math.PI / 2; sh.scale.set(1, 0.45, 1); scene.add(sh);
   return { ...a, c, g: c.getContext('2d'), card, sh }; });
-const clock = SET.props.alarm_clock_01; clock.scale.multiplyScalar(1.35); clock.position.x = -0.02; clock.position.z = 0.95; clock.position.y -= SET.benchTop; clock.rotation.y += Math.PI + 0.2; const clock0 = clock.position.clone(), clockR0 = clock.rotation.clone();
+const clock = SET.props.alarm_clock_01; clock.scale.multiplyScalar(1.35); clock.position.x = -0.02; clock.position.z = 0.95; clock.position.y -= SET.benchTop; clock.rotation.y += 0.45; const clock0 = clock.position.clone(), clockR0 = clock.rotation.clone();
 
 const SHOTS = [
   { a: 0, b: 3.42, keys: [{ t: 0, pos: [0.0, 1.05, 4.5], look: [0.0, 0.82, 0.6], fov: 40, focus: 3.8, ap: 0.0007 }, { t: 3.42, pos: [0.0, 1.0, 4.15], look: [0.0, 0.8, 0.6], fov: 40, focus: 3.5, ap: 0.0007 }] },
   { a: 3.42, b: 4.45, keys: [{ t: 3.42, pos: [0.15, 1.15, 3.0], look: [0.36, 1.0, 0.6], fov: 38, focus: 2.4, ap: 0.0012 }, { t: 4.45, pos: [0.15, 1.15, 2.8], look: [0.38, 1.02, 0.6], fov: 38, focus: 2.2, ap: 0.0012 }] },
-  { a: 4.45, b: 6.1, keys: [{ t: 4.45, pos: [-0.2, 1.1, 2.95], look: [-0.38, 0.98, 0.62], fov: 38, focus: 2.35, ap: 0.0012 }, { t: 6.1, pos: [-0.22, 1.1, 2.7], look: [-0.38, 1.0, 0.62], fov: 38, focus: 2.1, ap: 0.0012 }] },
-  { a: 6.1, b: 8, keys: [{ t: 6.1, pos: [0.06, 1.0, 4.3], look: [0.06, 0.82, 0.6], fov: 40, focus: 3.65, ap: 0.0007 }, { t: 8, pos: [0.06, 1.0, 4.05], look: [0.06, 0.84, 0.6], fov: 40, focus: 3.4, ap: 0.0007 }] },
+  { a: 4.45, b: 6.1, keys: [{ t: 4.45, pos: [-0.05, 1.1, 2.95], look: [-0.28, 0.98, 0.62], fov: 38, focus: 2.35, ap: 0.0012 }, { t: 6.1, pos: [-0.07, 1.1, 2.75], look: [-0.28, 1.0, 0.62], fov: 38, focus: 2.1, ap: 0.0012 }] },
+  { a: 6.1, b: 8, keys: [{ t: 6.1, pos: [0.17, 1.0, 5.1], look: [0.17, 0.84, 0.6], fov: 40, focus: 4.2, ap: 0.0007 }, { t: 8, pos: [0.17, 1.0, 4.85], look: [0.17, 0.85, 0.6], fov: 40, focus: 3.95, ap: 0.0007 }] },
 ];
 const KICKS = [{ t: 1.0, a: 0.004 }, { t: 3.42, a: 0.03 }];
 function clockAt(t) {
@@ -51,9 +51,9 @@ function clockAt(t) {
 window.renderFrame = (f) => {
   const t = f / FPS, sh = SHOTS.find((s) => t >= s.a && t < s.b) || SHOTS[SHOTS.length - 1], v = camKeys(sh.keys, t);
   for (const kk of KICKS) { const d = (t - kk.t) * FPS; if (d >= 0 && d < 8) { const s = (Math.floor(d) % 2 ? -1 : 1) * kk.a * (1 - d / 8); v.look = [v.look[0] + s, v.look[1] + s * 1.4, v.look[2]]; v.roll = (v.roll || 0) + s * 25; } }
-  camera.position.set(...v.pos); camera.up.set(0, 1, 0); camera.lookAt(...v.look); camera.rotateZ((v.roll || 0) * Math.PI / 180); camera.fov = v.fov; camera.updateProjectionMatrix();
+  camera.position.set(...v.pos); camera.up.set(0, 1, 0); camera.lookAt(...v.look); camera.rotateZ((v.roll || 0) * Math.PI / 180); camera.fov = v.fov; camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   bokeh.uniforms.focus.value = v.focus; bokeh.uniforms.aperture.value = v.ap ?? 0.001;
-  for (const A of ACTORS) { const pose = A.P.poseAt(t), x = A.x + (pose.dx || 0), g = A.g;
+  for (const A of ACTORS) { const cr = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0), pose = A.P.poseAt(t, { camRight: [cr.x, cr.z] }), x = pose.pos ? pose.pos[0] : A.x, g = A.g;
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, CW, CH); g.setTransform(CW / 600, 0, 0, CH / 1000, 0, 0);
     drawCharacter(g, A.P.spec, { ...pose, light: { dir: A.light, contrast: 1, rim: '255,210,150', rimI: 0.9 } }); A.card.tex.needsUpdate = true;
     A.card.mesh.position.set(x, 0, A.z); A.card.mesh.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - A.z); A.sh.position.set(x, 0.004, A.z + 0.03); }
