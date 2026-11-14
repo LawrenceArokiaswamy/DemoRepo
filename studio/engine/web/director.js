@@ -20,7 +20,7 @@ const speeches = {};
 for (const line of story.dialogue || []) { const words = await J(line.words), env = await J(line.env); speeches[line.speaker] = makeSpeech(words, env, { offset: line.offset }); }
 // ---- performers + cards
 const CARD_H = story.cardHeight || 1.62;
-const mkActor = (id, P, x, z, res = 1, y = 0) => { const c = document.createElement('canvas'); c.width = 1200 * res; c.height = 2000 * res; const card = makeCard(CARD_H * 0.6, CARD_H, c); card.mesh.material.emissive.setRGB(0.32, 0.31, 0.3);
+const mkActor = (id, P, x, z, res = 1, y = 0) => { const c = document.createElement('canvas'); c.width = 1200 * res; c.height = 2000 * res; const card = makeCard(CARD_H * 0.6, CARD_H, c); const em = story.cardEmissive ?? 0.32; card.mesh.material.emissive.setRGB(em, em * 0.97, em * 0.94);
   const sh = new THREE.Mesh(new THREE.CircleGeometry(0.26, 32), new THREE.MeshBasicMaterial({ color: '#2a1a10', transparent: true, opacity: 0.35, depthWrite: false })); sh.rotation.x = -Math.PI / 2; sh.scale.set(1, 0.5, 1); scene.add(sh);
   return { id, P, x, y, z, c, g: c.getContext('2d'), card, sh }; };
 const ACT = {};
@@ -46,10 +46,10 @@ function setup(t) {
     const pose = A.P.poseAt(wt, ctx); let x = pose.pos ? pose.pos[0] : A.x, z = pose.pos ? pose.pos[1] : A.z, y = A.y || 0;
     const pl = biz.placeActor ? biz.placeActor(A.id, wt, pose, CTX) : null;   // business may put actors on decks, walls, etc.
     if (pl) { x = pl.x; y = pl.y; z = pl.z; if (pl.lean) pose.lean = (pose.lean || 0) + pl.lean; if (pl.hide) { A.card.mesh.visible = A.sh.visible = false; continue; } }
-    A.card.mesh.visible = true; A.sh.visible = !(pl && pl.noShadow);
-    A.card.mesh.position.set(x, y, z); A.card.mesh.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - z); A.card.mesh.updateMatrixWorld(); A.sh.position.set(x, y + 0.004, z + 0.03);
+    A.card.mesh.visible = true; A.sh.visible = !(pl && pl.noShadow) || !!(pl && pl.shadowUp);
+    A.card.mesh.position.set(x, y, z); A.card.mesh.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - z); A.card.mesh.updateMatrixWorld(); A.sh.position.set(x, y + 0.004, z + 0.03); A.sh.rotation.set(-Math.PI / 2, 0, 0); if (pl && pl.shadowUp) { A.sh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...pl.shadowUp)); A.sh.position.set(x + pl.shadowUp[0] * 0.03, y + pl.shadowUp[1] * 0.03, z + pl.shadowUp[2] * 0.03); }
     const g = A.g; g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, A.c.width, A.c.height); g.setTransform(A.c.width / 600, 0, 0, A.c.height / 1000, 0, 0);
-    A.out = drawCharacter(g, A.P.spec, { ...pose, light }); A.card.tex.needsUpdate = true; A.pose = pose;
+    A.out = drawCharacter(g, A.P.spec, { ...pose, light: biz.cardLight ? biz.cardLight(CTX, A) : light }); A.card.tex.needsUpdate = true; A.pose = pose;
   }
 }
 // ---- story business (optional)

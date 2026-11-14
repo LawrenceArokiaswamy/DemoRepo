@@ -7,10 +7,10 @@ const lerp = (a, b, k) => a + (b - a) * k, cl = (x, a = 0, b = 1) => Math.max(a,
 const ss = (x) => { x = cl(x); return x * x * (3 - 2 * x); }, s5 = (x) => { x = cl(x); return x * x * x * (x * (6 * x - 15) + 10); };
 const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); };
 const D2R = Math.PI / 180;
-let S = null;
+let S = null, THREE = null; const setThree = (T) => { THREE = T; };
 
 export async function init(C) {
-  const { THREE, scene, SET } = C; S = { THREE, SY: SET };
+  const { THREE, scene, SET } = C; S = { THREE, SY: SET }; setThree(C.THREE);
   const { makeSplash, makeSprayTexture, makeCrown } = await import('/engine/web/fx/ocean.js');
   S.tex = makeSprayTexture(THREE); S.splash = makeSplash(THREE, scene, S.tex, { count: 240, seed: 3 }); S.impact = makeSplash(THREE, scene, S.tex, { count: 420, seed: 5 });
   const rc = document.createElement('canvas'); rc.width = rc.height = 256; const rg = rc.getContext('2d'), grd = rg.createRadialGradient(128, 128, 60, 128, 128, 128); grd.addColorStop(0, 'rgba(255,255,255,0)'); grd.addColorStop(0.55, 'rgba(255,255,255,0.85)'); grd.addColorStop(0.75, 'rgba(255,255,255,0.35)'); grd.addColorStop(1, 'rgba(255,255,255,0)'); rg.fillStyle = grd; rg.fillRect(0, 0, 256, 256);
@@ -95,7 +95,9 @@ function poseShips(w, C) {
   H.root.visible = !st.hidden; H.root.position.set(st.x, 0, st.cz); H.root.rotation.set(0, Math.PI / 2, 0);
   const bob = sea.heightAt(st.x, st.cz, w), sl = sea.slopeAt(st.x, st.cz, w), still = 1 - cl(st.lift / (10 * D2R));
   H.root.position.y = bob * still - st.sink; H.root.rotateZ(-sl[1] * 0.35 * still); H.root.rotateX(sl[0] * 0.25 * still + st.roll);
-  H.lift.rotation.z = st.lift; H.setOars(st.rowPhase, st.lift > 0.12 ? 'dangle' : st.rowMode, new THREE.Vector3(-Math.sin(st.lift), -Math.cos(st.lift), 0));
+  const liftK = cl(st.lift / (20 * D2R)); if (liftK > 0 && w < K.REL + 0.25) { H.root.rotateX(0.035 * Math.sin(w * 0.8) * liftK); H.root.rotateY(0.02 * Math.sin(w * 0.55 + 1) * liftK); }
+  if (H.rig) { const dt = 0.06, th = (x) => heroState(x, SY).lift, acc = (th(w + dt) - 2 * st.lift + th(w - dt)) / (dt * dt); H.rig.rotation.z = cl(-acc * 0.012, -0.14, 0.14) + 0.025 * Math.sin(w * 2.1) * liftK; }
+  H.setTime(w); H.lift.rotation.z = st.lift; H.setOars(st.rowPhase, st.lift > 0.12 ? 'dangle' : st.rowMode, new THREE.Vector3(-Math.sin(st.lift), -Math.cos(st.lift), 0));
   // flagship (Marcellus): follows, holds off, later the days-later approach and panic retreat
   let fx = -15, fz = lerp(96, 44, s5(ramp(w, 0, 15))), fro = 'row', back = 0;
   if (w > 15) fro = 'rest';
@@ -142,9 +144,31 @@ export function placeActor(id, w, pose, C) {
   }
   let lean = 0; if (ship === 'hero' && st.lift > 0.02) { const sl = (L) => cl(Math.sin(L) * 1.2 - 0.1) * (u - 0.1) * 0.5, slide = sl(st.lift), prev = sl(heroState(w - 0.08, SY).lift), spd = Math.abs(slide - prev) / 0.08 * 30;
     u -= slide; lean = -Math.min(14, st.lift / D2R * 0.22); if (spd > 0.05 && pose) pose.gait = { phase: slide * 9, amt: Math.min(1, spd * 0.6), run: false, dir: -1, lift: 1, stride: 1 }; }
-  const p = S0.deckPoint(u, v).applyMatrix4(S0.body.matrixWorld); return { x: p.x, y: p.y, z: p.z, lean, noShadow: true, hide: ship === 'hero' && S.st.hidden };
+  if (ship === 'hero' && pose && w > K.LIFT0 + 0.3 && w < K.REL + 0.4) { const R = REACT[id]; if (R) { const r = R(w, u, v, S0, pose); if (r) { u = r.u ?? u; v = r.v ?? v; } } }
+  const p = S0.deckPoint(u, v).applyMatrix4(S0.body.matrixWorld), up = new THREE.Vector3(0, 1, 0).transformDirection(S0.body.matrixWorld);
+  if (pose && pose._grips) { for (const [side, wp, k] of pose._grips) { const uv = worldToCard(p, wp, C); pose['reach' + side] = { pt: uv, k }; pose['hand' + side] = 'grip'; } delete pose._grips; }
+  return { x: p.x, y: p.y, z: p.z, lean, noShadow: true, shadowUp: up.toArray(), hide: ship === 'hero' && S.st.hidden };
 }
 
+// project a world point onto an actor's camera-facing card (0..1 card coords) so hands can grip real 3D objects
+function worldToCard(pos, wp, C) { const cam = C.camera.position, ry = Math.atan2(cam.x - pos.x, cam.z - pos.z), H = C.story.cardHeight || 1.62, W = H * 0.6;
+  const rx = Math.cos(ry), rz = -Math.sin(ry), d = (wp.x - pos.x) * rx + (wp.z - pos.z) * rz; return [cl(0.5 + d / W, -0.2, 1.2), cl(1 - (wp.y - pos.y) / H, -0.1, 1.1)]; }
+// how each sailor copes once the deck tilts (fear made varied and physical: gripping, crouching, sliding, praying)
+const rail = (S0, u, side, h = 0.85) => S0.deckPoint(u, side * 1.18).add(new THREE.Vector3(0, h, 0)).applyMatrix4(S0.body.matrixWorld);
+const gk = (w, t0) => ss(cl((w - t0) / 0.35));
+const REACT = {
+  titus: (w, u, v, S0, P) => { const k = gk(w, K.LIFT0 + 1.4); P._grips = [['R', rail(S0, u + 0.01, 1, 0.75), k], ['L', rail(S0, u + 0.035, 1, 0.95), k]]; P.lean = (P.lean || 0) - 6 * k; return { v: lerp(v, 0.92, k) }; },
+  crew1: (w, u, v, S0, P) => { const k = gk(w, K.LIFT0 + 0.9), mu = 0.545; const m = S0.deckPoint(mu + 0.008, 0).add(new THREE.Vector3(0, 1.0, 0)).applyMatrix4(S0.body.matrixWorld); P._grips = [['L', m, k], ['R', m.clone().add(new THREE.Vector3(0, 0.25, 0)), k]]; P.face && (P.face.lidT = P.face.lidT.map((x) => Math.max(x, 0.55 * k))); return { u: lerp(u, mu - 0.012, k), v: lerp(v, 0.18, k) }; },
+  crew2: (w, u, v, S0, P) => { const k = gk(w, K.LIFT0 + 1.1); P.squash = (P.squash || 0) + 0.32 * k; P.bob = (P.bob || 0) + 3.2 * k; P.armL = [150, 130]; P.armR = [150, 130]; P.handL = P.handR = 'spread'; P.headTilt = (P.headTilt || 0) + 10 * k + 3 * Math.sin(w * 31); return null; },
+  crew3: (w, u, v, S0, P) => { const k = gk(w, K.LIFT0 + 1.6); P.sit = k; P.gait = null; P.armL = [120 + 30 * Math.sin(w * 7), 20]; P.armR = [130 + 30 * Math.sin(w * 6 + 1), 30]; P.handL = P.handR = 'spread'; return { u: u - 0.06 * k * cl((w - K.LIFT0 - 1.6) / 3) }; },
+  crew4: (w, u, v, S0, P) => { const k = gk(w, K.LIFT0 + 1.2); P._grips = [['L', rail(S0, u, -1, 0.85), k]]; P.armR = [105 + 10 * Math.sin(w * 5), -15]; P.handR = 'spread'; return { v: lerp(v, -0.9, k) }; },
+  crew5: (w, u, v, S0, P) => { P.armL = [150 + 40 * Math.sin(w * 9), 30]; P.armR = [150 + 40 * Math.sin(w * 9 + 3), 30]; P.handL = P.handR = 'spread'; return null; },
+  crew6: (w, u, v, S0, P) => { const k = gk(w, K.LIFT0 + 1.8); const c = S0.deckPoint(u, v).add(new THREE.Vector3(0, 1.0, 0)).applyMatrix4(S0.body.matrixWorld); P._grips = [['L', c, k * 0.9], ['R', c, k * 0.9]]; if (P.face) { P.face.lidT = P.face.lidT.map(() => 0.9 * k + 0.1); P.face.tears = 0.6 * k; } P.headTilt = (P.headTilt || 0) + 8 * k; return null; },
+};
+export function cardLight(C, A) {   // shade each character from the side the sun is actually on, for this camera; rim takes the sky's colour
+  const SY = S.SY, r = new THREE.Vector3().setFromMatrixColumn(C.camera.matrixWorld, 0), sd = SY.sunDir, sideDot = sd.x * r.x + sd.z * r.z, up = SY.sun.intensity / 3.4;
+  return { dir: sideDot >= 0 ? 1 : -1, contrast: 0.75 + 0.55 * up, rim: up > 0.3 ? '255,206,160' : '170,190,230', rimI: 0.55 + 0.6 * up };
+}
 export function prepare(C) {
   if (S.prepared) return; S.prepared = true; const { THREE } = S, SY = S.SY;
   for (const d of S.debris) { poseShips(d.t0, C); const H = SY.hero; d.p0 = H.deckPoint(d.u, d.side * 1.05).applyMatrix4(H.body.matrixWorld); d.v0 = new THREE.Vector3(d.side * 1.6, 0.8, 2.2); }
@@ -203,6 +227,10 @@ export function frame(w, C, t) {
     if (p0.y < sea0 + 0.4) continue; const y = p0.y - 4.905 * tau * tau; if (y < sea0) { if (tau - Math.sqrt(2 * (p0.y - sea0) / 9.81) < 0.05) landings.push([p0.x, sea0, p0.z]); continue; }
     d.sp.visible = true; const v = 9.81 * tau; d.sp.position.set(p0.x + d.side * 0.25, y - Math.min(1.6, v * 0.08) * 0.5, p0.z); d.sp.scale.set(d.w, d.drip ? d.w * 4 : Math.max(0.25, Math.min(d.w > 0.5 ? 3.2 : 2.2, v * (d.w > 0.5 ? 0.3 : 0.16))), 1); d.sp.material.opacity = (d.drip ? 0.85 : d.w > 0.5 ? 0.8 * Math.exp(-Math.max(0, w - K.LIFT0 - 0.6) * 0.45) : 0.7) * drainK; }
   S.dropSplash.update(w, landings.slice(0, 12).map((p, i) => ({ t0: w - 0.05 - (i % 4) * 0.04, pos: p, power: 0.22 })));
+  // churning foam where the hull meets the water (stern pressed down while the bow is lifted)
+  if (!S.foam) { S.foam = []; for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), S.rings[0].material.clone()); m.rotation.x = -Math.PI / 2; m.visible = false; C.scene.add(m); S.foam.push({ m, u: 0.03 + rnd(i, 51) * 0.36, side: rnd(i, 52) > 0.5 ? 1 : -1, ph: rnd(i, 53) * 6.28, s: 1.2 + rnd(i, 54) * 2 }); } }
+  for (const f of S.foam) { const on = active && st.lift > 0.08; f.m.visible = on; if (!on) continue; const p = Hh.deckPoint(f.u, f.side * 1.25).applyMatrix4(Hh.body.matrixWorld), sh = SY.sea.heightAt(p.x, p.z, w);
+    f.m.position.set(p.x + f.side * 0.6, sh + 0.06, p.z); const sc = f.s * (1 + 0.25 * Math.sin(w * 2.3 + f.ph)) * cl(st.lift * 2.5); f.m.scale.set(sc * 1.6, sc, 1); f.m.material.opacity = 0.65 * cl(st.lift * 3); }
   // (legacy cascade puffs disabled: they read as fog)
   if (S.cascade) for (const c of S.cascade) c.sp.visible = false;
   if (false) {

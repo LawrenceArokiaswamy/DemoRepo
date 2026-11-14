@@ -3,7 +3,8 @@
 // stern keel, so lift.rotation.z stands the ship on its stern) -> body. Returns handles for animation.
 export function buildWarship(THREE, { L = 30, B = 5, H = 3.0, draft = 1.3, pbr = null, hullTex = 'dark_wooden_planks', deckTex = 'wood_planks', oarsPerSide = 22, shield = '#a8322c', eye = true, seed = 1 } = {}) {
   const wood = pbr ? pbr(hullTex, [L / 4, 1.2], { roughness: 0.8, color: '#9a7a5c', side: THREE.DoubleSide }) : new THREE.MeshStandardMaterial({ color: '#6b4a34', roughness: 0.8, side: THREE.DoubleSide });
-  const pitch = new THREE.MeshStandardMaterial({ color: '#1e1a17', roughness: 0.55, metalness: 0.05, side: THREE.DoubleSide });
+  const hullWood = wood.clone(); hullWood.vertexColors = true;
+  const pitch = pbr ? pbr(hullTex, [L / 4, 1.2], { roughness: 0.28, color: '#4a4038', metalness: 0.05, side: THREE.DoubleSide, envMapIntensity: 1.3 }) : new THREE.MeshStandardMaterial({ color: '#1e1a17', roughness: 0.3, side: THREE.DoubleSide }); pitch.vertexColors = true;
   const deckM = pbr ? pbr(deckTex, [L / 3, 1.2], { roughness: 0.85, color: '#c9ab88' }) : new THREE.MeshStandardMaterial({ color: '#9a7a5c' });
   const bronze = new THREE.MeshStandardMaterial({ color: '#b07a3a', metalness: 0.85, roughness: 0.32 });
   const oarM = new THREE.MeshStandardMaterial({ color: '#8a6a48', roughness: 0.7 }), paint = new THREE.MeshStandardMaterial({ color: '#7a2a2a', roughness: 0.6 });
@@ -22,7 +23,10 @@ export function buildWarship(THREE, { L = 30, B = 5, H = 3.0, draft = 1.3, pbr =
       (j < NJ * 0.42 ? idxA : idxB).push(...q); } }
   const hg = new THREE.BufferGeometry(); hg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); hg.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
   hg.setIndex([...idxA, ...idxB]); hg.addGroup(0, idxA.length, 0); hg.addGroup(idxA.length, idxB.length, 1); hg.computeVertexNormals(); hg.setAttribute('uv2', hg.attributes.uv);
-  const hull = new THREE.Mesh(hg, [wood, pitch]); hull.castShadow = hull.receiveShadow = true; body.add(hull);
+  { const col = [], P = hg.attributes.position; for (let i = 0; i < P.count; i++) { const y = P.getY(i), x = P.getX(i), n = 0.92 + 0.08 * Math.sin(x * 1.7 + y * 5.1) * Math.sin(x * 0.53);
+      let c = y > H * 0.55 ? [1, 1, 1] : y > 0.35 ? [0.82, 0.8, 0.76] : y > -0.25 ? [0.5, 0.58, 0.4] : [0.55, 0.52, 0.48]; col.push(c[0] * n, c[1] * n, c[2] * n); }
+    hg.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); }
+  const hull = new THREE.Mesh(hg, [hullWood, pitch]); hull.castShadow = hull.receiveShadow = true; body.add(hull);
   // ---- deck (a little below the sheer, bulwarks above)
   const dp = [], du = [], di = []; for (let i = 0; i <= NS; i++) { const u = i / NS, x = -L / 2 + u * L, w = halfW(u) * 0.96, y = Math.min(sheer(u), H + 0.6) - 0.45; dp.push(x, y, -w, x, y, w); du.push(u * L / 3, 0, u * L / 3, 1); if (i < NS) { const a = i * 2; di.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } }
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.Float32BufferAttribute(dp, 3)); dg.setAttribute('uv', new THREE.Float32BufferAttribute(du, 2)); dg.setIndex(di); dg.computeVertexNormals(); dg.setAttribute('uv2', dg.attributes.uv);
@@ -30,16 +34,21 @@ export function buildWarship(THREE, { L = 30, B = 5, H = 3.0, draft = 1.3, pbr =
   // ---- outrigger oar-box + wale stripe
   for (const s of [1, -1]) { const ob = new THREE.Mesh(new THREE.BoxGeometry(L * 0.62, 0.7, 0.55), paint); ob.position.set(L * 0.02, H * 0.62, s * (B / 2 + 0.12)); ob.castShadow = true; body.add(ob);
     const wale = new THREE.Mesh(new THREE.BoxGeometry(L * 0.9, 0.16, 0.12), new THREE.MeshStandardMaterial({ color: '#c9a24a', roughness: 0.5, metalness: 0.3 })); wale.position.set(0, H * 0.9, s * (halfW(0.5) + 0.02)); body.add(wale); }
+  { const portM = new THREE.MeshStandardMaterial({ color: '#120e0b', roughness: 1 }); for (const sd of [1, -1]) for (let i = 0; i < oarsPerSide; i++) { const pm = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.22, 0.02), portM); pm.position.set(-L * 0.29 + L * 0.62 * (i + 0.5) / oarsPerSide, H * 0.55, sd * (B / 2 + 0.4)); body.add(pm); } }
   // ---- oars (instanced; rowing angle set per frame)
   const oarGeo = new THREE.CylinderGeometry(0.06, 0.07, 1, 6); oarGeo.translate(0, -0.5, 0); const bladeGeo = new THREE.BoxGeometry(0.06, 1.1, 0.42); bladeGeo.translate(0, -0.55, 0);
   const N = oarsPerSide * 2, oars = new THREE.InstancedMesh(oarGeo, oarM, N), blades = new THREE.InstancedMesh(bladeGeo, oarM, N); oars.castShadow = blades.castShadow = true; body.add(oars, blades);
   const oarLen = H * 0.62 + 2.6, ports = []; for (const s of [1, -1]) for (let i = 0; i < oarsPerSide; i++) ports.push([-L * 0.29 + L * 0.62 * (i + 0.5) / oarsPerSide, H * 0.55, s * (B / 2 + 0.38), s]);
   const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler(), S1 = new THREE.Vector3(1, oarLen, 1), V = new THREE.Vector3(), ONE = new THREE.Vector3(1, 1, 1);
-  const DN = new THREE.Vector3(0, -1, 0), OUT = new THREE.Vector3();
+  const DN = new THREE.Vector3(0, -1, 0), OUT = new THREE.Vector3(), r1 = (i, k) => { const x = Math.sin((i + seed * 13) * 78.233 + k * 12.9898) * 43758.5453; return x - Math.floor(x); };
+  const ov = ports.map((_, i) => ({ len: 0.88 + r1(i, 1) * 0.22, ang: (r1(i, 2) - 0.5) * 0.12, sw: (r1(i, 3) - 0.5) * 0.18, twist: (r1(i, 4) - 0.5) * 0.6, ph: r1(i, 5) * 6.28, fr: 1.4 + r1(i, 6) * 1.2, lost: r1(i, 7) < 0.14 }));
+  let oarT = 0; const setTime = (t) => { oarT = t; };
   function setOars(phase, mode = 'row', downLocal = null) {   // mode: row | rest | dangle (hang along downLocal = world-down in body space)
-    ports.forEach(([x, y, z, s], i) => { const ph = phase * Math.PI * 2, sweep = mode === 'row' ? Math.sin(ph) * 0.42 : 0, liftA = mode === 'row' ? Math.max(0, Math.cos(ph)) * 0.18 : mode === 'rest' ? 0.25 : 0;
-      if (mode === 'dangle' && downLocal) { OUT.set(0, 0, s).multiplyScalar(0.35).add(downLocal).normalize(); Q.setFromUnitVectors(DN, OUT); } else { E.set(-s * (1.0 - liftA), sweep, 0); Q.setFromEuler(E); } V.set(x, y, z);
-      M.compose(V, Q, S1); oars.setMatrixAt(i, M); const tip = new THREE.Vector3(0, -oarLen, 0).applyQuaternion(Q).add(V); M.compose(tip, Q, ONE); blades.setMatrixAt(i, M); });
+    ports.forEach(([x, y, z, s], i) => { const o = ov[i], ph = phase * Math.PI * 2 + o.ang * 2, sweep = (mode === 'row' ? Math.sin(ph) * 0.42 : 0) + o.sw, liftA = (mode === 'row' ? Math.max(0, Math.cos(ph)) * 0.18 : mode === 'rest' ? 0.25 : 0) + o.ang;
+      if (mode === 'dangle' && o.lost) { M.makeScale(0, 0, 0); oars.setMatrixAt(i, M); blades.setMatrixAt(i, M); return; }
+      if (mode === 'dangle' && downLocal) { const swg = Math.sin(oarT * o.fr + o.ph) * 0.16; OUT.set(Math.sin(swg) * 0.6, 0, s * (0.3 + 0.15 * Math.cos(oarT * o.fr * 0.7 + o.ph))).add(downLocal).normalize(); Q.setFromUnitVectors(DN, OUT); } else { E.set(-s * (1.0 - liftA), sweep, 0); Q.setFromEuler(E); }
+      Q.multiply(new THREE.Quaternion().setFromAxisAngle(DN, o.twist)); V.set(x, y, z); S1.set(1, oarLen * o.len, 1);
+      M.compose(V, Q, S1); oars.setMatrixAt(i, M); const tip = new THREE.Vector3(0, -oarLen * o.len, 0).applyQuaternion(Q).add(V); M.compose(tip, Q, ONE); blades.setMatrixAt(i, M); });
     oars.instanceMatrix.needsUpdate = blades.instanceMatrix.needsUpdate = true; }
   setOars(0);
   // ---- ram (three-finned bronze rostrum at the waterline) + bow post + stern ornament
@@ -56,9 +65,10 @@ export function buildWarship(THREE, { L = 30, B = 5, H = 3.0, draft = 1.3, pbr =
     for (const s of [1, -1]) { const u = 0.9, m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.75), new THREE.MeshStandardMaterial({ map: t, transparent: true, roughness: 0.6, polygonOffset: true, polygonOffsetFactor: -2 }));
       m.position.set(-L / 2 + u * L, H * 0.78, s * (halfW(u) + 0.06)); m.rotation.y = s > 0 ? 0.32 : Math.PI - 0.32; body.add(m); } }
   // ---- mast, yard with furled sail, rigging, shields along the rail
+  const rig = new THREE.Group(); rig.position.set(L * 0.06, H - 0.4, 0); body.add(rig); const toRig = (m) => { body.remove(m); m.position.sub(rig.position); rig.add(m); };
   const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 11, 10), wood); mast.position.set(L * 0.06, H + 5, 0); mast.castShadow = true; body.add(mast);
   const yard = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 9, 8), wood); yard.rotation.x = Math.PI / 2; yard.position.set(L * 0.06, H + 9.6, 0); body.add(yard);
-  const sail = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.4, 8.4, 9), new THREE.MeshStandardMaterial({ color: '#b9a888', roughness: 1 })); sail.rotation.x = Math.PI / 2; sail.position.set(L * 0.06, H + 9.25, 0); sail.castShadow = true; body.add(sail);
+  const sail = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.4, 8.4, 9), new THREE.MeshStandardMaterial({ color: '#b9a888', roughness: 1 })); sail.rotation.x = Math.PI / 2; sail.position.set(L * 0.06, H + 9.25, 0); sail.castShadow = true; body.add(sail); [mast, yard, sail].forEach(toRig);
   const rope = new THREE.MeshStandardMaterial({ color: '#3a2a1a', roughness: 0.9 }); const line = (a, b) => { const A = new THREE.Vector3(...a), Bv = new THREE.Vector3(...b), m = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, A.distanceTo(Bv), 4), rope); m.position.copy(A).add(Bv).multiplyScalar(0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), Bv.clone().sub(A).normalize()); body.add(m); };
   line([L * 0.06, H + 10.4, 0], [L / 2 - 0.5, H + 0.7, 0]); line([L * 0.06, H + 10.4, 0], [-L / 2 + 1.2, H + 1.2, 0]); for (const s of [1, -1]) line([L * 0.06, H + 10, 0], [L * 0.06, H + 0.5, s * (B / 2)]);
   const shM = new THREE.MeshStandardMaterial({ color: shield, roughness: 0.55 }), boss = new THREE.MeshStandardMaterial({ color: '#c9a24a', metalness: 0.8, roughness: 0.35 });
@@ -67,5 +77,5 @@ export function buildWarship(THREE, { L = 30, B = 5, H = 3.0, draft = 1.3, pbr =
   /** local deck point (u along length 0..1 from stern, v across -1..1) */
   const deckPoint = (u, v = 0) => new THREE.Vector3(-L / 2 + u * L, deckY(u), v * halfW(u) * 0.8);
   const bowGrip = new THREE.Vector3(L / 2 - 0.1, H + 1.4, 0);   // where the claw bites (bow post)
-  return { root, lift, body, L, B, H, draft, deckY, halfW, deckPoint, bowGrip, setOars, materials: { wood, pitch, deckM, bronze } };
+  return { root, lift, body, rig, L, B, H, draft, deckY, halfW, deckPoint, bowGrip, setOars, setTime, materials: { wood, pitch, deckM, bronze } };
 }
