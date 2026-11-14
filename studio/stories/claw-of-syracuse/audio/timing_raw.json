@@ -1,0 +1,992 @@
+{
+ "duration": 78.289,
+ "phrases": [
+  {
+   "text": "This is a Roman warship... and a city wall is picking it up.",
+   "start": 0.0,
+   "end": 5.386
+  },
+  {
+   "text": "Rewind.",
+   "start": 5.813,
+   "end": 6.599
+  },
+  {
+   "text": "Syracuse, 213 BC. Before dawn, Rome's fleet creeps toward the city walls.",
+   "start": 6.947,
+   "end": 13.619
+  },
+  {
+   "text": "The plan: get so close that the city's catapults... shoot right over their heads. And it works.",
+   "start": 14.101,
+   "end": 20.808
+  },
+  {
+   "text": "Then, above them... something creaks.",
+   "start": 21.061,
+   "end": 23.598
+  },
+  {
+   "text": "A huge beam swings out over the wall... and lowers an iron hand on a chain.",
+   "start": 23.867,
+   "end": 30.153
+  },
+  {
+   "text": "It grabs the ship by the nose.",
+   "start": 30.471,
+   "end": 32.533
+  },
+  {
+   "text": "Behind the wall, the far end of the beam is pushed down, like a seesaw... and the front of the ship rises.",
+   "start": 32.853,
+   "end": 40.673
+  },
+  {
+   "text": "Higher... until it's standing on its stern.",
+   "start": 41.089,
+   "end": 43.957
+  },
+  {
+   "text": "Then... they let go.",
+   "start": 44.222,
+   "end": 44.984
+  },
+  {
+   "text": "Some ships capsized. Most just filled with water.",
+   "start": 45.409,
+   "end": 49.245
+  },
+  {
+   "text": "The genius behind it wasn't a general. He was a mathematician in his seventies: Archimedes.",
+   "start": 49.544,
+   "end": 55.983
+  },
+  {
+   "text": "The Roman commander joked that Archimedes was using his ships to scoop up seawater... His men didn't laugh.",
+   "start": 56.308,
+   "end": 63.272
+  },
+  {
+   "text": "One ancient writer says that whenever a rope or a stick poked over the wall, they screamed...",
+   "start": 63.512,
+   "end": 69.69
+  },
+  {
+   "text": "THERE IT IS!",
+   "start": 69.932,
+   "end": 70.777
+  },
+  {
+   "text": "...and fled.",
+   "start": 71.081,
+   "end": 71.897
+  },
+  {
+   "text": "Rome stopped attacking the walls. It just waited... because of one old man.",
+   "start": 72.326,
+   "end": 78.087
+  }
+ ],
+ "words": [
+  {
+   "w": "This",
+   "start": 0.0,
+   "end": 0.317
+  },
+  {
+   "w": "is",
+   "start": 0.317,
+   "end": 0.634
+  },
+  {
+   "w": "a",
+   "start": 0.634,
+   "end": 0.95
+  },
+  {
+   "w": "Roman",
+   "start": 0.95,
+   "end": 1.584
+  },
+  {
+   "w": "warship...",
+   "start": 1.584,
+   "end": 2.218
+  },
+  {
+   "w": "and",
+   "start": 2.218,
+   "end": 2.534
+  },
+  {
+   "w": "a",
+   "start": 2.534,
+   "end": 2.851
+  },
+  {
+   "w": "city",
+   "start": 2.851,
+   "end": 3.485
+  },
+  {
+   "w": "wall",
+   "start": 3.485,
+   "end": 3.802
+  },
+  {
+   "w": "is",
+   "start": 3.802,
+   "end": 4.118
+  },
+  {
+   "w": "picking",
+   "start": 4.118,
+   "end": 4.752
+  },
+  {
+   "w": "it",
+   "start": 4.752,
+   "end": 5.069
+  },
+  {
+   "w": "up.",
+   "start": 5.069,
+   "end": 5.386
+  },
+  {
+   "w": "Rewind.",
+   "start": 5.813,
+   "end": 6.599
+  },
+  {
+   "w": "Syracuse,",
+   "start": 6.947,
+   "end": 8.059
+  },
+  {
+   "w": "213",
+   "start": 8.059,
+   "end": 8.429
+  },
+  {
+   "w": "BC.",
+   "start": 8.429,
+   "end": 8.8
+  },
+  {
+   "w": "Before",
+   "start": 8.8,
+   "end": 9.541
+  },
+  {
+   "w": "dawn,",
+   "start": 9.541,
+   "end": 9.912
+  },
+  {
+   "w": "Rome's",
+   "start": 9.912,
+   "end": 10.653
+  },
+  {
+   "w": "fleet",
+   "start": 10.653,
+   "end": 11.024
+  },
+  {
+   "w": "creeps",
+   "start": 11.024,
+   "end": 11.395
+  },
+  {
+   "w": "toward",
+   "start": 11.395,
+   "end": 12.136
+  },
+  {
+   "w": "the",
+   "start": 12.136,
+   "end": 12.507
+  },
+  {
+   "w": "city",
+   "start": 12.507,
+   "end": 13.248
+  },
+  {
+   "w": "walls.",
+   "start": 13.248,
+   "end": 13.619
+  },
+  {
+   "w": "The",
+   "start": 14.101,
+   "end": 14.421
+  },
+  {
+   "w": "plan:",
+   "start": 14.421,
+   "end": 14.74
+  },
+  {
+   "w": "get",
+   "start": 14.74,
+   "end": 15.06
+  },
+  {
+   "w": "so",
+   "start": 15.06,
+   "end": 15.379
+  },
+  {
+   "w": "close",
+   "start": 15.379,
+   "end": 15.698
+  },
+  {
+   "w": "that",
+   "start": 15.698,
+   "end": 16.018
+  },
+  {
+   "w": "the",
+   "start": 16.018,
+   "end": 16.337
+  },
+  {
+   "w": "city's",
+   "start": 16.337,
+   "end": 16.976
+  },
+  {
+   "w": "catapults...",
+   "start": 16.976,
+   "end": 17.934
+  },
+  {
+   "w": "shoot",
+   "start": 17.934,
+   "end": 18.253
+  },
+  {
+   "w": "right",
+   "start": 18.253,
+   "end": 18.572
+  },
+  {
+   "w": "over",
+   "start": 18.572,
+   "end": 19.211
+  },
+  {
+   "w": "their",
+   "start": 19.211,
+   "end": 19.53
+  },
+  {
+   "w": "heads.",
+   "start": 19.53,
+   "end": 19.85
+  },
+  {
+   "w": "And",
+   "start": 19.85,
+   "end": 20.169
+  },
+  {
+   "w": "it",
+   "start": 20.169,
+   "end": 20.488
+  },
+  {
+   "w": "works.",
+   "start": 20.488,
+   "end": 20.808
+  },
+  {
+   "w": "Then,",
+   "start": 21.061,
+   "end": 21.378
+  },
+  {
+   "w": "above",
+   "start": 21.378,
+   "end": 22.012
+  },
+  {
+   "w": "them...",
+   "start": 22.012,
+   "end": 22.33
+  },
+  {
+   "w": "something",
+   "start": 22.33,
+   "end": 23.281
+  },
+  {
+   "w": "creaks.",
+   "start": 23.281,
+   "end": 23.598
+  },
+  {
+   "w": "A",
+   "start": 23.867,
+   "end": 24.198
+  },
+  {
+   "w": "huge",
+   "start": 24.198,
+   "end": 24.529
+  },
+  {
+   "w": "beam",
+   "start": 24.529,
+   "end": 24.86
+  },
+  {
+   "w": "swings",
+   "start": 24.86,
+   "end": 25.191
+  },
+  {
+   "w": "out",
+   "start": 25.191,
+   "end": 25.521
+  },
+  {
+   "w": "over",
+   "start": 25.521,
+   "end": 26.183
+  },
+  {
+   "w": "the",
+   "start": 26.183,
+   "end": 26.514
+  },
+  {
+   "w": "wall...",
+   "start": 26.514,
+   "end": 26.845
+  },
+  {
+   "w": "and",
+   "start": 26.845,
+   "end": 27.176
+  },
+  {
+   "w": "lowers",
+   "start": 27.176,
+   "end": 27.837
+  },
+  {
+   "w": "an",
+   "start": 27.837,
+   "end": 28.168
+  },
+  {
+   "w": "iron",
+   "start": 28.168,
+   "end": 28.83
+  },
+  {
+   "w": "hand",
+   "start": 28.83,
+   "end": 29.161
+  },
+  {
+   "w": "on",
+   "start": 29.161,
+   "end": 29.492
+  },
+  {
+   "w": "a",
+   "start": 29.492,
+   "end": 29.823
+  },
+  {
+   "w": "chain.",
+   "start": 29.823,
+   "end": 30.153
+  },
+  {
+   "w": "It",
+   "start": 30.471,
+   "end": 30.766
+  },
+  {
+   "w": "grabs",
+   "start": 30.766,
+   "end": 31.06
+  },
+  {
+   "w": "the",
+   "start": 31.06,
+   "end": 31.355
+  },
+  {
+   "w": "ship",
+   "start": 31.355,
+   "end": 31.649
+  },
+  {
+   "w": "by",
+   "start": 31.649,
+   "end": 31.944
+  },
+  {
+   "w": "the",
+   "start": 31.944,
+   "end": 32.238
+  },
+  {
+   "w": "nose.",
+   "start": 32.238,
+   "end": 32.533
+  },
+  {
+   "w": "Behind",
+   "start": 32.853,
+   "end": 33.454
+  },
+  {
+   "w": "the",
+   "start": 33.454,
+   "end": 33.755
+  },
+  {
+   "w": "wall,",
+   "start": 33.755,
+   "end": 34.056
+  },
+  {
+   "w": "the",
+   "start": 34.056,
+   "end": 34.357
+  },
+  {
+   "w": "far",
+   "start": 34.357,
+   "end": 34.658
+  },
+  {
+   "w": "end",
+   "start": 34.658,
+   "end": 34.958
+  },
+  {
+   "w": "of",
+   "start": 34.958,
+   "end": 35.259
+  },
+  {
+   "w": "the",
+   "start": 35.259,
+   "end": 35.56
+  },
+  {
+   "w": "beam",
+   "start": 35.56,
+   "end": 35.861
+  },
+  {
+   "w": "is",
+   "start": 35.861,
+   "end": 36.161
+  },
+  {
+   "w": "pushed",
+   "start": 36.161,
+   "end": 36.763
+  },
+  {
+   "w": "down,",
+   "start": 36.763,
+   "end": 37.064
+  },
+  {
+   "w": "like",
+   "start": 37.064,
+   "end": 37.365
+  },
+  {
+   "w": "a",
+   "start": 37.365,
+   "end": 37.665
+  },
+  {
+   "w": "seesaw...",
+   "start": 37.665,
+   "end": 38.267
+  },
+  {
+   "w": "and",
+   "start": 38.267,
+   "end": 38.568
+  },
+  {
+   "w": "the",
+   "start": 38.568,
+   "end": 38.869
+  },
+  {
+   "w": "front",
+   "start": 38.869,
+   "end": 39.169
+  },
+  {
+   "w": "of",
+   "start": 39.169,
+   "end": 39.47
+  },
+  {
+   "w": "the",
+   "start": 39.47,
+   "end": 39.771
+  },
+  {
+   "w": "ship",
+   "start": 39.771,
+   "end": 40.072
+  },
+  {
+   "w": "rises.",
+   "start": 40.072,
+   "end": 40.673
+  },
+  {
+   "w": "Higher...",
+   "start": 41.089,
+   "end": 41.662
+  },
+  {
+   "w": "until",
+   "start": 41.662,
+   "end": 42.236
+  },
+  {
+   "w": "it's",
+   "start": 42.236,
+   "end": 42.523
+  },
+  {
+   "w": "standing",
+   "start": 42.523,
+   "end": 43.096
+  },
+  {
+   "w": "on",
+   "start": 43.096,
+   "end": 43.383
+  },
+  {
+   "w": "its",
+   "start": 43.383,
+   "end": 43.67
+  },
+  {
+   "w": "stern.",
+   "start": 43.67,
+   "end": 43.957
+  },
+  {
+   "w": "Then...",
+   "start": 44.222,
+   "end": 44.412
+  },
+  {
+   "w": "they",
+   "start": 44.412,
+   "end": 44.603
+  },
+  {
+   "w": "let",
+   "start": 44.603,
+   "end": 44.793
+  },
+  {
+   "w": "go.",
+   "start": 44.793,
+   "end": 44.984
+  },
+  {
+   "w": "Some",
+   "start": 45.409,
+   "end": 45.729
+  },
+  {
+   "w": "ships",
+   "start": 45.729,
+   "end": 46.048
+  },
+  {
+   "w": "capsized.",
+   "start": 46.048,
+   "end": 47.007
+  },
+  {
+   "w": "Most",
+   "start": 47.007,
+   "end": 47.327
+  },
+  {
+   "w": "just",
+   "start": 47.327,
+   "end": 47.647
+  },
+  {
+   "w": "filled",
+   "start": 47.647,
+   "end": 48.286
+  },
+  {
+   "w": "with",
+   "start": 48.286,
+   "end": 48.606
+  },
+  {
+   "w": "water.",
+   "start": 48.606,
+   "end": 49.245
+  },
+  {
+   "w": "The",
+   "start": 49.544,
+   "end": 49.774
+  },
+  {
+   "w": "genius",
+   "start": 49.774,
+   "end": 50.234
+  },
+  {
+   "w": "behind",
+   "start": 50.234,
+   "end": 50.694
+  },
+  {
+   "w": "it",
+   "start": 50.694,
+   "end": 50.924
+  },
+  {
+   "w": "wasn't",
+   "start": 50.924,
+   "end": 51.154
+  },
+  {
+   "w": "a",
+   "start": 51.154,
+   "end": 51.384
+  },
+  {
+   "w": "general.",
+   "start": 51.384,
+   "end": 52.074
+  },
+  {
+   "w": "He",
+   "start": 52.074,
+   "end": 52.304
+  },
+  {
+   "w": "was",
+   "start": 52.304,
+   "end": 52.534
+  },
+  {
+   "w": "a",
+   "start": 52.534,
+   "end": 52.764
+  },
+  {
+   "w": "mathematician",
+   "start": 52.764,
+   "end": 53.914
+  },
+  {
+   "w": "in",
+   "start": 53.914,
+   "end": 54.144
+  },
+  {
+   "w": "his",
+   "start": 54.144,
+   "end": 54.374
+  },
+  {
+   "w": "seventies:",
+   "start": 54.374,
+   "end": 55.064
+  },
+  {
+   "w": "Archimedes.",
+   "start": 55.064,
+   "end": 55.984
+  },
+  {
+   "w": "The",
+   "start": 56.308,
+   "end": 56.557
+  },
+  {
+   "w": "Roman",
+   "start": 56.557,
+   "end": 57.054
+  },
+  {
+   "w": "commander",
+   "start": 57.054,
+   "end": 57.801
+  },
+  {
+   "w": "joked",
+   "start": 57.801,
+   "end": 58.298
+  },
+  {
+   "w": "that",
+   "start": 58.298,
+   "end": 58.547
+  },
+  {
+   "w": "Archimedes",
+   "start": 58.547,
+   "end": 59.542
+  },
+  {
+   "w": "was",
+   "start": 59.542,
+   "end": 59.79
+  },
+  {
+   "w": "using",
+   "start": 59.79,
+   "end": 60.288
+  },
+  {
+   "w": "his",
+   "start": 60.288,
+   "end": 60.537
+  },
+  {
+   "w": "ships",
+   "start": 60.537,
+   "end": 60.785
+  },
+  {
+   "w": "to",
+   "start": 60.785,
+   "end": 61.034
+  },
+  {
+   "w": "scoop",
+   "start": 61.034,
+   "end": 61.283
+  },
+  {
+   "w": "up",
+   "start": 61.283,
+   "end": 61.531
+  },
+  {
+   "w": "seawater...",
+   "start": 61.531,
+   "end": 62.278
+  },
+  {
+   "w": "His",
+   "start": 62.278,
+   "end": 62.526
+  },
+  {
+   "w": "men",
+   "start": 62.526,
+   "end": 62.775
+  },
+  {
+   "w": "didn't",
+   "start": 62.775,
+   "end": 63.024
+  },
+  {
+   "w": "laugh.",
+   "start": 63.024,
+   "end": 63.272
+  },
+  {
+   "w": "One",
+   "start": 63.512,
+   "end": 63.77
+  },
+  {
+   "w": "ancient",
+   "start": 63.77,
+   "end": 64.285
+  },
+  {
+   "w": "writer",
+   "start": 64.285,
+   "end": 64.799
+  },
+  {
+   "w": "says",
+   "start": 64.799,
+   "end": 65.057
+  },
+  {
+   "w": "that",
+   "start": 65.057,
+   "end": 65.314
+  },
+  {
+   "w": "whenever",
+   "start": 65.314,
+   "end": 66.086
+  },
+  {
+   "w": "a",
+   "start": 66.086,
+   "end": 66.344
+  },
+  {
+   "w": "rope",
+   "start": 66.344,
+   "end": 66.601
+  },
+  {
+   "w": "or",
+   "start": 66.601,
+   "end": 66.859
+  },
+  {
+   "w": "a",
+   "start": 66.859,
+   "end": 67.116
+  },
+  {
+   "w": "stick",
+   "start": 67.116,
+   "end": 67.373
+  },
+  {
+   "w": "poked",
+   "start": 67.373,
+   "end": 67.888
+  },
+  {
+   "w": "over",
+   "start": 67.888,
+   "end": 68.403
+  },
+  {
+   "w": "the",
+   "start": 68.403,
+   "end": 68.66
+  },
+  {
+   "w": "wall,",
+   "start": 68.66,
+   "end": 68.918
+  },
+  {
+   "w": "they",
+   "start": 68.918,
+   "end": 69.175
+  },
+  {
+   "w": "screamed...",
+   "start": 69.175,
+   "end": 69.69
+  },
+  {
+   "w": "THERE",
+   "start": 69.932,
+   "end": 70.214
+  },
+  {
+   "w": "IT",
+   "start": 70.214,
+   "end": 70.495
+  },
+  {
+   "w": "IS!",
+   "start": 70.495,
+   "end": 70.777
+  },
+  {
+   "w": "...and",
+   "start": 71.081,
+   "end": 71.489
+  },
+  {
+   "w": "fled.",
+   "start": 71.489,
+   "end": 71.897
+  },
+  {
+   "w": "Rome",
+   "start": 72.326,
+   "end": 72.646
+  },
+  {
+   "w": "stopped",
+   "start": 72.646,
+   "end": 73.286
+  },
+  {
+   "w": "attacking",
+   "start": 73.286,
+   "end": 74.246
+  },
+  {
+   "w": "the",
+   "start": 74.246,
+   "end": 74.566
+  },
+  {
+   "w": "walls.",
+   "start": 74.566,
+   "end": 74.886
+  },
+  {
+   "w": "It",
+   "start": 74.886,
+   "end": 75.206
+  },
+  {
+   "w": "just",
+   "start": 75.206,
+   "end": 75.527
+  },
+  {
+   "w": "waited...",
+   "start": 75.527,
+   "end": 76.167
+  },
+  {
+   "w": "because",
+   "start": 76.167,
+   "end": 76.807
+  },
+  {
+   "w": "of",
+   "start": 76.807,
+   "end": 77.127
+  },
+  {
+   "w": "one",
+   "start": 77.127,
+   "end": 77.447
+  },
+  {
+   "w": "old",
+   "start": 77.447,
+   "end": 77.767
+  },
+  {
+   "w": "man.",
+   "start": 77.767,
+   "end": 78.087
+  }
+ ]
+}
