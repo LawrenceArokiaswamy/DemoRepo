@@ -14,23 +14,23 @@ SHOTS = [
  ('01 HOOK: warship lifted out of the sea by the claw', 0.00, 2.15, 27.6, 29.2, HOOK, None),
  ('02 ...by one old man (Archimedes, calm)',          2.15, 3.25, 29.2, 30.3, ARCH_CU, None),
  ('03 rewind',                                         3.25, 3.70, 30.3, 4.4, HOOK, None),
- ('04 sixty warships row in (waterline)',              3.70, 6.70, 4.4, 7.4, (K([-12, 7.5, 62], [0, 2.5, 190], 44, 110, 0.00006), K([-12, 7.2, 66], [0, 2.5, 190], 40, 110, 0.00006)), None),
+ ('04 sixty warships row in (waterline)',              3.70, 6.70, 4.4, 7.4, (K([-9, 21, -4], [2, 1.5, 150], 40, 140, 0.00004), K([-9, 20.6, -2.5], [2, 1.5, 150], 36, 140, 0.00004)), None),
  ('05 Archimedes draws in the sand; defenders scramble', 6.70, 9.45, 7.4, 10.1, (K([-8.2, 16.4, -6.4], [-4.9, 14.2, -1.6], 40, 6, 0.0006), K([-7.8, 16.2, -6.0], [-4.9, 14.2, -1.6], 38, 5.6, 0.0006)), None),
  ('06 ...and he wasn\'t worried (tiny smile)',         9.45, 11.10, 10.1, 11.8, ARCH_CU, None),
- ('07 the Romans row right up under the walls',       11.10, 13.40, 12.6, 14.9, (K([-2.5, 4.5, 1.3], [12, 9.0, 0], 56, 5, 0.0004), K([-1.8, 4.5, 1.3], [12, 9.8, 0], 54, 5, 0.0004)), 'hero'),
- ('08 ...exactly where he wanted them (hand raised)', 13.40, 15.40, 14.9, 16.4, (K([-5.2, 14.0, -5.0], [-4.4, 14.9, -1.6], 44, 3.6, 0.0009), K([-5.1, 14.0, -4.7], [-4.4, 15.0, -1.6], 40, 3.3, 0.0009)), None),
- ('09 a giant wooden arm swings out (low, against the sky)', 15.40, 17.90, 16.4, 19.2, (K([26, 5.5, 34], [1, 16, 4], 48, 36, 0.0001), K([25, 5.2, 33], [1, 15, 5], 46, 36, 0.0001)), None),
+ ('07 the Romans row right up under the walls',       11.10, 13.40, 12.6, 14.9, (K([1.6, 4.0, -1.3], [12, 5.6, 0.6], 54, 2.6, 0.0006), K([2.0, 4.0, -1.3], [12, 6.1, 0.6], 52, 2.4, 0.0006)), 'hero'),
+ ('08 ...exactly where he wanted them (hand raised)', 13.40, 15.40, 14.9, 16.4, (K([-5.8, 14.1, -6.6], [-4.3, 14.8, -1.6], 50, 5.2, 0.0007), K([-5.7, 14.1, -6.2], [-4.3, 14.9, -1.6], 46, 4.8, 0.0007)), None),
+ ('09 a giant wooden arm swings out (low, against the sky)', 15.40, 17.90, 16.4, 19.2, (K([28, 6.0, 38], [0, 11.5, 8], 54, 38, 0.0001), K([27, 5.8, 37], [0, 11, 9], 52, 38, 0.0001)), None),
  ('10 an iron claw drops... and bites',               17.90, 20.30, 19.2, 21.25, (K([5.4, 4.25, 1.4], [14, 6.2, -0.3], 50, 8.5, 0.0005), K([5.8, 4.25, 1.4], [14, 4.6, -0.3], 48, 8.2, 0.0005)), 'hero'),
  ('11 sailor looks up: grin fades',                   20.30, 21.20, 21.25, 22.1, (K([11.3, 4.1, 1.7], [9.0, 4.0, 0.5], 30, 2.6, 0.0013), K([11.2, 4.1, 1.65], [9.0, 4.0, 0.5], 28, 2.5, 0.0013)), 'hero'),
  ('12 the chain snaps taut: it begins to pull',       21.20, 22.70, 22.1, 23.1, (K([9.5, 5.2, 3.6], [14.6, 9.0, 0], 46, 6, 0.0005), K([9.8, 5.0, 3.4], [14.6, 9.5, 0], 44, 6, 0.0005)), 'hero'),
  ('13 UP. OUT OF THE SEA (the hook image, now understood)', 22.70, 25.70, 23.3, 27.6, (K([16, 2.4, 64], [1, 8.5, 12], 52, 52, 0.00012), HOOK[0]), None),
- ('14 silence: terrified sailor, deck tilted',        25.70, 26.60, 28.0, 28.9, (K([-0.2, 5.1, 2.3], [-9, 2.6, -0.4], 56, 5, 0.0006), K([-0.4, 5.1, 2.2], [-9, 2.4, -0.4], 56, 5, 0.0006)), 'hero', 0.65),
+ ('14 silence: terrified sailor, deck tilted',        25.70, 26.60, 28.0, 28.9, (K([-2.7, 4.1, 3.1], [-0.1, 3.75, 1.9], 34, 2.9, 0.0012), K([-2.6, 4.1, 3.0], [-0.1, 3.75, 1.9], 32, 2.8, 0.0012)), 'hero', 0.7),
  ('15 and then... the claw released it',              26.60, 28.60, 31.3, 32.75, (K([20, 9, 38], [1, 17, 12], 42, 30, 0.0001), K([19.5, 8.8, 37], [1, 16, 12], 42, 30, 0.0001)), None),
  ('16 the fall (slow motion) and the crash',          28.60, 30.80, 32.75, 34.6, (K([31, 6.5, 46], [0, 6, 16], 46, 40, 0.0002), K([30, 6.3, 45], [0, 5.5, 16], 44, 40, 0.0002)), None),
- ('17 days later: a pole and rope swing out over the wall (echo of the claw)', 30.80, 32.60, 54.7, 56.0, (K([24, 7.5, 20], [4.5, 14.5, 2.5], 40, 22, 0.0001), K([23.6, 7.4, 19.6], [4.5, 14.0, 3.0], 38, 22, 0.0001)), None),
- ('18 the same sailor sees it: PANIC',                32.60, 34.60, 56.0, 57.6, (K([4.5, 4.25, 1.7], [7.0, 4.05, 0.5], 32, 2.8, 0.0012), K([4.8, 4.2, 1.6], [7.0, 4.05, 0.5], 30, 2.55, 0.0012)), 'flag'),
- ('19 Rome had sixty warships (holding back at sea)', 34.60, 36.70, 59.6, 61.7, (K([-1.0, 5.5, 14], [-16, 3, 95], 34, 80, 0.00005), K([-1.0, 5.4, 15], [-16, 3, 95], 31, 80, 0.00005)), None),
- ('20 Syracuse had Archimedes (alone on the wall)',   36.70, 39.80, 61.7, 64.8, (K([-9.6, 14.0, -3.6], [-4.4, 15.1, -1.4], 40, 5.6, 0.0008), K([-9.2, 14.05, -3.4], [-4.4, 15.1, -1.4], 34, 5.2, 0.0008)), None),
+ ('17 days later: a pole and rope swing out over the wall (echo of the claw)', 30.80, 32.60, 54.7, 56.0, (K([7.2, 4.3, 0.5], [24.2, 12.6, 3.4], 32, 18, 0.00015), K([7.3, 4.3, 0.5], [24.2, 12.0, 3.4], 28, 18, 0.00015)), 'flag'),
+ ('18 the same sailor sees it: PANIC',                32.60, 34.60, 56.0, 57.6, (K([2.0, 4.0, -0.2], [24, 8.5, 3.0], 40, 5.0, 0.0004), K([2.6, 4.0, -0.1], [24, 8.6, 3.0], 36, 4.4, 0.0004)), 'flag'),
+ ('19 Rome had sixty warships (holding back at sea)', 34.60, 36.70, 59.6, 61.7, (K([-3.0, 24, -6], [3, 4, 95], 40, 90, 0.00004), K([-3.0, 23.6, -5.0], [3, 4, 95], 36, 90, 0.00004)), None),
+ ('20 Syracuse had Archimedes (alone on the wall)',   36.70, 39.80, 61.7, 64.8, (K([-6.6, 14.6, -5.6], [-2.2, 14.4, 8.0], 50, 4.4, 0.0005), K([-6.2, 14.6, -5.0], [-2.2, 14.4, 8.0], 44, 3.8, 0.0005)), None),
 ]
 DUR = 39.8; tm, shots = [], []
 for sh in SHOTS:
@@ -47,17 +47,20 @@ cast = json.loads(json.dumps(v1['cast'])); cast['archimedes']['spec'].pop('prop'
 P = v1['performances']
 P['archimedes'] = {'beats': [
   {'t': 0, 'act': 'idle', 'face': CALM}, {'t': 7.4, 'act': 'curious'}, {'t': 9.6, 'act': 'idle', 'face': SMUG},
-  {'t': 15.3, 'act': 'point', 'face': SMUG, 'body': {'armR': [165, -8], 'handR': 'open'}}, {'t': 17.2, 'act': 'idle', 'face': SMUG},
+  {'t': 15.3, 'act': 'point', 'face': SMUG, 'body': {'armR': [128, 30], 'handR': 'open', 'headTilt': 6}}, {'t': 17.2, 'act': 'idle', 'face': SMUG},
   {'t': 27.0, 'act': 'idle', 'face': CALM}, {'t': 32.4, 'act': 'idle', 'face': SMUG},
   {'t': 49.5, 'act': 'idle', 'face': CALM}, {'t': 62.6, 'act': 'idle', 'face': SMUG}]}
+UP = {'pupil': [0, -0.9]}
+for e in v1['extras']:
+    if e['id'].startswith('worker'): e['beats'] = [{'t': 0, 'act': 'idle'}, {'t': 7.4, 'act': 'shock'}, {'t': 8.0, 'act': 'fear'}, {'t': 21.2, 'act': 'effort'}]
 P['titus'] = {'beats': [
   {'t': 0, 'act': 'idle'}, {'t': 12.0, 'act': 'laugh'}, {'t': 15.0, 'act': 'idle', 'face': {'preset': 'neutral', 'mouth': {'smile': 0.6}}},
   {'t': 20.9, 'act': 'notice'}, {'t': 21.5, 'act': 'confused'}, {'t': 22.0, 'act': 'fear'}, {'t': 23, 'act': 'stumble'}, {'t': 25.2, 'act': 'fear'},
   {'t': 28.2, 'act': 'recoil'}, {'t': 32.7, 'act': 'shock'}, {'t': 34, 'act': 'fear'},
-  {'t': 49.5, 'act': 'idle', 'face': {'preset': 'neutral', 'mouth': {'smile': 0.3}}}, {'t': 55.85, 'act': 'shock'}, {'t': 56.5, 'act': 'fear'}]}
+  {'t': 49.5, 'act': 'idle', 'face': {'preset': 'neutral', 'mouth': {'smile': 0.3}}}, {'t': 55.75, 'act': 'notice', 'face': dict(UP, preset='notice')}, {'t': 56.15, 'act': 'shock', 'face': dict(UP, preset='shock')}, {'t': 56.8, 'act': 'fear', 'face': dict(UP, preset='fear')}]}
 story = {'title': 'The Claw of Syracuse (v2)', 'period': v1['period'], 'set': v1['set'], 'fps': FPS, 'duration': DUR, 'business': '../claw-of-syracuse/business.js',
          'cardHeight': v1['cardHeight'], 'cardEmissive': v1.get('cardEmissive', 0.16), 'timeMap': tm, 'ambience': v1.get('ambience'),
-         'cast': cast, 'extras': v1['extras'], 'performances': P, 'shots': shots, 'kicks': [], 'noStones': True,
-         'extraFleet': 22, 'hideAfter': {'w': 59.5, 'ids': ['titus', 'marcellus', 'crew1', 'crew2', 'crew3', 'crew4', 'crew5', 'crew6', 'officer1', 'officer2']}, 'ropeGag': {'pivot': [4.5, 13.6, 0.4], 'len': 3.6, 't0': 55.0, 'swing': 0.9}}
+         'cast': cast, 'extras': v1['extras'], 'performances': P, 'shots': shots, 'kicks': [], 'noStones': True, 'clearAfter': 49.5, 'hazeScale': 0.3,
+         'extraFleet': 22, 'hideAfter': {'w': 59.5, 'ids': ['titus', 'marcellus', 'crew1', 'crew2', 'crew3', 'crew4', 'crew5', 'crew6', 'officer1', 'officer2']}, 'ropeGag': {'pivot': [-3.6, 13.6, 0.4], 'len': 3.6, 't0': 55.0, 'swing': 0.9, 'until': 58.5}, 'workerRun': {'t0': 7.6, 't1': 10.6, 'x0': -10.5, 'x1': 2.0, 'z': -0.9}}
 json.dump(story, open('story.json', 'w'), indent=1)
 print('shots', len(shots), 'frames', round(DUR * FPS)); print('timeMap', tm)

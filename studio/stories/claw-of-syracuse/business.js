@@ -142,7 +142,9 @@ export function placeActor(id, w, pose, C) {
   const HA = C.story.hideAfter; if (HA && w >= HA.w && HA.ids.includes(id)) return { x: 0, y: -50, z: 0, hide: true };   // story option: actors leave the stage
   const { THREE } = S, SY = S.SY; if (S.lastW !== w) { poseShips(w, C); S.lastW = w; }
   if (id === 'archimedes') { if (w >= 59.5) return { x: -4.5, y: SY.wallTop + 0.3, z: -1.5 }; return { x: -4.5, y: SY.wallTop + 0.3, z: -1.6 }; }
-  if (id.startsWith('worker')) { const i = +id.slice(-1); return { x: -1.4 + i * 1.4, y: SY.wallTop + 0.3, z: -5.9 }; }
+  if (id.startsWith('worker')) { const i = +id.slice(-1), WR = C.story.workerRun;   // story option: defenders run along the walkway
+    if (WR && w >= WR.t0 - 0.5 && w <= WR.t1 + 0.5) { const k = cl((w - WR.t0 - i * 0.25) / (WR.t1 - WR.t0)); return { x: lerp(WR.x0, WR.x1, k) - i * 1.5, y: SY.wallTop + 0.3 + Math.abs(Math.sin(w * 9 + i)) * 0.08, z: WR.z + i * 0.35, lean: 10 }; }
+    return { x: -1.4 + i * 1.4, y: SY.wallTop + 0.3, z: -5.9 }; }
   const on = ON[id]; if (!on) return null;
   let [ship, u, v] = on; if (w >= K.DAYS && ship === 'hero') { ship = 'flag'; u = { titus: 0.72, crew1: 0.62, crew2: 0.53, crew3: 0.4, crew4: 0.45, crew5: 0.33, crew6: 0.26 }[id]; v = { crew4: 0.9 }[id] ?? v;
     if (id === 'crew4' && w >= K.JUMP0) { if (!S.jumpFrom) prepare(C); const k = cl((w - K.JUMP0) / (K.JUMP1 - K.JUMP0)); if (k < 1) { const p = S.jumpFrom.clone().lerp(S.jumpTo, k); p.y = lerp(S.jumpFrom.y, SY.sea.heightAt(S.jumpTo.x, S.jumpTo.z, w) - 0.9, k) + Math.sin(k * Math.PI) * 2.2; return { x: p.x, y: p.y, z: p.z, lean: -40 * k, noShadow: true }; }
@@ -194,9 +196,10 @@ export function frame(w, C, t) {
   C.scene.environmentIntensity = lerp(0.16, 0.6, day); C.scene.backgroundIntensity = lerp(0.12, 0.72, day); SY.sun.intensity = lerp(0.0, 3.4, sunUp); SY.hemi.intensity = lerp(0.12, 0.25, day);
   SY.fog.color.setRGB(lerp(0.11, 0.79, day), lerp(0.13, 0.72, day), lerp(0.2, 0.66, day)); C.renderer.toneMappingExposure = lerp(0.85, 0.88, day);
   for (const T of SY.torches) { const fl = 1 + 0.15 * Math.sin(w * 23 + T.x) + 0.1 * Math.sin(w * 37 + T.x * 2); T.f.scale.set(0.9 * fl, 1.4 * fl, 1); T.f.material.opacity = lerp(1, 0.35, day); if (T.L) T.L.intensity = 30 * fl * lerp(1, 0.25, day); }
-  SY.mist.forEach((m, i) => { m.material.opacity = lerp(0.35, 0.2, day); m.material.color.setRGB(lerp(0.16, 0.92, day), lerp(0.2, 0.88, day), lerp(0.28, 0.84, day)); m.material.map.offset.x = w * 0.004 * (i + 1); });
+  const HZ = (C.story.clearAfter != null && w >= C.story.clearAfter) ? (C.story.hazeScale ?? 0.3) : 1; SY.fog.near = 60 / HZ; SY.fog.far = 420 / HZ;   // story option: clearer air late in the film
+  SY.mist.forEach((m, i) => { m.material.opacity = lerp(0.35, 0.2, day) * HZ; m.material.color.setRGB(lerp(0.16, 0.92, day), lerp(0.2, 0.88, day), lerp(0.28, 0.84, day)); m.material.map.offset.x = w * 0.004 * (i + 1); });
   // stones
-  if (S.rope) { const { R, piv, segs } = S.rope, on = w >= K.DAYS, k = ss(ramp(w, R.t0, R.t0 + R.swing)); piv.visible = on; piv.rotation.x = lerp(-1.35, -0.12, k) + Math.sin(w * 2.1) * 0.03 * k;   // pole tips out over the sea
+  if (S.rope) { const { R, piv, segs } = S.rope, on = w >= K.DAYS && w < (R.until ?? 1e9), k = ss(ramp(w, R.t0, R.t0 + R.swing)); piv.visible = on; piv.rotation.x = lerp(-1.35, -0.12, k) + Math.sin(w * 2.1) * 0.03 * k;   // pole tips out over the sea
     piv.updateMatrixWorld(true); const tip = new THREE.Vector3(0, 0, R.len).applyMatrix4(piv.matrixWorld); let prev = tip.clone(); const sw = Math.sin((w - R.t0) * 2.4) * 0.35 * (1 - 0.5 * k) * k;
     segs.forEach((m, i) => { m.visible = on && k > 0.02; const a = (i + 1) / segs.length, nx = tip.x + Math.sin(sw * a * 1.6) * 0.42 * (i + 1) * 0.35, ny = tip.y - 0.4 * (i + 1) * k, nz = tip.z + Math.sin(sw * a) * 0.42 * (i + 1) * 0.6;
       const p = new THREE.Vector3(nx, ny, nz), mid = prev.clone().add(p).multiplyScalar(0.5); m.position.copy(mid); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p.clone().sub(prev).normalize()); prev = p; }); }
