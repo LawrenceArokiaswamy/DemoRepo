@@ -153,7 +153,7 @@ export function applyStyle(C, cfg = {}) {
   // ambient occlusion (Visual standard v2, experimental): contact shading that grounds characters and props
   if (cfg.ao) { const ao = new GTAOPass(scene, camera, composer.renderTarget1.width, composer.renderTarget1.height); Object.assign(ao.blendIntensity !== undefined ? ao : {}, { blendIntensity: cfg.ao.intensity ?? 0.9 });
     ao.updateGtaoMaterial({ radius: cfg.ao.radius ?? 0.35, distanceExponent: 1.5, thickness: 1.0, scale: 1.0, samples: cfg.ao.samples ?? 12 }); composer.insertPass(ao, 2);
-    const aoRender = ao.render.bind(ao); ao.render = (...a) => { const hid = []; scene.traverse((o) => { if ((o.isSprite || (o.material && o.material.transparent && o.material.blending === THREE.AdditiveBlending)) && o.visible) { o.visible = false; hid.push(o); } });
+    const aoRender = ao.render.bind(ao); ao.render = (...a) => { const hid = []; scene.traverse((o) => { if ((o.isSprite || (o.material && o.material.transparent && (o.material.blending === THREE.AdditiveBlending || o.material.depthWrite === false))) && o.visible) { o.visible = false; hid.push(o); } });
       aoRender(...a); for (const o of hid) o.visible = true; }; }   // glow sprites must not occlude (they read as dark quads)   // after the ink pass (ink reads the render pass depth)
   return { preset: P, sky, ink, key, rim, converted: cache.size };
 }

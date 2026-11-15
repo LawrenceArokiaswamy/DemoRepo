@@ -36,27 +36,28 @@ export function drawCPlusFace(g, X, live = {}, o = {}) {
   const fill = (col, w = OW) => { g.fillStyle = col; g.fill(); if (w) ink(w); };
   const E = (x, y, rx, ry, rot = 0) => { g.beginPath(); g.ellipse(x, y, Math.max(0.5, rx), Math.max(0.5, ry), rot, 0, Math.PI * 2); };
   if (X.red) { g.save(); g.globalAlpha = 0.22 * X.red; E(cx, cy + r * 0.12, r * 0.72, r * 0.5); g.fillStyle = '#e04030'; g.fill(); g.restore(); }
-  const sp = 0.37 * r;
+  const V2 = o.style === 'v2', ES = V2 ? 0.8 : 1, LID = V2 ? OW + 1 : OW + 3, sp = (V2 ? 0.33 : 0.37) * r;   // v2: smaller eyes, crisper lids (Visual standard v2)
   for (const [s, i] of [[-1, 0], [1, 1]]) {
-    const ex = cx + s * sp, ey = cy + r * 0.1, rx = 0.25 * r, o0 = X.open[i], o = o0 * (1 - blink), ry = 0.3 * r * Math.max(0.1, o);
+    const ex = cx + s * sp, ey = cy + r * 0.1, rx = 0.25 * r * ES, o0 = X.open[i], o = o0 * (1 - blink), ry = 0.3 * r * ES * Math.max(0.1, o);
     if (X.happyEye && blink < 0.5) { g.beginPath(); g.moveTo(ex - rx, ey + ry * 0.4); g.quadraticCurveTo(ex, ey - ry * 2.2, ex + rx, ey + ry * 0.4); ink(OW + 1); }
-    else if (o < 0.16) { g.beginPath(); g.moveTo(ex - rx * 1.05, ey); g.quadraticCurveTo(ex, ey + r * 0.07, ex + rx * 1.05, ey); ink(OW + 3); }   // closed lid
+    else if (o < 0.16) { g.beginPath(); g.moveTo(ex - rx * 1.05, ey); g.quadraticCurveTo(ex, ey + r * 0.07, ex + rx * 1.05, ey); ink(LID); }   // closed lid
     else { const pupX = (X.pup[0] + gaze[0]), pupY = (X.pup[1] + gaze[1]);
       g.beginPath(); g.ellipse(ex, ey, rx, ry, 0, 0, 7); fill(PAL.white, 5); g.save(); g.clip(); const pr = 0.13 * r * X.pr, px = ex + pupX * rx * 0.55, py = ey + pupY * ry * 0.5;
       E(px, py, pr, pr); g.fillStyle = INK; g.fill(); E(px - pr * 0.35, py - pr * 0.4, pr * 0.32, pr * 0.32); g.fillStyle = '#fff'; g.fill();
       if (blink > 0.02) { g.beginPath(); g.rect(ex - rx * 1.2, ey - 0.3 * r * o0 * 1.1, rx * 2.4, 0.6 * r * o0 * blink * 1.1); g.fillStyle = '#e9ad86'; g.fill(); }   // lid sweeping down
-      g.restore(); g.beginPath(); g.ellipse(ex, ey, rx * 1.03, ry * 1.03, 0, Math.PI * 1.05, Math.PI * 1.95); ink(OW + 3); }   // heavy upper lid
+      g.restore(); g.beginPath(); g.ellipse(ex, ey, rx * 1.03, ry * 1.03, 0, Math.PI * 1.05, Math.PI * 1.95); ink(LID); }   // upper lid
     // thick tapered brow (sits just under the helmet brim)
-    const by = Math.max(-0.37 * r, ey - 0.43 * r - (o0 > 1 ? (o0 - 1) * r * 0.45 : 0) + X.brow[i] * r / 150),   // clamped: stays visible under the helmet brim
-      tilt = X.tilt[i] * Math.PI / 180 * s, bw = 0.21 * r;
+    const by = Math.max(-0.37 * r, ey - (V2 ? 0.36 : 0.43) * r - (o0 > 1 ? (o0 - 1) * r * 0.45 : 0) + X.brow[i] * r / 150),   // clamped: stays visible under the helmet brim
+      tilt = X.tilt[i] * Math.PI / 180 * s, bw = (V2 ? 0.17 : 0.21) * r;
     g.save(); g.translate(ex + s * 0.02 * r, by); g.rotate(tilt); if (s > 0) g.scale(-1, 1);
-    g.beginPath(); g.moveTo(-bw, 8); g.quadraticCurveTo(-bw * 0.1, -bw * 0.8, bw * 1.15, -3); g.quadraticCurveTo(bw * 0.1, -bw * 0.12, -bw, 8); g.closePath(); g.fillStyle = o.browCol || PAL.hair; g.fill(); ink(5); g.restore(); }
+    if (V2) { g.beginPath(); g.moveTo(-bw, 6); g.quadraticCurveTo(0, -bw * 0.62, bw * 1.1, 0); g.quadraticCurveTo(0, -bw * 0.18, -bw, 6); g.closePath(); g.fillStyle = o.browCol || INK; g.fill(); g.restore(); }
+    else { g.beginPath(); g.moveTo(-bw, 8); g.quadraticCurveTo(-bw * 0.1, -bw * 0.8, bw * 1.15, -3); g.quadraticCurveTo(bw * 0.1, -bw * 0.12, -bw, 8); g.closePath(); g.fillStyle = o.browCol || PAL.hair; g.fill(); ink(5); g.restore(); } }
   for (const s of [-1, 1]) { E(cx + s * r * 0.54, cy + r * 0.46, r * 0.15, r * 0.09); g.fillStyle = `rgba(232,104,96,${0.25 + 0.4 * (X.cheek || 0)})`; g.fill(); }
   // 1620s moustache (o.stache): two curled strokes above the mouth
   if (o.stache) { for (const s of [-1, 1]) { g.beginPath(); g.moveTo(cx + s * 4, cy + r * 0.52); g.quadraticCurveTo(cx + s * r * 0.2, cy + r * 0.47, cx + s * r * 0.3, cy + r * 0.55); g.quadraticCurveTo(cx + s * r * 0.36, cy + r * 0.6, cx + s * r * 0.33, cy + r * 0.48);
     g.lineWidth = 9; g.strokeStyle = o.browCol || PAL.hair; g.lineCap = 'round'; g.stroke(); } }
   // mouth library
-  const mx = cx + (X.mouth === 'smirk' ? r * 0.04 : 0), my = cy + r * 0.66, mw = 0.46 * r * (X.mo ?? 1); g.beginPath();
+  const mx = cx + (X.mouth === 'smirk' ? r * 0.04 : 0), my = cy + r * (V2 ? 0.62 : 0.66), mw = (V2 ? 0.38 : 0.46) * r * (X.mo ?? 1); g.beginPath();
   if (X.mouth === 'smile') { g.moveTo(mx - mw * 0.5, my - 2); g.quadraticCurveTo(mx + mw * 0.05, my + mw * 0.32, mx + mw * 0.55, my - 6); ink(OW); }
   else if (X.mouth === 'flat') { g.moveTo(mx - mw * 0.36, my + 2); g.quadraticCurveTo(mx, my + mw * 0.08, mx + mw * 0.38, my); ink(OW); }
   else if (X.mouth === 'frown') { g.moveTo(mx - mw * 0.4, my + 8); g.quadraticCurveTo(mx, my - mw * 0.16, mx + mw * 0.4, my + 8); ink(OW); }

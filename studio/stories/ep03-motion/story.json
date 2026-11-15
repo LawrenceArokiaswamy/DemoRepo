@@ -1,0 +1,288 @@
+{
+ "title": "EP03 Gate 2 motion test",
+ "period": "modern",
+ "set": "restaurant",
+ "fps": 30,
+ "duration": 9.0,
+ "business": "business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "interior_evening",
+  "shadowBox": [
+   0.4,
+   1,
+   -3,
+   9
+  ],
+  "ao": {
+   "radius": 0.4,
+   "intensity": 0.85,
+   "samples": 12
+  },
+  "override": {
+   "fill": {
+    "sky": "#ffd9a8",
+    "ground": "#3a2a22",
+    "intensity": 0.45
+   }
+  }
+ },
+ "shots": [
+  {
+   "name": "S1 two-shot: calm -> buzz -> glance",
+   "a": 0,
+   "b": 2.0,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -2.3,
+      1.45,
+      -2.0
+     ],
+     "look": [
+      0.45,
+      1.0,
+      0.35
+     ],
+     "fov": 42,
+     "focus": 3.2,
+     "ap": 0.0008
+    },
+    {
+     "t": 1.1,
+     "pos": [
+      -2.0,
+      1.37,
+      -1.75
+     ],
+     "look": [
+      0.45,
+      1.0,
+      0.35
+     ],
+     "fov": 42,
+     "focus": 2.9,
+     "ap": 0.0008
+    },
+    {
+     "t": 2.0,
+     "pos": [
+      -1.75,
+      1.3,
+      -1.55
+     ],
+     "look": [
+      0.45,
+      0.98,
+      0.35
+     ],
+     "fov": 42,
+     "focus": 2.6,
+     "ap": 0.0008
+    }
+   ],
+   "ease": "out"
+  },
+  {
+   "name": "S2 insert: the alert",
+   "a": 2.0,
+   "b": 3.3,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 2.0,
+     "pos": [
+      0.02,
+      1.02,
+      0.0
+     ],
+     "look": [
+      0.35,
+      0.64,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.5,
+     "ap": 0.0006
+    },
+    {
+     "t": 3.3,
+     "pos": [
+      0.08,
+      0.95,
+      0.0
+     ],
+     "look": [
+      0.35,
+      0.64,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.43,
+     "ap": 0.0006
+    }
+   ],
+   "ease": "out"
+  },
+  {
+   "name": "S3 his close-up: anticipation -> SNAP shock -> hold",
+   "a": 3.3,
+   "b": 5.0,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 3.3,
+     "pos": [
+      -0.36,
+      0.98,
+      -0.52
+     ],
+     "look": [
+      0.78,
+      1.2,
+      0.0
+     ],
+     "fov": 44,
+     "focus": 1.22,
+     "ap": 0.0018
+    },
+    {
+     "t": 3.62,
+     "pos": [
+      -0.35,
+      0.98,
+      -0.51
+     ],
+     "look": [
+      0.78,
+      1.2,
+      0.0
+     ],
+     "fov": 44,
+     "focus": 1.21,
+     "ap": 0.0018
+    },
+    {
+     "t": 3.76,
+     "pos": [
+      -0.27,
+      0.99,
+      -0.46
+     ],
+     "look": [
+      0.78,
+      1.21,
+      0.0
+     ],
+     "fov": 44,
+     "focus": 1.12,
+     "ap": 0.0018
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      -0.25,
+      0.99,
+      -0.45
+     ],
+     "look": [
+      0.78,
+      1.21,
+      0.0
+     ],
+     "fov": 44,
+     "focus": 1.1,
+     "ap": 0.0018
+    }
+   ],
+   "ease": "out"
+  },
+  {
+   "name": "S4 her suspicion; his guilty side-glance + gulp",
+   "a": 5.0,
+   "b": 6.6,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 5.0,
+     "pos": [
+      -1.6,
+      1.3,
+      -1.2
+     ],
+     "look": [
+      0.52,
+      1.08,
+      0.37
+     ],
+     "fov": 44,
+     "focus": 2.4,
+     "ap": 0.0008
+    },
+    {
+     "t": 6.6,
+     "pos": [
+      -1.42,
+      1.27,
+      -1.03
+     ],
+     "look": [
+      0.52,
+      1.08,
+      0.37
+     ],
+     "fov": 44,
+     "focus": 2.2,
+     "ap": 0.0008
+    }
+   ],
+   "ease": "out"
+  },
+  {
+   "name": "S5 wide: the wave of phones; pull back and up",
+   "a": 6.6,
+   "b": 9.0,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 6.6,
+     "pos": [
+      0.9,
+      2.0,
+      3.2
+     ],
+     "look": [
+      0.3,
+      1.1,
+      -4.0
+     ],
+     "fov": 46,
+     "focus": 7.5,
+     "ap": 0.0002
+    },
+    {
+     "t": 9.0,
+     "pos": [
+      0.9,
+      3.0,
+      5.0
+     ],
+     "look": [
+      0.3,
+      1.0,
+      -4.4
+     ],
+     "fov": 46,
+     "focus": 9.5,
+     "ap": 0.0002
+    }
+   ],
+   "ease": "out"
+  }
+ ]
+}

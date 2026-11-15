@@ -5,7 +5,7 @@ let S = null, THREE = null;
 export async function init(C) {
   THREE = C.THREE; const RS = C.SET; S = { RS, C };
   const CP = await import('/engine/web/character_cplus.js'); S.CP = CP;
-  const L = (k, o = {}) => CP.loadCPlus(THREE, { url: `/engine/web/characters/cplus_${k}.glb`, look: 'v2', faceRes: o.faceRes || 512, recolor: o.recolor, rim: o.rim || '#ffd2a0', rimK: 0.4, shadowLevel: 178 });
+  const L = (k, o = {}) => CP.loadCPlus(THREE, { url: `/engine/web/characters/cplus_${k}.glb`, look: 'v2', faceRes: o.faceRes || 512, face: { style: 'v2', browCol: '#2a1b17' }, recolor: o.recolor, rim: o.rim || '#ffd2a0', rimK: 0.4, shadowLevel: 178 });
   S.hero = await L('modern_m', { faceRes: 1024, recolor: { top: '#3f6f8f', hair: '#3a2418' } });
   S.partner = await L('modern_f', { faceRes: 1024, recolor: { top: '#b84a48', hair: '#5a2e1c', skin: '#e9b48e' } });
   S.diners = [];

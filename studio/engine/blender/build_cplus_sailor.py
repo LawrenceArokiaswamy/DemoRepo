@@ -154,9 +154,21 @@ if ROMAN:
 ARM = {}
 for s, sx in (('L', 1), ('R', -1)):
     sh, el, wr = Vector((sx * SH_X, 0.0, SH_Z)), Vector((sx * 0.265, 0.01, 0.86)), Vector((sx * 0.29, -0.01, 0.63))
-    ARM[s] = (sh, el, wr); tube(f'Arm.{s}', [sh, el, wr], [0.072, 0.061, 0.053] if ROMAN else ([0.062, 0.053, 0.046] if SLIM else [0.076, 0.066, 0.056]), [(0.32, 'red'), (1.0, 'skin')] if ROMAN else ([(W8['sleeve'], 'top'), (1.0, 'skin')] if W8['sleeve'] < 1 else [(0.97, 'top'), (1.0, 'white' if W8.get('collar') else ('skin' if SLIM else 'top'))]), 20, 12)
+    ARM[s] = (sh, el, wr); tube(f'Arm.{s}', [sh, el, wr], [0.072, 0.061, 0.053] if ROMAN else ([0.054, 0.046, 0.04] if SLIM else [0.076, 0.066, 0.056]), [(0.32, 'red'), (1.0, 'skin')] if ROMAN else ([(W8['sleeve'], 'top'), (1.0, 'skin')] if W8['sleeve'] < 1 else [(0.97, 'top'), (1.0, 'white' if W8.get('collar') else ('skin' if SLIM else 'top'))]), 20, 12)
     if ROMAN: ellipsoid(f'ShoulderPlate.{s}', sh + Vector((sx * 0.025, 0.0, 0.03)), (0.098, 0.085, 0.07), 'steel', 28, 18, lambda p: Vector((p.x, p.y, max(p.z, -0.012))))
+def hand_slim(name, wr, sx, point=False):
+    """modern mitten hand (Visual standard v2): soft palm + one rounded finger mitten + thumb; pointing = slim tapered index"""
+    objs = []; inn = -sx; palm = wr + Vector((0, -0.004, -0.05))
+    objs.append(ellipsoid(name + '.palm', palm, (0.027, 0.04, 0.04), 'skin', 22, 16))
+    if point:
+        objs.append(ellipsoid(name + '.mitt', palm + Vector((inn * 0.016, 0.006, -0.032)), (0.022, 0.03, 0.024), 'skin', 18, 12))
+        objs.append(tube(name + '.f0', [palm + Vector((0, -0.024, -0.03)), palm + Vector((0, -0.028, -0.07)), palm + Vector((0, -0.03, -0.098))], [0.013, 0.011, 0.009], [(1.0, 'skin')], 12, 4))
+    else:
+        objs.append(ellipsoid(name + '.mitt', palm + Vector((inn * 0.006, 0.0, -0.045)), (0.024, 0.038, 0.034), 'skin', 18, 12, lambda p: Vector((p.x + max(0, -p.z) * 0.5 * inn, p.y, p.z))))
+    objs.append(ellipsoid(name + '.thumb', palm + Vector((inn * 0.012, -0.038, -0.008)), (0.013, 0.014, 0.026), 'skin', 14, 10, lambda p: Vector((p.x, p.y - max(0, -p.z) * 0.4, p.z))))
+    return objs
 def hand(name, wr, sx, point=False):
+    if SLIM: return hand_slim(name, wr, sx, point)
     """chunky 4-finger mitten hand hanging along the forearm: palm faces the thigh (-sx), fingers spaced front-back, thumb at the front"""
     objs = []; palm = wr + Vector((0, -0.004, -0.062)); inn = -sx
     objs.append(ellipsoid(name + '.palm', palm, (0.034, 0.05, 0.058), 'skin', 22, 16))
@@ -177,7 +189,7 @@ LEG = {}
 for s, sx in (('L', 1), ('R', -1)):
     hp, kn, an = Vector((sx * HIP_X, 0.0, HIP_Z)), Vector((sx * 0.118, -0.01, 0.34)), Vector((sx * 0.12, 0.0, 0.08)); LEG[s] = (hp, kn, an)
     if ROMAN: tube(f'Leg.{s}', [hp, kn, an], [0.066, 0.057, 0.05], [(1.0, 'skin')], 20, 12)
-    else: tube(f'Leg.{s}', [hp, kn, an], [0.068, 0.056, 0.047] if SLIM else [0.082, 0.064, 0.05], [(0.6, 'breech'), (1.0, 'skin' if W8['hose'] == 'skin' else 'hose')], 20, 12)
+    else: tube(f'Leg.{s}', [hp, kn, an], [0.06, 0.05, 0.043] if SLIM else [0.082, 0.064, 0.05], [(0.6, 'breech'), (1.0, 'skin' if W8['hose'] == 'skin' else 'hose')], 20, 12)
     for z in ((0.15, 0.22) if ROMAN else ()):
         bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=False, segments=24, radius1=0.054, radius2=0.054, depth=0.014)
         for v in bm.verts: v.co += Vector((sx * 0.12, 0.0, z))
@@ -206,17 +218,20 @@ if ROMAN:
 if not ROMAN:
     hair = ellipsoid('Hair', HEAD_C + Vector((0, 0.025, 0.035)), (0.236, 0.232, 0.225), 'hair', 40, 28,
                      lambda p: Vector((p.x, p.y, p.z if (p.y > -0.06 or p.z > 0.1) else 0.1 + (p.z - 0.1) * 0.08)))   # cap of hair; fringe stays above the brows
-    if W8.get('hair'):   # modern hair: lumpy volume + scalloped hairline + fringe tufts (reads as hair, not a cap)
+    if W8.get('hair'):   # modern hair (v2): smooth sculpted shells, clean curved hairline, swept fringe; no lumps or tufts
         import math as _m
-        hv = bpy.data.objects['Hair']
+        hv = bpy.data.objects['Hair']; C0 = HEAD_C + Vector((0, 0.025, 0.035))
         for v in hv.data.vertices:
-            d = v.co - (HEAD_C + Vector((0, 0.025, 0.035))); a = _m.atan2(d.x, d.y); e = _m.atan2(d.z, (d.x ** 2 + d.y ** 2) ** 0.5)
-            v.co += d.normalized() * (0.012 * _m.sin(a * 7 + e * 5) + 0.008 * _m.sin(a * 13 - e * 9) + 0.018 * max(0, _m.sin(e)))
-        n = 7 if W8['hair'] == 'short' else 9
-        for i in range(n):
-            u = (i / (n - 1)) * 2 - 1; ax = u * 0.17; ay = -0.205 + abs(u) * 0.07; az = 0.11 + 0.02 * (1 - abs(u))
-            ellipsoid('HairTuft', HEAD_C + Vector((ax, ay, az)), (0.045, 0.035, 0.07), 'hair', 14, 10, lambda p, u=u: Vector((p.x + max(0, -p.z) * (0.6 if W8['hair'] == 'short' else 0.2) * (1 if u <= 0.2 else -0.4), p.y, p.z)))
-        for sx in (1, -1): ellipsoid('HairSide', HEAD_C + Vector((sx * 0.215, -0.02, 0.04)), (0.04, 0.09, 0.09), 'hair', 14, 10)
+            d = v.co - C0; xn = d.x / 0.24
+            line = 0.07 - 0.07 * xn * xn if d.y < 0.02 else -0.16   # hairline: high at the centre, lower at the temples, down to the nape at the back
+            if d.z < line: v.co = C0 + d * 0.88   # tuck below-hairline vertices inside the head
+            else: v.co = C0 + d * 1.02
+        if W8['hair'] == 'short':
+            ellipsoid('HairQuiff', HEAD_C + Vector((-0.03, -0.13, 0.17)), (0.18, 0.11, 0.075), 'hair', 32, 20, lambda p: Vector((p.x, p.y, p.z + max(0.0, -p.x) * 0.28 - max(0.0, -p.y) * 0.25)))
+        else:
+            ellipsoid('HairBack', HEAD_C + Vector((0, 0.08, -0.14)), (0.25, 0.16, 0.3), 'hair', 36, 24, lambda p: Vector((p.x * (1 + max(0.0, -p.z) * 0.6), p.y, p.z)))
+            for sx in (1, -1): ellipsoid('HairCurtain', HEAD_C + Vector((sx * 0.215, -0.04, -0.06)), (0.05, 0.11, 0.25), 'hair', 20, 16, lambda p: Vector((p.x, p.y, p.z)))
+            ellipsoid('HairFringeSwoop', HEAD_C + Vector((0.05, -0.15, 0.165)), (0.2, 0.09, 0.07), 'hair', 30, 18, lambda p: Vector((p.x, p.y, p.z + p.x * 0.35)))
     if W8.get('hair') == 'short':
         pass
     if W8.get('hair') == 'long':    # long hair falling behind the shoulders + side locks framing the face

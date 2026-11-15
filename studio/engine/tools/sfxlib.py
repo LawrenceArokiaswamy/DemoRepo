@@ -36,6 +36,12 @@ def S_scuff(e): m = int(0.18 * SR); return band(nz(m), 300, 2500) * env(m, 0.01,
 def S_thud(e): m = int(0.5 * SR); tb = np.arange(m) / SR; return np.sin(2 * np.pi * (85 - 30 * tb) * tb) * env(m, 0.003, 0.12) * 1.4 + band(nz(m), 300, 2000) * env(m, 0.005, 0.15) * 0.5, 0.55, 0.3
 def S_chisel(e): n = int(0.12 * SR); return partials(1900 + rng.uniform(-150, 150), 0.12, [(1, 1), (2.7, 0.5), (4.1, 0.3)], 40) + filt(nz(n), 2500, True) * env(n, 0.0005, 0.008), 0.035, -0.5
 def S_tick(e): n = int(0.05 * SR); return filt(nz(n), 2100, True) * env(n, 0.0005, 0.006) + np.sin(2 * np.pi * 3000 * np.arange(n) / SR) * env(n, 0.0005, 0.01) * 0.4, 0.18, 0
+def S_buzz(e):   # phone vibrating on a table: pulsed low buzz + rattle
+    d = e.get('dur', 0.45); n = int(d * SR); t = np.arange(n) / SR; gate = (np.sin(2 * np.pi * 9 * t) > -0.2).astype(float)
+    return (np.sign(np.sin(2 * np.pi * 165 * t)) * 0.4 + band(nz(n), 800, 3000) * 0.25) * gate * np.minimum(1, t / 0.01) * np.minimum(1, (d - t) / 0.04), 0.35, 0.0
+def S_ding(e):   # notification chime: two quick bright tones (pitch per event)
+    f = e.get('f', 1320); n = int(0.7 * SR); out = partials(f, 0.7, [(1, 1), (2.0, 0.3)], 6); k = int(0.09 * SR); out[k:] += partials(f * 1.5, 0.7, [(1, 0.8), (2.0, 0.2)], 6)[:n - k]
+    return out, 0.3, e.get('pan', 0.0)
 def S_bell(e): return partials(1180, 0.8, [(1, 1), (2.76, 0.5), (5.4, 0.25), (8.9, 0.12)], 3) / 1.9, 0.4, 0
 def S_clank(e): return partials(620, 0.25, [(1, 1), (1.53, 0.7), (2.41, 0.5), (3.9, 0.3)], 18), 0.3, 0.3
 def S_chain(e):   # chain rattling while it pays out or sways: many small inharmonic link clinks
@@ -61,6 +67,9 @@ if 'sea' in AMB:
     sw = 0.55 + 0.45 * np.sin(2 * np.pi * tt / 6.5) ** 2; sea = filt(nz(N), 500) * sw + filt(nz(N), 1800, True) * 0.08 * sw ** 3; sea /= np.abs(sea).max()
     place(sea, 0, 0.10, -0.2); place(np.roll(sea, 30000), 0, 0.10, 0.3)
 if 'wind' in AMB: w = band(nz(N), 300, 1200) * (0.6 + 0.4 * np.sin(2 * np.pi * tt / 9 + 1)); place(w / np.abs(w).max(), 0, 0.035)
+if 'cafe' in AMB:   # restaurant murmur: band noise with slow syllabic modulation + occasional cutlery ticks
+    m = band(nz(N), 180, 1400) * (0.55 + 0.45 * np.abs(np.sin(2 * np.pi * tt * 2.7) * np.sin(2 * np.pi * tt * 0.9 + 1))); place(m / np.abs(m).max(), 0, 0.05)
+    for k in range(int(DUR * 1.5)): place(partials(2400 + rng.uniform(-300, 600), 0.08, [(1, 1), (2.7, 0.4)], 60), rng.uniform(0, DUR), 0.03, rng.uniform(-0.6, 0.6))
 if 'room' in AMB: place(filt(nz(N), 300) * 0.5 + filt(nz(N), 2000, True) * 0.03, 0, 0.05)
 if 'masons' in AMB:
     for t0 in np.sort(rng.uniform(0.3, DUR - 0.3, int(DUR * 0.8))): s, g, p = S_chisel({}); place(s, t0, g, p)
