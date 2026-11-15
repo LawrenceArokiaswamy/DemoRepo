@@ -34,11 +34,13 @@ SHOTS = [
  ('20 Syracuse had Archimedes (alone on the wall)',   36.70, 39.80, 61.7, 64.8, (K([-6.6, 14.6, -5.6], [-2.2, 14.4, 8.0], 50, 4.4, 0.0005), K([-6.2, 14.6, -5.0], [-2.2, 14.4, 8.0], 44, 3.8, 0.0005)), None),
 ]
 DUR = 39.8; tm, shots = [], []
+if os.path.exists('build/retime.json') and '--animatic-timing' not in sys.argv:   # picture conformed to the recorded narration (build_final.py)
+    RT = json.load(open('build/retime.json')); DUR = RT['duration']; SHOTS = [(s[0], RT['shots'][i][0], RT['shots'][i][1], *s[3:]) for i, s in enumerate(SHOTS)]
 for sh in SHOTS:
     name, va, vb, wa, wb, (k0, k1), att = sh[:7]
     tm.append([round(va + (1e-3 if tm else 0), 3), wa])
     if name.startswith('16'):   # slow-motion fall: release -> impact stretched, then real time
-        tm += [[29.0, 32.95], [30.2, 33.75]]
+        tm += [[round(va + (vb - va) * 0.4 / 2.2, 3), 32.95], [round(va + (vb - va) * 1.6 / 2.2, 3), 33.75]]
     tm.append([vb, wb])
     s = {'name': name, 'a': va, 'b': vb, 'keys': [dict(k0, t=va), dict(k1, t=vb)], 'a_world': wa, 'b_world': wb}
     if att: s['attach'] = att
@@ -63,5 +65,6 @@ story = {'title': 'The Claw of Syracuse (v2)', 'period': v1['period'], 'set': v1
          'cardHeight': v1['cardHeight'], 'cardEmissive': v1.get('cardEmissive', 0.16), 'timeMap': tm, 'ambience': v1.get('ambience'),
          'cast': cast, 'extras': v1['extras'], 'performances': P, 'shots': shots, 'kicks': [], 'noStones': True, 'clearAfter': 49.5, 'exposure': [[34.6, 39.8, 0.62, 0.15]], 'hazeScale': 0.3,
          'extraFleet': 22, 'hideAfter': {'w': 59.5, 'ids': ['titus', 'marcellus', 'crew1', 'crew2', 'crew3', 'crew4', 'crew5', 'crew6', 'officer1', 'officer2']}, 'ropeGag': {'pivot': [-3.6, 13.6, 0.4], 'len': 3.6, 't0': 55.0, 'swing': 0.9, 'until': 58.5}, 'workerRun': {'t0': 7.6, 't1': 10.6, 'x0': -10.5, 'x1': 2.0, 'z': -0.9}}
+s19 = next(x for x in shots if x['name'].startswith('19')); story['exposure'] = [[s19['a'], DUR + 1, 0.62, 0.15]]   # late sun-facing shots (19-20): less exposure and glare
 json.dump(story, open('story.json', 'w'), indent=1)
 print('shots', len(shots), 'frames', round(DUR * FPS)); print('timeMap', tm)
