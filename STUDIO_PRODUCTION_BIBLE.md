@@ -766,7 +766,7 @@ Keep an original identity; never copy the reference.
 - **Landscape thumbnail renders** (`LANDSCAPE=1`), already used in production.
 - **Render cost:** 4.9 s/frame at 1080×1920 for the benchmark (AO plus 8–10 lights), against about 2–2.5 s for the Vasa scenes. That's roughly a 2× regression, acceptable for a 60 s Short (about 2.5 h CPU).
 
-*B2. IMPLEMENTED AND TESTED IN MOTION: Gate 2* (`stories/ep03-motion`, `renders/ep03_gate2_motion_test.mp4`, 9 s). Awaiting owner review; **experimental until approved**.
+*B2. IMPLEMENTED, TESTED IN MOTION AND **OWNER-APPROVED FOR EPISODE 3** (Gate 2, 2026-11-15):* `stories/ep03-motion`, `renders/ep03_gate2_motion_test.mp4` (9 s). Do not rebuild the rig or the pipeline; improve inside production.
 - **C+ v2 character cleanup** (same rig; Roman and 1628 costumes untouched):
   - face `style: 'v2'`: eyes about 20% smaller, thinner lid lines, solid tapered brows without outline, slimmer mouth;
   - sculpted hair: a smooth shell with a curved hairline, a swept quiff (men), long hair with face-framing curtains (women), replacing the lumpy tufts;
@@ -784,6 +784,18 @@ Keep an original identity; never copy the reference.
 - **Staging lesson:** a phone screen meant to be read needs a dedicated insert shot with the phone light reduced, or it blows out.
 - **Coding lesson (three times now):** run `node --check` after every scripted JS edit.
 - **Render cost:** 3.6–4.0 s/frame at 1080×1920 (270 frames in 17.4 min including loads), against about 2.3 s for Vasa scenes: roughly 1.7× slower. That's acceptable (about 4 h CPU for a 60 s Short).
+
+**Gate 2 lessons (owner review), fixed inside Episode 3 production:**
+- **Endings need faces, not tiny figures.** Show "it's happening to everyone" with low angles among the tables and quick reaction close-ups, not a distant wide shot.
+- **Readable phone screens:** front-facing, a dark surround, phone light reduced in the insert, held at least 1.3 s.
+- **Material finish:**
+  - a lower rim (about 0.22);
+  - subtle painted skin, hair and fabric textures to break the plastic gradient;
+  - smaller, softer noses on modern builds.
+- **Composition:**
+  - the principal subject is at least 40% of frame height in medium shots;
+  - no more than about 20% empty floor, ceiling or wall;
+  - backgrounds support the story and don't compete with it.
 
 *C. PLANNED / EXPERIMENTAL (not started)*:
 - shot-language toolkit (camera presets, whip-pan transitions, still-frame composition overlay);
