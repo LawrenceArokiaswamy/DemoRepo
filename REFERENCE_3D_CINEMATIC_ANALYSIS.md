@@ -344,3 +344,25 @@ Every step is a small, testable increment. Nothing replaces a PROVEN system unti
 - An unmistakable step up from Episode 1 in cohesion, integration and camera.
 - Not yet at the reference's polish. The main remaining gaps are colour and lighting design (brightness and separation), painted material art, and crisp bold faces.
 - The fixes are listed in Bible §C.8a, about 1 day.
+
+## 11. Polish pass results (2026-11-15, ≈1 day, $0): PROOF OF CONCEPT CLOSED
+
+**Deliverables:**
+- `renders/poc_deck_at_sunset_v2_1080p.mp4`: 1080×1920, 9:16, H.264, 30/1 fps, 150 frames, 5.0 s, −14.1 LUFS, no black or frozen frames.
+- `renders/poc_polish_before_after.jpg`: before/after comparison.
+
+**Improved:**
+- **Colour and lighting:** bright, clean "golden" look, clear separation of the sailors from the deck, sea and sky; no orange grade.
+- **Characters:** smooth bodies; a bigger, bolder face; shock that reads on a phone.
+- **Materials:** painted stone blocks and planks with inked seams.
+- **Opening:** the sailor is visible from frame 1, and the boom-up shows the hauling.
+- **Claw:** a chain-and-hook shadow crosses the deck and closes on the sailor.
+
+**Remaining weaknesses (honest):**
+1. The **deck dominates the palette** (large warm-orange area); a cooler or darker deck tint would help.
+2. The claw's three hooks read less clearly than the chain links.
+3. The secondary sailor's reaction is small and partly off-frame.
+4. Motion is **posed rather than animated**: no squash and stretch, no follow-through on the arms or crest, no blinks.
+5. The reference still leads in environment density and in hand-designed props.
+
+**Recommendation:** adopt the components (style presets, painted textures, 3D actor, spline camera, shadow card) as the Episode 2 foundation. Address items 1–4 inside Episode 2 production, not as further POC work.
