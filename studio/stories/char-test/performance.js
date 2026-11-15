@@ -32,7 +32,7 @@ export function makePerformance(CP) {
   // expressions: [t, name, blend duration]
   const EXPR = [[0, 'relaxed', 0], [1.02, 'curious', 0.18], [2.5, 'squint', 0.12], [2.68, 'surprised', 0.08], [4.3, 'concern', 0.35]];
   const exprAt = (t) => { let X = EXP[EXPR[0][1]]; for (let i = 1; i < EXPR.length; i++) { const [t0, n, d] = EXPR[i]; if (t < t0) break; X = blendExp(X, EXP[n], ease.ss(Math.min(1, (t - t0) / d))); } return X; };
-  const BLINKS = [0.55, 1.72, 3.18, 4.31, 5.45];
+  const BLINKS = [0.55, 1.93, 3.18, 4.31, 5.45];
   return (t) => {
     const s = run(t), br = Math.sin(t * 2 * Math.PI * 0.28), sway = Math.sin(t * 2 * Math.PI * 0.17 + 1.1);
     const ch = s.chest, add = (a, b) => a.map((v, i) => v + (b[i] || 0));
