@@ -736,6 +736,11 @@ Do not call an episode a failure from early views alone.
 
 **Operating principle:** FINISH → REVIEW → PUBLISH → MEASURE → IMPROVE → REPEAT.
 
+**Visual standard v2 ("Lantern style"): PROPOSED, awaiting owner review (2026-11-15).** See `VISUAL_QUALITY_REASSESSMENT.md`.
+- **Diagnosis:** we built detailed characters in plain worlds; the references do the opposite. The gap is art direction, lighting, set dressing, shot design and FX, not resolution.
+- **Five reusable improvements:** lighting/atmosphere kit, stylised texture and set-dressing kit, C+ look refresh (same rig), shot-language toolkit with a still-frame gate, stylised FX library.
+- **Gate:** three approved benchmark stills before any motion test or episode animation.
+
 **Lessons learned (PROVEN):**
 1. Story before technology. Claw v1 was technically complete and creatively failed.
 2. Approve the script, then the storyboard, then an animatic before any expensive step. The animatic caught a dozen staging problems at about 1/10 of the cost.
