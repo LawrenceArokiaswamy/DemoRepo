@@ -1,7 +1,7 @@
 # STUDIO PRODUCTION BIBLE
 
 The studio's permanent operating manual: creative playbook, production workflow, technical reference and memory.
-**Read this before any video work** (see `CLAUDE.md`). Episode records live in `studio/episodes/`. The topic backlog lives in `studio/content/`.
+**Read this before any video work** (see `CLAUDE.md`). Visual-quality reference study and improvement roadmap: [`REFERENCE_3D_CINEMATIC_ANALYSIS.md`](REFERENCE_3D_CINEMATIC_ANALYSIS.md) (proposal; not yet approved). Episode records live in `studio/episodes/`. The topic backlog lives in `studio/content/`.
 
 Status tags used throughout:
 - **PROVEN**: used in a delivered video and verified.
@@ -476,7 +476,7 @@ Report honestly; don't polish a failing concept.
 - `ropeGag`, `workerRun`, `extraFleet`, `exposure` and the haze options (first used in Claw v2).
 - Free music libraries.
 
-**Future research (ASPIRATIONAL; needs approval and a small test first):**
+**Future research (ASPIRATIONAL; needs approval and a small test first). See `REFERENCE_3D_CINEMATIC_ANALYSIS.md` §5–§9 for the prioritised plan:**
 - Toon or outline unification pass.
 - Card silhouette shadows.
 - Stylised city replacements.
