@@ -29,6 +29,8 @@ Version history: v1, 2026-11-15, written after Episode 1 (Claw of Syracuse) v1 f
 
 It must have our own identity and never copy another creator's characters, art, scripts or branding. Long-term revenue goal is about $20k/month, built sustainably. We make no view or revenue promises without evidence.
 
+**Operating philosophy (owner decision 2026-11-15):** *Publish consistently. Learn from real audience feedback. Improve with every episode.* Quality rises episode by episode through small, validated improvements inside real production. There are no standalone redesign or R&D projects unless a serious production blocker emerges, and no chasing perfection before publishing.
+
 **Priority order (when goals conflict):**
 1. Storytelling and engagement.
 2. Clarity and emotional impact.
@@ -292,14 +294,27 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 - low grazing rim light, the painted shadow-card technique;
 - spline camera with key times, the overhead debug view.
 
-**Not approved as final: character design.** (Superseded by C.8d: the C+ rigged character, awaiting owner review.) The POC actor (`actor3d.js`) is a technical prototype, not the studio's character design. Character quality is being solved first; see [`CHARACTER_DEVELOPMENT_PROPOSAL.md`](CHARACTER_DEVELOPMENT_PROPOSAL.md).
+**Character design: superseded by C.8d, C+ Version 1, approved as the production character system 2026-11-15.** The POC actor (`actor3d.js`) is a technical prototype, not the studio's character design. Character quality is being solved first; see [`CHARACTER_DEVELOPMENT_PROPOSAL.md`](CHARACTER_DEVELOPMENT_PROPOSAL.md).
 
 **Verified 2026-11-15:**
 - Blender's Python module (`bpy` 5.3.0, via PyPI) runs headless on CPU here.
 - It can build subdivided meshes, armatures with automatic weights and shape keys, and export them as GLB (skin and morph targets confirmed).
 - Free character-asset hosts (Quaternius, Kenney) and blender.org are blocked by the current network policy.
 
-### C.8d Rigged 3D character pipeline: Blender build + our renderer (VERIFIED 2026-11-15, character test; awaiting owner review)
+### C.8d Rigged 3D character pipeline: Blender build + our renderer (APPROVED 2026-11-15 as C+ Version 1, the production character system)
+
+**C+ VERSION 1 BASELINE (owner-approved 2026-11-15).** This is the studio's production character system: the model, rig, face, runtime and acting helpers listed below, at git commit `4bccd75`, with the acting test `renders/character_test_cplus_1080p.mp4` as the reference.
+- The owner judged it a meaningful improvement (more expressive face, more recognisable costume, gestures and reactions inside the 3D world), though not yet at the reference channel's artistic level.
+- Keep V1 working. Improve it **inside episode production**, carrying each change forward. Do not start another standalone character-development project unless a serious production blocker emerges.
+- Record each episode's character improvements here as V1.1, V1.2 and so on, with what changed and why.
+
+**Carry-forward improvement list (apply during episodes; owner priority order not implied):**
+1. Better foot planting and body weight (2-bone leg IK and foot locks; weight shifts over the planted foot).
+2. More natural gestures, anticipation and follow-through.
+3. Better side-profile facial expressions (a profile eye/mouth treatment beyond the front projection).
+4. Clearer character acting (one readable idea per beat; hold golden poses).
+5. Stronger cinematic compositions.
+6. More distinctive environments and props.
 
 The approved **C+ "Cinematic Expressive"** direction is now a real, reusable, rigged 3D character. Blender is used only to **build and rig**; rendering stays in our three.js engine. Cost: $0 cash, 0 credits.
 
