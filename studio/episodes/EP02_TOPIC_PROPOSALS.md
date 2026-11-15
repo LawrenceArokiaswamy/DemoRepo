@@ -1,6 +1,6 @@
 # Episode 2: topic proposals (story development, stage 1)
 
-- **Status:** PROPOSAL, awaiting owner topic choice. No script, animatic or render work until the story and script are approved (Bible H).
+- **Status:** DECIDED 2026-11-15. The owner chose Vasa; see `EP02_vasa.md`. (Original status: proposal, awaiting owner topic choice.) No script, animatic or render work until the story and script are approved (Bible H).
 - **Written:** 2026-11-15.
 - **Budget:** $0 cash; 0 Higgsfield credits spent on this stage.
 - **Shortlisted from:** `studio/content/backlog.json` (15 permanent topics; none removed or replaced).
@@ -246,7 +246,7 @@ The modern namesake. It is strong and shareable.
 ## Shared production notes (all three)
 
 - **Format:** 1080×1920, 30 fps, captions per E.1; faces that must read emotion take at least 30–35% of frame height; platform-safe margins.
-- **Narrator voice: owner decision needed.** The brief says "keep our existing Fish Audio narrator voice". This repository has **no Fish Audio integration** (Bible D.1, corrected 2026-11-15). Episode 1's narration used **ElevenLabs v4 "Grady" via Higgsfield**, which costs credits (≈2.8 credits for Episode 1's narration). Whichever voice the owner means, generating it costs credits or a new service, so a cost quote and approval come before any narration.
+- **Narrator voice: RESOLVED 2026-11-15.** The owner wants the exact Episode 1 voice, verified as ElevenLabs v4 "Grady" (see EP02_vasa.md §0). Original note: The brief says "keep our existing Fish Audio narrator voice". This repository has **no Fish Audio integration** (Bible D.1, corrected 2026-11-15). Episode 1's narration used **ElevenLabs v4 "Grady" via Higgsfield**, which costs credits (≈2.8 credits for Episode 1's narration). Whichever voice the owner means, generating it costs credits or a new service, so a cost quote and approval come before any narration.
 - **Music:** the two owned scores are Claw-specific. Episode 2 needs a new cue: either an owned/free track or a generated one, which needs a credit quote and approval.
 - **Carry-forward improvements to apply in Episode 2** (owner list; none of them is a standalone project):
   - foot planting and body weight;

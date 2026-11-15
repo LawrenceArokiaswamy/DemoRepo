@@ -390,6 +390,13 @@ The approved **C+ "Cinematic Expressive"** direction is now a real, reusable, ri
 ### D.1 Narration (PROVEN)
 **Correction recorded 2026-11-15.** The established narrator voice is **ElevenLabs "Eleven v4", called through the Higgsfield MCP** (`generate_audio`, model `elevenlabs_v4`, preset voice "Grady", id `e2a2d2e6-9ed2-59cd-82af-feaa27f8a678`). There is **no Fish Audio integration in this repository**. If the owner adds one, document it here first.
 
+**Verified again 2026-11-15 (Episode 2 prep)** against three records:
+1. The Episode 1 generation call in the session transcript: `model: elevenlabs_v4`, `dialogue: [{text, voice_type: "preset", voice_id: "e2a2d2e6-9ed2-59cd-82af-feaa27f8a678"}, …]` (16 lines), `use_unlim: false`, no other voice settings.
+2. The Higgsfield transaction log: "Eleven v4", −2.76 credits, 2026-11-15 02:32 UTC.
+3. The file `stories/claw-v2/audio/narration_raw.mp3`: written at 02:32, mono 44.1 kHz, 46.0 s.
+
+The owner wants this **exact voice** preserved, so it is the studio narrator. To reproduce it, use the same model and voice ID with the same `dialogue` line-per-phrase format and no extra settings. Any "Fish Audio" reference means this voice.
+
 **Cost:**
 - About 4.6 credits for ~80 s of narration (Claw v1).
 - The quote for the Claw v2 script was 2.76 credits.

@@ -135,16 +135,18 @@
    ],
    "factual_caveats": [
     "Death toll is uncertain (often given as 30-50)",
-    "Stability explanations simplified: top-heavy, narrow hull, too little ballast"
+    "Stability explanations simplified: top-heavy, narrow hull, too little ballast",
+    "Ruler/asymmetry hypothesis is disputed; excluded from script",
+    "Sailing time ~20 min (museum; one page says ~15)"
    ],
    "estimated_credits": 14,
    "estimated_production_days": 3,
    "editorial_score": null,
-   "research_status": "Partially verified (web, 2026-11-15)",
-   "production_status": "Idea",
+   "research_status": "Verified (Vasa Museum pages via search, 2026-11-15)",
+   "production_status": "Script",
    "publication_url": null,
    "performance": null,
-   "notes": "2026-11-15: shortlisted for Episode 2 (rank 1 of 3); see studio/episodes/EP02_TOPIC_PROPOSALS.md."
+   "notes": "2026-11-15: shortlisted for Episode 2 (rank 1 of 3); see studio/episodes/EP02_TOPIC_PROPOSALS.md. 2026-11-15: owner approved as Episode 2. Script + storyboard + plan in studio/episodes/EP02_vasa.md, awaiting owner approval. Rulers theory excluded (not on museum pages; disputed)."
   },
   {
    "id": "EP03",
