@@ -40,6 +40,7 @@ export async function init(C) {
     S.decal.userData.keepMaterial = true; S.decal.renderOrder = 2; H.body.add(S.decal);
     t.needsUpdate = true; }
   for (const s of SY.fleet) s.root.visible = true;
+  if (C.story.noActors) { S.hero.root.visible = S.mate.root.visible = false; }   // empty deck (for concept previews)
 }
 function placeShip(t) {   // the ship rides the swell, bow toward the wall (called before the camera reads the ship's frame)
   if (S.placedAt === t) return; S.placedAt = t; const SY = S.SY, H = S.H; SY.sea.update(t + 40);
