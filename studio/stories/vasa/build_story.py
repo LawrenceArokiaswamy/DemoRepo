@@ -29,6 +29,18 @@ sun = {'zenith': '#4f86d9', 'mid': '#9fc2ee', 'horizon': '#ffd9a0', 'sun': '#fff
 story = {'title': 'Vasa: The Warship That Sank on Its First Voyage (animatic)', 'period': 'baroque', 'set': 'stockholm', 'fps': 30, 'duration': 50.4, 'business': 'business.js',
          'cast': {}, 'performances': {}, 'extras': [], 'kicks': [], 'style': {'preset': 'golden', 'override': {'sky': sun}, 'shadowBox': [0, 5, 0, 40]},
          'shots': [{'name': n, 'a': a, 'b': b, 'attach': at, 'keys': ks, 'outline': ol} for n, a, b, at, ks, ol in SH]}
+# final conform (build_final.py): shots and camera keys are authored in animation time; the director wants video time
+import os
+if os.path.exists('build/timeline.json'):
+    TLJ = json.load(open('build/timeline.json')); TM = TLJ['timeMap']
+    def w2v(w):
+        for (v0, w0), (v1, w1) in zip(TM, TM[1:]):
+            if w <= w1 + 1e-9: return round(v0 + (v1 - v0) * (w - w0) / max(1e-6, (w1 - w0)), 4)
+        return TM[-1][0]
+    for sh in story['shots']:
+        sh['a'], sh['b'] = w2v(sh['a']), w2v(sh['b'])
+        for k in sh['keys']: k['t'] = w2v(k['t'])
+    story['timeMap'] = TM; story['duration'] = TLJ['duration']; story['title'] = story['title'].replace(' (animatic)', '')
 json.dump(story, open('story.json', 'w'), indent=1)
 # ---- temp captions (the locked script lines at their planned times) ----
 VO = [(0.2, 2.4, 'Sweden built a warship so powerful…'), (2.7, 4.0, '…it sank on its first voyage.'), (4.2, 6.8, 'The king wanted two gun decks. Sixty-four cannons.'),

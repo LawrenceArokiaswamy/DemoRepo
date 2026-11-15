@@ -1,0 +1,2 @@
+# Final video files are kept locally (large binaries are not auto-committed; see FINAL_VIDEO_INDEX.md)
+*.mp4

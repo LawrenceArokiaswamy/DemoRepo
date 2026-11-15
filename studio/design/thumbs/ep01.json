@@ -1,0 +1,38 @@
+{
+ "out_dir": "final_videos/EP01_Claw_of_Syracuse",
+ "bg": {
+  "img": "design/thumbs/ep01_ship_lifted_wide.jpg",
+  "crop": [
+   180,
+   60,
+   1740,
+   938
+  ]
+ },
+ "inset": {
+  "img": "design/thumbs/ep01_archimedes.jpg",
+  "crop": [
+   110,
+   660,
+   1010,
+   1760
+  ]
+ },
+ "lines": [
+  "1 OLD MAN",
+  "vs 60 WARSHIPS"
+ ],
+ "hi": [
+  "vs 60 WARSHIPS"
+ ],
+ "cover": {
+  "img": "design/thumbs/ep01_ship_lifted.jpg",
+  "crop": [
+   0,
+   0,
+   1080,
+   1920
+  ]
+ },
+ "text_pos": "top"
+}

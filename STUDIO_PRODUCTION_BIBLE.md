@@ -587,12 +587,92 @@ studio/
 | 11 | Delivery | master (local) + < 50 MB copy in `renders/` | — | **owner approves publication** |
 | 12 | Record | episode record + Bible updates | lessons logged | — |
 
+**Permanent workflow (owner directive 2026-11-15)**
+Topic research → script approval → storyboard → animatic → review → narration → final animation → render → sound design → captions → QA → publishing package → owner approval → publication (by the owner) → performance review.
+
+**Mandatory release gate.** An episode may be marked **Ready for Publication** only when all of these hold:
+1. The final upload-ready video is complete.
+2. Technical and creative QA have passed (section I, plus the episode's own checklist).
+3. A thumbnail (1280×720) and a vertical cover (1080×1920) are prepared.
+4. Three title options and a recommended title are written.
+5. The final description is written.
+6. **Exactly five** hashtags are chosen.
+7. YouTube tags are prepared (under 500 characters).
+8. The package is stored in `studio/final_videos/EPxx_Name/`.
+9. The owner has reviewed the deliverables.
+
+Only after the owner's explicit approval does the status become **Approved for Publication**. Claude never publishes.
+
+**Status ladder** (`FINAL_VIDEO_INDEX.md`, `backlog.json`): In Production → QA → Ready for Publication → Approved for Publication → Published (with URL) → Reviewed (metrics recorded).
+
 **Stop and reconsider** when:
 - a story fails Gate B twice;
 - a fix needs a new engine or paid service;
 - an animatic still fails the muted test after one fix pass.
 
 Report honestly; don't polish a failing concept.
+
+---
+
+## K. Delivery, archive and publishing packages (PERMANENT, owner directive 2026-11-15)
+
+**K.1 Final video archive: `studio/final_videos/`, the one place to find everything needed to publish.**
+```
+studio/final_videos/
+├── FINAL_VIDEO_INDEX.md            (episode, title, status, file, size, resolution, duration, QA, URL)
+├── EP01_Claw_of_Syracuse/   EP01_Claw_of_Syracuse_UPLOAD.mp4, thumbnail_1280x720.png, cover_1080x1920.png,
+│                             YOUTUBE_PUBLISHING_PACKAGE.md, metadata.md
+└── EP02_Vasa/               (same set)
+```
+- Only **approved, upload-ready** videos go here. Animatics, tests and intermediates stay in `renders/` or the scratchpad.
+- Never modify or delete the original render; the archive holds a **copy**, checked with `cmp` and a full ffmpeg decode.
+- `*.mp4` in `final_videos/` is **gitignored**; videos are never auto-committed.
+- **The cloud session's disk is temporary.** Its local files are lost when the container is reclaimed. Durable copies are:
+  - the owner's own download of each upload file;
+  - a free cloud folder such as Google Drive's free tier (the recommended no-cost backup);
+  - with the owner's approval, a ≤ 50 MB copy committed under `renders/`.
+- Never let the scratchpad hold the only copy of a finished video.
+
+**K.2 Publishing package (`YOUTUBE_PUBLISHING_PACKAGE.md`), mandatory per episode**
+1. Episode number and title.
+2. Three titles and the recommended one, with a reason.
+3. A copy-paste description: a strong first line, the story without the full payoff, natural keywords, a subscribe line, source links.
+4. **Exactly five** hashtags.
+5. Comma-separated tags (under 500 characters).
+6. The thumbnail and cover filenames.
+7. The recommended Shorts cover frame or timestamp.
+8. Sources.
+9. Category (Education).
+10. Status.
+11. URL.
+
+`metadata.md` records the technical specs, SHA prefix, narrator, music, credits, QA results and approval status.
+
+**K.3 Thumbnails and covers (studio identity)**
+- **Tool:** `engine/tools/make_thumb.py <spec.json>`. Specs live in `studio/design/thumbs/`.
+- **Clean frames only:** render caption-free frames from the story. For 16:9 art, render natively in landscape: `LANDSCAPE=1 node render.mjs <slug> <dir> <frame>` (1920×1080, same cameras, wider view).
+- **Identity:**
+  - one strong story image, full bleed;
+  - an optional character inset with a diagonal yellow edge;
+  - 2–4 words in Inter Display Black, white with a heavy dark outline;
+  - **one** signature-yellow phrase over a yellow accent bar;
+  - a warm contrast grade and vignette.
+  - Text goes over empty sky or sea, never over the subject or a face.
+- **Keep it truthful:** no misleading claims, no copying another creator's look.
+- **Same system, different image:** keep the type, colour and layout, but give every episode its own story image.
+- **Shorts thumbnails (checked November 2026):**
+  - Desktop YouTube Studio lets most creators set a custom Short thumbnail.
+  - Mobile support is inconsistent, so always name a **frame timestamp** to select during upload as the fallback.
+  - Never promise that a custom image will appear on a Short.
+
+**K.4 Performance review (after publication).** Record in the episode record and the index:
+- views at 48 h, 7 days and 28 days;
+- viewed vs swiped away;
+- retention curve and average view duration;
+- likes, comments, shares and subscribers gained;
+- one or two lessons.
+
+Do not call an episode a failure from early views alone.
 
 ---
 
@@ -639,6 +719,22 @@ Report honestly; don't polish a failing concept.
 ---
 
 ## J. Continuous improvement
+
+**Standing creative improvements (Episode 3 onward; owner directive 2026-11-15).** Each episode must improve at least one of these, inside production, never as a separate tech project:
+1. **Stronger hooks.** The first 1–2 s are visually irresistible: striking action, danger, curiosity or an unexpected image that stops the scroll.
+2. **Clearer visual storytelling.** For complicated actions, choose the angle that makes cause and effect unmistakable (Vasa: the open ports dipping under, shown from outside). Avoid cluttered wides that hide the main event (Vasa's running wide fought sails and rigging).
+3. **More cinematic action.** Purposeful camera movement, strong compositions, readable scale, visual progression.
+4. **Better emotional storytelling.** Expressions, body language, reactions, anticipation, timing, follow-through.
+5. **Stronger endings.** Give reveals and payoffs enough screen time and dramatic framing.
+
+**Production efficiency (Claude usage is a limited resource).**
+- Reuse tools and assets.
+- Run deterministic renders in background batches.
+- Verify with low-res keyframes before any full render; never repeat a full-resolution render for optional tweaks.
+- Keep documents concise.
+- Do not open research or redesign cycles that aren't needed to finish the episode.
+
+**Operating principle:** FINISH → REVIEW → PUBLISH → MEASURE → IMPROVE → REPEAT.
 
 **Lessons learned (PROVEN):**
 1. Story before technology. Claw v1 was technically complete and creatively failed.

@@ -1,0 +1,60 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,700,1
+Style: Note,DejaVu Sans,44,&H00F2F2F2,&H00FFFFFF,&H64000000,&H64000000,1,0,0,0,100,100,2,0,3,10,0,8,90,90,215,1
+Style: Tag,DejaVu Sans,30,&H00E0E0E0,&H00FFFFFF,&H80000000,&H80000000,0,0,0,0,100,100,0,0,3,6,0,9,40,40,300,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.20,0:00:01.25,Cap,,0,0,0,,Sweden built a
+Dialogue: 0,0:00:01.25,0:00:02.82,Cap,,0,0,0,,warship so powerful…
+Dialogue: 0,0:00:03.14,0:00:04.00,Cap,,0,0,0,,…it {\c&H0040D8FF&}sank{\c&HFFFFFF&} on
+Dialogue: 0,0:00:04.00,0:00:05.15,Cap,,0,0,0,,its {\c&H0040D8FF&}first{\c&HFFFFFF&} {\c&H0040D8FF&}voyage.{\c&HFFFFFF&}
+Dialogue: 0,0:00:05.45,0:00:06.71,Cap,,0,0,0,,The {\c&H0040D8FF&}king{\c&HFFFFFF&} wanted
+Dialogue: 0,0:00:06.71,0:00:07.66,Cap,,0,0,0,,{\c&H0040D8FF&}two{\c&HFFFFFF&} {\c&H0040D8FF&}gun{\c&HFFFFFF&} {\c&H0040D8FF&}decks.{\c&HFFFFFF&}
+Dialogue: 0,0:00:07.66,0:00:09.24,Cap,,0,0,0,,{\c&H0040D8FF&}Sixty-four{\c&HFFFFFF&} cannons.
+Dialogue: 0,0:00:09.51,0:00:09.84,Cap,,0,0,0,,{\c&H0040D8FF&}First,{\c&HFFFFFF&}
+Dialogue: 0,0:00:09.84,0:00:10.51,Cap,,0,0,0,,a {\c&H0040D8FF&}test:{\c&HFFFFFF&}
+Dialogue: 0,0:00:10.51,0:00:11.84,Cap,,0,0,0,,{\c&H0040D8FF&}thirty{\c&HFFFFFF&} men ran
+Dialogue: 0,0:00:11.84,0:00:13.18,Cap,,0,0,0,,across the deck.
+Dialogue: 0,0:00:16.41,0:00:17.42,Cap,,0,0,0,,She rolled so
+Dialogue: 0,0:00:17.42,0:00:17.68,Cap,,0,0,0,,hard,
+Dialogue: 0,0:00:17.68,0:00:19.20,Cap,,0,0,0,,the admiral stopped
+Dialogue: 0,0:00:19.20,0:00:19.71,Cap,,0,0,0,,the {\c&H0040D8FF&}test.{\c&HFFFFFF&}
+Dialogue: 0,0:00:20.11,0:00:21.31,Cap,,0,0,0,,They sailed {\c&H0040D8FF&}anyway.{\c&HFFFFFF&}
+Dialogue: 0,0:00:23.81,0:00:24.78,Cap,,0,0,0,,A breeze.
+Dialogue: 0,0:00:24.78,0:00:25.76,Cap,,0,0,0,,She leaned…
+Dialogue: 0,0:00:25.76,0:00:27.06,Cap,,0,0,0,,and came {\c&H0040D8FF&}back.{\c&HFFFFFF&}
+Dialogue: 0,0:00:27.31,0:00:27.67,Cap,,0,0,0,,Then,
+Dialogue: 0,0:00:27.67,0:00:29.11,Cap,,0,0,0,,a stronger gust.
+Dialogue: 0,0:00:29.54,0:00:30.43,Cap,,0,0,0,,The lower {\c&H0040D8FF&}gunports{\c&HFFFFFF&}
+Dialogue: 0,0:00:30.43,0:00:31.15,Cap,,0,0,0,,were {\c&H0040D8FF&}open.{\c&HFFFFFF&}
+Dialogue: 0,0:00:34.54,0:00:35.51,Cap,,0,0,0,,Within sight of
+Dialogue: 0,0:00:35.51,0:00:36.24,Cap,,0,0,0,,the city,
+Dialogue: 0,0:00:36.24,0:00:36.73,Cap,,0,0,0,,she {\c&H0040D8FF&}sank.{\c&HFFFFFF&}
+Dialogue: 0,0:00:37.14,0:00:38.28,Cap,,0,0,0,,At least {\c&H0040D8FF&}thirty{\c&HFFFFFF&}
+Dialogue: 0,0:00:38.28,0:00:39.13,Cap,,0,0,0,,people {\c&H0040D8FF&}died.{\c&HFFFFFF&}
+Dialogue: 0,0:00:39.40,0:00:40.61,Cap,,0,0,0,,The designer was
+Dialogue: 0,0:00:40.61,0:00:40.85,Cap,,0,0,0,,dead.
+Dialogue: 0,0:00:41.48,0:00:42.46,Cap,,0,0,0,,The builders said
+Dialogue: 0,0:00:42.46,0:00:43.68,Cap,,0,0,0,,the {\c&H0040D8FF&}king{\c&HFFFFFF&} approved
+Dialogue: 0,0:00:43.68,0:00:44.17,Cap,,0,0,0,,the plans.
+Dialogue: 0,0:00:44.62,0:00:45.86,Cap,,0,0,0,,Nobody was {\c&H0040D8FF&}punished.{\c&HFFFFFF&}
+Dialogue: 0,0:00:46.17,0:00:46.94,Cap,,0,0,0,,She {\c&H0040D8FF&}sank{\c&HFFFFFF&} in
+Dialogue: 0,0:00:46.94,0:00:48.22,Cap,,0,0,0,,{\c&H0040D8FF&}twenty{\c&HFFFFFF&} {\c&H0040D8FF&}minutes.{\c&HFFFFFF&}
+Dialogue: 0,0:00:48.51,0:00:49.78,Cap,,0,0,0,,Then she lay
+Dialogue: 0,0:00:49.78,0:00:52.32,Cap,,0,0,0,,underwater for {\c&H0040D8FF&}333{\c&HFFFFFF&}
+Dialogue: 0,0:00:52.32,0:00:52.74,Cap,,0,0,0,,{\c&H0040D8FF&}years…{\c&HFFFFFF&}
+Dialogue: 0,0:00:53.03,0:00:53.93,Cap,,0,0,0,,…until they brought
+Dialogue: 0,0:00:53.93,0:00:54.39,Cap,,0,0,0,,her {\c&H0040D8FF&}back,{\c&HFFFFFF&}
+Dialogue: 0,0:00:55.23,0:00:56.11,Cap,,0,0,0,,almost {\c&H0040D8FF&}whole.{\c&HFFFFFF&}
+Dialogue: 0,0:00:05.45,0:00:09.36,Note,,0,0,0,,STOCKHOLM · 1628
+Dialogue: 0,0:00:21.51,0:00:23.61,Note,,0,0,0,,10 AUGUST 1628
+Dialogue: 0,0:00:51.90,0:00:54.93,Note,,0,0,0,,1961
+Dialogue: 0,0:00:09.51,0:00:11.81,Tag,,0,0,0,,Reconstruction

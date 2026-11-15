@@ -11,7 +11,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 export { THREE };
 
 const SC = +(new URLSearchParams(location.search).get('scale') || 1);   // ?scale=0.33 for fast low-res animatics
-export const W = Math.round(1080 * SC), H = Math.round(1920 * SC);
+const QP = new URLSearchParams(location.search);   // ?w=1920&h=1080 renders a native landscape frame (thumbnails)
+export const W = Math.round((+QP.get('w') || 1080) * SC), H = Math.round((+QP.get('h') || 1920) * SC);
 export const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H, false);
 renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.95; renderer.outputColorSpace = THREE.SRGBColorSpace;
