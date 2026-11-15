@@ -32,7 +32,7 @@ export async function init(C) {
   const sprayT = ST.spray;
   S.smoke = []; for (let i = 0; i < 36; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprayT, color: '#f4f0e8', transparent: true, depthWrite: false, opacity: 0 })); s.visible = false; C.scene.add(s); S.smoke.push(s); }
   { const c = document.createElement('canvas'); c.width = 64; c.height = 256; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(10,30,40,0)'); gr.addColorStop(0.5, 'rgba(5,18,30,0.85)'); gr.addColorStop(1, 'rgba(10,30,40,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 256);
-    const t = new THREE.CanvasTexture(c); S.gust = new THREE.Mesh(new THREE.PlaneGeometry(260, 14), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false })); S.gust.rotation.x = -Math.PI / 2; S.gust.userData.keepMaterial = true; S.gust.visible = false; C.scene.add(S.gust); }
+    const t = new THREE.CanvasTexture(c); S.gust = new THREE.Mesh(new THREE.PlaneGeometry(320, 34), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false })); S.gust.rotation.x = -Math.PI / 2; S.gust.userData.keepMaterial = true; S.gust.visible = false; C.scene.add(S.gust); }
   { const c = document.createElement('canvas'); c.width = 128; c.height = 512; const g = c.getContext('2d'); g.fillStyle = 'rgba(70,140,150,0.75)'; g.fillRect(0, 0, 128, 512);
     for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(230,245,245,${0.3 + Math.random() * 0.5})`; g.fillRect(Math.random() * 128, Math.random() * 512, 3 + Math.random() * 6, 30 + Math.random() * 90); }
     S.sheetTex = new THREE.CanvasTexture(c); S.sheetTex.wrapT = THREE.RepeatWrapping; S.sheetTex.colorSpace = THREE.SRGBColorSpace; }
@@ -51,10 +51,10 @@ export async function init(C) {
   // 1961 salvage: two pontoons, cranes, press boats
   S.salv = new THREE.Group(); C.scene.add(S.salv); S.salv.visible = false;
   { const mPont = new THREE.MeshStandardMaterial({ color: '#5a5f66', roughness: 0.8 }), mBoat = new THREE.MeshStandardMaterial({ color: '#d8d4ca', roughness: 0.7 }), mRed = new THREE.MeshStandardMaterial({ color: '#6a6f76', roughness: 0.7 });
-    for (const dz of [-10.5, 10.5]) { const p = new THREE.Mesh(new THREE.BoxGeometry(44, 3.2, 6), mPont); p.position.set(VOY.x, 0.35, VOY.z + dz * 1.15); p.scale.set(1, 0.5, 0.8); S.salv.add(p); const cr = new THREE.Mesh(new THREE.BoxGeometry(0.6, 16, 0.6), mRed);  }
+    for (const dz of [-10.5]) { const p = new THREE.Mesh(new THREE.BoxGeometry(44, 3.2, 6), mPont); p.position.set(VOY.x, 0.35, VOY.z + dz * 1.15); p.scale.set(1, 0.5, 0.8); S.salv.add(p); const cr = new THREE.Mesh(new THREE.BoxGeometry(0.6, 16, 0.6), mRed);  }
     for (const [x, z, r] of [[VOY.x + 26, VOY.z - 30, 0.6], [VOY.x - 22, VOY.z - 28, -0.4], [VOY.x + 48, VOY.z - 6, 1.4]]) { const b = new THREE.Mesh(new THREE.BoxGeometry(7, 1.4, 2.4), mBoat); b.position.set(x, 0.5, z); b.rotation.y = r; S.salv.add(b); const cab = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.4, 2.0), mBoat); cab.position.set(x, 1.8, z); cab.rotation.y = r; S.salv.add(cab); }
     S.flashes = []; for (let i = 0; i < 6; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprayT, color: '#ffffff', transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending })); s.position.set(VOY.x + [26, 27, -22, -21, 48, 47][i], 2.6, VOY.z + [-30, -29, -28, -27, -6, -5][i]); s.scale.setScalar(2.2); S.salv.add(s); S.flashes.push(s); }
-    S.salvCrowd = ST.addCrowd([...Array(40)].map((_, i) => [VOY.x - 18 + (i % 20) * 2.1, 2.5, VOY.z + (i < 20 ? -10.5 : 10.5) + ((i * 7) % 3 - 1)]), 11); S.salvCrowd.body.visible = S.salvCrowd.head.visible = false; }
+    S.salvCrowd = ST.addCrowd([...Array(24)].map((_, i) => [VOY.x - 18 + (i % 24) * 1.6, 1.15, VOY.z - 12.1 + ((i * 7) % 3 - 1) * 0.5]), 11); S.salvCrowd.body.visible = S.salvCrowd.head.visible = false; }
   { const { pbr: pb } = await import('/engine/web/stage.js'); const st = new THREE.Mesh(new THREE.BoxGeometry(16, 1.2, 7), pb('wood_planks', [3, 2], { roughness: 0.85, color: '#c7a57a' })); st.position.set(VOY.x - 3, 0.6, 99.5); st.castShadow = st.receiveShadow = true; C.scene.add(st); }
   { const cap = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 10), new THREE.MeshStandardMaterial({ color: '#5e4a36' })); cap.scale.set(1.25, 0.32, 1.25); cap.position.set(0.05, 0.58, 0.05); ST.chair.add(cap); }
   S.rollCache = null; S.landHAt = (await import('/engine/web/sets/stockholm.js')).landH;
@@ -77,6 +77,7 @@ function rollAt(t) {   // heel (+ = port) of the moored ship during the test
 }
 // ---------------- ship state per beat ----------------
 function shipState(t) {
+  t = Math.round(t * 1000) / 1000;   // director time can be 3.99999 at a cut
   if (t < T.S03) { const k = rmp(t, T.S02, T.S03); return { x: VOY.x - 34 + t * 1.6, z: VOY.z, heel: 0.03 + ss(rmp(t, 2.3, 3.6)) * 0.17 + Math.sin(t * 1.1) * 0.005, ports: 1 }; }
   if (t < T.S08) return { x: QUAY.x, z: QUAY.z, heel: rollAt(t) + Math.sin(t * 0.9) * 0.003, ports: t < T.S03 + 0.5 ? 0 : ss(rmp(t, T.S03 + 0.5, T.S03 + 2.4)) };
   if (t < T.S09) { const k = ss(rmp(t, T.S08, T.S09 + 1)); return { x: QUAY.x + 3 + k * 10, z: QUAY.z + 3 * k, heel: 0.015 + Math.sin(t) * 0.006, ports: 1 }; }
@@ -86,8 +87,8 @@ function shipState(t) {
   if (t < T.S14) { const k = rmp(t, T.S13, T.S14); return { x: VOY.x, z: VOY.z, heel: 0.36 + Math.pow(k, 1.3) * 0.75, sink: Math.pow(ss(rmp(t, T.S13 + 0.8, T.S14 + 0.6)), 1.6) * 20, pitch: -k * 0.08, ports: 1 }; }
   if (t < T.S15) return { x: VOY.x, z: VOY.z, heel: 0, sink: 60, ports: 1 };
   if (t < T.S16) return { x: VOY.x, z: VOY.z, heel: 0.06, sink: 27.2, pitch: 0.02, ports: 0.3, wreck: true };
-  if (t < T.S17) { const k = ss(rmp(t, T.S16, T.S17 + 0.5)); return { x: VOY.x, z: VOY.z, heel: 0.02, sink: lerp(7.0, 3.0, Math.pow(k, 0.7)), ports: 0.3, wreck: true }; }
-  return { x: VOY.x, z: VOY.z, heel: 0.02, sink: lerp(3.0, 2.6, ss(rmp(t, T.S17, T.END))), ports: 0.3, wreck: true };
+  if (t < T.S17) { const k = ss(rmp(t, T.S16, T.S17 + 0.5)); return { x: VOY.x, z: VOY.z, heel: 0.02, sink: lerp(6.0, 2.2, Math.pow(k, 0.7)), ports: 0.3, wreck: true }; }
+  return { x: VOY.x, z: VOY.z, heel: 0.02, sink: lerp(2.2, 1.9, ss(rmp(t, T.S17, T.END))), ports: 0.3, wreck: true };
 }
 function place(t) {
   if (S.placedAt === t) return; S.placedAt = t; const ST = S.ST; ST.sea.update(t + 40);
@@ -141,6 +142,7 @@ function crewFrame(t) {   // the quay scene, 6.9 .. 18.6
   }
 }
 export function frame(t, C, vt) {
+  t = Math.round(t * 1000) / 1000;
   const ST = S.ST; place(t); for (const ch of S.all) ch.root.visible = false;
   S.ST.sea.near.receiveShadow = false; for (const s of S.smoke) s.visible = false; S.gust.visible = false; for (const m of S.sheets) m.visible = false; S.flood.visible = false; for (const s of S.splash.list) s.visible = false;
   for (const l of S.lamps) l.intensity = 0; S.under.visible = false; S.salv.visible = false; S.salvCrowd.body.visible = S.salvCrowd.head.visible = false; ST.roomLight.intensity = 0;
@@ -166,7 +168,7 @@ export function frame(t, C, vt) {
       const turn = ss(rmp(t, 16.5, 17.0)) * (1 - ss(rmp(t, 17.3, 17.7)));
       const face = t < 12.1 ? E('neutral') : t < 14.15 ? CP.blendExp(E('neutral'), E('surprised'), ss(rmp(t, 12.1, 12.4))) : t < 16.4 ? E('angry') : CP.blendExp(E('concern'), E('squint'), ss(rmp(t, 17.2, 17.6)));
       atWorld(S.admiral, ax, ST.quay.y, az, 0, stand(t, { face: { ...face, mouth: t > 14.2 && t < 15.1 ? 'shout' : face.mouth }, blinks: [12.0, 16.1, 17.35], gaze: turn > 0.5 ? [-0.7, -0.3] : [0, -0.3],
-        bones: { head: [-0.3 + turn * 0.2, -turn * 1.0, 0], neck: [-0.08, -turn * 0.3, 0], chest: [t > 17.0 && t < 17.5 ? 0.08 : 0, -turn * 0.25, 0], upperarmR: [lerp(-0.05, -2.9, up) + wave * -1.3, wave * -0.6, -0.1], forearmR: [-0.2 - wave * 0.4, 0, 0],
+        bones: { head: [-0.3 + turn * 0.2, turn * 0.9, 0], neck: [-0.08, turn * 0.3, 0], chest: [t > 17.0 && t < 17.5 ? 0.08 : 0, turn * 0.2, 0], upperarmR: [lerp(-0.05, -2.9, up) + wave * -1.3, wave * -0.6, -0.1], forearmR: [-0.2 - wave * 0.4, 0, 0],
           upperarmL: [-0.15, 0, 0.12], forearmL: [-1.3, 0, 0] }, squash: t > 17.0 && t < 17.4 ? -0.025 * Math.sin(rmp(t, 17.0, 17.4) * Math.PI) : 0 })); }
     px = 4.6;
   }
@@ -196,8 +198,12 @@ export function frame(t, C, vt) {
       bones: { head: [0.2 * turn, -1.2 * turn * (1 - bd * 0.85), 0], neck: [0, -0.3 * turn * (1 - bd), 0], chest: [0, -0.5 * sh * (1 - bd), 0], upperarmL: [-0.8 * ss(rmp(t, 27.2, 27.6)), 0, 0.5], forearmL: [-1.3 * ss(rmp(t, 27.2, 27.6)), 0, 0], upperarmR: [-1.9 * ss(rmp(t, 28.4, 28.8)), 0, -0.2], forearmR: [-0.2, 0, 0] } }), hand: t > 28.5 ? 'point' : 'relaxed' });
     S.hero.root.position.y = S.VASA.lowerDeckY;
     // water: sheets through the low (port) ports + the flood plane rising inside
-    const wk = rmp(t, 27.4, T.S13); for (const [i, m] of S.sheets.entries()) { const a = cl((wk - i * 0.06) * 2.2); m.visible = a > 0; m.material.map.offset.y = -t * 1.6; m.scale.set(1, Math.max(0.01, a), 1); m.material.opacity = 1.0; m.material.color.set('#ffffff'); }
-    const deckLow = new THREE.Vector3(0, S.VASA.lowerDeckY, -4.5); V.heel.localToWorld(deckLow); S.flood.visible = wk > 0; S.flood.position.set(V.root.position.x + 1, deckLow.y - 0.12 + ss(wk) * 0.45, V.root.position.z - 4.0); S.flood.scale.set(1, 0.45, 1);
+    const wk = rmp(t, 27.4, T.S13); if (t < T.S12) for (const [i, m] of S.sheets.entries()) { const a = cl((wk - i * 0.06) * 2.2); m.visible = a > 0; m.material.map.offset.y = -t * 1.6; m.scale.set(1, Math.max(0.01, a), 1); m.material.opacity = 1.0; m.material.color.set('#ffffff'); }
+    if (t >= T.S12) { for (const m of S.sheets) m.visible = false; let i = 0;   // exterior: the open lower ports reach the water -> water rushes in
+      for (let k = 1; k <= 10; k++) { const p = new THREE.Vector3(-S.VASA.L / 2 + (0.24 + k * (0.58 / 11)) * S.VASA.L, 1.35, -6.0); V.heel.localToWorld(p); const sea = ST.sea.heightAt(p.x, p.z, t + 40);
+        if (p.y - sea > 0.35) continue; for (let j = 0; j < 6 && i < S.splash.list.length; j++, i++) { const sp = S.splash.list[i], ph = (t * 2.2 + j * 0.37 + k * 0.13) % 1;
+          sp.visible = true; sp.position.set(p.x + (j - 2.5) * 0.18, sea + 0.15 + ph * 0.9 - ph * ph * 0.8, p.z - 0.3 + ph * 0.6); const sz = 0.35 + ph * 0.6; sp.scale.set(sz, sz, 1); sp.material.opacity = 0.8 * (1 - ph); } } }
+    const deckLow = new THREE.Vector3(0, S.VASA.lowerDeckY, -4.5); V.heel.localToWorld(deckLow); S.flood.visible = wk > 0 && t < T.S12; S.flood.position.set(V.root.position.x + 1, deckLow.y - 0.12 + ss(wk) * 0.45, V.root.position.z - 4.0); S.flood.scale.set(1, 0.45, 1);
     px = 5.0;
   }
   // ---- S13 the sinking, seen from the south shore crowd (respectful: no gags)

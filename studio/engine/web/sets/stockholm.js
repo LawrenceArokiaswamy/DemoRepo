@@ -74,8 +74,8 @@ export async function build() {
   ST.chair.position.set(IX + 0.0, ST.room.y, IZ + 0.15); ST.chair.rotation.y = 0; scene.add(ST.chair);
   { const c = document.createElement('canvas'); c.width = 384; c.height = 512; const g = c.getContext('2d');   // portrait: a crowned royal figure (stylised, not a likeness)
     g.fillStyle = '#3a2c22'; g.fillRect(0, 0, 384, 512); g.fillStyle = '#5b4632'; g.fillRect(20, 20, 344, 472); const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, '#6a7a94'); gr.addColorStop(1, '#3a4256'); g.fillStyle = gr; g.fillRect(34, 34, 316, 444);
-    g.fillStyle = '#1d2a4a'; g.beginPath(); g.ellipse(192, 470, 150, 190, 0, Math.PI, 0); g.fill(); g.fillStyle = '#f0c8a0'; g.beginPath(); g.ellipse(192, 230, 70, 86, 0, 0, 7); g.fill();
-    g.fillStyle = '#d9a93a'; g.beginPath(); g.moveTo(126, 160); for (const [x, y] of [[140, 110], [162, 150], [192, 96], [222, 150], [244, 110], [258, 160]]) g.lineTo(x, y); g.closePath(); g.fill();
+    g.fillStyle = '#1d2a4a'; g.beginPath(); g.ellipse(192, 470, 150, 190, 0, Math.PI, 0); g.fill(); g.fillStyle = '#b88a68'; g.beginPath(); g.ellipse(192, 230, 70, 86, 0, 0, 7); g.fill();
+    g.fillStyle = '#a07a28'; g.beginPath(); g.moveTo(126, 160); for (const [x, y] of [[140, 110], [162, 150], [192, 96], [222, 150], [244, 110], [258, 160]]) g.lineTo(x, y); g.closePath(); g.fill();
     g.fillStyle = '#7a4a2a'; g.beginPath(); g.ellipse(192, 300, 40, 30, 0, 0, Math.PI); g.fill(); g.strokeStyle = '#2a1b17'; g.lineWidth = 6; for (const s of [-1, 1]) { g.beginPath(); g.moveTo(192 + s * 30, 222); g.lineTo(192 + s * 30, 226); g.stroke(); }
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; ST.portrait = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 2.0), new THREE.MeshStandardMaterial({ map: t, roughness: 0.6 })); ST.portrait.position.set(IX, ST.room.y + 3.4, IZ - 5.8); scene.add(ST.portrait); }
   ST.roomLight = new THREE.PointLight('#ffcf8a', 0, 30, 1.2); ST.roomLight.position.set(IX + 2, ST.room.y + 4.8, IZ + 2); scene.add(ST.roomLight);
