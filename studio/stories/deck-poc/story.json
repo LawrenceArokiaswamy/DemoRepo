@@ -11,89 +11,69 @@
  "extras": [],
  "kicks": [],
  "style": {
-  "preset": "sunset",
+  "preset": "golden",
   "shadowBox": [
    6,
    3,
    36,
-   18
-  ],
-  "override": {
-   "sky": {
-    "zenith": "#3d4a8c",
-    "mid": "#c46a8a",
-    "horizon": "#ffb070",
-    "sun": "#fff0c0",
-    "sunDir": [
-     -0.42,
-     0.45,
-     -0.79
-    ],
-    "clouds": "#ffcf9e",
-    "cloudShade": "#8a5a8a"
-   },
-   "fill": {
-    "sky": "#7b74c2",
-    "ground": "#7a4e3c",
-    "intensity": 0.75
-   }
-  }
+   16
+  ]
  },
  "shots": [
   {
    "name": "deck POC",
    "a": 0,
    "b": 5.0,
-   "spline": true,
+   "spline": "out",
    "attach": "hero",
    "keys": [
     {
      "t": 0,
      "pos": [
-      -10.0,
-      3.75,
-      0.25
+      -6.0,
+      3.42,
+      -1.75
      ],
      "look": [
-      6,
-      4.3,
-      -0.2
+      4.2,
+      3.75,
+      -0.45
      ],
-     "fov": 48,
-     "focus": 2.2,
+     "fov": 40,
+     "focus": 9,
      "ap": 0.0003
     },
     {
-     "t": 2.5,
+     "t": 2.9,
      "pos": [
       0.6,
-      4.0,
-      1.75
+      5.9,
+      -2.9
      ],
      "look": [
-      5,
-      4.0,
-      -0.3
+      5.6,
+      2.7,
+      0.4
      ],
-     "fov": 42,
-     "focus": 4.5,
-     "ap": 0.0005
+     "fov": 44,
+     "focus": 5.5,
+     "ap": 0.0004
     },
     {
      "t": 5,
      "pos": [
-      6.6,
-      4.0,
-      1.5
+      6.3,
+      3.95,
+      -1.75
      ],
      "look": [
       4.2,
-      3.85,
-      -0.22
+      3.55,
+      -0.25
      ],
-     "fov": 37,
-     "focus": 2.9,
-     "ap": 0.0009
+     "fov": 42,
+     "focus": 2.6,
+     "ap": 0.0008
     }
    ]
   }

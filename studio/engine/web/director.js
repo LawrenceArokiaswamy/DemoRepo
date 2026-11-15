@@ -54,10 +54,12 @@ function setup(t) {
 }
 // spline camera (EXPERIMENTAL): Catmull-Rom through all keys, one eased travel over the whole shot at constant speed
 const _spl = new Map();
-function camSpline(sh, t) { const K = sh.keys; if (!_spl.has(sh)) _spl.set(sh, { P: new THREE.CatmullRomCurve3(K.map((k) => new THREE.Vector3(...k.pos)), false, 'centripetal'), L: new THREE.CatmullRomCurve3(K.map((k) => new THREE.Vector3(...k.look)), false, 'centripetal') });
-  const c = _spl.get(sh), x = Math.max(0, Math.min(1, (t - K[0].t) / (K[K.length - 1].t - K[0].t))), e = sh.spline === 'linear' ? x : x * x * x * (x * (x * 6 - 15) + 10);
-  const f = e * (K.length - 1), i = Math.min(K.length - 2, Math.floor(f)), r = f - i, li = (a, b) => a + (b - a) * r;
-  return { pos: c.P.getPointAt(e).toArray(), look: c.L.getPoint(e).toArray(), fov: li(K[i].fov, K[i + 1].fov), focus: li(K[i].focus, K[i + 1].focus), ap: li(K[i].ap ?? 0.0012, K[i + 1].ap ?? 0.0012) }; }
+function camSpline(sh, t) { const K = sh.keys, n = K.length; if (!_spl.has(sh)) _spl.set(sh, { P: new THREE.CatmullRomCurve3(K.map((k) => new THREE.Vector3(...k.pos)), false, 'centripetal'), L: new THREE.CatmullRomCurve3(K.map((k) => new THREE.Vector3(...k.look)), false, 'centripetal') });
+  // passes through every key AT ITS TIME; the shot's clock is eased once ('out': moving from frame 1, settling at the end; default: smootherstep)
+  const c = _spl.get(sh), t0 = K[0].t, t1 = K[n - 1].t, x = Math.max(0, Math.min(1, (t - t0) / (t1 - t0)));
+  const e = sh.spline === 'linear' ? x : sh.spline === 'out' ? 1 - Math.pow(1 - x, 1.4) : x * x * x * (x * (x * 6 - 15) + 10), T = t0 + e * (t1 - t0);
+  let i = 0; while (i < n - 2 && T > K[i + 1].t) i++; const r = Math.max(0, Math.min(1, (T - K[i].t) / (K[i + 1].t - K[i].t))), u = (i + r) / (n - 1), li = (a, b) => a + (b - a) * r;
+  return { pos: c.P.getPoint(u).toArray(), look: c.L.getPoint(u).toArray(), fov: li(K[i].fov, K[i + 1].fov), focus: li(K[i].focus, K[i + 1].focus), ap: li(K[i].ap ?? 0.0012, K[i + 1].ap ?? 0.0012) }; }
 // ---- story business (optional)
 const CTX = { THREE, scene, camera, SET, ACT, story, FPS, DUR, setup, cardToWorld, handsMid, camRight, loadModel, worldT, grade, renderer, bloom, composer };
 let biz = {};

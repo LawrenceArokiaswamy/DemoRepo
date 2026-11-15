@@ -21,7 +21,7 @@ export const camera = new THREE.PerspectiveCamera(35, W / H, 0.02, 200);
 
 const gl = new GLTFLoader(), texL = new THREE.TextureLoader();
 export const loadModel = (id) => new Promise((res, rej) => gl.load(`./assets/models/${id}/${id}.gltf`, (g) => { g.scene.traverse((o) => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } }); res(g.scene); }, undefined, rej));
-export const pbr = (id, rep = [1, 1], o = {}) => { const t = (k, srgb) => { const x = texL.load(`./assets/textures/${id}/${k}.jpg`); x.wrapS = x.wrapT = THREE.RepeatWrapping; x.repeat.set(...rep); x.anisotropy = 8; if (srgb) x.colorSpace = THREE.SRGBColorSpace; return x; };
+export const pbr = (id, rep = [1, 1], o = {}) => { const t = (k, srgb) => { const x = texL.load(`./assets/textures/${id}/${k}.jpg`); x.userData.src = id; x.wrapS = x.wrapT = THREE.RepeatWrapping; x.repeat.set(...rep); x.anisotropy = 8; if (srgb) x.colorSpace = THREE.SRGBColorSpace; return x; };
   return new THREE.MeshStandardMaterial({ map: t('diff', true), normalMap: t('nor'), roughnessMap: t('rough'), aoMap: t('ao'), ...o }); };
 export async function loadHDRI(path, intensity = 1) {
   const hdr = await new RGBELoader().loadAsync(path); hdr.mapping = THREE.EquirectangularReflectionMapping;

@@ -1,0 +1,66 @@
+{
+ "title": "Deck at sunset (POC)",
+ "period": "roman",
+ "set": "syracuse",
+ "fps": 30,
+ "duration": 5.0,
+ "business": "../deck-poc/business.js",
+ "cardHeight": 1.62,
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "golden",
+  "shadowBox": [
+   6,
+   3,
+   36,
+   40
+  ]
+ },
+ "shots": [
+  {
+   "name": "deck POC",
+   "a": 0,
+   "b": 5.0,
+   "spline": false,
+   "attach": "hero",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -6,
+      14,
+      -14
+     ],
+     "look": [
+      4.5,
+      4,
+      0
+     ],
+     "fov": 60,
+     "focus": 20,
+     "ap": 0.0001
+    },
+    {
+     "t": 5,
+     "pos": [
+      -6,
+      14,
+      -14
+     ],
+     "look": [
+      4.5,
+      4,
+      0
+     ],
+     "fov": 60,
+     "focus": 20,
+     "ap": 0.0001
+    }
+   ]
+  }
+ ],
+ "debugClaw": true
+}

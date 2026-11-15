@@ -260,6 +260,31 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 - A sharper, higher-contrast claw-shaped shadow.
 - Better opening framing.
 
+### C.8b Polish pass (2026-11-15, ≈1 day, $0): what changed and what we learned
+
+**New reusable components (EXPERIMENTAL):**
+- **`golden` preset** (`painterly.js`): bright, clean daylight-golden look. Blue sky, cool fill (0.85), warm key (3.6), a **low grazing rim** (`rimHeight` 0.12), no orange grade (`ink.warm` 0, `sat` 1.12), crisp cel shadows (`sharpShadows` → `PCFShadowMap`).
+- **Painted procedural textures:**
+  - `stage.pbr()` now tags each map with its source id (`map.userData.src`).
+  - The style swaps photo maps for painted canvases with **inked seams**: stone blocks (`castle_wall`/`rock`), planks (`plank`/`wood`), plaster, sand.
+  - Repeat and offset are preserved. Opt out with `"paintTextures": false`.
+- **Actor quality:**
+  - Spline-resampled lathe bodies (no faceted bands), denser head, helmet and limb geometry.
+  - **Face decal 1.16× larger** (`opts.faceScale`).
+  - Sleeves start inside the body (no open tube ends).
+  - Sleeve colour = body colour (no "disc" at the shoulder); cheek guards off for 3D.
+- **Bold expressions:** for phone readability, scale `eye` ×1.2–1.32, `browY` ×1.5, `pupilS` 0.7, mouth `open` 1.0 / `w` 54 for shock.
+- **Spline camera fix:** the camera now passes through **every key at its time** (it used to spread keys by curve length, so mid keys were reached far too early). `spline: 'out'` moves from frame 1 and settles at the end.
+- **Painted shadow card (PROVEN technique for a story-critical silhouette):**
+  - A dark alpha-masked plane lying on the deck (claw: beam, chain links, hub, three hooks), sliding across the surface, combined with a ~20% key-light dip.
+  - Reliable and art-directable. **Use it whenever the audience must read a shadow's shape.**
+
+**Lessons:**
+1. **A high rim light washes out all ground shadows**: it lights every upward surface from a second direction. Keep rim lights low and grazing.
+2. **Shadow-mapping a thin, hanging, off-screen object is fragile** for a story beat: grazing camera angles squash it, and fill light weakens it. Prefer a painted shadow card for must-read silhouettes; keep real shadow maps for contact and ambient shadows.
+3. **Debug in two views:** an overhead "god" camera plus a visible-red stand-in (`story.debugClaw`) found in minutes what eye-level frames hid for hours.
+4. **The opening must show the story action:** boom up over the subject so the deck action reads, then settle low for emotion.
+
 ### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
 - Toon or outline post-pass to unify flat cards and 3D surfaces.
 - Shadows cast from card silhouettes.

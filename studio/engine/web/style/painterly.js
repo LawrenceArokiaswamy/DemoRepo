@@ -9,6 +9,9 @@ import * as THREE from 'three';
 import { Pass, FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 
 export const PRESETS = {
+  golden: { sky: { zenith: '#4f86d9', mid: '#9fc2ee', horizon: '#ffd9a0', sun: '#fff6dc', sunDir: [-0.42, 0.5, -0.76], clouds: '#ffffff', cloudShade: '#c6b7e2' },
+            key: { color: '#fff0d8', intensity: 3.6 }, fill: { sky: '#9db8ec', ground: '#8a6c58', intensity: 0.85 }, rim: { color: '#ffe6c0', intensity: 1.8 },
+            fog: { color: '#d8e4f2', near: 90, far: 420 }, exposure: 1.08, ink: { color: '#1e1a2c', strength: 0.95, warm: 0.0, sat: 1.12 }, water: { color: '#2f86b8', rough: 0.4, env: 0.3 }, sharpShadows: true },
   sunset: { sky: { zenith: '#3d4a8c', mid: '#c46a8a', horizon: '#ffb070', sun: '#fff0c0', sunDir: [-0.55, 0.18, -0.82], clouds: '#ffcf9e', cloudShade: '#8a5a8a' },
             key: { color: '#ffb36b', intensity: 3.4 }, fill: { sky: '#7b74c2', ground: '#7a4e3c', intensity: 0.95 }, rim: { color: '#ffd6a0', intensity: 1.6 },
             fog: { color: '#e9a07e', near: 70, far: 360 }, exposure: 1.0, ink: { color: '#2a1424', strength: 0.9 }, water: { color: '#2b5f86', rough: 0.42, env: 0.25 } },
@@ -36,10 +39,36 @@ export function paintMap(mat, bias = 2.6, sat = 1.12) {
      #endif`); };
   mat.customProgramCacheKey = () => `paint${bias}${sat}`; return mat;
 }
+// ---- painted textures (procedural, inked seams) replacing photographic maps, chosen by the map's source id
+const PAINT = new Map();
+const rnd = (i) => { const x = Math.sin(i * 127.1) * 43758.5453; return x - Math.floor(x); };
+function paintedStone(g, S) { g.fillStyle = '#d9c29a'; g.fillRect(0, 0, S, S); const rows = 8, h = S / rows;
+  for (let r = 0; r < rows; r++) { const off = (r % 2) * 0.5, n = 4; for (let c = -1; c <= n; c++) { const x0 = (c + off) * S / n, w = S / n, k = rnd(r * 13 + c * 7 + 3);
+    g.fillStyle = `hsl(${32 + k * 10}, ${30 + k * 14}%, ${66 + (k - 0.5) * 14}%)`; g.fillRect(x0 + 4, r * h + 4, w - 8, h - 8);
+    g.fillStyle = 'rgba(255,245,220,0.35)'; g.fillRect(x0 + 6, r * h + 6, w - 12, 6);   // lit top edge
+    g.fillStyle = 'rgba(90,60,40,0.18)'; g.fillRect(x0 + 6, r * h + h - 14, w - 12, 8); // shadow lip
+    if (k > 0.7) { g.strokeStyle = 'rgba(60,40,30,0.5)'; g.lineWidth = 3; g.beginPath(); g.moveTo(x0 + w * 0.3, r * h + h * 0.3); g.lineTo(x0 + w * 0.45, r * h + h * 0.55); g.stroke(); } } }
+  g.strokeStyle = '#4a3428'; g.lineWidth = 6; for (let r = 0; r <= rows; r++) { g.beginPath(); g.moveTo(0, r * h); g.lineTo(S, r * h); g.stroke(); }
+  for (let r = 0; r < rows; r++) { const off = (r % 2) * 0.5; for (let c = 0; c <= 4; c++) { const x = ((c + off) % 4) * S / 4; g.beginPath(); g.moveTo(x, r * h); g.lineTo(x, r * h + h); g.stroke(); } } }
+function paintedPlanks(g, S) { const n = 8, w = S / n;
+  for (let i = 0; i < n; i++) { const k = rnd(i * 5 + 1); g.fillStyle = `hsl(${24 + k * 8}, ${42 + k * 10}%, ${52 + (k - 0.5) * 12}%)`; g.fillRect(0, i * w, S, w);
+    g.strokeStyle = 'rgba(70,40,25,0.25)'; g.lineWidth = 3; for (let j = 0; j < 3; j++) { const y = i * w + w * (0.25 + j * 0.25) + (rnd(i * 9 + j) - 0.5) * 6; g.beginPath(); g.moveTo(0, y); g.bezierCurveTo(S * 0.3, y + 5, S * 0.6, y - 5, S, y); g.stroke(); }
+    g.fillStyle = 'rgba(255,235,200,0.22)'; g.fillRect(0, i * w + 3, S, 5); const cut = rnd(i * 3 + 2) * S; g.fillStyle = '#3a2418'; g.fillRect(cut, i * w, 5, w);
+    for (const x of [cut - 18, cut + 18]) { g.beginPath(); g.arc(x, i * w + w * 0.3, 3.5, 0, 7); g.arc(x, i * w + w * 0.7, 3.5, 0, 7); g.fill(); } }
+  g.strokeStyle = '#3a2418'; g.lineWidth = 5; for (let i = 0; i <= n; i++) { g.beginPath(); g.moveTo(0, i * w); g.lineTo(S, i * w); g.stroke(); } }
+function paintedFlat(g, S, base) { g.fillStyle = base; g.fillRect(0, 0, S, S); for (let i = 0; i < 220; i++) { g.fillStyle = `rgba(255,255,255,${rnd(i) * 0.08})`; g.beginPath(); g.arc(rnd(i * 3) * S, rnd(i * 7) * S, 6 + rnd(i * 11) * 26, 0, 7); g.fill(); } }
+export function paintedTexture(src, orig) {
+  const kind = /castle_wall|rock_face|stone/.test(src) ? 'stone' : /plank|wood/.test(src) ? 'planks' : /plaster/.test(src) ? 'plaster' : /sand|gravel/.test(src) ? 'sand' : null; if (!kind) return null;
+  if (!PAINT.has(kind)) { const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+    if (kind === 'stone') paintedStone(g, 512); else if (kind === 'planks') paintedPlanks(g, 512); else paintedFlat(g, 512, kind === 'plaster' ? '#f1e7d4' : '#d9c39a');
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; PAINT.set(kind, t); }
+  const t = PAINT.get(kind).clone(); t.repeat.copy(orig.repeat); t.offset.copy(orig.offset); t.rotation = orig.rotation; t.needsUpdate = true; return t;
+}
 export function toToon(m, o = {}) {
   const t = new THREE.MeshToonMaterial({ color: m.color, map: m.map, gradientMap: toonGradient(), transparent: m.transparent, opacity: m.opacity, alphaTest: m.alphaTest,
     side: m.side, vertexColors: m.vertexColors, emissive: m.emissive, emissiveMap: m.emissiveMap, emissiveIntensity: m.emissiveIntensity, fog: m.fog, depthWrite: m.depthWrite });
-  if (m.map) paintMap(t, o.mapBias, o.mapSat); t.name = (m.name || '') + '|toon'; return t;
+  const painted = m.map && m.map.userData && m.map.userData.src && o.paintTextures !== false ? paintedTexture(m.map.userData.src, m.map) : null;
+  if (painted) t.map = painted; else if (m.map) paintMap(t, o.mapBias, o.mapSat); t.name = (m.name || '') + '|toon'; return t;
 }
 const isCard = (m) => m.map && m.map.isCanvasTexture && m.emissiveMap === m.map;   // 2D character cards keep their own look
 const isCustom = (m) => Object.prototype.hasOwnProperty.call(m, 'onBeforeCompile');   // custom-shader materials (e.g. the ocean's Gerstner waves) keep theirs
@@ -106,11 +135,11 @@ export function applyStyle(C, cfg = {}) {
     if (cfg.shadowBox) { const [cx, cy, cz, r] = cfg.shadowBox; key.target.position.set(cx, cy, cz); key.position.set(cx, cy, cz).addScaledVector(sd, 140); Object.assign(key.shadow.camera, { left: -r, right: r, top: r, bottom: -r, near: 60, far: 240 }); key.shadow.camera.updateProjectionMatrix(); }
     key.target.updateMatrixWorld(); }
   for (const l of lights) if (l.isHemisphereLight) { l.color.set(P.fill.sky); l.groundColor.set(P.fill.ground); l.intensity = P.fill.intensity; }
-  const rim = new THREE.DirectionalLight(P.rim.color, P.rim.intensity); const rd = new THREE.Vector3(...P.sky.sunDir).multiplyScalar(-1); rd.y = Math.abs(rd.y) + 0.35;
+  const rim = new THREE.DirectionalLight(P.rim.color, P.rim.intensity); const rd = new THREE.Vector3(...P.sky.sunDir).multiplyScalar(-1); rd.y = P.rimHeight ?? 0.12;   // low, grazing rim: edges glow, but upward surfaces (decks) keep their shadows
   rim.position.copy(rd.normalize().multiplyScalar(100)); scene.add(rim);
   scene.environmentIntensity = (scene.environmentIntensity ?? 1) * 0.35; scene.background = null; const sky = paintedSky(scene, camera, P.sky);
   if (scene.fog) { scene.fog.color.set(P.fog.color); scene.fog.near = P.fog.near; scene.fog.far = P.fog.far; }
-  renderer.toneMappingExposure = P.exposure;
+  renderer.toneMappingExposure = P.exposure; if (P.sharpShadows) { renderer.shadowMap.type = THREE.PCFShadowMap; renderer.shadowMap.needsUpdate = true; }
   // ink pass right after the scene render (needs the scene depth): depth textures on both composer targets
   for (const rt of [composer.renderTarget1, composer.renderTarget2]) { rt.depthTexture = new THREE.DepthTexture(rt.width, rt.height); rt.depthTexture.type = THREE.UnsignedIntType; }
   const ink = new InkPass(composer.renderTarget1.width, composer.renderTarget1.height, { ...P.ink, ...(cfg.ink || {}) }); ink.u.near.value = camera.near; ink.u.far.value = camera.far;
