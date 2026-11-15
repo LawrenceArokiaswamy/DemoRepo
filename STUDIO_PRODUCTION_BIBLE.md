@@ -202,6 +202,7 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 - **Known failure: a job can silently lose its WebGL context and write black frames** (Claw v1: 229 frames).
   - Always check: `find <frames> -size -20k`.
   - Re-render missing frames into a fresh directory, then copy them over. Never `rm` with variable paths.
+- **Root cause found (Claw v2 final):** a single headless browser starts writing black frames after about 300–340 heavy frames (seen three times; healthy jobs stopped just short of it). **PROVEN fix:** render in batches of ≤ 40–100 frames per `node render.mjs` call (a fresh browser each time), looping over the range. Also run a watcher that stops on the first undersized frames.
 
 ### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
 - Toon or outline post-pass to unify flat cards and 3D surfaces.
