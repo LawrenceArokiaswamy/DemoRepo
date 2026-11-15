@@ -2,7 +2,7 @@
 
 **Goal:** one original, appealing, professionally designed stylised 3D character, reusable across episodes and periods, before Episode 2 production.
 
-- **Status:** PROPOSAL, awaiting owner approval.
+- **Status (updated 2026-11-15):** Option D (hybrid) approved and built. The C+ direction was approved and turned into a rigged 3D character, with an acting test delivered for owner review. See Bible C.8d and `renders/character_test_cplus_*`. Episode 2 animation waits for that review.
 - **Written:** 2026-11-15.
 - **Budget:** $0 cash, 0 Higgsfield credits.
 - **Benchmark:** the owner's reference Shorts (see `REFERENCE_3D_CINEMATIC_ANALYSIS.md`), used as a *quality* bar, never as a design to copy.

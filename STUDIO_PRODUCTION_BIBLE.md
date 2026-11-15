@@ -292,12 +292,75 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 - low grazing rim light, the painted shadow-card technique;
 - spline camera with key times, the overhead debug view.
 
-**Not approved as final: character design.** The POC actor (`actor3d.js`) is a technical prototype, not the studio's character design. Character quality is being solved first; see [`CHARACTER_DEVELOPMENT_PROPOSAL.md`](CHARACTER_DEVELOPMENT_PROPOSAL.md).
+**Not approved as final: character design.** (Superseded by C.8d: the C+ rigged character, awaiting owner review.) The POC actor (`actor3d.js`) is a technical prototype, not the studio's character design. Character quality is being solved first; see [`CHARACTER_DEVELOPMENT_PROPOSAL.md`](CHARACTER_DEVELOPMENT_PROPOSAL.md).
 
 **Verified 2026-11-15:**
 - Blender's Python module (`bpy` 5.3.0, via PyPI) runs headless on CPU here.
 - It can build subdivided meshes, armatures with automatic weights and shape keys, and export them as GLB (skin and morph targets confirmed).
 - Free character-asset hosts (Quaternius, Kenney) and blender.org are blocked by the current network policy.
+
+### C.8d Rigged 3D character pipeline: Blender build + our renderer (VERIFIED 2026-11-15, character test; awaiting owner review)
+
+The approved **C+ "Cinematic Expressive"** direction is now a real, reusable, rigged 3D character. Blender is used only to **build and rig**; rendering stays in our three.js engine. Cost: $0 cash, 0 credits.
+
+**Files (all reusable):**
+| File | What it is |
+|---|---|
+| `studio/engine/blender/build_cplus_sailor.py` | Builds the Roman sailor from the C+ proportions in headless `bpy`, rigs it and exports `cplus_sailor.glb` (≈0.55 MB). Re-run after any design change (≈2 s). |
+| `studio/engine/web/characters/cplus_sailor.glb` | The model: 20-bone skeleton (hips, spine, chest, neck, head, crest; upperarm/forearm/hand L/R; thigh/shin/foot L/R; cape1, cape2), skinned arms, legs, torso and cape; rigid helmet, costume and hands bone-parented; separate relaxed + pointing right hand; `FaceShell` with a planar front UV. |
+| `studio/engine/web/cplus_face.js` | The C+ face as live drawing: heavy-lid eyes, pupils with catch-lights, thick tapered brows, cheeks, 8 mouths (smile, flat, frown, grin, O, grimace, shout, smirk). 10 numeric expressions (`neutral relaxed curious happy surprised scared concern angry suspicious squint`) that blend (`blendExp`), plus live `blink` and `gaze`. |
+| `studio/engine/web/character_cplus.js` | Runtime: `loadCPlus(THREE)`, `ch.pose({bones, offset, squash, face, blink, gaze, hand})`, `ch.update(camera, outlinePx)`. Acting helpers: `channel()` (eased pose-to-pose keys), `springBank()` (deterministic springs + secondary follow-through), `blinkAt()`. |
+| `studio/stories/char-test/` | The acting test (`story.json` shots, `business.js` staging, `performance.js` the acting). Template for future performances. |
+| `studio/stories/char-turn/` | Turnaround / pose check (frames 0–4 = 0°, 45°, 90°, 180°, −45°). |
+
+**Workflow (VERIFIED):**
+1. Edit and run the build: `<bpyenv>/bin/python studio/engine/blender/build_cplus_sailor.py -- studio/engine/web/characters/cplus_sailor.glb`. `bpy` lives in a scratchpad venv (`pip install bpy`, ≈1.1 GB; reinstall in a new session).
+2. Check the turnaround: `SCALE=0.5 node render.mjs char-turn <dir> 0-4`. Read the frames before anything else.
+3. Animate in a story `performance.js`: per-channel keys `[t, [x,y,z], dur, ease]` → spring bank → `ch.pose()`. Render low-res keyframes (`SCALE=0.33`, chosen frames) before full renders.
+4. Full render in batches of ≤66 frames into a **fresh** directory, then encode (E.2).
+
+**Pose conventions:** bone rotations are deltas in the character's own axes, applied in the rest frame and inherited down the chain.
+- x is pitch: + leans forward or nods down; on an arm, − raises it forward and up.
+- y is yaw: + turns to the character's left.
+- z is roll: + tilts the head toward his right shoulder; + raises the LEFT arm sideways, − the RIGHT.
+- The character faces +Z with +X on his left. `frameOf('char')` in the test gives character-local camera keys, so shots ride the ship's roll.
+
+**Acting technique (VERIFIED in the test):**
+- Eased pose-to-pose targets fed through springs with different stiffness per body part give natural lag, overshoot and settle: head ≈3.4 Hz, chest ≈2.3, hips ≈1.8, arms ≈2.6 with damping 0.5 for overshoot.
+- Staggering the keys (eyes → head → chest → hips) creates the "head first, then shoulders, then body" turn.
+- Secondary springs (crest drags behind the head, cape behind the chest) give follow-through for free.
+- The springs are integrated from t = 0 with a fixed step, so every frame is identical in any batch or order.
+- Anticipation = a small opposite move before the main one (dip before the head turn; crouch + squint + squash before the surprise take; arm pull-back before the point).
+- Blinks on head turns and after big beats; saccade gaze changes (≈0.06 s) lead head turns.
+
+**Look integration:**
+- The painterly style converts the GLB's flat materials to toon automatically. Base colours are toned ×0.7 at load (`tone` option) because the key light is calibrated for textured sets; untoned steel rendered pure white.
+- Bold outlines: inverted hulls (skinned hulls bound to the same skeleton) at a **screen-constant width** (`outlinePx`, ≈4.6–6 px at 1080×1920), plus the existing ink pass.
+- The face texture is a transparent, toon-lit canvas over the skin, so head shading and shadows fall across the face.
+- Real cast shadows on the deck come from the key light.
+
+**Design decisions taken in 3D (refinements, not a redesign):**
+- Helmet raised 0.115 m above the head centre and eyes/brows lowered on the face. In 3D the brim hid the brows; brow height is clamped to stay under the brim, so surprise reads mainly through the eyes and mouth.
+- The 3D nose replaces the drawn nose.
+- **Hands:** rounded chunky 4-finger mittens with thumb (fixes the blocky concept hands). There is a separate pointing hand with the thumb up and out so the point reads unambiguously.
+- **Side profile:** real head volume with a cheek bulge, a forward chin and a 3D nose. The face is front-projected and reads to about 60–70° of head turn.
+- The hair tuft was dropped: at the temple it read as a bruise or black eye.
+- The crest is a rounded brush, so it reads from the front too.
+- Pteruges are long leather strips.
+- A cape strap with brooch shows the one-shoulder cape from the front.
+
+**Limitations (honest):**
+- **Face projection:** a planar front projection, so features stretch near full profile. No dedicated profile face yet.
+- **Feet:** no IK foot planting. Body turns rotate the legs from the hips; a small step lift hides it at 0.3 rad, but large turns or walks need foot IK (not built).
+- **Expressions and mouths:** brow raise is limited by the helmet brim. Mouth shapes switch at the blend midpoint, with a size dip that hides the pop. No lip-sync visemes for this face yet.
+- **Rigid joints:** shoulder plates, cheek guards, skirt and pteruges are rigid (no cloth). Elbows and knees are 2-bone blends, so extreme bends pinch a little.
+- **One-off design:** one costume, built by script. A second character means a new build script or parameters (the inventor variation is not built yet).
+- **Render speed:** ≈3 s/frame at 1080×1920 on CPU.
+
+**Lessons:**
+1. Check the turnaround after every model change before any animation; it caught the hidden brows, the bruise-like tuft and the blown-out colours in minutes.
+2. A 2D concept detail doesn't always survive 3D; judge it in the 3D render.
+3. Never reuse a scratch render directory. A stale folder mixed in old frames, so always render into a fresh directory.
 
 ### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
 - Toon or outline post-pass to unify flat cards and 3D surfaces.

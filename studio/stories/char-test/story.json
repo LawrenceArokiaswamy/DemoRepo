@@ -1,0 +1,189 @@
+{
+ "title": "C+ character acting test",
+ "period": "roman",
+ "set": "syracuse",
+ "fps": 30,
+ "duration": 6.6,
+ "business": "business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "golden",
+  "shadowBox": [
+   6,
+   3,
+   36,
+   16
+  ]
+ },
+ "outlineByShot": [
+  4.6,
+  5.0,
+  4.6,
+  5.5
+ ],
+ "shots": [
+  {
+   "name": "S1 full body: relaxed, blink, glance",
+   "a": 0,
+   "b": 1.7,
+   "attach": "char",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      1.0,
+      1.05,
+      3.6
+     ],
+     "look": [
+      0.05,
+      0.92,
+      0
+     ],
+     "fov": 38,
+     "focus": 3.7,
+     "ap": 0.0002
+    },
+    {
+     "t": 1.7,
+     "pos": [
+      0.85,
+      1.1,
+      3.25
+     ],
+     "look": [
+      0.0,
+      0.94,
+      0
+     ],
+     "fov": 38,
+     "focus": 3.4,
+     "ap": 0.0002
+    }
+   ]
+  },
+  {
+   "name": "S2 medium: head > shoulders > body turn, surprise",
+   "a": 1.7,
+   "b": 3.4,
+   "attach": "char",
+   "keys": [
+    {
+     "t": 1.7,
+     "pos": [
+      -1.1,
+      1.3,
+      2.3
+     ],
+     "look": [
+      -0.1,
+      1.2,
+      0
+     ],
+     "fov": 38,
+     "focus": 2.5,
+     "ap": 0.0003
+    },
+    {
+     "t": 3.4,
+     "pos": [
+      -1.0,
+      1.28,
+      2.15
+     ],
+     "look": [
+      -0.12,
+      1.2,
+      0
+     ],
+     "fov": 38,
+     "focus": 2.4,
+     "ap": 0.0003
+    }
+   ]
+  },
+  {
+   "name": "S3 three-quarter low angle: wind-up + point",
+   "a": 3.4,
+   "b": 4.9,
+   "attach": "char",
+   "keys": [
+    {
+     "t": 3.4,
+     "pos": [
+      0.4,
+      0.75,
+      2.75
+     ],
+     "look": [
+      -0.28,
+      1.12,
+      0
+     ],
+     "fov": 42,
+     "focus": 2.8,
+     "ap": 0.0002
+    },
+    {
+     "t": 4.9,
+     "pos": [
+      0.55,
+      0.8,
+      2.5
+     ],
+     "look": [
+      -0.3,
+      1.14,
+      0
+     ],
+     "fov": 42,
+     "focus": 2.6,
+     "ap": 0.0002
+    }
+   ]
+  },
+  {
+   "name": "S4 facial close-up: looks to camera, concern, settle",
+   "a": 4.9,
+   "b": 6.6,
+   "attach": "char",
+   "keys": [
+    {
+     "t": 4.9,
+     "pos": [
+      -0.06,
+      1.42,
+      1.6
+     ],
+     "look": [
+      -0.04,
+      1.42,
+      0
+     ],
+     "fov": 30,
+     "focus": 1.6,
+     "ap": 0.0005
+    },
+    {
+     "t": 6.6,
+     "pos": [
+      -0.12,
+      1.38,
+      2.0
+     ],
+     "look": [
+      -0.07,
+      1.36,
+      0
+     ],
+     "fov": 31,
+     "focus": 2.0,
+     "ap": 0.0004
+    }
+   ]
+  }
+ ]
+}

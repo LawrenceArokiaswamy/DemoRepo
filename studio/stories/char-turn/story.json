@@ -1,0 +1,50 @@
+{
+ "title": "C+ turnaround",
+ "period": "roman",
+ "set": "syracuse",
+ "fps": 30,
+ "duration": 0.2,
+ "business": "business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "turnaround": true,
+ "style": {
+  "preset": "golden",
+  "shadowBox": [
+   6,
+   3,
+   36,
+   16
+  ]
+ },
+ "shots": [
+  {
+   "name": "turn",
+   "a": 0,
+   "b": 1,
+   "attach": "char",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      0,
+      1.15,
+      4.6
+     ],
+     "look": [
+      0,
+      0.92,
+      0
+     ],
+     "fov": 30,
+     "focus": 4.6,
+     "ap": 0.0001
+    }
+   ]
+  }
+ ],
+ "hand": "relaxed",
+ "face": "neutral"
+}
