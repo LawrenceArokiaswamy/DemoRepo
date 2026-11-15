@@ -1,0 +1,2558 @@
+{
+ "title": "Style test (painterly) on Syracuse v2",
+ "period": "roman",
+ "set": "syracuse",
+ "fps": 30,
+ "duration": 46.38,
+ "business": "../claw-of-syracuse/business.js",
+ "cardHeight": 1.62,
+ "cardEmissive": 0.16,
+ "timeMap": [
+  [
+   0.0,
+   27.6
+  ],
+  [
+   2.66,
+   29.2
+  ],
+  [
+   2.661,
+   29.2
+  ],
+  [
+   4.19,
+   30.3
+  ],
+  [
+   4.191,
+   30.3
+  ],
+  [
+   4.59,
+   4.4
+  ],
+  [
+   4.591,
+   4.4
+  ],
+  [
+   8.368,
+   7.4
+  ],
+  [
+   8.369,
+   7.4
+  ],
+  [
+   12.656,
+   10.1
+  ],
+  [
+   12.657,
+   10.1
+  ],
+  [
+   14.177,
+   11.8
+  ],
+  [
+   14.178,
+   12.6
+  ],
+  [
+   16.71,
+   14.9
+  ],
+  [
+   16.711,
+   14.9
+  ],
+  [
+   19.043,
+   16.4
+  ],
+  [
+   19.044,
+   16.4
+  ],
+  [
+   22.766,
+   19.2
+  ],
+  [
+   22.767,
+   19.2
+  ],
+  [
+   25.414,
+   21.25
+  ],
+  [
+   25.415,
+   21.25
+  ],
+  [
+   26.24,
+   22.1
+  ],
+  [
+   26.241,
+   22.1
+  ],
+  [
+   27.755,
+   23.1
+  ],
+  [
+   27.756,
+   23.3
+  ],
+  [
+   30.787,
+   27.6
+  ],
+  [
+   30.788,
+   28.0
+  ],
+  [
+   31.587,
+   28.9
+  ],
+  [
+   31.588,
+   31.3
+  ],
+  [
+   32.637,
+   32.35
+  ],
+  [
+   32.638,
+   32.35
+  ],
+  [
+   34.188,
+   32.75
+  ],
+  [
+   34.189,
+   32.75
+  ],
+  [
+   34.588,
+   32.95
+  ],
+  [
+   35.788,
+   33.75
+  ],
+  [
+   36.388,
+   34.6
+  ],
+  [
+   36.389,
+   54.7
+  ],
+  [
+   37.988,
+   56.0
+  ],
+  [
+   37.989,
+   56.0
+  ],
+  [
+   40.894,
+   57.6
+  ],
+  [
+   40.895,
+   59.6
+  ],
+  [
+   43.078,
+   61.7
+  ],
+  [
+   43.079,
+   61.7
+  ],
+  [
+   46.378,
+   64.8
+  ]
+ ],
+ "ambience": [
+  "sea",
+  "wind"
+ ],
+ "cast": {
+  "archimedes": {
+   "spec": {
+    "name": "Archimedes (c. 74)",
+    "period": "roman",
+    "age": "elder",
+    "build": "slim",
+    "height": 1.06,
+    "shoulders": 0.84,
+    "skin": "#e0b08a",
+    "cheek": "#e08a78",
+    "head": {
+     "shape": "long",
+     "width": 0.92,
+     "jaw": 0.4
+    },
+    "eyes": {
+     "size": 1.14,
+     "spacing": 1.0
+    },
+    "nose": "hook",
+    "ears": 1.1,
+    "wrinkles": 1,
+    "hair": {
+     "style": "wild",
+     "color": "#f2efe8"
+    },
+    "brows": {
+     "thick": 1.3,
+     "bushy": true
+    },
+    "facialHair": {
+     "type": "bigbeard",
+     "color": "#f2efe8"
+    },
+    "outfit": {
+     "top": "toga",
+     "color": "#3f5f8a",
+     "color2": "#d9b25a",
+     "legs": "skin",
+     "sandals": true,
+     "boots": "#6b4426"
+    },
+    "personality": {
+     "energy": 0.9,
+     "tempo": 1.0,
+     "posture": "upright",
+     "exaggeration": 1.0,
+     "walk": "shuffle"
+    }
+   },
+   "x": -3.6,
+   "z": -1.7,
+   "seed": 5
+  },
+  "marcellus": {
+   "spec": {
+    "name": "Marcus Claudius Marcellus",
+    "period": "roman",
+    "age": "adult",
+    "build": "stout",
+    "height": 1.06,
+    "shoulders": 1.15,
+    "belly": 0.4,
+    "skin": "#d39a70",
+    "head": {
+     "shape": "square",
+     "width": 1.06,
+     "jaw": 0.95
+    },
+    "eyes": {
+     "size": 0.92,
+     "spacing": 0.95
+    },
+    "nose": "big",
+    "wrinkles": 0.35,
+    "hair": {
+     "style": "caesar",
+     "color": "#4a3a30"
+    },
+    "brows": {
+     "thick": 1.5
+    },
+    "facialHair": {
+     "type": "stubble"
+    },
+    "outfit": {
+     "top": "armor",
+     "color": "#c9cfd4",
+     "color2": "#a8322c",
+     "legs": "skin",
+     "sandals": true,
+     "boots": "#5a3622",
+     "belt": true,
+     "cape": "#a8322c"
+    },
+    "headwear": {
+     "type": "helmet",
+     "color": "#c9a24a",
+     "crest": "#a8322c",
+     "cheek": true
+    },
+    "personality": {
+     "energy": 0.6,
+     "tempo": 0.9,
+     "posture": "proud",
+     "exaggeration": 0.85,
+     "walk": "swagger"
+    }
+   },
+   "x": 0,
+   "z": 0,
+   "seed": 8
+  },
+  "titus": {
+   "spec": {
+    "name": "Titus (marine, 18)",
+    "period": "roman",
+    "age": "teen",
+    "build": "slim",
+    "height": 1.0,
+    "skin": "#e8b48a",
+    "freckles": 1,
+    "head": {
+     "shape": "round",
+     "width": 1.0
+    },
+    "eyes": {
+     "size": 1.18
+    },
+    "nose": "button",
+    "ears": 1.25,
+    "hair": {
+     "style": "caesar",
+     "color": "#8a3a1c"
+    },
+    "outfit": {
+     "top": "armor",
+     "color": "#b8bec4",
+     "color2": "#a8322c",
+     "legs": "skin",
+     "sandals": true,
+     "boots": "#6b4426",
+     "belt": true
+    },
+    "headwear": {
+     "type": "helmet",
+     "color": "#b8a070",
+     "cheek": true
+    },
+    "personality": {
+     "energy": 1,
+     "tempo": 1.2,
+     "exaggeration": 1,
+     "walk": "bouncy"
+    }
+   },
+   "x": 0,
+   "z": 0,
+   "seed": 11
+  }
+ },
+ "extras": [
+  {
+   "id": "crew1",
+   "seed": 31,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.71,
+     "act": "shock"
+    },
+    {
+     "t": 56.26,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "crew2",
+   "seed": 32,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.219999999999999,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.52,
+     "act": "laugh"
+    },
+    {
+     "t": 14.719999999999999,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.720000000000002,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.220000000000002,
+     "act": "shock"
+    },
+    {
+     "t": 23.12,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.720000000000002,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.82,
+     "act": "shock"
+    },
+    {
+     "t": 34.12,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.77,
+     "act": "shock"
+    },
+    {
+     "t": 56.32,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "crew3",
+   "seed": 36,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.71,
+     "act": "shock"
+    },
+    {
+     "t": 56.26,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "officer1",
+   "seed": 41,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.71,
+     "act": "shock"
+    },
+    {
+     "t": 56.26,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "officer2",
+   "seed": 44,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.34,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.64,
+     "act": "laugh"
+    },
+    {
+     "t": 14.84,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.84,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.34,
+     "act": "shock"
+    },
+    {
+     "t": 23.24,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.84,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.940000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.24,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.89,
+     "act": "shock"
+    },
+    {
+     "t": 56.44,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "worker0",
+   "seed": 51,
+   "role": "worker",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle"
+    },
+    {
+     "t": 7.4,
+     "act": "shock"
+    },
+    {
+     "t": 8.0,
+     "act": "fear"
+    },
+    {
+     "t": 21.2,
+     "act": "effort"
+    }
+   ]
+  },
+  {
+   "id": "worker1",
+   "seed": 53,
+   "role": "worker",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle"
+    },
+    {
+     "t": 7.4,
+     "act": "shock"
+    },
+    {
+     "t": 8.0,
+     "act": "fear"
+    },
+    {
+     "t": 21.2,
+     "act": "effort"
+    }
+   ]
+  },
+  {
+   "id": "worker2",
+   "seed": 57,
+   "role": "worker",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle"
+    },
+    {
+     "t": 7.4,
+     "act": "shock"
+    },
+    {
+     "t": 8.0,
+     "act": "fear"
+    },
+    {
+     "t": 21.2,
+     "act": "effort"
+    }
+   ]
+  },
+  {
+   "id": "crew4",
+   "seed": 62,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.219999999999999,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.52,
+     "act": "laugh"
+    },
+    {
+     "t": 14.719999999999999,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.720000000000002,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.220000000000002,
+     "act": "shock"
+    },
+    {
+     "t": 23.12,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.720000000000002,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.82,
+     "act": "shock"
+    },
+    {
+     "t": 34.12,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle"
+    },
+    {
+     "t": 55.7,
+     "act": "shock"
+    },
+    {
+     "t": 56.3,
+     "act": "fear",
+     "body": {
+      "armL": [
+       170,
+       10
+      ],
+      "armR": [
+       170,
+       10
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 57.1,
+     "act": "fear"
+    }
+   ]
+  },
+  {
+   "id": "crew5",
+   "seed": 66,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.71,
+     "act": "shock"
+    },
+    {
+     "t": 56.26,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  },
+  {
+   "id": "crew6",
+   "seed": 71,
+   "role": "soldier",
+   "x": 0,
+   "z": 0,
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 11.16,
+     "act": "shock",
+     "body": {
+      "yaw": 0.1
+     }
+    },
+    {
+     "t": 12.46,
+     "act": "laugh"
+    },
+    {
+     "t": 14.66,
+     "act": "notice",
+     "body": {
+      "headTilt": -14
+     },
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 16.66,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -1
+      ]
+     }
+    },
+    {
+     "t": 21.16,
+     "act": "shock"
+    },
+    {
+     "t": 23.06,
+     "act": "stumble",
+     "faceTravel": false
+    },
+    {
+     "t": 24.66,
+     "act": "fear",
+     "body": {
+      "armL": [
+       160,
+       20
+      ],
+      "armR": [
+       150,
+       30
+      ],
+      "handL": "spread",
+      "handR": "spread"
+     }
+    },
+    {
+     "t": 32.760000000000005,
+     "act": "shock"
+    },
+    {
+     "t": 34.06,
+     "act": "fear"
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "face": {
+      "preset": "sad"
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "body": {
+      "yaw": -0.2
+     }
+    },
+    {
+     "t": 55.71,
+     "act": "shock"
+    },
+    {
+     "t": 56.26,
+     "act": "fear"
+    },
+    {
+     "t": 59.5,
+     "act": "sad"
+    }
+   ]
+  }
+ ],
+ "performances": {
+  "titus": {
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle"
+    },
+    {
+     "t": 12.0,
+     "act": "laugh"
+    },
+    {
+     "t": 15.0,
+     "act": "idle",
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.6
+      }
+     }
+    },
+    {
+     "t": 20.9,
+     "act": "notice"
+    },
+    {
+     "t": 21.5,
+     "act": "confused"
+    },
+    {
+     "t": 22.0,
+     "act": "fear"
+    },
+    {
+     "t": 23,
+     "act": "stumble"
+    },
+    {
+     "t": 25.2,
+     "act": "fear"
+    },
+    {
+     "t": 28.2,
+     "act": "recoil"
+    },
+    {
+     "t": 32.7,
+     "act": "shock"
+    },
+    {
+     "t": 34,
+     "act": "fear"
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.3
+      }
+     }
+    },
+    {
+     "t": 55.75,
+     "act": "notice",
+     "face": {
+      "pupil": [
+       0,
+       -0.9
+      ],
+      "preset": "notice"
+     }
+    },
+    {
+     "t": 56.15,
+     "act": "shock",
+     "face": {
+      "pupil": [
+       0,
+       -0.9
+      ],
+      "preset": "shock"
+     }
+    },
+    {
+     "t": 56.8,
+     "act": "fear",
+     "face": {
+      "pupil": [
+       0,
+       -0.9
+      ],
+      "preset": "fear"
+     }
+    }
+   ]
+  },
+  "marcellus": {
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "body": {
+      "yaw": 0.3
+     }
+    },
+    {
+     "t": 9.4,
+     "act": "talk",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.7
+      }
+     },
+     "body": {
+      "yaw": 0.2,
+      "lean": 4
+     },
+     "gesture": "R"
+    },
+    {
+     "t": 11.2,
+     "act": "laugh",
+     "body": {
+      "yaw": 0.3
+     }
+    },
+    {
+     "t": 13.5,
+     "act": "idle",
+     "body": {
+      "yaw": 0.3
+     }
+    },
+    {
+     "t": 21.0,
+     "act": "notice"
+    },
+    {
+     "t": 24,
+     "act": "disbelief"
+    },
+    {
+     "t": 32.8,
+     "act": "shock"
+    },
+    {
+     "t": 34.6,
+     "act": "disbelief",
+     "face": {
+      "mouth": {
+       "open": 0.6
+      }
+     }
+    },
+    {
+     "t": 42.4,
+     "act": "laugh",
+     "body": {
+      "yaw": 0.25
+     }
+    },
+    {
+     "t": 43.4,
+     "act": "talk",
+     "face": {
+      "preset": "laugh"
+     },
+     "gesture": "R",
+     "body": {
+      "yaw": 0.2
+     }
+    },
+    {
+     "t": 46.5,
+     "act": "sad",
+     "body": {
+      "yaw": 0.3
+     }
+    },
+    {
+     "t": 59.5,
+     "act": "sad",
+     "body": {
+      "yaw": 0.2
+     }
+    }
+   ]
+  },
+  "archimedes": {
+   "beats": [
+    {
+     "t": 0,
+     "act": "idle",
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.25
+      },
+      "lidT": [
+       0.25,
+       0.25
+      ]
+     }
+    },
+    {
+     "t": 7.4,
+     "act": "curious"
+    },
+    {
+     "t": 9.6,
+     "act": "idle",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.55,
+       "asym": 0.8
+      },
+      "lidT": [
+       0.32,
+       0.22
+      ]
+     }
+    },
+    {
+     "t": 15.3,
+     "act": "point",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.55,
+       "asym": 0.8
+      },
+      "lidT": [
+       0.32,
+       0.22
+      ]
+     },
+     "body": {
+      "armR": [
+       128,
+       30
+      ],
+      "handR": "open",
+      "headTilt": 6
+     }
+    },
+    {
+     "t": 17.2,
+     "act": "idle",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.55,
+       "asym": 0.8
+      },
+      "lidT": [
+       0.32,
+       0.22
+      ]
+     }
+    },
+    {
+     "t": 27.0,
+     "act": "idle",
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.25
+      },
+      "lidT": [
+       0.25,
+       0.25
+      ]
+     }
+    },
+    {
+     "t": 32.4,
+     "act": "idle",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.55,
+       "asym": 0.8
+      },
+      "lidT": [
+       0.32,
+       0.22
+      ]
+     }
+    },
+    {
+     "t": 49.5,
+     "act": "idle",
+     "face": {
+      "preset": "neutral",
+      "mouth": {
+       "smile": 0.25
+      },
+      "lidT": [
+       0.25,
+       0.25
+      ]
+     }
+    },
+    {
+     "t": 62.6,
+     "act": "idle",
+     "face": {
+      "preset": "suspicious",
+      "mouth": {
+       "smile": 0.55,
+       "asym": 0.8
+      },
+      "lidT": [
+       0.32,
+       0.22
+      ]
+     }
+    }
+   ]
+  }
+ },
+ "shots": [
+  {
+   "name": "01 HOOK: warship lifted out of the sea by the claw",
+   "a": 0.0,
+   "b": 2.66,
+   "keys": [
+    {
+     "pos": [
+      38,
+      6.5,
+      58
+     ],
+     "look": [
+      0.5,
+      15.0,
+      20
+     ],
+     "fov": 52,
+     "focus": 53,
+     "ap": 0.0001,
+     "t": 0.0
+    },
+    {
+     "pos": [
+      36.5,
+      6.3,
+      56
+     ],
+     "look": [
+      0.5,
+      15.3,
+      20
+     ],
+     "fov": 50,
+     "focus": 51,
+     "ap": 0.0001,
+     "t": 2.66
+    }
+   ],
+   "a_world": 27.6,
+   "b_world": 29.2
+  },
+  {
+   "name": "02 ...by one old man (Archimedes, calm)",
+   "a": 2.66,
+   "b": 4.19,
+   "keys": [
+    {
+     "pos": [
+      -4.7,
+      14.85,
+      -5.6
+     ],
+     "look": [
+      -4.5,
+      14.6,
+      -1.6
+     ],
+     "fov": 30,
+     "focus": 4.0,
+     "ap": 0.0011,
+     "t": 2.66
+    },
+    {
+     "pos": [
+      -4.7,
+      14.85,
+      -5.3
+     ],
+     "look": [
+      -4.5,
+      14.6,
+      -1.6
+     ],
+     "fov": 27,
+     "focus": 3.7,
+     "ap": 0.0011,
+     "t": 4.19
+    }
+   ],
+   "a_world": 29.2,
+   "b_world": 30.3
+  },
+  {
+   "name": "03 rewind",
+   "a": 4.19,
+   "b": 4.59,
+   "keys": [
+    {
+     "pos": [
+      38,
+      6.5,
+      58
+     ],
+     "look": [
+      0.5,
+      15.0,
+      20
+     ],
+     "fov": 52,
+     "focus": 53,
+     "ap": 0.0001,
+     "t": 4.19
+    },
+    {
+     "pos": [
+      36.5,
+      6.3,
+      56
+     ],
+     "look": [
+      0.5,
+      15.3,
+      20
+     ],
+     "fov": 50,
+     "focus": 51,
+     "ap": 0.0001,
+     "t": 4.59
+    }
+   ],
+   "a_world": 30.3,
+   "b_world": 4.4
+  },
+  {
+   "name": "04 sixty warships row in (waterline)",
+   "a": 4.59,
+   "b": 8.368,
+   "keys": [
+    {
+     "pos": [
+      -9,
+      21,
+      -4
+     ],
+     "look": [
+      2,
+      1.5,
+      150
+     ],
+     "fov": 40,
+     "focus": 140,
+     "ap": 4e-05,
+     "t": 4.59
+    },
+    {
+     "pos": [
+      -9,
+      20.6,
+      -2.5
+     ],
+     "look": [
+      2,
+      1.5,
+      150
+     ],
+     "fov": 36,
+     "focus": 140,
+     "ap": 4e-05,
+     "t": 8.368
+    }
+   ],
+   "a_world": 4.4,
+   "b_world": 7.4
+  },
+  {
+   "name": "05 Archimedes draws in the sand; defenders scramble",
+   "a": 8.368,
+   "b": 12.656,
+   "keys": [
+    {
+     "pos": [
+      -8.2,
+      16.4,
+      -6.4
+     ],
+     "look": [
+      -4.9,
+      14.2,
+      -1.6
+     ],
+     "fov": 40,
+     "focus": 6,
+     "ap": 0.0006,
+     "t": 8.368
+    },
+    {
+     "pos": [
+      -7.8,
+      16.2,
+      -6.0
+     ],
+     "look": [
+      -4.9,
+      14.2,
+      -1.6
+     ],
+     "fov": 38,
+     "focus": 5.6,
+     "ap": 0.0006,
+     "t": 12.656
+    }
+   ],
+   "a_world": 7.4,
+   "b_world": 10.1
+  },
+  {
+   "name": "06 ...and he wasn't worried (tiny smile)",
+   "a": 12.656,
+   "b": 14.177,
+   "keys": [
+    {
+     "pos": [
+      -4.7,
+      14.85,
+      -5.6
+     ],
+     "look": [
+      -4.5,
+      14.6,
+      -1.6
+     ],
+     "fov": 30,
+     "focus": 4.0,
+     "ap": 0.0011,
+     "t": 12.656
+    },
+    {
+     "pos": [
+      -4.7,
+      14.85,
+      -5.3
+     ],
+     "look": [
+      -4.5,
+      14.6,
+      -1.6
+     ],
+     "fov": 27,
+     "focus": 3.7,
+     "ap": 0.0011,
+     "t": 14.177
+    }
+   ],
+   "a_world": 10.1,
+   "b_world": 11.8
+  },
+  {
+   "name": "07 the Romans row right up under the walls",
+   "a": 14.177,
+   "b": 16.71,
+   "keys": [
+    {
+     "pos": [
+      1.6,
+      4.0,
+      -1.3
+     ],
+     "look": [
+      12,
+      5.6,
+      0.6
+     ],
+     "fov": 54,
+     "focus": 2.6,
+     "ap": 0.0006,
+     "t": 14.177
+    },
+    {
+     "pos": [
+      2.0,
+      4.0,
+      -1.3
+     ],
+     "look": [
+      12,
+      6.1,
+      0.6
+     ],
+     "fov": 52,
+     "focus": 2.4,
+     "ap": 0.0006,
+     "t": 16.71
+    }
+   ],
+   "a_world": 12.6,
+   "b_world": 14.9,
+   "attach": "hero"
+  },
+  {
+   "name": "08 ...exactly where he wanted them (hand raised)",
+   "a": 16.71,
+   "b": 19.043,
+   "keys": [
+    {
+     "pos": [
+      -4.6,
+      14.5,
+      -5.4
+     ],
+     "look": [
+      -5.1,
+      14.7,
+      -1.6
+     ],
+     "fov": 46,
+     "focus": 3.9,
+     "ap": 0.0008,
+     "t": 16.71
+    },
+    {
+     "pos": [
+      -4.55,
+      14.5,
+      -5.1
+     ],
+     "look": [
+      -5.1,
+      14.75,
+      -1.6
+     ],
+     "fov": 42,
+     "focus": 3.6,
+     "ap": 0.0008,
+     "t": 19.043
+    }
+   ],
+   "a_world": 14.9,
+   "b_world": 16.4
+  },
+  {
+   "name": "09 a giant wooden arm swings out (low, against the sky)",
+   "a": 19.043,
+   "b": 22.766,
+   "keys": [
+    {
+     "pos": [
+      28,
+      6.0,
+      38
+     ],
+     "look": [
+      0,
+      11.5,
+      8
+     ],
+     "fov": 54,
+     "focus": 38,
+     "ap": 0.0001,
+     "t": 19.043
+    },
+    {
+     "pos": [
+      27,
+      5.8,
+      37
+     ],
+     "look": [
+      0,
+      11,
+      9
+     ],
+     "fov": 52,
+     "focus": 38,
+     "ap": 0.0001,
+     "t": 22.766
+    }
+   ],
+   "a_world": 16.4,
+   "b_world": 19.2
+  },
+  {
+   "name": "10 an iron claw drops... and bites",
+   "a": 22.766,
+   "b": 25.414,
+   "keys": [
+    {
+     "pos": [
+      5.4,
+      4.25,
+      1.4
+     ],
+     "look": [
+      14,
+      6.2,
+      -0.3
+     ],
+     "fov": 50,
+     "focus": 8.5,
+     "ap": 0.0005,
+     "t": 22.766
+    },
+    {
+     "pos": [
+      5.8,
+      4.25,
+      1.4
+     ],
+     "look": [
+      14,
+      4.6,
+      -0.3
+     ],
+     "fov": 48,
+     "focus": 8.2,
+     "ap": 0.0005,
+     "t": 25.414
+    }
+   ],
+   "a_world": 19.2,
+   "b_world": 21.25,
+   "attach": "hero"
+  },
+  {
+   "name": "11 sailor looks up: grin fades",
+   "a": 25.414,
+   "b": 26.24,
+   "keys": [
+    {
+     "pos": [
+      11.3,
+      4.1,
+      1.7
+     ],
+     "look": [
+      9.0,
+      4.0,
+      0.5
+     ],
+     "fov": 30,
+     "focus": 2.6,
+     "ap": 0.0013,
+     "t": 25.414
+    },
+    {
+     "pos": [
+      11.2,
+      4.1,
+      1.65
+     ],
+     "look": [
+      9.0,
+      4.0,
+      0.5
+     ],
+     "fov": 28,
+     "focus": 2.5,
+     "ap": 0.0013,
+     "t": 26.24
+    }
+   ],
+   "a_world": 21.25,
+   "b_world": 22.1,
+   "attach": "hero"
+  },
+  {
+   "name": "12 the chain snaps taut: it begins to pull",
+   "a": 26.24,
+   "b": 27.755,
+   "keys": [
+    {
+     "pos": [
+      9.5,
+      5.2,
+      3.6
+     ],
+     "look": [
+      14.6,
+      9.0,
+      0
+     ],
+     "fov": 46,
+     "focus": 6,
+     "ap": 0.0005,
+     "t": 26.24
+    },
+    {
+     "pos": [
+      9.8,
+      5.0,
+      3.4
+     ],
+     "look": [
+      14.6,
+      9.5,
+      0
+     ],
+     "fov": 44,
+     "focus": 6,
+     "ap": 0.0005,
+     "t": 27.755
+    }
+   ],
+   "a_world": 22.1,
+   "b_world": 23.1,
+   "attach": "hero"
+  },
+  {
+   "name": "13 UP. OUT OF THE SEA (the hook image, now understood)",
+   "a": 27.755,
+   "b": 30.787,
+   "keys": [
+    {
+     "pos": [
+      16,
+      2.4,
+      64
+     ],
+     "look": [
+      1,
+      8.5,
+      12
+     ],
+     "fov": 52,
+     "focus": 52,
+     "ap": 0.00012,
+     "t": 27.755
+    },
+    {
+     "pos": [
+      38,
+      6.5,
+      58
+     ],
+     "look": [
+      0.5,
+      15.0,
+      20
+     ],
+     "fov": 52,
+     "focus": 53,
+     "ap": 0.0001,
+     "t": 30.787
+    }
+   ],
+   "a_world": 23.3,
+   "b_world": 27.6
+  },
+  {
+   "name": "14 silence: terrified sailor, deck tilted",
+   "a": 30.787,
+   "b": 31.587,
+   "keys": [
+    {
+     "pos": [
+      -2.7,
+      4.1,
+      3.1
+     ],
+     "look": [
+      -0.1,
+      3.75,
+      1.9
+     ],
+     "fov": 34,
+     "focus": 2.9,
+     "ap": 0.0012,
+     "t": 30.787
+    },
+    {
+     "pos": [
+      -2.6,
+      4.1,
+      3.0
+     ],
+     "look": [
+      -0.1,
+      3.75,
+      1.9
+     ],
+     "fov": 32,
+     "focus": 2.8,
+     "ap": 0.0012,
+     "t": 31.587
+    }
+   ],
+   "a_world": 28.0,
+   "b_world": 28.9,
+   "attach": "hero",
+   "attachUp": 0.7
+  },
+  {
+   "name": "15 and then... the claw released it",
+   "a": 31.587,
+   "b": 32.637,
+   "keys": [
+    {
+     "pos": [
+      20,
+      9,
+      38
+     ],
+     "look": [
+      1,
+      17,
+      12
+     ],
+     "fov": 42,
+     "focus": 30,
+     "ap": 0.0001,
+     "t": 31.587
+    },
+    {
+     "pos": [
+      19.5,
+      8.8,
+      37
+     ],
+     "look": [
+      1,
+      16,
+      12
+     ],
+     "fov": 42,
+     "focus": 30,
+     "ap": 0.0001,
+     "t": 32.637
+    }
+   ],
+   "a_world": 31.3,
+   "b_world": 32.35
+  },
+  {
+   "name": "15b CLOSE: the claw opens",
+   "a": 32.637,
+   "b": 34.188,
+   "keys": [
+    {
+     "pos": [
+      8.2,
+      24.6,
+      23.6
+     ],
+     "look": [
+      1.2,
+      26.4,
+      16.5
+     ],
+     "fov": 34,
+     "focus": 10,
+     "ap": 0.0003,
+     "t": 32.637
+    },
+    {
+     "pos": [
+      7.9,
+      24.6,
+      23.2
+     ],
+     "look": [
+      1.2,
+      26.2,
+      16.5
+     ],
+     "fov": 32,
+     "focus": 9.6,
+     "ap": 0.0003,
+     "t": 34.188
+    }
+   ],
+   "a_world": 32.35,
+   "b_world": 32.75
+  },
+  {
+   "name": "16 the fall (slow motion) and the crash",
+   "a": 34.188,
+   "b": 36.388,
+   "keys": [
+    {
+     "pos": [
+      31,
+      6.5,
+      46
+     ],
+     "look": [
+      0,
+      6,
+      16
+     ],
+     "fov": 46,
+     "focus": 40,
+     "ap": 0.0002,
+     "t": 34.188
+    },
+    {
+     "pos": [
+      30,
+      6.3,
+      45
+     ],
+     "look": [
+      0,
+      5.5,
+      16
+     ],
+     "fov": 44,
+     "focus": 40,
+     "ap": 0.0002,
+     "t": 36.388
+    }
+   ],
+   "a_world": 32.75,
+   "b_world": 34.6
+  },
+  {
+   "name": "17 days later: a pole and rope swing out over the wall (echo of the claw)",
+   "a": 36.388,
+   "b": 37.988,
+   "keys": [
+    {
+     "pos": [
+      7.2,
+      4.3,
+      0.5
+     ],
+     "look": [
+      24.2,
+      12.6,
+      3.4
+     ],
+     "fov": 32,
+     "focus": 18,
+     "ap": 0.00015,
+     "t": 36.388
+    },
+    {
+     "pos": [
+      7.3,
+      4.3,
+      0.5
+     ],
+     "look": [
+      24.2,
+      12.0,
+      3.4
+     ],
+     "fov": 28,
+     "focus": 18,
+     "ap": 0.00015,
+     "t": 37.988
+    }
+   ],
+   "a_world": 54.7,
+   "b_world": 56.0,
+   "attach": "flag"
+  },
+  {
+   "name": "18 the same sailor sees it: PANIC",
+   "a": 37.988,
+   "b": 40.894,
+   "keys": [
+    {
+     "pos": [
+      2.0,
+      4.0,
+      -0.2
+     ],
+     "look": [
+      24,
+      8.5,
+      3.0
+     ],
+     "fov": 40,
+     "focus": 5.0,
+     "ap": 0.0004,
+     "t": 37.988
+    },
+    {
+     "pos": [
+      2.6,
+      4.0,
+      -0.1
+     ],
+     "look": [
+      24,
+      8.6,
+      3.0
+     ],
+     "fov": 36,
+     "focus": 4.4,
+     "ap": 0.0004,
+     "t": 40.894
+    }
+   ],
+   "a_world": 56.0,
+   "b_world": 57.6,
+   "attach": "flag"
+  },
+  {
+   "name": "19 Rome had sixty warships (holding back at sea)",
+   "a": 40.894,
+   "b": 43.078,
+   "keys": [
+    {
+     "pos": [
+      -3.0,
+      24,
+      -6
+     ],
+     "look": [
+      3,
+      4,
+      95
+     ],
+     "fov": 40,
+     "focus": 90,
+     "ap": 4e-05,
+     "t": 40.894
+    },
+    {
+     "pos": [
+      -3.0,
+      23.6,
+      -5.0
+     ],
+     "look": [
+      3,
+      4,
+      95
+     ],
+     "fov": 36,
+     "focus": 90,
+     "ap": 4e-05,
+     "t": 43.078
+    }
+   ],
+   "a_world": 59.6,
+   "b_world": 61.7
+  },
+  {
+   "name": "20 Syracuse had Archimedes (alone on the wall)",
+   "a": 43.078,
+   "b": 46.378,
+   "keys": [
+    {
+     "pos": [
+      -6.6,
+      14.6,
+      -5.6
+     ],
+     "look": [
+      -2.2,
+      14.4,
+      8.0
+     ],
+     "fov": 50,
+     "focus": 4.4,
+     "ap": 0.0005,
+     "t": 43.078
+    },
+    {
+     "pos": [
+      -6.2,
+      14.6,
+      -5.0
+     ],
+     "look": [
+      -2.2,
+      14.4,
+      8.0
+     ],
+     "fov": 44,
+     "focus": 3.8,
+     "ap": 0.0005,
+     "t": 46.378
+    }
+   ],
+   "a_world": 61.7,
+   "b_world": 64.8
+  }
+ ],
+ "kicks": [],
+ "noStones": true,
+ "clearAfter": 49.5,
+ "exposure": [
+  [
+   40.894,
+   47.38,
+   0.52,
+   0.0,
+   0.08
+  ]
+ ],
+ "hazeScale": 0.2,
+ "extraFleet": 22,
+ "hideAfter": {
+  "w": 59.5,
+  "ids": [
+   "titus",
+   "marcellus",
+   "crew1",
+   "crew2",
+   "crew3",
+   "crew4",
+   "crew5",
+   "crew6",
+   "officer1",
+   "officer2"
+  ]
+ },
+ "ropeGag": {
+  "pivot": [
+   -3.6,
+   13.6,
+   0.4
+  ],
+  "len": 3.6,
+  "t0": 55.0,
+  "swing": 0.9,
+  "until": 58.5
+ },
+ "workerRun": {
+  "t0": 7.6,
+  "t1": 10.6,
+  "x0": -10.5,
+  "x1": 2.0,
+  "z": -0.9
+ },
+ "style": {
+  "preset": "sunset"
+ }
+}

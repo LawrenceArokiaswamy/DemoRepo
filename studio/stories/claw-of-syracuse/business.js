@@ -193,13 +193,14 @@ export function frame(w, C, t) {
   SY.sea.update(w);
   // dawn: pre-dawn blue -> sunrise during the lift -> golden morning; "days later" is daytime
   const day = w >= K.DAYS ? 1 : ss(ramp(w, 12, 31)), sunUp = w >= K.DAYS ? 1 : ss(ramp(w, 26, 33));
+  if (!C.story.style) {   // a painterly story style owns lighting, fog and exposure
   C.scene.environmentIntensity = lerp(0.16, 0.6, day); C.scene.backgroundIntensity = lerp(0.12, 0.72, day); SY.sun.intensity = lerp(0.0, 3.4, sunUp); SY.hemi.intensity = lerp(0.12, 0.25, day);
-  SY.fog.color.setRGB(lerp(0.11, 0.79, day), lerp(0.13, 0.72, day), lerp(0.2, 0.66, day)); C.renderer.toneMappingExposure = lerp(0.85, 0.88, day);
+  SY.fog.color.setRGB(lerp(0.11, 0.79, day), lerp(0.13, 0.72, day), lerp(0.2, 0.66, day)); C.renderer.toneMappingExposure = lerp(0.85, 0.88, day); }
   for (const T of SY.torches) { const fl = 1 + 0.15 * Math.sin(w * 23 + T.x) + 0.1 * Math.sin(w * 37 + T.x * 2); T.f.scale.set(0.9 * fl, 1.4 * fl, 1); T.f.material.opacity = lerp(1, 0.35, day); if (T.L) T.L.intensity = 30 * fl * lerp(1, 0.25, day); }
-  const HZ = (C.story.clearAfter != null && w >= C.story.clearAfter) ? (C.story.hazeScale ?? 0.3) : 1; SY.fog.near = 60 / HZ; SY.fog.far = 420 / HZ;   // story option: clearer air late in the film
+  const HZ = (C.story.clearAfter != null && w >= C.story.clearAfter) ? (C.story.hazeScale ?? 0.3) : 1; if (!C.story.style) { SY.fog.near = 60 / HZ; SY.fog.far = 420 / HZ; }   // story option: clearer air late in the film
   const EX = (C.story.exposure || []).find((e) => t >= e[0] && t < e[1]);   // story option: per-shot exposure / glare override [t0, t1, exposure, sunGlowScale]
   if (C.bloom) { if (C.bloom._base == null) C.bloom._base = C.bloom.strength; C.bloom.strength = EX && EX[4] != null ? EX[4] : C.bloom._base; }   // per-shot bloom (glare) override
-  if (EX) { C.renderer.toneMappingExposure = EX[2]; }
+  if (EX && !C.story.style) { C.renderer.toneMappingExposure = EX[2]; }
   SY.mist.forEach((m, i) => { m.material.opacity = lerp(0.35, 0.2, day) * HZ; m.material.color.setRGB(lerp(0.16, 0.92, day), lerp(0.2, 0.88, day), lerp(0.28, 0.84, day)); m.material.map.offset.x = w * 0.004 * (i + 1); });
   // stones
   if (S.rope) { const { R, piv, segs } = S.rope, on = w >= K.DAYS && w < (R.until ?? 1e9), k = ss(ramp(w, R.t0, R.t0 + R.swing)); piv.visible = on; piv.rotation.x = lerp(-1.35, -0.12, k) + Math.sin(w * 2.1) * 0.03 * k;   // pole tips out over the sea

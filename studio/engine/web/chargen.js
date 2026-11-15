@@ -3,6 +3,7 @@
 // drawCharacter(g, spec, pose) draws on a 600x1000 design canvas, feet at y = 980.
 import { FACE, blendFace } from './toon.js';
 export { FACE, blendFace };
+export { drawFace, headPath };   // reused by actor3d.js (face decals on 3D heads)
 export const INK = '#2a1b17';
 const D2R = Math.PI / 180, lerp = (a, b, k) => a + (b - a) * k;
 const hexRGB = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];

@@ -53,9 +53,10 @@ function setup(t) {
   }
 }
 // ---- story business (optional)
-const CTX = { THREE, scene, camera, SET, ACT, story, FPS, DUR, setup, cardToWorld, handsMid, camRight, loadModel, worldT, grade, renderer, bloom };
+const CTX = { THREE, scene, camera, SET, ACT, story, FPS, DUR, setup, cardToWorld, handsMid, camRight, loadModel, worldT, grade, renderer, bloom, composer };
 let biz = {};
 if (story.business) biz = await import(`${base}/${story.business}`); if (biz.init) await biz.init(CTX);
+if (story.style) { const { applyStyle } = await import('./style/painterly.js'); CTX.style = applyStyle(CTX, story.style); if (biz.styled) biz.styled(CTX); }   // EXPERIMENTAL painterly look
 window.renderFrame = (f) => { const t = f / FPS; if (biz.prepare) biz.prepare(CTX); setup(t); if (biz.frame) biz.frame(worldT(t), CTX, t); grade.uniforms.t.value = t; composer.render(); return true; };
 window.cues = () => { const out = { fps: FPS, duration: DUR, events: [] };
   // footsteps from every walking character's gait (contacts = half-cycles of the gait phase)
