@@ -285,6 +285,20 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 3. **Debug in two views:** an overhead "god" camera plus a visible-red stand-in (`story.debugClaw`) found in minutes what eye-level frames hid for hours.
 4. **The opening must show the story action:** boom up over the subject so the deck action reads, then settle low for emotion.
 
+### C.8c Retained for Episode 2 (owner decision 2026-11-15)
+
+**Kept** as the Episode 2 foundation: the environment, lighting and camera improvements from the POC.
+- painterly style, the `golden` / `day` / `sunset` / `night` presets, painted procedural textures;
+- low grazing rim light, the painted shadow-card technique;
+- spline camera with key times, the overhead debug view.
+
+**Not approved as final: character design.** The POC actor (`actor3d.js`) is a technical prototype, not the studio's character design. Character quality is being solved first; see [`CHARACTER_DEVELOPMENT_PROPOSAL.md`](CHARACTER_DEVELOPMENT_PROPOSAL.md).
+
+**Verified 2026-11-15:**
+- Blender's Python module (`bpy` 5.3.0, via PyPI) runs headless on CPU here.
+- It can build subdivided meshes, armatures with automatic weights and shape keys, and export them as GLB (skin and morph targets confirmed).
+- Free character-asset hosts (Quaternius, Kenney) and blender.org are blocked by the current network policy.
+
 ### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
 - Toon or outline post-pass to unify flat cards and 3D surfaces.
 - Shadows cast from card silhouettes.
