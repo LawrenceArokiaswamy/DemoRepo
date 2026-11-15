@@ -320,3 +320,27 @@ Each gap lists what the reference achieves, what we lack, the likely cause, what
 7. Episode 2 storyboarded with the new toolkit. Humour cadence and explain-after-payoff cutaways go into the storytelling checklist (Bible §B).
 
 Every step is a small, testable increment. Nothing replaces a PROVEN system until its replacement passes a side-by-side test and owner approval.
+
+---
+
+## 10. Proof-of-concept results (2026-11-15)
+
+**Deliverables:**
+- `renders/poc_deck_at_sunset_1080p.mp4`: 1080×1920, 9:16, H.264, 30/1 fps, 150 frames, 5.0 s, −14.1 LUFS.
+- `renders/poc_stage1_style_before_after.jpg`: the Stage 1 still.
+- `renders/poc_vs_episode1.jpg`: comparison with Episode 1.
+
+**Effort and cost:** about 1 working day (estimate 3–4), $0, no credits. Render 5.3 s/frame.
+
+| Criterion | Result |
+|---|---|
+| One cohesive style (characters + world) | **Improved clearly** vs Episode 1. Outlines, cel light and painted sky unify the frame. Still below the reference: wall and deck read as softened photos; warm grade makes everything orange-brown. |
+| Character feels in the world | **Yes.** A 3D body, lit by the scene, casting shadows, hands on the rope, turning in place. Weaker than the reference: faceted shading, small face features. |
+| Cinematic camera | **Smooth and purposeful** (spline glide, reveal from his back to his face). The first ~2 s under-feature the sailors and are slow to start. |
+| Lighting and shadows working together | Sun dimming as the claw passes reads as a threat overhead. **The shadow shape does not read as a claw.** |
+| Emotion readable on mute | **Yes:** calm hauling → head snaps → full turn → open-mouthed shock, hands up. |
+
+**Verdict:**
+- An unmistakable step up from Episode 1 in cohesion, integration and camera.
+- Not yet at the reference's polish. The main remaining gaps are colour and lighting design (brightness and separation), painted material art, and crisp bold faces.
+- The fixes are listed in Bible §C.8a, about 1 day.

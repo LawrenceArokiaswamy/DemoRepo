@@ -206,6 +206,60 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
   - Re-render missing frames into a fresh directory, then copy them over. Never `rm` with variable paths.
 - **Root cause found (Claw v2 final):** a single headless browser starts writing black frames after about 300–340 heavy frames (seen three times; healthy jobs stopped just short of it). **PROVEN fix:** render in batches of ≤ 40–100 frames per `node render.mjs` call (a fresh browser each time), looping over the range. Also run a watcher that stops on the first undersized frames.
 
+### C.8a Cinematic POC components (EXPERIMENTAL, built 2026-11-15 for "Deck at sunset"; reusable, not yet used in an episode)
+
+**Status:**
+- Proven in a 5 s test at 1080×1920 / 30 fps: `renders/poc_deck_at_sunset_1080p.mp4`.
+- Not yet proven across a full episode.
+- Owner approval is needed before adoption.
+
+**Effort and cost:**
+- About 1 working day (estimate was 3–4).
+- $0, 0 credits.
+- Rendering runs at **5.3 s/frame**, faster than the PBR look (8–12 s/frame).
+
+**`engine/web/style/painterly.js`:** enable per story with `"style": {"preset": "sunset"|"day"|"night", "shadowBox": [x, y, z, r], "override": {...}}`.
+- Cel-banded `MeshToonMaterial` (3 bands: 0.56 / 0.8 / 1.0).
+- Photo textures sampled at a soft mip with a saturation lift, so they read as painted.
+- Depth- and colour-edge **ink pass** inserted right after the scene render (needs depth textures on the composer targets).
+- Painted sky dome with a sun glow and cel-banded clouds.
+- Lighting presets: key, fill, rim and fog.
+- Stylised matte water.
+- **Skipped automatically:** 2D cards, and any material with its own `onBeforeCompile` (e.g. the ocean's waves).
+- **Business code must not overwrite** fog, exposure or sky when `story.style` is set (Syracuse business is guarded).
+
+**`engine/web/actor3d.js` `makeActor3D(spec)`:** the 3D pebble actor.
+- Body: pebble lathe body, rounded head with our **`drawFace`** decal (identity preserved), helmet with crest, ears.
+- Limbs: chunky sleeves with **2-bone IK** to hand targets, mitten hands, legs and sandals.
+- Rendering: inverted-hull ink outlines, toon shading, cast and received shadows.
+- Pose: `setPose({pos, yaw, lean, side, bob, squash, headYaw, headPitch, headTilt, face, handL, handR})`. Hands are given in the parent's space, so a parent such as a ship makes props easy.
+
+**Director:**
+- `shot.spline: true` gives Catmull-Rom camera travel through all keys, constant speed, eased once over the shot.
+- `CTX.composer` and `CTX.style` are exposed.
+
+**Lessons from the POC:**
+1. **Place attached objects before the camera reads their frame.** Call the business's `placeShip(t)` from `frameOf(name, w)`. Otherwise the camera lags a frame, and on frame 0 it sits at the default spot.
+2. **Probe the rig and deck before staging.** The mast stood exactly where the actors were first placed. Use `probe_expr.mjs`.
+3. **Shadows from far-off objects:** use an invisible stand-in (`colorWrite: false`, `castShadow`) placed up-sun of the target deck point. Dimming the key light about 35% as it passes makes "something huge overhead" read.
+4. **Head leads body** in turns (anticipation). Throw shock hands **beside** the head, relative to facing, never across the face.
+
+**Known limitations (honest):**
+- Head and body show faceted banding.
+- Face features are small on the 3D head.
+- Warm grading pushes the whole frame orange-brown.
+- Wall and deck textures are still softened photos, not painted.
+- The claw shadow reads as darkening, not as a claw silhouette.
+- The opening 2 s of the POC under-feature the characters.
+
+**Next fixes (≈1 day, $0):**
+- Smoother normals and more segments on actor bodies.
+- Bigger, bolder face decal.
+- A brighter, more separated colour preset.
+- Procedural painted stone and plank textures with inked seams.
+- A sharper, higher-contrast claw-shaped shadow.
+- Better opening framing.
+
 ### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
 - Toon or outline post-pass to unify flat cards and 3D surfaces.
 - Shadows cast from card silhouettes.
