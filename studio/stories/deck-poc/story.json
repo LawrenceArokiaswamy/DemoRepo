@@ -1,0 +1,101 @@
+{
+ "title": "Deck at sunset (POC)",
+ "period": "roman",
+ "set": "syracuse",
+ "fps": 30,
+ "duration": 5.0,
+ "business": "business.js",
+ "cardHeight": 1.62,
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "sunset",
+  "shadowBox": [
+   6,
+   3,
+   36,
+   18
+  ],
+  "override": {
+   "sky": {
+    "zenith": "#3d4a8c",
+    "mid": "#c46a8a",
+    "horizon": "#ffb070",
+    "sun": "#fff0c0",
+    "sunDir": [
+     -0.42,
+     0.45,
+     -0.79
+    ],
+    "clouds": "#ffcf9e",
+    "cloudShade": "#8a5a8a"
+   },
+   "fill": {
+    "sky": "#7b74c2",
+    "ground": "#7a4e3c",
+    "intensity": 0.75
+   }
+  }
+ },
+ "shots": [
+  {
+   "name": "deck POC",
+   "a": 0,
+   "b": 5.0,
+   "spline": true,
+   "attach": "hero",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -10.0,
+      3.75,
+      0.25
+     ],
+     "look": [
+      6,
+      4.3,
+      -0.2
+     ],
+     "fov": 48,
+     "focus": 2.2,
+     "ap": 0.0003
+    },
+    {
+     "t": 2.5,
+     "pos": [
+      0.6,
+      4.0,
+      1.75
+     ],
+     "look": [
+      5,
+      4.0,
+      -0.3
+     ],
+     "fov": 42,
+     "focus": 4.5,
+     "ap": 0.0005
+    },
+    {
+     "t": 5,
+     "pos": [
+      6.6,
+      4.0,
+      1.5
+     ],
+     "look": [
+      4.2,
+      3.85,
+      -0.22
+     ],
+     "fov": 37,
+     "focus": 2.9,
+     "ap": 0.0009
+    }
+   ]
+  }
+ ]
+}

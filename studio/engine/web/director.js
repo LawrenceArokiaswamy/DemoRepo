@@ -34,7 +34,7 @@ const camRight = () => { const r = new THREE.Vector3().setFromMatrixColumn(camer
 const light = story.cardLight || { dir: -1, contrast: 1.05, rim: '255,222,180', rimI: 0.85 };
 // setup(t): camera + every character card at time t (business code may call it to capture deterministic states)
 function setup(t) {
-  const sh = story.shots.find((s) => t >= s.a && t < s.b) || story.shots[story.shots.length - 1], v = camKeys(sh.keys, t);
+  const sh = story.shots.find((s) => t >= s.a && t < s.b) || story.shots[story.shots.length - 1], v = sh.spline ? camSpline(sh, t) : camKeys(sh.keys, t);
   for (const kk of story.kicks || []) { const d = (t - kk.t) * FPS; if (d >= 0 && d < 8) { const s = (Math.floor(d) % 2 ? -1 : 1) * kk.a * (1 - d / 8); v.look = [v.look[0] + s, v.look[1] + s * 1.4, v.look[2]]; } }
   let up = [0, 1, 0];
   if (sh.attach && biz.frameOf) { const M = biz.frameOf(sh.attach, worldT(t)), P = new THREE.Vector3(...v.pos).applyMatrix4(M), Lk = new THREE.Vector3(...v.look).applyMatrix4(M); v.pos = P.toArray(); v.look = Lk.toArray();
@@ -52,6 +52,12 @@ function setup(t) {
     A.out = drawCharacter(g, A.P.spec, { ...pose, light: biz.cardLight ? biz.cardLight(CTX, A) : light }); A.card.tex.needsUpdate = true; A.pose = pose;
   }
 }
+// spline camera (EXPERIMENTAL): Catmull-Rom through all keys, one eased travel over the whole shot at constant speed
+const _spl = new Map();
+function camSpline(sh, t) { const K = sh.keys; if (!_spl.has(sh)) _spl.set(sh, { P: new THREE.CatmullRomCurve3(K.map((k) => new THREE.Vector3(...k.pos)), false, 'centripetal'), L: new THREE.CatmullRomCurve3(K.map((k) => new THREE.Vector3(...k.look)), false, 'centripetal') });
+  const c = _spl.get(sh), x = Math.max(0, Math.min(1, (t - K[0].t) / (K[K.length - 1].t - K[0].t))), e = sh.spline === 'linear' ? x : x * x * x * (x * (x * 6 - 15) + 10);
+  const f = e * (K.length - 1), i = Math.min(K.length - 2, Math.floor(f)), r = f - i, li = (a, b) => a + (b - a) * r;
+  return { pos: c.P.getPointAt(e).toArray(), look: c.L.getPoint(e).toArray(), fov: li(K[i].fov, K[i + 1].fov), focus: li(K[i].focus, K[i + 1].focus), ap: li(K[i].ap ?? 0.0012, K[i + 1].ap ?? 0.0012) }; }
 // ---- story business (optional)
 const CTX = { THREE, scene, camera, SET, ACT, story, FPS, DUR, setup, cardToWorld, handsMid, camRight, loadModel, worldT, grade, renderer, bloom, composer };
 let biz = {};
