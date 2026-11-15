@@ -148,8 +148,32 @@ There are 21 shots. Each has one stated purpose.
 | Raised hand hidden | Arm angle 165° hid the hand behind the head | `armR [128, 30]`; reframed |
 | Release not visible | Attached camera pointed at the sky | Probed claw position (`probe_expr.mjs`); world-space close-up |
 
-## 8. QA results
-To be filled in at delivery: technical (ffprobe, black/freeze, loudness), creative (muted first-time-viewer check), caption safe area.
+## 8. QA results (v2 final, 2026-11-15)
+
+**Technical**
+- 1080×1920, 9:16, H.264, 30/1 fps, 1,391 frames, 46.37 s.
+- AAC 48 kHz stereo.
+- No black or frozen frames.
+- −14.1 LUFS, true peak −1.3 dBTP.
+- During speech the voice is 12.6 dB over the music and 17.6 dB over the SFX.
+- Delivery copy 29 MB, SSIM 0.967 vs the 111 MB master.
+
+**Captions**
+- Standard position: text rows 1155–1204, i.e. 716–765 px above the bottom edge (35–40% target).
+- In four face close-ups (shots 02, 06, 08, 11) captions sit above the head.
+- No overlapping or stacked chunks.
+- Nothing in the bottom 25% or the right 130 px UI zones.
+- The RECONSTRUCTION label sits below the top UI strip.
+
+**Re-timing**
+- The voice runs about 138 wpm (planned 160), so the picture was conformed to it: 46.4 s vs 39.8 s planned.
+- Tempo ≤ 1.08 on ordinary lines, ≤ 1.04 on dramatic lines.
+
+**Render incidents**
+- One OOM kill, and render browsers degrading after about 300 frames (black frames).
+- Fixed by fresh-browser batches (Bible C.7).
+
+**Known weaknesses (not release-blocking)** are listed in the delivery note: card/3D style gap, small rope prop in the POV, hazy fleet shot, warm backlight in the final shot.
 
 ## 9. Lessons learned
 See Bible §J.

@@ -71,14 +71,19 @@ subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{off:.2f}', '-i', '../cl
 # ---- captions: 1-3 word chunks timed by syllable share within each line's clip; key words highlighted
 def syl(wd): import re; return max(1, len(re.findall(r'[aeiouy]+', wd.lower())))
 KEY = {'lifted', 'one', 'old', 'man.', 'sixty', 'warships', 'Archimedes', "wasn't", 'worried.', 'exactly', 'giant', 'wooden', 'arm', 'iron', 'claw', 'bit', 'pull.', 'Up.', 'released', 'rope', 'panic.', 'Syracuse', 'Archimedes.'}
-ts = lambda x: f'0:{int(x // 60):02d}:{x % 60:05.2f}'; ev = []
+ts = lambda x: f'0:{int(x // 60):02d}:{x % 60:05.2f}'; ev = []; raw_ev = []
+FACE = [sh[1], sh[5], sh[7], sh[10]]   # tight face close-ups: captions go above the head instead of across the face
+style_at = lambda x: 'CapHi' if any(a <= x < b for a, b in FACE) else 'Cap'
 for i, (_, text) in enumerate(LINES):
     words = text.split(); tot = sum(syl(x) for x in words); speech = D[i] - 0.09; t0 = st[i] + 0.03; acc = 0; chunk = []; cs = t0
     for j, wd in enumerate(words):
         chunk.append(wd); acc += syl(wd)
         if len(chunk) == 3 or j == len(words) - 1 or wd.endswith(('.', ',', '…', '—')) or (len(chunk) == 2 and syl(wd) > 2):
             ce = t0 + speech * acc / tot; txt = ' '.join(('{\\c&H0040D8FF&}' + x + '{\\c&HFFFFFF&}') if x.strip('…') in KEY or x in KEY else x for x in chunk)
-            ev.append(f'Dialogue: 0,{ts(cs)},{ts(ce + 0.05)},Cap,,0,0,0,,{txt}'); chunk = []; cs = ce
+            raw_ev.append([cs, ce + 0.05, txt]); chunk = []; cs = ce
+for k, (a, b, txt) in enumerate(raw_ev):   # never let two chunks overlap (they would stack)
+    if k + 1 < len(raw_ev): b = min(b, raw_ev[k + 1][0])
+    ev.append(f'Dialogue: 0,{ts(a)},{ts(b)},{style_at((a + b) / 2)},,0,0,0,,{txt}')
 hdr = """[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
@@ -88,7 +93,8 @@ WrapStyle: 0
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Cap,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,700,1
-Style: Note,DejaVu Sans,30,&H00E8E8E8,&H00FFFFFF,&H00101010,&H70000000,0,1,0,0,100,100,1,0,3,2,0,8,90,90,170,1
+Style: CapHi,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,1240,1
+Style: Note,DejaVu Sans,30,&H00E8E8E8,&H00FFFFFF,&H00101010,&H70000000,0,1,0,0,100,100,1,0,3,2,0,8,90,90,205,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

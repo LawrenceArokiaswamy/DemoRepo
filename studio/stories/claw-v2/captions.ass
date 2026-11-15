@@ -7,54 +7,55 @@ WrapStyle: 0
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Cap,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,700,1
-Style: Note,DejaVu Sans,30,&H00E8E8E8,&H00FFFFFF,&H00101010,&H70000000,0,1,0,0,100,100,1,0,3,2,0,8,90,90,170,1
+Style: CapHi,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,1240,1
+Style: Note,DejaVu Sans,30,&H00E8E8E8,&H00FFFFFF,&H00101010,&H70000000,0,1,0,0,100,100,1,0,3,2,0,8,90,90,205,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 0,0:00:00.06,0:00:01.03,Cap,,0,0,0,,This warship is
-Dialogue: 0,0:00:00.98,0:00:01.94,Cap,,0,0,0,,being {\c&H0040D8FF&}lifted{\c&HFFFFFF&} out
+Dialogue: 0,0:00:00.06,0:00:00.98,Cap,,0,0,0,,This warship is
+Dialogue: 0,0:00:00.98,0:00:01.89,Cap,,0,0,0,,being {\c&H0040D8FF&}lifted{\c&HFFFFFF&} out
 Dialogue: 0,0:00:01.89,0:00:02.63,Cap,,0,0,0,,of the sea…
-Dialogue: 0,0:00:02.75,0:00:03.86,Cap,,0,0,0,,…by {\c&H0040D8FF&}one{\c&HFFFFFF&} {\c&H0040D8FF&}old{\c&HFFFFFF&}
-Dialogue: 0,0:00:03.81,0:00:04.13,Cap,,0,0,0,,{\c&H0040D8FF&}man.{\c&HFFFFFF&}
-Dialogue: 0,0:00:04.70,0:00:05.49,Cap,,0,0,0,,Rome had sent
-Dialogue: 0,0:00:05.44,0:00:06.42,Cap,,0,0,0,,{\c&H0040D8FF&}sixty{\c&HFFFFFF&} {\c&H0040D8FF&}warships{\c&HFFFFFF&} to
-Dialogue: 0,0:00:06.37,0:00:07.35,Cap,,0,0,0,,take the city
+Dialogue: 0,0:00:02.75,0:00:03.81,CapHi,,0,0,0,,…by {\c&H0040D8FF&}one{\c&HFFFFFF&} {\c&H0040D8FF&}old{\c&HFFFFFF&}
+Dialogue: 0,0:00:03.81,0:00:04.13,CapHi,,0,0,0,,{\c&H0040D8FF&}man.{\c&HFFFFFF&}
+Dialogue: 0,0:00:04.70,0:00:05.44,Cap,,0,0,0,,Rome had sent
+Dialogue: 0,0:00:05.44,0:00:06.37,Cap,,0,0,0,,{\c&H0040D8FF&}sixty{\c&HFFFFFF&} {\c&H0040D8FF&}warships{\c&HFFFFFF&} to
+Dialogue: 0,0:00:06.37,0:00:07.30,Cap,,0,0,0,,take the city
 Dialogue: 0,0:00:07.30,0:00:08.28,Cap,,0,0,0,,of Syracuse.
-Dialogue: 0,0:00:08.48,0:00:09.45,Cap,,0,0,0,,But {\c&H0040D8FF&}Syracuse{\c&HFFFFFF&}
-Dialogue: 0,0:00:09.40,0:00:10.38,Cap,,0,0,0,,had {\c&H0040D8FF&}Archimedes{\c&HFFFFFF&}
-Dialogue: 0,0:00:10.33,0:00:10.56,Cap,,0,0,0,,—
-Dialogue: 0,0:00:10.51,0:00:11.67,Cap,,0,0,0,,a mathematician
+Dialogue: 0,0:00:08.48,0:00:09.40,Cap,,0,0,0,,But {\c&H0040D8FF&}Syracuse{\c&HFFFFFF&}
+Dialogue: 0,0:00:09.40,0:00:10.33,Cap,,0,0,0,,had {\c&H0040D8FF&}Archimedes{\c&HFFFFFF&}
+Dialogue: 0,0:00:10.33,0:00:10.51,Cap,,0,0,0,,—
+Dialogue: 0,0:00:10.51,0:00:11.62,Cap,,0,0,0,,a mathematician
 Dialogue: 0,0:00:11.62,0:00:12.60,Cap,,0,0,0,,in his seventies.
-Dialogue: 0,0:00:12.74,0:00:13.43,Cap,,0,0,0,,And he {\c&H0040D8FF&}wasn't{\c&HFFFFFF&}
-Dialogue: 0,0:00:13.38,0:00:13.87,Cap,,0,0,0,,{\c&H0040D8FF&}worried.{\c&HFFFFFF&}
-Dialogue: 0,0:00:14.29,0:00:15.40,Cap,,0,0,0,,The Romans rowed
-Dialogue: 0,0:00:15.35,0:00:16.25,Cap,,0,0,0,,right up under
+Dialogue: 0,0:00:12.74,0:00:13.38,CapHi,,0,0,0,,And he {\c&H0040D8FF&}wasn't{\c&HFFFFFF&}
+Dialogue: 0,0:00:13.38,0:00:13.87,CapHi,,0,0,0,,{\c&H0040D8FF&}worried.{\c&HFFFFFF&}
+Dialogue: 0,0:00:14.29,0:00:15.35,Cap,,0,0,0,,The Romans rowed
+Dialogue: 0,0:00:15.35,0:00:16.20,Cap,,0,0,0,,right up under
 Dialogue: 0,0:00:16.20,0:00:16.67,Cap,,0,0,0,,the walls…
-Dialogue: 0,0:00:16.79,0:00:18.04,Cap,,0,0,0,,{\c&H0040D8FF&}…exactly{\c&HFFFFFF&} where he
-Dialogue: 0,0:00:17.99,0:00:18.63,Cap,,0,0,0,,wanted them.
-Dialogue: 0,0:00:19.15,0:00:20.02,Cap,,0,0,0,,Then a {\c&H0040D8FF&}giant{\c&HFFFFFF&}
-Dialogue: 0,0:00:19.97,0:00:21.11,Cap,,0,0,0,,{\c&H0040D8FF&}wooden{\c&HFFFFFF&} {\c&H0040D8FF&}arm{\c&HFFFFFF&} swung
-Dialogue: 0,0:00:21.06,0:00:22.19,Cap,,0,0,0,,out over the
+Dialogue: 0,0:00:16.79,0:00:17.99,CapHi,,0,0,0,,{\c&H0040D8FF&}…exactly{\c&HFFFFFF&} where he
+Dialogue: 0,0:00:17.99,0:00:18.63,CapHi,,0,0,0,,wanted them.
+Dialogue: 0,0:00:19.15,0:00:19.97,Cap,,0,0,0,,Then a {\c&H0040D8FF&}giant{\c&HFFFFFF&}
+Dialogue: 0,0:00:19.97,0:00:21.06,Cap,,0,0,0,,{\c&H0040D8FF&}wooden{\c&HFFFFFF&} {\c&H0040D8FF&}arm{\c&HFFFFFF&} swung
+Dialogue: 0,0:00:21.06,0:00:22.14,Cap,,0,0,0,,out over the
 Dialogue: 0,0:00:22.14,0:00:22.74,Cap,,0,0,0,,water.
-Dialogue: 0,0:00:22.92,0:00:24.07,Cap,,0,0,0,,An {\c&H0040D8FF&}iron{\c&HFFFFFF&} {\c&H0040D8FF&}claw{\c&HFFFFFF&}
+Dialogue: 0,0:00:22.92,0:00:24.02,Cap,,0,0,0,,An {\c&H0040D8FF&}iron{\c&HFFFFFF&} {\c&H0040D8FF&}claw{\c&HFFFFFF&}
 Dialogue: 0,0:00:24.02,0:00:24.62,Cap,,0,0,0,,dropped…
-Dialogue: 0,0:00:24.74,0:00:25.62,Cap,,0,0,0,,…and {\c&H0040D8FF&}bit{\c&HFFFFFF&} into
-Dialogue: 0,0:00:25.57,0:00:26.03,Cap,,0,0,0,,the ship.
-Dialogue: 0,0:00:26.32,0:00:27.15,Cap,,0,0,0,,And it began
+Dialogue: 0,0:00:24.74,0:00:25.57,Cap,,0,0,0,,…and {\c&H0040D8FF&}bit{\c&HFFFFFF&} into
+Dialogue: 0,0:00:25.57,0:00:26.03,CapHi,,0,0,0,,the ship.
+Dialogue: 0,0:00:26.32,0:00:27.10,Cap,,0,0,0,,And it began
 Dialogue: 0,0:00:27.10,0:00:27.55,Cap,,0,0,0,,to {\c&H0040D8FF&}pull.{\c&HFFFFFF&}
-Dialogue: 0,0:00:27.82,0:00:28.32,Cap,,0,0,0,,{\c&H0040D8FF&}Up.{\c&HFFFFFF&}
-Dialogue: 0,0:00:28.27,0:00:28.77,Cap,,0,0,0,,{\c&H0040D8FF&}Up.{\c&HFFFFFF&}
-Dialogue: 0,0:00:28.72,0:00:30.13,Cap,,0,0,0,,Out of the
+Dialogue: 0,0:00:27.82,0:00:28.27,Cap,,0,0,0,,{\c&H0040D8FF&}Up.{\c&HFFFFFF&}
+Dialogue: 0,0:00:28.27,0:00:28.72,Cap,,0,0,0,,{\c&H0040D8FF&}Up.{\c&HFFFFFF&}
+Dialogue: 0,0:00:28.72,0:00:30.08,Cap,,0,0,0,,Out of the
 Dialogue: 0,0:00:30.08,0:00:30.58,Cap,,0,0,0,,sea.
-Dialogue: 0,0:00:31.67,0:00:32.31,Cap,,0,0,0,,And then…
-Dialogue: 0,0:00:32.26,0:00:33.78,Cap,,0,0,0,,the {\c&H0040D8FF&}claw{\c&HFFFFFF&} {\c&H0040D8FF&}released{\c&HFFFFFF&}
+Dialogue: 0,0:00:31.67,0:00:32.26,Cap,,0,0,0,,And then…
+Dialogue: 0,0:00:32.26,0:00:33.73,Cap,,0,0,0,,the {\c&H0040D8FF&}claw{\c&HFFFFFF&} {\c&H0040D8FF&}released{\c&HFFFFFF&}
 Dialogue: 0,0:00:33.73,0:00:34.08,Cap,,0,0,0,,it.
-Dialogue: 0,0:00:36.57,0:00:36.82,Cap,,0,0,0,,Soon,
-Dialogue: 0,0:00:36.77,0:00:37.85,Cap,,0,0,0,,even a {\c&H0040D8FF&}rope{\c&HFFFFFF&}
-Dialogue: 0,0:00:37.80,0:00:38.88,Cap,,0,0,0,,hanging over the
-Dialogue: 0,0:00:38.83,0:00:39.91,Cap,,0,0,0,,wall made Roman
+Dialogue: 0,0:00:36.57,0:00:36.77,Cap,,0,0,0,,Soon,
+Dialogue: 0,0:00:36.77,0:00:37.80,Cap,,0,0,0,,even a {\c&H0040D8FF&}rope{\c&HFFFFFF&}
+Dialogue: 0,0:00:37.80,0:00:38.83,Cap,,0,0,0,,hanging over the
+Dialogue: 0,0:00:38.83,0:00:39.86,Cap,,0,0,0,,wall made Roman
 Dialogue: 0,0:00:39.86,0:00:40.73,Cap,,0,0,0,,soldiers {\c&H0040D8FF&}panic.{\c&HFFFFFF&}
-Dialogue: 0,0:00:41.02,0:00:42.41,Cap,,0,0,0,,Rome had {\c&H0040D8FF&}sixty{\c&HFFFFFF&}
+Dialogue: 0,0:00:41.02,0:00:42.36,Cap,,0,0,0,,Rome had {\c&H0040D8FF&}sixty{\c&HFFFFFF&}
 Dialogue: 0,0:00:42.36,0:00:42.95,Cap,,0,0,0,,warships.
 Dialogue: 0,0:00:43.21,0:00:45.17,Cap,,0,0,0,,{\c&H0040D8FF&}Syracuse{\c&HFFFFFF&} had {\c&H0040D8FF&}Archimedes.{\c&HFFFFFF&}
 Dialogue: 0,0:00:19.04,0:00:30.79,Note,,0,0,0,,RECONSTRUCTION — the machine's exact design is unknown

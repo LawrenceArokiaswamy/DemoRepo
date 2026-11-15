@@ -9,7 +9,7 @@ Validation: **Unvalidated** = comparable-video research not yet done (no audienc
 
 ## In production
 
-- **EP00 The Claw of Syracuse** (Extraordinary history) — QA · credits spent 13.62 · `studio/stories/claw-of-syracuse`
+- **EP00 The Claw of Syracuse** (Extraordinary history) — QA · credits spent 16.38 · `studio/stories/claw-of-syracuse`
 
 ## Summary
 
