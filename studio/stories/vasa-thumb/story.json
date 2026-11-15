@@ -1,0 +1,63 @@
+{
+ "title": "Vasa thumbnail frame",
+ "period": "baroque",
+ "set": "stockholm",
+ "fps": 30,
+ "duration": 40,
+ "business": "../vasa/business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "golden",
+  "override": {
+   "sky": {
+    "zenith": "#4f86d9",
+    "mid": "#9fc2ee",
+    "horizon": "#ffd9a0",
+    "sun": "#fff6dc",
+    "sunDir": [
+     -0.6,
+     0.42,
+     0.68
+    ],
+    "clouds": "#ffffff",
+    "cloudShade": "#c6b7e2"
+   }
+  },
+  "shadowBox": [
+   0,
+   5,
+   0,
+   40
+  ]
+ },
+ "shots": [
+  {
+   "name": "thumb: she rolls over, seen from the low (port) side at water level",
+   "a": 0,
+   "b": 40,
+   "attach": "ship",
+   "outline": 3.4,
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -26,
+      1.6,
+      -52
+     ],
+     "look": [
+      4,
+      9,
+      -2
+     ],
+     "fov": 40,
+     "focus": 55,
+     "ap": 0.0001
+    }
+   ]
+  }
+ ]
+}

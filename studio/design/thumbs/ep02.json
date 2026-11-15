@@ -1,0 +1,37 @@
+{
+ "out_dir": "final_videos/EP02_Vasa",
+ "bg": {
+  "img": "design/thumbs/ep02_rollover_wide.jpg",
+  "crop": [
+   60,
+   100,
+   1660,
+   1000
+  ]
+ },
+ "inset": {
+  "img": "design/thumbs/ep02_sailor.jpg",
+  "crop": [
+   0,
+   230,
+   900,
+   1330
+  ]
+ },
+ "lines": [
+  "SANK IN",
+  "20 MINUTES"
+ ],
+ "hi": [
+  "20 MINUTES"
+ ],
+ "cover": {
+  "img": "design/thumbs/ep02_rollover_tall.jpg",
+  "crop": [
+   0,
+   0,
+   1080,
+   1920
+  ]
+ }
+}

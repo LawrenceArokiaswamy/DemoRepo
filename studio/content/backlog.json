@@ -143,10 +143,11 @@
    "estimated_production_days": 3,
    "editorial_score": null,
    "research_status": "Verified (Vasa Museum pages via search, 2026-11-15)",
-   "production_status": "Storyboard",
+   "production_status": "QA",
    "publication_url": null,
    "performance": null,
-   "notes": "2026-11-15: shortlisted for Episode 2 (rank 1 of 3); see studio/episodes/EP02_TOPIC_PROPOSALS.md. 2026-11-15: owner approved as Episode 2. Script + storyboard + plan in studio/episodes/EP02_vasa.md, awaiting owner approval. Rulers theory excluded (not on museum pages; disputed). 2026-11-15: animatic v2 delivered for owner review (renders/vasa_animatic_v2.mp4). Paid narration (2.99) and music (7.27) NOT yet approved."
+   "notes": "2026-11-15: shortlisted for Episode 2 (rank 1 of 3); see studio/episodes/EP02_TOPIC_PROPOSALS.md. 2026-11-15: owner approved as Episode 2. Script + storyboard + plan in studio/episodes/EP02_vasa.md, awaiting owner approval. Rulers theory excluded (not on museum pages; disputed). 2026-11-15: animatic v2 delivered for owner review (renders/vasa_animatic_v2.mp4). Paid narration (2.99) and music (7.27) NOT yet approved. 2026-11-15: final cut 57.43 s + publishing package delivered for owner review (not yet approved).",
+   "credits_spent": 10.26
   },
   {
    "id": "EP03",

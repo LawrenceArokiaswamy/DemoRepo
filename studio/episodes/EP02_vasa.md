@@ -15,6 +15,33 @@
 
 ---
 
+## F. Final production (2026-11-15)
+
+**Owner approval:** final production, plus the 10.26-credit audio budget.
+
+**Spend:** 2.99 (narration) + 7.27 (music) = **10.26 credits**, exactly as approved.
+
+**Conform**
+- The natural Grady read runs about 8 s longer than the animatic plan, so the picture was conformed to the voice through `story.timeMap` (`build_final.py`).
+- Each line starts on its picture beat, or after the previous line; the voice is sped up 5% (atempo 1.05).
+- The final cut is **57.43 s**.
+
+**Audio**
+- The score was edited into three segments. Music fades as water pours in, the sinking plays over near-silence with sound effects only, and mournful music returns on "Within sight of the city…".
+- The inquiry falls in the score's natural pause; the ending re-enters under the seabed and recovery.
+- About 134 synthesized sound-effect cues: lids, cannons, running feet, hull groans, salute, gust, water.
+- Sea ambience is muted in the inquiry room and underwater.
+
+**Deliverables**
+- `renders/vasa_final_review.mp4`: 61 MB, local only, gitignored per directive.
+- QA results: `final_videos/EP02_Vasa/metadata.md`.
+- Publishing package: `final_videos/EP02_Vasa/`.
+
+**Lessons**
+1. Plan scripts at the measured pace of the voice *including* its dramatic pauses. Grady with ellipses runs ~120 wpm, not 138.
+2. A time map conforms picture to voice with no re-animation.
+3. Generated music does not follow requested section timings; plan to edit it into segments.
+
 ## R. Revision 1: owner notes applied, animatic v1 (2026-11-15)
 
 **Owner decisions (2026-11-15)**
