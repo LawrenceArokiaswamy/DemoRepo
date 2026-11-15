@@ -18,7 +18,11 @@ WARD = {'sailor1628': dict(top='#e6dcc3', sleeve=0.78, breech='#6b5844', hose='s
         'officer1628': dict(top='#2d3a5c', sleeve=1.0, breech='#2d3a5c', hose='#d9d0bd', shoe='#1f1a17', belt='sashx', hat='wide', collar='falling', beard=True, tabs=True),
         'council1628': dict(top='#26221f', sleeve=1.0, breech='#26221f', hose='#26221f', shoe='#141110', belt=None, hat=None, collar='ruff', beard=True, tabs=True),
         'shipwright1628': dict(top='#d6c9a6', sleeve=0.8, breech='#5e4a36', hose='#cdbf9f', shoe='#3b2a1e', belt='apron', hat='flat', collar=None, beard=False)}
+# modern wardrobe (Episode 3+): slimmer limbs, everyday clothes, hairstyles; same rig, face and proportions
+WARD.update({'modern_m': dict(top='#3f6f8f', sleeve=1.0, breech='#2f3a52', hose='#2f3a52', shoe='#2a2522', belt=None, hat=None, collar=None, beard=False, hair='short', slim=True, cuff=None),
+             'modern_f': dict(top='#c0504a', sleeve=0.55, breech='#2c2f45', hose='#2c2f45', shoe='#3a2a2a', belt=None, hat=None, collar=None, beard=False, hair='long', slim=True, cuff=None)})
 W8 = WARD.get(KIND, {})
+SLIM = W8.get('slim', False)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 C = bpy.context
 
@@ -150,7 +154,7 @@ if ROMAN:
 ARM = {}
 for s, sx in (('L', 1), ('R', -1)):
     sh, el, wr = Vector((sx * SH_X, 0.0, SH_Z)), Vector((sx * 0.265, 0.01, 0.86)), Vector((sx * 0.29, -0.01, 0.63))
-    ARM[s] = (sh, el, wr); tube(f'Arm.{s}', [sh, el, wr], [0.072, 0.061, 0.053] if ROMAN else [0.076, 0.066, 0.056], [(0.32, 'red'), (1.0, 'skin')] if ROMAN else ([(W8['sleeve'], 'top'), (1.0, 'skin')] if W8['sleeve'] < 1 else [(0.97, 'top'), (1.0, 'white' if W8.get('collar') else 'top')]), 20, 12)
+    ARM[s] = (sh, el, wr); tube(f'Arm.{s}', [sh, el, wr], [0.072, 0.061, 0.053] if ROMAN else ([0.062, 0.053, 0.046] if SLIM else [0.076, 0.066, 0.056]), [(0.32, 'red'), (1.0, 'skin')] if ROMAN else ([(W8['sleeve'], 'top'), (1.0, 'skin')] if W8['sleeve'] < 1 else [(0.97, 'top'), (1.0, 'white' if W8.get('collar') else ('skin' if SLIM else 'top'))]), 20, 12)
     if ROMAN: ellipsoid(f'ShoulderPlate.{s}', sh + Vector((sx * 0.025, 0.0, 0.03)), (0.098, 0.085, 0.07), 'steel', 28, 18, lambda p: Vector((p.x, p.y, max(p.z, -0.012))))
 def hand(name, wr, sx, point=False):
     """chunky 4-finger mitten hand hanging along the forearm: palm faces the thigh (-sx), fingers spaced front-back, thumb at the front"""
@@ -173,7 +177,7 @@ LEG = {}
 for s, sx in (('L', 1), ('R', -1)):
     hp, kn, an = Vector((sx * HIP_X, 0.0, HIP_Z)), Vector((sx * 0.118, -0.01, 0.34)), Vector((sx * 0.12, 0.0, 0.08)); LEG[s] = (hp, kn, an)
     if ROMAN: tube(f'Leg.{s}', [hp, kn, an], [0.066, 0.057, 0.05], [(1.0, 'skin')], 20, 12)
-    else: tube(f'Leg.{s}', [hp, kn, an], [0.082, 0.064, 0.05], [(0.6, 'breech'), (1.0, 'skin' if W8['hose'] == 'skin' else 'hose')], 20, 12)
+    else: tube(f'Leg.{s}', [hp, kn, an], [0.068, 0.056, 0.047] if SLIM else [0.082, 0.064, 0.05], [(0.6, 'breech'), (1.0, 'skin' if W8['hose'] == 'skin' else 'hose')], 20, 12)
     for z in ((0.15, 0.22) if ROMAN else ()):
         bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=False, segments=24, radius1=0.054, radius2=0.054, depth=0.014)
         for v in bm.verts: v.co += Vector((sx * 0.12, 0.0, z))
@@ -202,6 +206,22 @@ if ROMAN:
 if not ROMAN:
     hair = ellipsoid('Hair', HEAD_C + Vector((0, 0.025, 0.035)), (0.236, 0.232, 0.225), 'hair', 40, 28,
                      lambda p: Vector((p.x, p.y, p.z if (p.y > -0.06 or p.z > 0.1) else 0.1 + (p.z - 0.1) * 0.08)))   # cap of hair; fringe stays above the brows
+    if W8.get('hair'):   # modern hair: lumpy volume + scalloped hairline + fringe tufts (reads as hair, not a cap)
+        import math as _m
+        hv = bpy.data.objects['Hair']
+        for v in hv.data.vertices:
+            d = v.co - (HEAD_C + Vector((0, 0.025, 0.035))); a = _m.atan2(d.x, d.y); e = _m.atan2(d.z, (d.x ** 2 + d.y ** 2) ** 0.5)
+            v.co += d.normalized() * (0.012 * _m.sin(a * 7 + e * 5) + 0.008 * _m.sin(a * 13 - e * 9) + 0.018 * max(0, _m.sin(e)))
+        n = 7 if W8['hair'] == 'short' else 9
+        for i in range(n):
+            u = (i / (n - 1)) * 2 - 1; ax = u * 0.17; ay = -0.205 + abs(u) * 0.07; az = 0.11 + 0.02 * (1 - abs(u))
+            ellipsoid('HairTuft', HEAD_C + Vector((ax, ay, az)), (0.045, 0.035, 0.07), 'hair', 14, 10, lambda p, u=u: Vector((p.x + max(0, -p.z) * (0.6 if W8['hair'] == 'short' else 0.2) * (1 if u <= 0.2 else -0.4), p.y, p.z)))
+        for sx in (1, -1): ellipsoid('HairSide', HEAD_C + Vector((sx * 0.215, -0.02, 0.04)), (0.04, 0.09, 0.09), 'hair', 14, 10)
+    if W8.get('hair') == 'short':
+        pass
+    if W8.get('hair') == 'long':    # long hair falling behind the shoulders + side locks framing the face
+        ellipsoid('HairLong', HEAD_C + Vector((0, 0.09, -0.16)), (0.25, 0.16, 0.3), 'hair', 32, 20)
+        for sx in (1, -1): ellipsoid('HairLock', HEAD_C + Vector((sx * 0.205, -0.03, -0.1)), (0.06, 0.09, 0.24), 'hair', 18, 14)
     if W8['hat'] == 'knit':   # slouched knitted cap
         ellipsoid('HatKnit', HEAD_C + Vector((0, 0.03, 0.11)), (0.245, 0.24, 0.17), 'cap', 36, 22, lambda p: Vector((p.x, p.y + max(0, p.z) * 0.55, max(p.z, -0.035))))
         tube('HatRoll', [HEAD_C + Vector((math.cos(a) * 0.243, 0.03 + math.sin(a) * 0.238, 0.08)) for a in [i / 24 * 2 * math.pi for i in range(25)]], [0.026] * 25, [(1.0, 'cap')], 10, 2)

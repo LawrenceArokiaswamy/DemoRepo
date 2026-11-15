@@ -6,6 +6,7 @@
 //   4. lighting presets (key / fill / rim colours, fog matched to the sky)
 // Enable per story with  "style": { "preset": "sunset", ... }  (director.js calls applyStyle after business init).
 import * as THREE from 'three';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { Pass, FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 
 export const PRESETS = {
@@ -18,6 +19,10 @@ export const PRESETS = {
   day:    { sky: { zenith: '#3f7fd6', mid: '#86bdf0', horizon: '#dff1ff', sun: '#fffbe8', sunDir: [0.35, 0.62, 0.7], clouds: '#ffffff', cloudShade: '#b9cbe6' },
             key: { color: '#fff1d6', intensity: 3.0 }, fill: { sky: '#a9c8f0', ground: '#8a7458', intensity: 1.0 }, rim: { color: '#ffffff', intensity: 0.8 },
             fog: { color: '#cfe4f5', near: 90, far: 420 }, exposure: 1.0, ink: { color: '#1f2433', strength: 0.85 }, water: { color: '#1f7fae', rough: 0.35, env: 0.35 } },
+  // Visual standard v2 (experimental): an evening interior; the 'sun' is cool moonlight through the windows, warmth comes from practical lights
+  interior_evening: { sky: { zenith: '#0e1636', mid: '#2a3a6e', horizon: '#3a4a7e', sun: '#c8d6ff', sunDir: [0.15, 0.45, -0.88], clouds: '#3a4a7e', cloudShade: '#1b2556' },
+            key: { color: '#9fb6ff', intensity: 1.1 }, fill: { sky: '#ffd9a8', ground: '#3a2a22', intensity: 0.55 }, rim: { color: '#ffb070', intensity: 0.5 }, rimHeight: 0.3,
+            fog: { color: '#2a1f2a', near: 14, far: 42 }, exposure: 1.05, ink: { color: '#1e1418', strength: 0.75, sat: 1.08, warm: 0.02 }, water: { color: '#2f86b8', rough: 0.4, env: 0.3 } },
   night:  { sky: { zenith: '#0d1440', mid: '#1f2f72', horizon: '#3b5aa0', sun: '#e8f0ff', sunDir: [0.2, 0.55, -0.8], clouds: '#5a6fb0', cloudShade: '#1b2556' },
             key: { color: '#9fb8ff', intensity: 1.6 }, fill: { sky: '#3a4fa0', ground: '#1a1f3a', intensity: 0.8 }, rim: { color: '#c8d8ff', intensity: 1.0 },
             fog: { color: '#22305e', near: 60, far: 300 }, exposure: 1.05, ink: { color: '#0a0c1a', strength: 0.9 }, water: { color: '#16285a', rough: 0.4, env: 0.2 } },
@@ -67,8 +72,9 @@ export function paintedTexture(src, orig) {
 export function toToon(m, o = {}) {
   const t = new THREE.MeshToonMaterial({ color: m.color, map: m.map, gradientMap: toonGradient(), transparent: m.transparent, opacity: m.opacity, alphaTest: m.alphaTest,
     side: m.side, vertexColors: m.vertexColors, emissive: m.emissive, emissiveMap: m.emissiveMap, emissiveIntensity: m.emissiveIntensity, fog: m.fog, depthWrite: m.depthWrite });
+  // kit textures (style/painted.js, userData.painted) are already painted: no mip-blur
   const painted = m.map && m.map.userData && m.map.userData.src && o.paintTextures !== false ? paintedTexture(m.map.userData.src, m.map) : null;
-  if (painted) t.map = painted; else if (m.map) paintMap(t, o.mapBias, o.mapSat); t.name = (m.name || '') + '|toon'; return t;
+  if (painted) t.map = painted; else if (m.map && !(m.map.userData && m.map.userData.painted)) paintMap(t, o.mapBias, o.mapSat); t.name = (m.name || '') + '|toon'; return t;
 }
 const isCard = (m) => m.map && m.map.isCanvasTexture && m.emissiveMap === m.map;   // 2D character cards keep their own look
 const isCustom = (m) => Object.prototype.hasOwnProperty.call(m, 'onBeforeCompile');   // custom-shader materials (e.g. the ocean's Gerstner waves) keep theirs
@@ -144,5 +150,10 @@ export function applyStyle(C, cfg = {}) {
   for (const rt of [composer.renderTarget1, composer.renderTarget2]) { rt.depthTexture = new THREE.DepthTexture(rt.width, rt.height); rt.depthTexture.type = THREE.UnsignedIntType; }
   const ink = new InkPass(composer.renderTarget1.width, composer.renderTarget1.height, { ...P.ink, ...(cfg.ink || {}) }); ink.u.near.value = camera.near; ink.u.far.value = camera.far;
   composer.insertPass(ink, 1);
+  // ambient occlusion (Visual standard v2, experimental): contact shading that grounds characters and props
+  if (cfg.ao) { const ao = new GTAOPass(scene, camera, composer.renderTarget1.width, composer.renderTarget1.height); Object.assign(ao.blendIntensity !== undefined ? ao : {}, { blendIntensity: cfg.ao.intensity ?? 0.9 });
+    ao.updateGtaoMaterial({ radius: cfg.ao.radius ?? 0.35, distanceExponent: 1.5, thickness: 1.0, scale: 1.0, samples: cfg.ao.samples ?? 12 }); composer.insertPass(ao, 2);
+    const aoRender = ao.render.bind(ao); ao.render = (...a) => { const hid = []; scene.traverse((o) => { if ((o.isSprite || (o.material && o.material.transparent && o.material.blending === THREE.AdditiveBlending)) && o.visible) { o.visible = false; hid.push(o); } });
+      aoRender(...a); for (const o of hid) o.visible = true; }; }   // glow sprites must not occlude (they read as dark quads)   // after the ink pass (ink reads the render pass depth)
   return { preset: P, sky, ink, key, rim, converted: cache.size };
 }

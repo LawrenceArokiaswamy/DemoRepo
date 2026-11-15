@@ -29,10 +29,19 @@ export async function loadCPlus(THREE, o = {}) {   // o: { url, faceRes, face: {
   const olU = { w: { value: 0.006 } }, olMat = new THREE.MeshBasicMaterial({ color: o.ink || INK, side: THREE.BackSide });
   olMat.onBeforeCompile = (sh) => { sh.uniforms.olW = olU.w; sh.vertexShader = 'uniform float olW;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed += normalize(normal) * olW;'); };
   const meshes = [], hands = { relaxed: [], point: [] }, hulls = [];
-  const tone = o.tone ?? 0.7, seen = new Set(), recolor = o.recolor || {};   // recolor: { materialName: '#hex' } (per-instance costume colours)   // flat base colours are toned down so the toon key light (calibrated for textured sets) doesn't blow them out
+  const tone = o.tone ?? (o.look === 'v2' ? 0.85 : 0.7), seen = new Set(), recolor = o.recolor || {};   // recolor: { materialName: '#hex' } (per-instance costume colours)   // flat base colours are toned down so the toon key light (calibrated for textured sets) doesn't blow them out
   gltf.scene.traverse((m) => { if (!m.isMesh) return; meshes.push(m); for (const mt of [].concat(m.material)) if (mt && mt.color && !seen.has(mt)) { seen.add(mt); if (recolor[mt.name]) mt.color.set(recolor[mt.name]); mt.color.multiplyScalar(tone); } });
+  // LOOK v2 (Visual standard v2, experimental): clean two-tone cel shading + a soft fresnel rim, faces never self-shadowed
+  const V2 = o.look === 'v2', rimU = { c: { value: new THREE.Color(o.rim || '#ffd7a8') }, k: { value: o.rimK ?? 0.35 } };
+  const grad2 = (() => { const d = new Uint8Array([o.shadowLevel ?? 175, o.shadowLevel ?? 175, o.shadowLevel ?? 175, 255, 255, 255, 255, 255]); const t = new THREE.DataTexture(d, 2, 1); t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t; })();
+  const v2mat = new Map(), toV2 = (mt) => { if (!v2mat.has(mt)) { const t = new THREE.MeshToonMaterial({ color: mt.color.clone(), gradientMap: grad2 });
+      t.onBeforeCompile = (sh) => { sh.uniforms.rimC = rimU.c; sh.uniforms.rimK = rimU.k; sh.fragmentShader = 'uniform vec3 rimC; uniform float rimK;\n' + sh.fragmentShader.replace('#include <opaque_fragment>',
+        'float _f = 1.0 - max(dot(normalize(vViewPosition), normal), 0.0); outgoingLight += rimC * rimK * smoothstep(0.55, 0.95, _f);\n#include <opaque_fragment>'); };
+      t.customProgramCacheKey = () => 'cplusv2'; v2mat.set(mt, t); } return v2mat.get(mt); };
+  if (V2) { faceMat.gradientMap = grad2; }
   for (const m of meshes) {
-    const nm = m.name; m.castShadow = !/Face/.test(nm); m.receiveShadow = true; m.frustumCulled = false;
+    const nm = m.name; m.castShadow = !/Face/.test(nm); m.receiveShadow = !(V2 && /Head|FaceShell|Nose|Ear/.test(nm)); m.frustumCulled = false;
+    if (V2 && !/FaceShell/.test(nm)) { m.material = Array.isArray(m.material) ? m.material.map(toV2) : toV2(m.material); m.userData.keepMaterial = true; }
     if (/FaceShell/.test(nm)) { m.material = faceMat; m.userData.keepMaterial = true; m.renderOrder = 3; continue; }
     if (/^HandR/.test(nm) || /^Hand_R|^Hand\.R/.test(nm)) hands.relaxed.push(m); if (/^HandPoint/.test(nm)) hands.point.push(m);
     if (o.outline === false || /^Band/.test(nm)) continue;

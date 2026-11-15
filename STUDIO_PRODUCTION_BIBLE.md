@@ -736,10 +736,44 @@ Do not call an episode a failure from early views alone.
 
 **Operating principle:** FINISH → REVIEW → PUBLISH → MEASURE → IMPROVE → REPEAT.
 
-**Visual standard v2 ("Lantern style"): PROPOSED, awaiting owner review (2026-11-15).** See `VISUAL_QUALITY_REASSESSMENT.md`.
-- **Diagnosis:** we built detailed characters in plain worlds; the references do the opposite. The gap is art direction, lighting, set dressing, shot design and FX, not resolution.
-- **Five reusable improvements:** lighting/atmosphere kit, stylised texture and set-dressing kit, C+ look refresh (same rig), shot-language toolkit with a still-frame gate, stylised FX library.
-- **Gate:** three approved benchmark stills before any motion test or episode animation.
+**VISUAL STANDARD v2: owner-approved direction (2026-11-15).** Analysis: `VISUAL_QUALITY_REASSESSMENT.md`.
+
+*A. APPROVED DESIGN PRINCIPLES* (permanent; they apply to every genre: science, futures, religion, human behaviour, history). Warm light and lanterns are **not** mandatory.
+1. Simple, appealing, expressive characters.
+2. Rich, carefully designed environments.
+3. Cohesive stylised materials and textures.
+4. Cinematic lighting appropriate to each story.
+5. Clear foreground, mid-ground and background separation.
+6. One obvious focal point per shot.
+7. Strong acting with readable poses.
+8. Purposeful camera direction.
+9. Clear cause-and-effect animation.
+10. Distinctive but restrained cartoon effects.
+
+Keep an original identity; never copy the reference.
+
+*B. IMPLEMENTED AND TESTED: Gate 1 benchmark stills only* (`stories/ep03-bench`, `renders/ep03_benchmark_A/B/C.jpg`). Verified only on stills; **not yet production-ready** until the Gate 2 motion test passes.
+- **Lighting and atmosphere:**
+  - `interior_evening` preset (cool moonlight key, warm hemisphere);
+  - practical pendant and phone point lights with glow halos;
+  - GTAO ambient occlusion (`style.ao`).
+  - **Lesson:** glow sprites must be hidden during the AO pass, or they render as dark quads (fixed in `painterly.js`).
+- **Painted-look texture kit** `style/painted.js`: wood floor, wallpaper, panels, velvet, linen, night city, paintings, glow sprite. Mark textures with `userData.painted` so the style converter doesn't blur them.
+- **Set** `sets/restaurant.js`: a dressed bistro. Furniture is scaled to C+ proportions (seat 0.38 m, table 0.62 m), and tables take chair angles.
+  - **Lesson:** a vertical frame cannot hold two people sitting opposite each other; seat couples at adjacent angles (about 70°) so both faces read.
+- **C+ look v2** (`loadCPlus({ look: 'v2' })`): two-tone cel shading plus a soft fresnel rim; head and face never self-shadow; skin tone 0.85.
+- **Modern costumes** `modern_m` and `modern_f`: slimmer limbs, lumpy hair volume with fringe tufts (the first version read as a beret).
+- **Landscape thumbnail renders** (`LANDSCAPE=1`), already used in production.
+- **Render cost:** 4.9 s/frame at 1080×1920 for the benchmark (AO plus 8–10 lights), against about 2–2.5 s for the Vasa scenes. That's roughly a 2× regression, acceptable for a 60 s Short (about 2.5 h CPU).
+
+*C. PLANNED / EXPERIMENTAL (not started)*:
+- shot-language toolkit (camera presets, whip-pan transitions, still-frame composition overlay);
+- stylised FX library;
+- C+ acting pose library with snap-and-hold timing;
+- cleaner character design pass (smaller face features, simpler hair silhouettes);
+- higher texture detail density.
+
+**Coding lesson (twice in one session):** never append a `//` comment in the middle of a one-line statement during scripted edits; it swallows the rest of the line.
 
 **Lessons learned (PROVEN):**
 1. Story before technology. Claw v1 was technically complete and creatively failed.

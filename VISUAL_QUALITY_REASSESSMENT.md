@@ -1,6 +1,7 @@
 # Visual quality reassessment: references vs our Episodes 1–2
 
-- **Status:** Phases 1–2 delivered for owner review (2026-11-15). **No changes implemented.**
+- **Status:** Phases 1–2 approved by the owner (2026-11-15), with refinements: warm light is not mandatory, and Episode 3 is the restaurant / internet-history scene.
+- **Gate 1:** benchmark stills delivered (see the Bible's visual standard v2 section, B). Gate 2 awaits approval.
 - **Next:** Phase 3 (three benchmark stills) only after approval.
 - **Budget:** $0, 0 credits.
 
