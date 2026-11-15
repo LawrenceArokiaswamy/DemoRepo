@@ -62,6 +62,19 @@
 - **C+ V1.1 (inside the episode):** 2-bone leg IK with foot locks (`ch.pose({ feet })`) and a procedural walk/run gait with planted feet (`gait()`).
 - **The episode:** `stories/vasa/` (`build_story.py`, `business.js`, `story.json`, `captions_animatic.ass`). The stability-test roll is a deterministic spring driven by where the crew is, so each run rolls the ship further.
 
+**Deliverable:** `renders/vasa_animatic_v2.mp4`
+- 1080×1920, 30 fps, 50.4 s, 1,512 frames, 19.96 MB.
+- Rendered at 0.33 scale and upscaled, with the script as burned-in text.
+- A contact sheet (one frame per 0.8 s) is in `renders/vasa_animatic_v2_contact.jpg`.
+- Every frame was checked: no black frames.
+
+**Known weak spots, to fix in the final pass (no new tools needed)**
+- **S05a (the runs):** cluttered by sails and rigging; needs a cleaner camera.
+- **S10 (the gust line):** the dark ripple barely reads; it needs whitecaps or a lower camera.
+- **S12 (the gunports dipping under):** reads, but the water is stylised.
+- **S16 (1961):** the hull is small in frame.
+- **Final quality** (full-res render, sound, real captions) comes after the voice is recorded.
+
 **Animatic notes and limitations**
 - **No voice:** the animatic carries the script as on-screen text. No paid narration was generated, and the free local text-to-speech model host is blocked by the network policy.
 - **No music; sound design comes in the final mix.**
