@@ -1,0 +1,466 @@
+# STUDIO PRODUCTION BIBLE
+
+The studio's permanent operating manual: creative playbook, production workflow, technical reference and memory.
+**Read this before any video work** (see `CLAUDE.md`). Episode records live in `studio/episodes/`. The topic backlog lives in `studio/content/`.
+
+Status tags used throughout:
+- **PROVEN**: used in a delivered video and verified.
+- **EXPERIMENTAL**: built or tested, not yet validated in a published video.
+- **ASPIRATIONAL**: a target we are working toward; not a current capability.
+- **DEPRECATED**: no longer recommended (kept so we don't repeat it).
+
+Never silently replace a PROVEN method with an untested one. Never describe an ASPIRATIONAL goal as a capability.
+
+Version history: v1, 2026-11-15, written after Episode 1 (Claw of Syracuse) v1 failed review and v2 was rebuilt story-first.
+
+---
+
+## A. Studio vision and creative identity
+
+**Mission.** Original animated Shorts that tell extraordinary true stories (science, nature, history, engineering, survival, mysteries, the occasional clearly-labelled What If?) so clearly and compellingly that a stranger stops scrolling, understands at once, feels something, and stays for the payoff.
+
+**Audience experience.** WHAT?! → OH NO! → WHOA! An emotional journey, not a template. Every video is a miniature film, not an illustrated explanation.
+
+**Ambition (ASPIRATIONAL).** An audience experience roughly 2× more compelling than leading animated-fact channels:
+- stronger hooks and greater curiosity;
+- cinematic presentation and better emotion;
+- smarter humour and exceptional sound;
+- more satisfying endings, with more rewatch and sharing.
+
+It must have our own identity and never copy another creator's characters, art, scripts or branding. Long-term revenue goal is about $20k/month, built sustainably. We make no view or revenue promises without evidence.
+
+**Priority order (when goals conflict):**
+1. Storytelling and engagement.
+2. Clarity and emotional impact.
+3. Cinematic direction.
+4. Visual and animation quality.
+5. Audio quality and sync.
+6. Technical polish.
+7. Efficiency and scale.
+
+Technology serves the story; never the reverse.
+
+**Visual identity today (PROVEN):**
+- 2D "pebble-folk" cartoon characters drawn on canvas cards (big heads, round expressive eyes, bold outlines, period costumes);
+- staged inside 3D worlds rendered with three.js (CC0 Poly Haven assets, procedural props);
+- warm cinematic grade.
+
+Known weakness: flat cards in a photoreal-ish world can look like two styles. See C.4.
+
+---
+
+## B. Storytelling playbook (PROVEN on Claw v2; refine with evidence)
+
+### B.1 Topic selection
+- Choose stories with one clear human (or creature) at the centre, a real threat or mystery, and a visual WOW moment that can be shown, not just told.
+- Prefer topics that reuse existing sets, props and cast (see F.5). Check `studio/content/production_backlog.md` (15 permanent topics; never remove one silently).
+
+### B.2 Research and fact-checking
+- Verify key claims against primary or reputable secondary sources. Record the sources in the episode record.
+- Keep three categories separate, and label them on screen when it matters:
+  - **documented**;
+  - **RECONSTRUCTION** (our interpretation of something real but undocumented in detail);
+  - **DRAMATIZATION** (invented for storytelling).
+- Wording must not overstate. Example from Claw v2: "the claw released it", not "he let go", because Archimedes designed the machines but is not documented operating one.
+
+### B.3 The story spine (every episode, answered in the first ~10 s)
+- **WHO** is this about?
+- **WHAT** extraordinary thing is happening?
+- **WHY** should I care what happens next?
+
+One hero, one threat or mystery, one turn, one payoff, one ending. No competing storylines, unnecessary characters, subplots or epilogues.
+
+### B.4 Hooks (first 1–2 s)
+- Open on an impossible-looking event, a dramatic consequence, a surprising visual, danger, a mystery, or an emotional contradiction.
+- The hook must create curiosity, not confusion. Answer "who?" within ~2 s while raising "how?".
+  - Claw v2: "This warship is being lifted out of the sea… by one old man."
+- The first frame must read on mute.
+- Avoid generic openers ("Did you know…", dates, establishing shots).
+
+### B.5 Curiosity, suspense, escalation
+- Every beat must do at least one of these:
+  - reveal something;
+  - raise the stakes;
+  - build suspense;
+  - show an emotional reaction;
+  - answer one question while opening another;
+  - move toward the payoff.
+- Show cause and effect one action per line (Claw v2: arm, then claw drops, then bites, then pull, then lift).
+- Use silence before the big moment.
+
+### B.6 Explanation
+- Never interrupt the climax with a technical lecture.
+- If a mechanism needs explaining, place it after the payoff as a simple diagram or analogy, or cut it if the action already explains itself (Claw v2 cut it).
+
+### B.7 Humour
+- Small and natural: irony, reactions, visual callbacks, contrast.
+- Never force it into tragedy.
+
+### B.8 WOW moment and ending
+- At least one replayable moment per episode.
+- End on the strongest meaningful beat: a reveal, reversal, callback or memorable image. No drawn-out epilogues.
+- Example (Claw v2): the true "rope panic" callback, then "Rome had sixty warships. / Syracuse had Archimedes."
+
+### B.9 Length and pacing
+- Never pad. Typical lengths are 20–35, 35–60 or 60–90 s, depending on the story.
+- Narration about 150–165 words per minute (Claw v2: 92 words in 39.8 s). Cut words rather than speed up the voice.
+- Shots about 1.5–3 s; hold the payoff or emotion longer only when it earns it.
+- A visual change at least every ~3 s.
+
+### B.10 Common storytelling mistakes (learned the hard way, Claw v1)
+- Hero introduced at 39 s of 79 s.
+- Three competing points of view.
+- Machine shown before its inventor matters.
+- Explanation mid-climax.
+- Two endings (a 31 s epilogue).
+- Dense, sped-up narration fighting long subtitles.
+- Shots composed to show off the 3D world instead of telling the story.
+
+### B.11 Gates for every story (must pass before storyboarding)
+- **A, Hook:** would a stranger stop scrolling in 1–3 s?
+- **B, Clarity:** can a first-time viewer say who and what?
+- **C, Emotion:** curiosity, tension, laughter or surprise?
+- **D, Payoff:** does the ending reward watching?
+- **E, Presentation:** do the narration, visuals, edit, sound and acting work together?
+
+---
+
+## C. Visual production manual
+
+### C.1 Pipeline (PROVEN)
+`studio/engine/web/director.js` plays a story folder `studio/stories/<slug>/` in headless Chromium (three.js r160, SwiftShader WebGL, CPU only).
+
+**`story.json` holds:**
+- `set` (module in `engine/web/sets/`), `period`, `cast` (character specs), `extras`, `performances` (acting beats in *world* time);
+- `shots` (camera keys in *video* time, optional `attach` to a ship frame and `attachUp`);
+- `timeMap` (video time → world time: slow motion, cuts, rewinds, flash-forwards), `duration`, `fps`.
+
+**`business.js` (optional)** holds story-specific simulation: ship state, claw machine, splashes, debris, props, actor placement (`placeActor`), camera frames (`frameOf`), per-character lighting (`cardLight`).
+
+**Story options (proven in Claw v2, set in `story.json`):**
+- `noStones`;
+- `extraFleet: N` (more distant ships);
+- `ropeGag {pivot, len, t0, swing, until}`;
+- `workerRun {t0, t1, x0, x1, z}`;
+- `hideAfter {w, ids}`;
+- `clearAfter` + `hazeScale` (thinner haze late in a film);
+- `exposure [[t0, t1, exposure, sunGlowScale]]` (per-shot exposure and glare control, video time).
+
+### C.2 Building an episode as data (PROVEN in Claw v2)
+- Write a small `build_story.py` per episode. It holds the shot list as `(name, video a→b, world a→b, camera keys, attach)`, the performances, and the story options, and emits `story.json` plus the `timeMap`.
+- One script means re-timing or reframing is a one-line edit. Reuse the world, cast and business of an earlier story with `"business": "../<other>/business.js"`.
+
+### C.3 Characters (PROVEN with limits)
+- Generator: `engine/web/chargen.js` (`drawCharacter`) with period-checked costumes (`periodExtra`, `checkPeriod`).
+- Acting: `engine/web/acting.js`.
+  - Actions: idle, talk, notice, curious, suspicious, disbelief, point, laugh, shock, recoil, stumble, dazed, sheepish, fear, sad, confused, realize, angry, carry, effort, shuffle, stride, bouncy, march, swagger.
+  - Face presets in `engine/web/toon.js` `FACE`: neutral, notice, curious, suspicious, disbelief, laugh, shock, fear, angry, sad, confused, realize.
+- A beat may override the face (`face: {preset, mouth: {smile}, lidT, pupil: [x, y]}`) and the body (`armL`/`armR: [shoulder, elbow]`, `handR`, `headTilt`). Examples:
+  - smirk: `{preset:'suspicious', mouth:{smile:0.55, asym:0.8}}`;
+  - looking up: `pupil:[0, -0.9]`;
+  - visible raised hand: `armR: [128, 30]` (165° hides the hand behind the head).
+- Lip-sync: `engine/web/lipsync.js` with `tools/align.py` (word timings) and `tools/envelope.py` (loudness). Hard m/b/p closure is PROVEN.
+- **Limits.** Cards always face the camera. Eyelines are therefore made by editing: a POV shot, then a reverse close-up (Claw v2, shots 17 and 18). Characters lean or slide; they do not truly turn.
+
+**Rules:**
+- Faces that must read emotion are ≥ 30–35% of frame height.
+- Wide shots carry spectacle, never facial acting.
+- Never claim an emotion reads unless it visibly does.
+
+### C.4 Environments, lighting, materials
+- **Sets:**
+  - `syracuse.js`: wall, city, claw machine, fleet, Etna, ocean;
+  - `roman_harbour.js`;
+  - `workshop.js`.
+- **Props:** `props/warship.js` (procedural, weathered, varied oars).
+- **FX:** `fx/ocean.js` (Gerstner waves, impact craters and rings, splash, crown).
+- **Assets:** 45 CC0 models, 14 texture sets, HDRI skies. Fetch them with `tools/fetch_assets.py` (via `setup.sh`).
+- **Lighting:**
+  - the HDR sky is column-rolled to place the sun (r160 has no `backgroundRotation`);
+  - per-scene card lighting through `cardLight`;
+  - shots that face the sun need the `exposure` override.
+
+**Problems to avoid (all seen in Claw):**
+- untextured placeholder boxes in frame (the city behind Archimedes): pick angles that avoid them, or dress them;
+- haze or mist planes washing out the far fleet;
+- backlit faces.
+
+### C.5 Camera direction (PROVEN rules)
+- Every shot names its job in one verb: establish, introduce, reveal, build, act, react, or pay off.
+- One subject per shot.
+- Motivated moves only: push in for emotion, pull back or crane for a reveal, track to follow a cause. No idle drifting.
+- **Place cameras from data, not guesses.** Use `tools/probe.mjs` (actor positions in a ship's local frame, plus any world point) and `tools/probe_expr.mjs` (any scene value, e.g. `wp(C.SET.hand)`). Claw v2 lost several iterations to guessed angles before probing.
+- Screen direction depends on the side you shoot from. Check with a test frame before a long render.
+
+### C.6 Physics and movement
+- Weight comes from timing: strain before motion, overshoot and settle, the stern pushing water, drainage streams, a slow-motion fall, then real-time impact (`timeMap`).
+- Authored curves, not simulation (PROVEN look; limited ceiling).
+
+### C.7 Rendering (PROVEN)
+- **Full quality:** 1080×1920, about 8–12 s/frame per job on CPU. Three parallel jobs give about 13 frames/min overall (≈ 90 min for 40 s at 30 fps).
+- **Animatic:** `SCALE=0.33` env var, 356×634, 4–5 s/frame. Use 15 fps for animatics (`build_story.py 15`), 30 for finals (`build_story.py 30`).
+- **Known failure: a job can silently lose its WebGL context and write black frames** (Claw v1: 229 frames).
+  - Always check: `find <frames> -size -20k`.
+  - Re-render missing frames into a fresh directory, then copy them over. Never `rm` with variable paths.
+
+### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
+- Toon or outline post-pass to unify flat cards and 3D surfaces.
+- Shadows cast from card silhouettes.
+- Stylised replacements for placeholder city geometry.
+- These are the top candidates for the next visual upgrade, to be evaluated only with a small test and owner approval.
+
+---
+
+## D. Audio production manual
+
+### D.1 Narration (PROVEN)
+**Correction recorded 2026-11-15.** The established narrator voice is **ElevenLabs "Eleven v4", called through the Higgsfield MCP** (`generate_audio`, model `elevenlabs_v4`, preset voice "Grady", id `e2a2d2e6-9ed2-59cd-82af-feaa27f8a678`). There is **no Fish Audio integration in this repository**. If the owner adds one, document it here first.
+
+**Cost:**
+- About 4.6 credits for ~80 s of narration (Claw v1).
+- The quote for the Claw v2 script was 2.76 credits.
+- Always quote first with `get_cost: true`, and get the owner's approval before spending.
+
+**Workflow:**
+1. Quote the cost with `get_cost: true`.
+2. Generate the lines with that voice.
+3. Download the result into `stories/<slug>/audio/`.
+4. Time it with `tools/align.py` (word timings) and `tools/envelope.py` (lip-sync loudness).
+5. Place the lines on the picture slots (per-episode script).
+
+**Rules:**
+- Cut words before speeding up; at most ±8% tempo.
+- Never speed up a character's dialogue.
+- A second voice for a character line in Claw v1 was preset "Benji" (`e6f9b893-51b1-51d3-afe9-9e0482cb7ac1`).
+
+### D.2 Music (PROVEN)
+- Original scores from ElevenLabs Music v2.5 via Higgsfield (Claw: 9.02 credits for 80 s). Reuse paid scores whenever possible.
+- Time the score so its peak lands on the payoff impact (offset with `ffmpeg -ss`).
+- Use silence before the release.
+- Free music libraries (YouTube Audio Library, Pixabay): EXPERIMENTAL. Check each track's licence and Content ID risk before use.
+
+### D.3 Sound effects (PROVEN, free)
+`tools/sfxlib.py cues.json out.wav "sea,wind"` synthesises:
+- impacts and mechanics: step, scrape, whoosh, plop, sizzle, bubble, clunk, roll, scuff, thud, chisel, tick, bell, clank, chain, snap;
+- timber and water: creak (f, dur), groan, pour (end, peak), drip;
+- ambience beds: sea, wind, room, masons.
+
+Cue sheets are in video time; build them per episode (Claw v2: `build_scratch_audio.py`).
+
+### D.4 Mixing (PROVEN)
+`tools/mix.sh <build_dir> <voice.wav> <voice_offset> <music> <music_LUFS> <duration>`.
+- Voice, plus music ducked under the voice, plus SFX ducked under the voice.
+- Normalised to −14 LUFS, limiter at −1.5 dBFS sample peak.
+- Expects `<build_dir>/sfx.wav`.
+- Music around −21 LUFS before ducking.
+
+### D.5 Audio QA
+- `ffmpeg -af ebur128=peak=true`: target I ≈ −14 LUFS, true peak ≤ −1 dBTP.
+- `astats`: no clipped samples.
+- Listen for voice overlaps (Claw v1 had the narrator and a character talking over each other). Check the voice-track energy around every character line.
+
+---
+
+## E. Subtitles and delivery
+
+### E.1 Captions (standard from Claw v2)
+- **Format:** ASS rendered by libass in ffmpeg (`-vf ass=captions.ass`).
+- **Typography:** DejaVu Sans Bold, white with a dark outline (≈5 px at 1080 wide) and a soft shadow.
+- **Chunks:** 1–3 words at a time, timed to word timings. Key words highlighted in the accent colour (amber `&H0040D8FF`).
+- **Position:**
+  - centred horizontally;
+  - caption block about **35–40% of frame height above the bottom edge**, i.e. bottom-aligned with `MarginV` ≈ 700 at 1920 tall;
+  - adjust per shot when it would cover a face or key action.
+- **Safe area for Shorts and Reels:**
+  - keep text out of the bottom ~25% (buttons, description) and the right ~120 px (action buttons);
+  - keep it out of the top ~10%.
+- **Labels:** small italic notes at the top, e.g. "RECONSTRUCTION — …" or "DRAMATIZATION — …".
+
+### E.2 Export (PROVEN)
+- **Production master:** `ffmpeg -framerate 30 -i frames/f%04d.jpg -i mix.wav -vf "ass=captions.ass,scale=1080:1920,setsar=1" -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -r 30 -c:a aac -b:a 192k -ar 48000 -movflags +faststart -shortest`. About 240 MB for 80 s; kept outside git.
+- **Delivery copy (< 50 MB for git and upload):** `-crf 22 -maxrate 4.8M -bufsize 9.6M`, audio copied. SSIM against the master should be ≥ 0.95.
+
+### E.3 Video QA (every delivery)
+- `ffprobe`: 1080×1920, 30/1 fps, expected frame count, AAC 48 kHz stereo.
+- `blackdetect=d=0.1:pix_th=0.08` and `freezedetect=n=0.002:d=0.5`: no hits except intended ones.
+- Contact sheet (1 frame per 1–3 s), a **muted** viewing, and a lip-sync strip for any spoken character.
+- Never call a video publishable just because it exported.
+
+---
+
+## F. Technical infrastructure
+
+### F.1 Layout
+```
+STUDIO_PRODUCTION_BIBLE.md   this file
+CLAUDE.md                    mandatory instructions for every session
+renders/                     delivered videos and review sheets (< 50 MB each)
+studio/
+  content/                   production_backlog.md (generated) + backlog.json (source of truth) + render_backlog_md.py
+  episodes/                  one production record per episode (EPxx_slug.md)
+  engine/
+    web/                     director.js, stage.js (renderer, ?scale=), chargen.js, acting.js, toon.js, lipsync.js,
+                             sets/, props/, fx/, assets/ (fetched, git-ignored), lib/ (three.js, git-ignored)
+    tools/                   render.mjs, probe.mjs, probe_expr.mjs, make_video.py, mix.sh, sfxlib.py,
+                             align.py, envelope.py, qa.py, fetch_assets.py, setup.sh
+  stories/<slug>/            story.json, build_story.py / build_*.py, business.js, audio/, captions, build/ (git-ignored)
+  ep01/, soldier_v2/, chargen/   earlier prototypes (DEPRECATED as pipelines; kept for reference)
+.claude/commands/make-video.md   /make-video command
+```
+
+### F.2 Commands (PROVEN)
+- **Fresh session setup:** `bash studio/engine/tools/setup.sh` (three.js r160, Playwright, numpy and pillow, CC0 assets). Free. Chromium is preinstalled in cloud sessions.
+- **Render frames:** `cd studio/engine/tools && node render.mjs <slug> <outdir> <a-b|list>`.
+  - `RESUME=1` skips existing frames.
+  - `SCALE=0.33` renders a low-res animatic.
+  - Run three jobs in parallel on separate ranges.
+- **Probe positions:**
+  - `node probe.mjs <slug> <frame> <actor> <hero|flag> ["x,y,z"]`;
+  - `node probe_expr.mjs <slug> <frame> "<expr using C, wp(obj)>"`.
+- **Sound effects:** `python3 studio/engine/tools/sfxlib.py cues.json sfx.wav "sea,wind"`.
+- **Mix:** `bash studio/engine/tools/mix.sh build voice.wav 0 music.wav -21 <dur>`.
+- **One-shot pipeline (older stories):** `python3 studio/engine/tools/make_video.py <slug>`.
+- **Backlog markdown:** `python3 studio/content/render_backlog_md.py`.
+
+### F.3 Dependencies
+- three.js r160 (MIT) and Playwright with preinstalled Chromium.
+- ffmpeg/ffprobe with libass, Python 3 with numpy and pillow.
+- No GPU. All free except Higgsfield credits.
+
+### F.4 Known limitations
+- Cards always face the camera.
+- SwiftShader is slow, with no global illumination or volumetrics.
+- Silent black-frame failures (C.7).
+- The harness refuses `rm` on variable paths (use fresh directories).
+- Long background waits time out after 2 h; re-arm them.
+
+### F.5 Reusable asset inventory (as of 2026-11-15)
+- **Syracuse world:**
+  - city wall, a city of whitewashed houses with terracotta roofs, a temple;
+  - Etna, ocean and mist, sunrise HDR skies;
+  - the claw machine (beam, chain, iron hand, winch);
+  - a hero warship, a flagship, a 7-ship fleet plus up to N extra distant ships;
+  - debris, splashes, drainage streams, sand tray, rope gag.
+- **Cast:**
+  - Archimedes (elder, robe);
+  - Roman soldiers and crew, period extras;
+  - Marcellus (commander).
+- **Also available:** workshop and Roman-harbour sets, 45 CC0 props, and two owned music scores (Claw 80 s; ep01 31 s).
+
+---
+
+## G. Budget and cost controls
+- **Cash:** about **$10–20 per month**. No new paid tools or services without approval.
+- **Credits:** Higgsfield credits are a conserved resource.
+  - Quote every generation with `get_cost: true`.
+  - Get owner approval before any spend.
+  - Record the actual spend from `transactions` in the episode record.
+- **Reference prices (quoted 2026-11-14/15):**
+  - narration ≈ 2.8–4.6 credits per episode;
+  - an 80 s score ≈ 9 credits;
+  - a keyframe image 0.25;
+  - AI video (Kling 3.0 Pro) 7.5 credits per 5 s, so not used per scene.
+- **Reuse first:** sets, cast, props, scores and SFX.
+
+---
+
+## H. Production workflow and approval gates
+
+| # | Stage | Inputs → outputs | Accept when | Approval |
+|---|---|---|---|---|
+| 1 | Topic | backlog → chosen topic + spine | passes B.3, has a showable WOW | owner |
+| 2 | Research | sources → `research.md` (documented / reconstruction / dramatization) | key claims sourced | — |
+| 3 | Script | → narration with timing estimates | Gates A–E (B.11), 150–165 wpm | **owner** |
+| 4 | Storyboard | → shot list (see, hear, understand, feel, why) in `build_story.py` | every shot has one purpose | **owner** |
+| 5 | Animatic | `build_story.py 15`, `SCALE=0.33`, scratch audio + text VO | **muted first-time-viewer test** passes | **owner** |
+| 6 | Narration | cost quote → voice lines → align / envelope | in sync, no overlaps | **owner approves credits** |
+| 7 | Final render | `build_story.py 30`, three jobs | no missing or black frames | — |
+| 8 | Mix | voice + music + SFX | −14 LUFS, ≤ −1 dBTP, voice clear | — |
+| 9 | Subtitles | ASS per E.1 | safe area, readable, synced | — |
+| 10 | QA | E.3 + section I checklists | no release blockers | — |
+| 11 | Delivery | master (local) + < 50 MB copy in `renders/` | — | **owner approves publication** |
+| 12 | Record | episode record + Bible updates | lessons logged | — |
+
+**Stop and reconsider** when:
+- a story fails Gate B twice;
+- a fix needs a new engine or paid service;
+- an animatic still fails the muted test after one fix pass.
+
+Report honestly; don't polish a failing concept.
+
+---
+
+## I. Quality assurance checklists
+
+**Creative:**
+- Do the first 1–2 s stop the scroll, and does the first frame read on mute?
+- Is who, what and why clear by about 10 s?
+- Does curiosity continue throughout, with no dead shots?
+- Are the threat, the trap or mystery, and the payoff visually clear?
+- Is the WOW moment replayable?
+- Is any callback obvious?
+- Is the ending the strongest beat?
+- Are claims accurate and labels in place?
+
+**Visual:**
+- Are faces readable where emotion matters?
+- Are eyelines clear (POV and reverse shots)?
+- No floating or sliding actors?
+- No placeholder geometry in frame?
+- No washed-out or backlit faces?
+- Is scale clear, with consistent exposure and colour?
+- No geometry breaks?
+
+**Audio:**
+- Is the narration intelligible on a phone speaker?
+- No overlaps?
+- Does the music support the voice, never bury it?
+- Are SFX synced to actions?
+- Silence used deliberately?
+- −14 LUFS, no clipping?
+
+**Technical:**
+- 1080×1920, 30 fps, expected frame count?
+- No black or frozen frames?
+- Captions inside the safe area and synced?
+- Delivery copy under 50 MB, SSIM ≥ 0.95?
+
+**Publication readiness:**
+- Owner has reviewed the final.
+- Title, description and sources prepared.
+- Status updated in the backlog and the episode record.
+
+---
+
+## J. Continuous improvement
+
+**Lessons learned (PROVEN):**
+1. Story before technology. Claw v1 was technically complete and creatively failed.
+2. Approve the script, then the storyboard, then an animatic before any expensive step. The animatic caught a dozen staging problems at about 1/10 of the cost.
+3. Evaluate muted, as a stranger. Narration must not rescue unclear visuals.
+4. Place cameras from probed data, not guesses.
+5. Make eyelines with a POV shot plus a reverse close-up (the cards can't turn).
+6. Callbacks work best when they reuse the original composition (the rope shot mirrors the claw shot).
+7. Check every render for black frames.
+8. Check for voice overlaps around every character line.
+9. Late-day or sun-facing shots need an exposure override.
+
+**Failed or deprecated:**
+- Long single-take tour shots of the world.
+- Explanation shots mid-climax.
+- Character dialogue that the narrator talks over.
+- Epilogue gags (the v1 fishing rod).
+- Mist planes near the camera (whiteout).
+- `ep01/` and `soldier_v2/` one-off pipelines (superseded by `engine/`).
+
+**Experimental:**
+- `ropeGag`, `workerRun`, `extraFleet`, `exposure` and the haze options (first used in Claw v2).
+- Free music libraries.
+
+**Future research (ASPIRATIONAL; needs approval and a small test first):**
+- Toon or outline unification pass.
+- Card silhouette shadows.
+- Stylised city replacements.
+- Selective AI video for one hero shot per episode, if the budget allows.
+
+**Efficiency:** per-episode `build_story.py`; reuse of business code across stories; low-res animatics.

@@ -8,7 +8,7 @@ v1 = json.load(open('../claw-of-syracuse/story_62s.json'))
 SMUG = {'preset': 'suspicious', 'mouth': {'smile': 0.55, 'asym': 0.8}, 'lidT': [0.32, 0.22]}
 CALM = {'preset': 'neutral', 'mouth': {'smile': 0.25}, 'lidT': [0.25, 0.25]}
 def K(pos, look, fov, focus, ap=0.0006): return {'pos': pos, 'look': look, 'fov': fov, 'focus': focus, 'ap': ap}
-HOOK = (K([11, 2.6, 60], [-1.5, 10.5, 12], 50, 50, 0.00012), K([10.4, 2.5, 57], [-1.5, 10.8, 12], 47, 47, 0.00012))   # lifted ship + chain + beam + wall in one frame
+HOOK = (K([38, 6.5, 58], [0.5, 15.0, 20], 52, 53, 0.0001), K([36.5, 6.3, 56], [0.5, 15.3, 20], 50, 51, 0.0001))   # lifted ship + chain + beam + wall in one frame
 ARCH_CU = (K([-4.7, 14.85, -5.6], [-4.5, 14.6, -1.6], 30, 4.0, 0.0011), K([-4.7, 14.85, -5.3], [-4.5, 14.6, -1.6], 27, 3.7, 0.0011))
 SHOTS = [
  ('01 HOOK: warship lifted out of the sea by the claw', 0.00, 2.15, 27.6, 29.2, HOOK, None),
@@ -18,14 +18,15 @@ SHOTS = [
  ('05 Archimedes draws in the sand; defenders scramble', 6.70, 9.45, 7.4, 10.1, (K([-8.2, 16.4, -6.4], [-4.9, 14.2, -1.6], 40, 6, 0.0006), K([-7.8, 16.2, -6.0], [-4.9, 14.2, -1.6], 38, 5.6, 0.0006)), None),
  ('06 ...and he wasn\'t worried (tiny smile)',         9.45, 11.10, 10.1, 11.8, ARCH_CU, None),
  ('07 the Romans row right up under the walls',       11.10, 13.40, 12.6, 14.9, (K([1.6, 4.0, -1.3], [12, 5.6, 0.6], 54, 2.6, 0.0006), K([2.0, 4.0, -1.3], [12, 6.1, 0.6], 52, 2.4, 0.0006)), 'hero'),
- ('08 ...exactly where he wanted them (hand raised)', 13.40, 15.40, 14.9, 16.4, (K([-5.8, 14.1, -6.6], [-4.3, 14.8, -1.6], 50, 5.2, 0.0007), K([-5.7, 14.1, -6.2], [-4.3, 14.9, -1.6], 46, 4.8, 0.0007)), None),
+ ('08 ...exactly where he wanted them (hand raised)', 13.40, 15.40, 14.9, 16.4, (K([-4.6, 14.5, -5.4], [-5.1, 14.7, -1.6], 46, 3.9, 0.0008), K([-4.55, 14.5, -5.1], [-5.1, 14.75, -1.6], 42, 3.6, 0.0008)), None),
  ('09 a giant wooden arm swings out (low, against the sky)', 15.40, 17.90, 16.4, 19.2, (K([28, 6.0, 38], [0, 11.5, 8], 54, 38, 0.0001), K([27, 5.8, 37], [0, 11, 9], 52, 38, 0.0001)), None),
  ('10 an iron claw drops... and bites',               17.90, 20.30, 19.2, 21.25, (K([5.4, 4.25, 1.4], [14, 6.2, -0.3], 50, 8.5, 0.0005), K([5.8, 4.25, 1.4], [14, 4.6, -0.3], 48, 8.2, 0.0005)), 'hero'),
  ('11 sailor looks up: grin fades',                   20.30, 21.20, 21.25, 22.1, (K([11.3, 4.1, 1.7], [9.0, 4.0, 0.5], 30, 2.6, 0.0013), K([11.2, 4.1, 1.65], [9.0, 4.0, 0.5], 28, 2.5, 0.0013)), 'hero'),
  ('12 the chain snaps taut: it begins to pull',       21.20, 22.70, 22.1, 23.1, (K([9.5, 5.2, 3.6], [14.6, 9.0, 0], 46, 6, 0.0005), K([9.8, 5.0, 3.4], [14.6, 9.5, 0], 44, 6, 0.0005)), 'hero'),
  ('13 UP. OUT OF THE SEA (the hook image, now understood)', 22.70, 25.70, 23.3, 27.6, (K([16, 2.4, 64], [1, 8.5, 12], 52, 52, 0.00012), HOOK[0]), None),
  ('14 silence: terrified sailor, deck tilted',        25.70, 26.60, 28.0, 28.9, (K([-2.7, 4.1, 3.1], [-0.1, 3.75, 1.9], 34, 2.9, 0.0012), K([-2.6, 4.1, 3.0], [-0.1, 3.75, 1.9], 32, 2.8, 0.0012)), 'hero', 0.7),
- ('15 and then... the claw released it',              26.60, 28.60, 31.3, 32.75, (K([20, 9, 38], [1, 17, 12], 42, 30, 0.0001), K([19.5, 8.8, 37], [1, 16, 12], 42, 30, 0.0001)), None),
+ ('15 and then... the claw released it',              26.60, 27.75, 31.3, 32.35, (K([20, 9, 38], [1, 17, 12], 42, 30, 0.0001), K([19.5, 8.8, 37], [1, 16, 12], 42, 30, 0.0001)), None),
+ ('15b CLOSE: the claw opens',                        27.75, 28.60, 32.35, 32.75, (K([8.2, 24.6, 23.6], [1.2, 26.4, 16.5], 34, 10, 0.0003), K([7.9, 24.6, 23.2], [1.2, 26.2, 16.5], 32, 9.6, 0.0003)), None),
  ('16 the fall (slow motion) and the crash',          28.60, 30.80, 32.75, 34.6, (K([31, 6.5, 46], [0, 6, 16], 46, 40, 0.0002), K([30, 6.3, 45], [0, 5.5, 16], 44, 40, 0.0002)), None),
  ('17 days later: a pole and rope swing out over the wall (echo of the claw)', 30.80, 32.60, 54.7, 56.0, (K([7.2, 4.3, 0.5], [24.2, 12.6, 3.4], 32, 18, 0.00015), K([7.3, 4.3, 0.5], [24.2, 12.0, 3.4], 28, 18, 0.00015)), 'flag'),
  ('18 the same sailor sees it: PANIC',                32.60, 34.60, 56.0, 57.6, (K([2.0, 4.0, -0.2], [24, 8.5, 3.0], 40, 5.0, 0.0004), K([2.6, 4.0, -0.1], [24, 8.6, 3.0], 36, 4.4, 0.0004)), 'flag'),
@@ -60,7 +61,7 @@ P['titus'] = {'beats': [
   {'t': 49.5, 'act': 'idle', 'face': {'preset': 'neutral', 'mouth': {'smile': 0.3}}}, {'t': 55.75, 'act': 'notice', 'face': dict(UP, preset='notice')}, {'t': 56.15, 'act': 'shock', 'face': dict(UP, preset='shock')}, {'t': 56.8, 'act': 'fear', 'face': dict(UP, preset='fear')}]}
 story = {'title': 'The Claw of Syracuse (v2)', 'period': v1['period'], 'set': v1['set'], 'fps': FPS, 'duration': DUR, 'business': '../claw-of-syracuse/business.js',
          'cardHeight': v1['cardHeight'], 'cardEmissive': v1.get('cardEmissive', 0.16), 'timeMap': tm, 'ambience': v1.get('ambience'),
-         'cast': cast, 'extras': v1['extras'], 'performances': P, 'shots': shots, 'kicks': [], 'noStones': True, 'clearAfter': 49.5, 'hazeScale': 0.3,
+         'cast': cast, 'extras': v1['extras'], 'performances': P, 'shots': shots, 'kicks': [], 'noStones': True, 'clearAfter': 49.5, 'exposure': [[34.6, 39.8, 0.62, 0.15]], 'hazeScale': 0.3,
          'extraFleet': 22, 'hideAfter': {'w': 59.5, 'ids': ['titus', 'marcellus', 'crew1', 'crew2', 'crew3', 'crew4', 'crew5', 'crew6', 'officer1', 'officer2']}, 'ropeGag': {'pivot': [-3.6, 13.6, 0.4], 'len': 3.6, 't0': 55.0, 'swing': 0.9, 'until': 58.5}, 'workerRun': {'t0': 7.6, 't1': 10.6, 'x0': -10.5, 'x1': 2.0, 'z': -0.9}}
 json.dump(story, open('story.json', 'w'), indent=1)
 print('shots', len(shots), 'frames', round(DUR * FPS)); print('timeMap', tm)

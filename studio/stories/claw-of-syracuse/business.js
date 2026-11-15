@@ -197,6 +197,8 @@ export function frame(w, C, t) {
   SY.fog.color.setRGB(lerp(0.11, 0.79, day), lerp(0.13, 0.72, day), lerp(0.2, 0.66, day)); C.renderer.toneMappingExposure = lerp(0.85, 0.88, day);
   for (const T of SY.torches) { const fl = 1 + 0.15 * Math.sin(w * 23 + T.x) + 0.1 * Math.sin(w * 37 + T.x * 2); T.f.scale.set(0.9 * fl, 1.4 * fl, 1); T.f.material.opacity = lerp(1, 0.35, day); if (T.L) T.L.intensity = 30 * fl * lerp(1, 0.25, day); }
   const HZ = (C.story.clearAfter != null && w >= C.story.clearAfter) ? (C.story.hazeScale ?? 0.3) : 1; SY.fog.near = 60 / HZ; SY.fog.far = 420 / HZ;   // story option: clearer air late in the film
+  const EX = (C.story.exposure || []).find((e) => t >= e[0] && t < e[1]);   // story option: per-shot exposure / glare override [t0, t1, exposure, sunGlowScale]
+  if (EX) { C.renderer.toneMappingExposure = EX[2]; }
   SY.mist.forEach((m, i) => { m.material.opacity = lerp(0.35, 0.2, day) * HZ; m.material.color.setRGB(lerp(0.16, 0.92, day), lerp(0.2, 0.88, day), lerp(0.28, 0.84, day)); m.material.map.offset.x = w * 0.004 * (i + 1); });
   // stones
   if (S.rope) { const { R, piv, segs } = S.rope, on = w >= K.DAYS && w < (R.until ?? 1e9), k = ss(ramp(w, R.t0, R.t0 + R.swing)); piv.visible = on; piv.rotation.x = lerp(-1.35, -0.12, k) + Math.sin(w * 2.1) * 0.03 * k;   // pole tips out over the sea
@@ -228,7 +230,7 @@ export function frame(w, C, t) {
     S.bobber.position.copy(end); S.bobber.visible = w < K.YANK; const mid = tip.clone().add(end).multiplyScalar(0.5), len = tip.distanceTo(end); S.line.position.copy(mid); S.line.scale.set(1, len, 1); S.line.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), end.clone().sub(tip).normalize());
     S.fish.visible = w >= K.YANK; S.fish.position.copy(end).add(new THREE.Vector3(0, -0.25, 0)); S.fish.material.rotation = w < K.CAUGHT ? (w - K.YANK) * 14 : Math.PI / 2 + Math.sin(w * 18) * 0.5; }
   // atmosphere: sun glow at dawn, surf along the rocks, stronger grade
-  SY.sunGlow.material.opacity = 0.55 * sunUp * (w >= K.DAYS ? 0.4 : 1); SY.surf.material.map.offset.x = w * 0.02; SY.surf.material.opacity = 0.55 + 0.25 * Math.sin(w * 1.1);
+  SY.sunGlow.material.opacity = 0.55 * sunUp * (w >= K.DAYS ? 0.4 : 1) * (EX ? (EX[3] ?? 1) : 1); SY.surf.material.map.offset.x = w * 0.02; SY.surf.material.opacity = 0.55 + 0.25 * Math.sin(w * 1.1);
   C.grade.uniforms.con.value = 0.27; C.grade.uniforms.vig.value = 0.38;
   S.spray2.update(w, [{ t0: K.LIFT0 + 0.2, pos: [1, 0.2, (S.grip?.z || 15) + 0.5], power: 0.8, spread: [0.6, 0.6] }, { t0: K.DAYS + 3.1, pos: [-4, 0.2, 27], power: 0.6 }]);
   // the stern digs in as the bow rises: a displacement wave
