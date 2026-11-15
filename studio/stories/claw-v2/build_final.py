@@ -94,11 +94,11 @@ WrapStyle: 0
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Cap,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,700,1
 Style: CapHi,DejaVu Sans,76,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,130,130,1240,1
-Style: Note,DejaVu Sans,30,&H00E8E8E8,&H00FFFFFF,&H00101010,&H70000000,0,1,0,0,100,100,1,0,3,2,0,8,90,90,205,1
+Style: Note,DejaVu Sans,40,&H00F2F2F2,&H00FFFFFF,&H64000000,&H64000000,1,0,0,0,100,100,1,0,3,10,0,8,90,90,215,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
-notes = [f"Dialogue: 0,{ts(sh[8][0])},{ts(sh[12][1])},Note,,0,0,0,,RECONSTRUCTION — the machine's exact design is unknown"]
+notes = [f"Dialogue: 0,{ts(sh[8][0])},{ts(sh[12][1])},Note,,0,0,0,,RECONSTRUCTION · exact design unknown"]
 open('captions.ass', 'w').write(hdr + '\n'.join(ev + notes) + '\n')
 print('duration', DUR); print('line starts', {i + 1: round(v, 2) for i, v in st.items()}); print('shots', sh)

@@ -65,6 +65,6 @@ story = {'title': 'The Claw of Syracuse (v2)', 'period': v1['period'], 'set': v1
          'cardHeight': v1['cardHeight'], 'cardEmissive': v1.get('cardEmissive', 0.16), 'timeMap': tm, 'ambience': v1.get('ambience'),
          'cast': cast, 'extras': v1['extras'], 'performances': P, 'shots': shots, 'kicks': [], 'noStones': True, 'clearAfter': 49.5, 'exposure': [[34.6, 39.8, 0.62, 0.15]], 'hazeScale': 0.3,
          'extraFleet': 22, 'hideAfter': {'w': 59.5, 'ids': ['titus', 'marcellus', 'crew1', 'crew2', 'crew3', 'crew4', 'crew5', 'crew6', 'officer1', 'officer2']}, 'ropeGag': {'pivot': [-3.6, 13.6, 0.4], 'len': 3.6, 't0': 55.0, 'swing': 0.9, 'until': 58.5}, 'workerRun': {'t0': 7.6, 't1': 10.6, 'x0': -10.5, 'x1': 2.0, 'z': -0.9}}
-s19 = next(x for x in shots if x['name'].startswith('19')); story['exposure'] = [[s19['a'], DUR + 1, 0.62, 0.15]]   # late sun-facing shots (19-20): less exposure and glare
+s19 = next(x for x in shots if x['name'].startswith('19')); story['exposure'] = [[s19['a'], DUR + 1, 0.52, 0.0, 0.08]]; story['hazeScale'] = 0.2   # late sun-facing shots (19-20): less exposure and glare
 json.dump(story, open('story.json', 'w'), indent=1)
 print('shots', len(shots), 'frames', round(DUR * FPS)); print('timeMap', tm)

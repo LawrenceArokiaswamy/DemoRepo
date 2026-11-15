@@ -144,7 +144,9 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 - `workerRun {t0, t1, x0, x1, z}`;
 - `hideAfter {w, ids}`;
 - `clearAfter` + `hazeScale` (thinner haze late in a film);
-- `exposure [[t0, t1, exposure, sunGlowScale]]` (per-shot exposure and glare control, video time).
+- `exposure [[t0, t1, exposure, sunGlowScale, bloomStrength]]` (per-shot exposure, sun-glow and bloom/glare control, in video time).
+  - Proven on Claw v2 shots 19–20: `0.52, 0.0, 0.08` with `hazeScale 0.2`.
+  - **Times are video seconds**, so recompute them after any re-time. Claw v2's builder derives them from the shot start.
 
 ### C.2 Building an episode as data (PROVEN in Claw v2)
 - Write a small `build_story.py` per episode. It holds the shot list as `(name, video a→b, world a→b, camera keys, attach)`, the performances, and the story options, and emits `story.json` plus the `timeMap`.
@@ -275,11 +277,20 @@ Cue sheets are in video time; build them per episode (Claw v2: `build_scratch_au
 - **Safe area for Shorts and Reels:**
   - keep text out of the bottom ~25% (buttons, description) and the right ~120 px (action buttons);
   - keep it out of the top ~10%.
-- **Labels:** small italic notes at the top, e.g. "RECONSTRUCTION — …" or "DRAMATIZATION — …".
+- **Labels:** short notes at the top, e.g. "RECONSTRUCTION · exact design unknown" or "DRAMATIZATION · …".
+  - Style: 40 px, upright (italic 30 px proved too small for phones), soft dark box (`BorderStyle 3`, 60% alpha), `MarginV` ≈ 215 so it sits below the platform's top bar.
+  - Show it only while the reconstructed object is on screen.
 
 ### E.2 Export (PROVEN)
 - **Production master:** `ffmpeg -framerate 30 -i frames/f%04d.jpg -i mix.wav -vf "ass=captions.ass,scale=1080:1920,setsar=1" -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -r 30 -c:a aac -b:a 192k -ar 48000 -movflags +faststart -shortest`. About 240 MB for 80 s; kept outside git.
 - **Delivery copy (< 50 MB for git and upload):** `-crf 22 -maxrate 4.8M -bufsize 9.6M`, audio copied. SSIM against the master should be ≥ 0.95.
+- **Verified for Claw v2 final:** 1080×1920, 9:16, H.264 yuv420p, 30/1 fps, AAC 48 kHz stereo; delivery copy about 29 MB; SSIM 0.967.
+- **Discrepancy found in QA (2026-11-15):**
+  - The owner saw **512×910** on a delivered MP4.
+  - ffprobe of every copy (delivery, master, committed file, source frames) reported 1080×1920.
+  - The Claude app **re-encodes attachments to a smaller preview**; the same thing happened with an earlier episode.
+  - **Rule:** in every delivery note, include the raw ffprobe output and the repository path of the original file (branch + `renders/<file>.mp4`), and state that the in-app preview may be downscaled.
+  - Never upscale a lower-resolution render and call it 1080p: confirm the source frames are 1080×1920 with `identify frames/f0000.jpg`.
 
 ### E.3 Video QA (every delivery)
 - `ffprobe`: 1080×1920, 30/1 fps, expected frame count, AAC 48 kHz stereo.

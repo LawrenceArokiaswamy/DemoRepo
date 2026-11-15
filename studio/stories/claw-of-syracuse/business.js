@@ -198,6 +198,7 @@ export function frame(w, C, t) {
   for (const T of SY.torches) { const fl = 1 + 0.15 * Math.sin(w * 23 + T.x) + 0.1 * Math.sin(w * 37 + T.x * 2); T.f.scale.set(0.9 * fl, 1.4 * fl, 1); T.f.material.opacity = lerp(1, 0.35, day); if (T.L) T.L.intensity = 30 * fl * lerp(1, 0.25, day); }
   const HZ = (C.story.clearAfter != null && w >= C.story.clearAfter) ? (C.story.hazeScale ?? 0.3) : 1; SY.fog.near = 60 / HZ; SY.fog.far = 420 / HZ;   // story option: clearer air late in the film
   const EX = (C.story.exposure || []).find((e) => t >= e[0] && t < e[1]);   // story option: per-shot exposure / glare override [t0, t1, exposure, sunGlowScale]
+  if (C.bloom) { if (C.bloom._base == null) C.bloom._base = C.bloom.strength; C.bloom.strength = EX && EX[4] != null ? EX[4] : C.bloom._base; }   // per-shot bloom (glare) override
   if (EX) { C.renderer.toneMappingExposure = EX[2]; }
   SY.mist.forEach((m, i) => { m.material.opacity = lerp(0.35, 0.2, day) * HZ; m.material.color.setRGB(lerp(0.16, 0.92, day), lerp(0.2, 0.88, day), lerp(0.28, 0.84, day)); m.material.map.offset.x = w * 0.004 * (i + 1); });
   // stones

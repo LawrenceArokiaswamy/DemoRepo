@@ -1,7 +1,7 @@
 // STORY DIRECTOR (original). Plays any story folder: story.json (set, cast bible, performances, shots, audio)
 // + optional business.js (story-specific object interaction: carried props, particles, physics).
 // URL: director.html?story=/stories/<slug>   Exposes window.renderFrame(f), window.TOTAL, window.cues(), window.ready.
-import { THREE, scene, camera, composer, bokeh, grade, makeCard, camKeys, loadModel, renderer } from './stage.js';
+import { THREE, scene, camera, composer, bokeh, grade, bloom, makeCard, camKeys, loadModel, renderer } from './stage.js';
 import { drawCharacter, normalizeSpec, periodExtra, checkPeriod } from './chargen.js';
 import { makePerformer } from './acting.js';
 import { makeSpeech } from './lipsync.js';
@@ -53,7 +53,7 @@ function setup(t) {
   }
 }
 // ---- story business (optional)
-const CTX = { THREE, scene, camera, SET, ACT, story, FPS, DUR, setup, cardToWorld, handsMid, camRight, loadModel, worldT, grade, renderer };
+const CTX = { THREE, scene, camera, SET, ACT, story, FPS, DUR, setup, cardToWorld, handsMid, camRight, loadModel, worldT, grade, renderer, bloom };
 let biz = {};
 if (story.business) biz = await import(`${base}/${story.business}`); if (biz.init) await biz.init(CTX);
 window.renderFrame = (f) => { const t = f / FPS; if (biz.prepare) biz.prepare(CTX); setup(t); if (biz.frame) biz.frame(worldT(t), CTX, t); grade.uniforms.t.value = t; composer.render(); return true; };
