@@ -766,6 +766,25 @@ Keep an original identity; never copy the reference.
 - **Landscape thumbnail renders** (`LANDSCAPE=1`), already used in production.
 - **Render cost:** 4.9 s/frame at 1080×1920 for the benchmark (AO plus 8–10 lights), against about 2–2.5 s for the Vasa scenes. That's roughly a 2× regression, acceptable for a 60 s Short (about 2.5 h CPU).
 
+*B2. IMPLEMENTED AND TESTED IN MOTION: Gate 2* (`stories/ep03-motion`, `renders/ep03_gate2_motion_test.mp4`, 9 s). Awaiting owner review; **experimental until approved**.
+- **C+ v2 character cleanup** (same rig; Roman and 1628 costumes untouched):
+  - face `style: 'v2'`: eyes about 20% smaller, thinner lid lines, solid tapered brows without outline, slimmer mouth;
+  - sculpted hair: a smooth shell with a curved hairline, a swept quiff (men), long hair with face-framing curtains (women), replacing the lumpy tufts;
+  - slimmer limbs;
+  - mitten hands (palm + mitten + thumb; pointing variant) instead of finger tubes;
+  - the transparent face layer is hidden from AO, which removed a seam across the face.
+- **Snap-and-hold acting:** `snap(t, t0, d)` uses an ease-out-back (overshoot) over 3–5 frames, then holds. Applied to:
+  - eyes first, then head, on the glance;
+  - anticipation then shock on the take, with squash and stretch;
+  - head-snap then eye-narrow on the suspicion;
+  - a staggered wave of diners' reactions.
+  - Secondary motion: phone vibration, a tremble during the shock hold, a gulp, breathing.
+- **Cartoon symbols as overlays** (depthTest off, so hair never hides them): shock lines and a sliding sweat drop.
+- **Sound, free:** `sfxlib.py` gained `buzz`, `ding(f, pan)` and a `cafe` murmur ambience.
+- **Staging lesson:** a phone screen meant to be read needs a dedicated insert shot with the phone light reduced, or it blows out.
+- **Coding lesson (three times now):** run `node --check` after every scripted JS edit.
+- **Render cost:** 3.6–4.0 s/frame at 1080×1920 (270 frames in 17.4 min including loads), against about 2.3 s for Vasa scenes: roughly 1.7× slower. That's acceptable (about 4 h CPU for a 60 s Short).
+
 *C. PLANNED / EXPERIMENTAL (not started)*:
 - shot-language toolkit (camera presets, whip-pan transitions, still-frame composition overlay);
 - stylised FX library;
