@@ -5,7 +5,7 @@
 | ID | EP00 (pilot) |
 | Category | Extraordinary history |
 | Story folders | v1: `studio/stories/claw-of-syracuse/` · v2: `studio/stories/claw-v2/` (reuses v1 world + `business.js`) |
-| Status | v1 **rejected** (2026-11-14). v2: script, storyboard and animatic approved; final production in progress |
+| Status | v1 **rejected** (2026-11-14). v2 **complete and closed** (2026-11-15): **ready for owner publication approval** |
 | Publication | not published (owner approval required) · URL: — · metrics: — |
 
 ## 1. Topic and research
@@ -194,3 +194,41 @@ See Bible §J.
    - Scan result: 44 captions, 0 shown during silence, 0 overlapping.
 5. **Final specs.** Delivery copy 1080×1920, 9:16, H.264 yuv420p, 30/1 fps, 1,391 frames, 46.37 s, AAC 48 kHz stereo, 29.2 MB. Master 111.6 MB (local). −14.1 LUFS, true peak −1.3 dBTP. No black or frozen frames. SSIM 0.967.
 6. **Status.** Delivered for the owner's publication approval. Not published.
+
+## 11. Close-out (2026-11-15)
+
+**Owner decision:** no more creative or animation revisions. Publish, then learn from real audience feedback.
+
+**Publication files (all native 1080×1920, 30/1 fps, AAC 48 kHz stereo, 46.37 s):**
+
+| File | Size | Bitrate | Purpose |
+|---|---|---|---|
+| `renders/claw_of_syracuse_v2_UPLOAD_1080p.mp4` | 49.4 MB | 8.5 Mb/s | **Use this one for YouTube / Instagram.** SSIM 0.973 vs master |
+| `renders/claw_of_syracuse_v2.mp4` | 29.2 MB | 4.8 Mb/s | Review copy. The GitHub copy is identical (SHA-256 `d6b0867a…8372a`) |
+| `stories/claw-v2/build/out/claw_v2_master.mp4` | 111.6 MB | 19 Mb/s | Local only (too large for git). Lost when the session container is reclaimed; reproducible from the committed sources |
+
+**Download:** `https://github.com/LawrenceArokiaswamy/DemoRepo/raw/claude/eager-volta-ovkg46/renders/<file>` (private repo; sign-in required). The "512×910" the owner saw comes from the Claude app's attachment preview, not from the files.
+
+**Preserved for reuse (committed):**
+- `stories/claw-v2/build_story.py` (shots, performances, options), `build_final.py` (conform to voice, captions, SFX remap, music timing), `build_scratch_audio.py`;
+- `story.json`, `captions.ass`, `audio/narration_raw.mp3` (paid, 2.76 credits), `story_animatic_timing.json`;
+- the shared world and business code in `stories/claw-of-syracuse/` (score `audio/music.mp3`, paid);
+- animatics and storyboard sheets in `renders/`.
+
+**To rebuild the master:**
+1. `python3 build_story.py 30`
+2. Render frames in batches.
+3. `python3 build_final.py`
+4. `mix.sh`
+5. The encode in Bible §E.2.
+
+**After publication, record here:** URL, publish date, and 48 h / 7 d / 28 d views, average view duration, % viewed, swipe-away rate, likes, comments, shares and subscribers gained.
+
+## 12. Lessons carried into Episode 2
+1. Story gates first, then an animatic, before any expensive render or spend.
+2. Record narration **before** locking picture timing; plan scripts at about 138 wpm for this voice, not 160.
+3. Render in fresh-browser batches, with a black-frame watcher.
+4. Time captions to voiced speech; check faces against the caption band.
+5. Plan sun direction per shot; use exposure, bloom and haze overrides for sun-facing shots.
+6. Deliver with raw ffprobe output plus the GitHub path, because app previews are downscaled.
+7. **Next quality focus (owner):** 3D environments, lighting, cinematography and animation. Evaluate with small tests after reviewing audience data.

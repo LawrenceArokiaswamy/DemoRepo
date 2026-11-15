@@ -17,13 +17,14 @@
    "working_title": "The Claw of Syracuse",
    "category": "Extraordinary history",
    "story_folder": "studio/stories/claw-of-syracuse",
-   "production_status": "QA",
+   "production_status": "QA — ready for owner publication approval",
    "credits_spent": 16.38,
    "publication_url": null,
    "performance": null,
    "duration_s": 46.37,
    "deliverable": "renders/claw_of_syracuse_v2.mp4",
-   "notes": "v1 rejected; v2 (story-first rebuild) delivered for owner review 2026-11-15. Master (CRF 19, 111 MB) kept locally in stories/claw-v2/build/out."
+   "notes": "Episode closed creatively 2026-11-15 (owner decision: publish and learn from audience). Owner will create the YouTube channel and upload. Record URL + metrics after publication.",
+   "upload_file": "renders/claw_of_syracuse_v2_UPLOAD_1080p.mp4"
   }
  ],
  "backlog": [

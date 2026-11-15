@@ -290,6 +290,7 @@ Cue sheets are in video time; build them per episode (Claw v2: `build_scratch_au
 ### E.2 Export (PROVEN)
 - **Production master:** `ffmpeg -framerate 30 -i frames/f%04d.jpg -i mix.wav -vf "ass=captions.ass,scale=1080:1920,setsar=1" -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -r 30 -c:a aac -b:a 192k -ar 48000 -movflags +faststart -shortest`. About 240 MB for 80 s; kept outside git.
 - **Delivery copy (< 50 MB for git and upload):** `-crf 22 -maxrate 4.8M -bufsize 9.6M`, audio copied. SSIM against the master should be ≥ 0.95.
+- **Upload master (PROVEN, preferred for platforms):** from the master, `-c:v libx264 -preset slow -crf 17 -maxrate 8.2M -bufsize 16M -profile:v high -pix_fmt yuv420p -c:a copy -movflags +faststart`. About 8.5 Mb/s; for about 46 s it stays under 50 MB (git-safe). SSIM ≈ 0.97. For episodes over about 48 s, lower `-maxrate` proportionally to stay under 50 MB.
 - **Verified for Claw v2 final:** 1080×1920, 9:16, H.264 yuv420p, 30/1 fps, AAC 48 kHz stereo; delivery copy about 29 MB; SSIM 0.967.
 - **Discrepancy found in QA (2026-11-15):**
   - The owner saw **512×910** on a delivered MP4.
@@ -482,3 +483,11 @@ Report honestly; don't polish a failing concept.
 - Selective AI video for one hero shot per episode, if the budget allows.
 
 **Efficiency:** per-episode `build_story.py`; reuse of business code across stories; low-res animatics.
+
+**Episode 1 retrospective (2026-11-15):**
+- **Process:** story-first gates fixed the core problem (v1 → v2).
+- **Biggest time sinks:**
+  - re-timing after narration (record the voice earlier);
+  - guessed camera angles (probe them);
+  - render failures (batch the renders).
+- **Next phase (ASPIRATIONAL, owner priority after audience data):** substantially better 3D environments, lighting, cinematography and animation. Approach it through small validated tests per episode, never a pipeline rebuild without approval.
