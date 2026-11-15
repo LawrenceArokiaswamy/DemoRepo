@@ -1,8 +1,8 @@
 # Episode 2: VASA, "The Warship That Sank on Its First Voyage"
 
 **Status**
-- Topic approved by the owner (2026-11-15).
-- **Script and production plan: AWAITING OWNER APPROVAL.**
+- Topic approved by the owner (2026-11-15). Unpaid stage approved.
+- **Animatic v1 and revised script: AWAITING OWNER REVIEW.** Paid narration and music need separate approval.
 - No paid generation, and no full animation, until approval (Bible H).
 
 **Spend so far:** $0 cash, 0 credits. The quotes below are preflights only, made with `get_cost: true`; nothing was submitted.
@@ -12,6 +12,64 @@
 - **[SECONDARY]**: reputable secondary source, consistent across sources.
 - **[DISPUTED]**: sources disagree, or the claim is a hypothesis.
 - **DRAMATIZATION / RECONSTRUCTION**: as defined in Bible B.2.
+
+---
+
+## R. Revision 1: owner notes applied, animatic v1 (2026-11-15)
+
+**Owner decisions (2026-11-15)**
+- Approved: Vasa as Episode 2, plus the **unpaid** stage (ship, harbour, period costumes, foot planting and acting improvements inside the episode, low-res animatic).
+- **Not yet approved:** the narration (2.99 credits) and the music (7.27 credits). Nothing is generated until the owner has reviewed the animatic and explicitly authorised those costs.
+- Keep the exact Episode 1 Grady voice.
+- Two script changes requested:
+  - **Opening:** say at once that she sank on her first voyage.
+  - **Ending:** must not suggest the ship *sailed* for 333 years.
+
+**Revised script (supersedes §2; 106 words; planned ~50.4 s; timing will be conformed to the recorded voice)**
+
+| Time (s) | VO | Shot |
+|---|---|---|
+| 0.2–2.4 | "Sweden built a warship so powerful…" | S01 gilded stern under full sail (water level) |
+| 2.7–4.0 | "…it sank on its first voyage." | S02 sailor waving; the horizon tilts; his smile freezes, eyes drop, then look to camera |
+| 4.2–6.8 | "The king wanted two gun decks. Sixty-four cannons." | S03 quay: two rows of lids swing open, cannons run out; the shipwright looks up, worried. Caption STOCKHOLM · 1628 |
+| 7.0–9.3 | "First, a test: thirty men ran across the deck." | S04 the crew lined up at the rail; the captain signals |
+| (9.4–14.1) | *(no VO: three runs, each roll bigger)* | S05a runners; S05b the admiral's eyes widen; S05c our sailor lands dizzy on the high side |
+| 13.9–16.1 | "She rolled so hard, the admiral stopped the test." | S06a the admiral's raised hand; S06b everyone frozen mid-stride, one still sliding |
+| 17.4–18.4 | "They sailed anyway." | S07 he glances toward the palace, sighs, waves them out |
+| (18.6–21.0) | *(departure, salute)* | S08 caption 10 AUGUST 1628 |
+| 21.1–23.8 | "A breeze. She leaned… and came back." | S09 our sailor grips the rail, then laughs with relief |
+| 24.2–25.4 | "Then, a stronger gust." | S10 a dark gust line races across the water |
+| 26.0–27.6 | "The lower gunports were open." | S11 lower gun deck: back to camera, then head → shoulders → body turn; surprise |
+| (28.2–30.2) | *(water)* | S12 water pours through the low ports |
+| 31.0–33.0 | "Within sight of the city, she sank." | S13 from the shore: townsfolk and a child watch her go over (respectful, no humour) |
+| 33.6–35.0 | "At least thirty people died." | (S13) |
+| 35.6–40.6 | "The designer was dead. The builders said the king approved the plans. Nobody was punished." | S14 inquiry: councillors point at each other, then at the empty chair with the shipwright's cap, then glance up at the king's portrait and lower their arms |
+| 41.0–45.6 | "She sank in twenty minutes. Then she lay underwater for 333 years…" | S15 the hull on the seabed, light shafts |
+| 46.0–47.8 | "…until they brought her back," | S16 1961: the dark hull breaks the surface between pontoons; press boats, flashes. Caption 1961 |
+| 48.2–49.4 | "almost whole." | S17 payoff: the stern, framed exactly like the opening |
+
+**Why these lines**
+- **The hook** states the outcome in under 2 s ("…it sank on its first voyage") while the picture shows pride turning to dread.
+- **The "twenty minutes" fact** moves to the ending, where its contrast with 333 years lands. The ship is never described as travelling for 333 years: she *lay underwater* for 333 years.
+- **"Within sight of the city":** the museum says she sank in sight of the shipyard, so the line is supported by the record.
+- **"The builders said the king approved the plans":** this is attributed testimony, as in the museum's inquest page.
+- **The interval:** August 1628 to April 1961 is 332 years 8 months. The Vasa Museum itself says "after 333 years", so we use "333 years".
+
+**What was built in this stage**
+- **Vasa ship:** `engine/blender/build_vasa.py` → `engine/web/props/models/vasa.glb` (≈1.1 MB, 229 parts). The lower gunports are real openings. Runtime: `engine/web/props/vasa.js` (hinged lids, cannons running out, heel/pitch/sink, the 1961 wreck look, painted stern carvings).
+- **Stockholm harbour set:** `engine/web/sets/stockholm.js`. Calm Baltic water, rocky shores, the town, a stylised castle tower, the quay, instanced crowds, the inquiry room, the seabed.
+- **1628 costumes** on the same C+ V1 rig: `build_cplus_sailor.py -- out.glb <costume>` builds sailor (3 cap colours), officer (admiral/captain), councillor (ruff) and shipwright. The Roman V1 baseline output is unchanged in structure. Faces gain a 1620s moustache option, and costumes can be recoloured per character.
+- **C+ V1.1 (inside the episode):** 2-bone leg IK with foot locks (`ch.pose({ feet })`) and a procedural walk/run gait with planted feet (`gait()`).
+- **The episode:** `stories/vasa/` (`build_story.py`, `business.js`, `story.json`, `captions_animatic.ass`). The stability-test roll is a deterministic spring driven by where the crew is, so each run rolls the ship further.
+
+**Animatic notes and limitations**
+- **No voice:** the animatic carries the script as on-screen text. No paid narration was generated, and the free local text-to-speech model host is blocked by the network policy.
+- **No music; sound design comes in the final mix.**
+- **Low resolution:** 356×634, the standard animatic scale.
+- **Not final polish:**
+  - water through the ports is a stylised sheet effect;
+  - the 1961 salvage scene is simplified;
+  - the king's portrait is a placeholder painting (not a likeness).
 
 ---
 
@@ -54,7 +112,7 @@ There is no Fish Audio integration, and no Fish Audio call appears anywhere in t
 
 ---
 
-## 2. Final script (fact-checked) with timestamps
+## 2. Script v1 (SUPERSEDED by §R; kept for the record)
 
 - **Narration:** 98 words.
 - **Pace:** planned at ~138 wpm, the measured pace of this voice on Episode 1, plus written pauses.
@@ -93,7 +151,7 @@ There is no Fish Audio integration, and no Fish Audio call appears anywhere in t
 
 ---
 
-## 3. Shot-by-shot storyboard (17 shots)
+## 3. Storyboard v1 (17 shots; SUPERSEDED by the §R shot list, which is implemented in `stories/vasa/build_story.py`)
 
 **Legend:**
 - **Lens:** vertical FOV.

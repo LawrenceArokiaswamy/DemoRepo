@@ -12,7 +12,7 @@ import { toonGradient } from './style/painterly.js';
 export { EXP, blendExp };
 export const BONES = ['hips', 'spine', 'chest', 'neck', 'head', 'crest', 'upperarmL', 'forearmL', 'handL', 'upperarmR', 'forearmR', 'handR', 'thighL', 'shinL', 'footL', 'thighR', 'shinR', 'footR', 'cape1', 'cape2'];
 
-export async function loadCPlus(THREE, o = {}) {
+export async function loadCPlus(THREE, o = {}) {   // o: { url, faceRes, face: { stache, browCol }, outline, tone, ink }
   const url = o.url || '/engine/web/characters/cplus_sailor.glb';
   const gltf = await new Promise((res, rej) => new GLTFLoader().load(url, res, undefined, rej));
   const root = new THREE.Group(), body = new THREE.Group(); root.add(body); body.add(gltf.scene); root.name = 'CPlus';
@@ -29,8 +29,8 @@ export async function loadCPlus(THREE, o = {}) {
   const olU = { w: { value: 0.006 } }, olMat = new THREE.MeshBasicMaterial({ color: o.ink || INK, side: THREE.BackSide });
   olMat.onBeforeCompile = (sh) => { sh.uniforms.olW = olU.w; sh.vertexShader = 'uniform float olW;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed += normalize(normal) * olW;'); };
   const meshes = [], hands = { relaxed: [], point: [] }, hulls = [];
-  const tone = o.tone ?? 0.7, seen = new Set();   // flat base colours are toned down so the toon key light (calibrated for textured sets) doesn't blow them out
-  gltf.scene.traverse((m) => { if (!m.isMesh) return; meshes.push(m); for (const mt of [].concat(m.material)) if (mt && mt.color && !seen.has(mt)) { seen.add(mt); mt.color.multiplyScalar(tone); } });
+  const tone = o.tone ?? 0.7, seen = new Set(), recolor = o.recolor || {};   // recolor: { materialName: '#hex' } (per-instance costume colours)   // flat base colours are toned down so the toon key light (calibrated for textured sets) doesn't blow them out
+  gltf.scene.traverse((m) => { if (!m.isMesh) return; meshes.push(m); for (const mt of [].concat(m.material)) if (mt && mt.color && !seen.has(mt)) { seen.add(mt); if (recolor[mt.name]) mt.color.set(recolor[mt.name]); mt.color.multiplyScalar(tone); } });
   for (const m of meshes) {
     const nm = m.name; m.castShadow = !/Face/.test(nm); m.receiveShadow = true; m.frustumCulled = false;
     if (/FaceShell/.test(nm)) { m.material = faceMat; m.userData.keepMaterial = true; m.renderOrder = 3; continue; }
@@ -56,14 +56,38 @@ export async function loadCPlus(THREE, o = {}) {
       const s = P.squash || 0; body.scale.set(1 - s * 0.5, 1 + s, 1 - s * 0.5);
       if (P.face) curFace = typeof P.face === 'string' ? EXP[P.face] : P.face; live = { blink: P.blink || 0, gaze: P.gaze || [0, 0] };
       if (P.hand) ch.setHand(P.hand);
+      if (P.feet) ch.plantFeet(P.feet, P.footPitch || {});
+    },
+    // FOOT PLANTING (V1.1, Episode 2): 2-bone leg IK. feet = { L: [x, y, z], R: [...] } ankle targets in the character's root space
+    // (the space of ch.root: y up, +z his front, +x his left). Solved after the body is posed, so hips/spine motion bends the knees
+    // instead of sliding the feet. footPitch = { L: rad } tilts the foot (+ toes down). Knees always bend forward.
+    plantFeet(feet, footPitch = {}) {
+      root.updateMatrixWorld(true); const rootInv = new THREE.Matrix4().copy(root.matrixWorld).invert();
+      for (const sd of ['L', 'R']) { const T = feet[sd]; if (!T) continue;
+        const th = B['thigh' + sd], sh = B['shin' + sd], ft = B['foot' + sd], hips = th.parent;
+        const H = th.getWorldPosition(new THREE.Vector3()).applyMatrix4(rootInv);
+        const hq = new THREE.Quaternion(); new THREE.Matrix4().multiplyMatrices(rootInv, hips.matrixWorld).decompose(new THREE.Vector3(), hq, new THREE.Vector3());
+        const Qp = hq.multiply(rest[hips.name.replace(/[.\s]/g, '')].wi);   // parent's rotation relative to its rest pose, in root space
+        const d = new THREE.Vector3(...T).sub(H).applyQuaternion(Qp.clone().invert()).divide(body.scale);   // target in the leg's rest frame
+        const L1 = ch.legLen[0], L2 = ch.legLen[1], dist = Math.min(L1 + L2 - 1e-4, Math.max(0.12, d.length()));
+        const a = Math.acos(Math.min(1, (L1 * L1 + dist * dist - L2 * L2) / (2 * L1 * dist))), b = Math.PI - Math.acos(Math.min(1, (L1 * L1 + L2 * L2 - dist * dist) / (2 * L1 * L2)));
+        const pitch = Math.atan2(d.z, -d.y) - ch.legRest[sd][0], roll = Math.atan2(d.x, Math.hypot(d.y, d.z)) - ch.legRest[sd][1];
+        const set = (bone, e) => { const r = rest[bone.name.replace(/[.\s]/g, '')]; _q.setFromEuler(_e.set(e[0], e[1] || 0, e[2] || 0, 'YXZ')); bone.quaternion.copy(r.q).multiply(r.wi.clone().multiply(_q).multiply(r.w)); };
+        set(th, [-(pitch + a), 0, roll]); set(sh, [b, 0, 0]); set(ft, [pitch + a - b + (footPitch[sd] || 0), 0, -roll]);
+      }
+      root.updateMatrixWorld(true);
     },
     // per frame: outline width constant in screen pixels (px at a 1920-px-tall frame), face texture redraw when it changed
     update(camera, px = 3.2) {
       root.updateMatrixWorld(true); const d = camera.position.distanceTo(B.chest.getWorldPosition(_v));
       olU.w.value = Math.min(0.02, px * 2 * d * Math.tan(camera.fov * Math.PI / 360) / 1920);
-      const key = JSON.stringify([curFace, live]); if (key !== faceKey) { drawCPlusFace(fg, curFace, live); ftex.needsUpdate = true; faceKey = key; }
+      const key = JSON.stringify([curFace, live]); if (key !== faceKey) { drawCPlusFace(fg, curFace, live, o.face || {}); ftex.needsUpdate = true; faceKey = key; }
     },
   };
+  { const v = (n) => { const w = new THREE.Vector3(); B[n].getWorldPosition(w); return w; }; gltf.scene.updateMatrixWorld(true);
+    const leg = (sd) => { const h = v('thigh' + sd), k = v('shin' + sd), a = v('foot' + sd); return { L1: h.distanceTo(k), L2: k.distanceTo(a), d: a.clone().sub(h) }; };
+    const l = leg('L'); ch.legLen = [l.L1, l.L2]; ch.legRest = {}; for (const sd of ['L', 'R']) { const d = leg(sd).d; ch.legRest[sd] = [Math.atan2(d.z, -d.y), Math.atan2(d.x, Math.hypot(d.y, d.z))]; }
+    ch.ankleRest = { L: v('footL').toArray(), R: v('footR').toArray() }; }
   ch.setHand('relaxed'); ch.pose({});
   return ch;
 }
@@ -96,4 +120,16 @@ export function springBank(spec, secondary = {}, dt = 1 / 240) {
 export function blinkAt(t, times, close = 0.06, hold = 0.03, open = 0.1) {
   let b = 0; for (const t0 of times) { const d = t - t0; if (d < 0 || d > close + hold + open) continue;
     b = Math.max(b, d < close ? ease.ss(d / close) : d < close + hold ? 1 : 1 - ease.ss((d - close - hold) / open)); } return b;
+}
+
+// GAIT (V1.1, Episode 2): procedural walk/run with planted feet. Returns ankle targets in root space for ch.pose({ feet }),
+// plus hips bob/sway and arm swing. dist = distance travelled along the character's +z so far (the stance foot stays
+// planted on the ground while the body moves over it). stride = metres per step, lift = swing height, run = 0..1.
+export function gait(dist, o = {}) {
+  const stride = o.stride ?? 0.55, lift = o.lift ?? 0.08, run = o.run ?? 0, w = o.width ?? 0.12, ank = o.ankleY ?? 0.08, p = dist / stride;
+  const foot = (ph, side) => { const c = ((ph % 2) + 2) % 2, x = side * w;   // 0..1 stance, 1..2 swing
+    if (c < 1) return { pos: [x, ank, stride * (0.5 - c)], pitch: 0 };
+    const k = c - 1, e = k * k * (3 - 2 * k); return { pos: [x, ank + lift * Math.sin(k * Math.PI) * (1 + run), stride * (-0.5 + e)], pitch: Math.sin(k * Math.PI) * 0.4 }; };
+  const L = foot(p, 1), R = foot(p + 1, -1), ph = p * Math.PI;
+  return { feet: { L: L.pos, R: R.pos }, footPitch: { L: L.pitch, R: R.pitch }, bob: -Math.abs(Math.sin(ph)) * (0.025 + run * 0.03) + (run ? -0.06 : -0.02), sway: Math.sin(ph) * 0.04, swing: Math.sin(ph) * (0.35 + run * 0.35), lean: 0.06 + run * 0.18 };
 }

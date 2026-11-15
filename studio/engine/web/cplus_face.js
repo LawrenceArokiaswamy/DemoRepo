@@ -52,6 +52,9 @@ export function drawCPlusFace(g, X, live = {}, o = {}) {
     g.save(); g.translate(ex + s * 0.02 * r, by); g.rotate(tilt); if (s > 0) g.scale(-1, 1);
     g.beginPath(); g.moveTo(-bw, 8); g.quadraticCurveTo(-bw * 0.1, -bw * 0.8, bw * 1.15, -3); g.quadraticCurveTo(bw * 0.1, -bw * 0.12, -bw, 8); g.closePath(); g.fillStyle = o.browCol || PAL.hair; g.fill(); ink(5); g.restore(); }
   for (const s of [-1, 1]) { E(cx + s * r * 0.54, cy + r * 0.46, r * 0.15, r * 0.09); g.fillStyle = `rgba(232,104,96,${0.25 + 0.4 * (X.cheek || 0)})`; g.fill(); }
+  // 1620s moustache (o.stache): two curled strokes above the mouth
+  if (o.stache) { for (const s of [-1, 1]) { g.beginPath(); g.moveTo(cx + s * 4, cy + r * 0.52); g.quadraticCurveTo(cx + s * r * 0.2, cy + r * 0.47, cx + s * r * 0.3, cy + r * 0.55); g.quadraticCurveTo(cx + s * r * 0.36, cy + r * 0.6, cx + s * r * 0.33, cy + r * 0.48);
+    g.lineWidth = 9; g.strokeStyle = o.browCol || PAL.hair; g.lineCap = 'round'; g.stroke(); } }
   // mouth library
   const mx = cx + (X.mouth === 'smirk' ? r * 0.04 : 0), my = cy + r * 0.66, mw = 0.46 * r * (X.mo ?? 1); g.beginPath();
   if (X.mouth === 'smile') { g.moveTo(mx - mw * 0.5, my - 2); g.quadraticCurveTo(mx + mw * 0.05, my + mw * 0.32, mx + mw * 0.55, my - 6); ink(OW); }

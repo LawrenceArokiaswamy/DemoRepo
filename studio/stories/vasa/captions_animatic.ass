@@ -1,0 +1,55 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,DejaVu Sans,66,&H00FFFFFF,&H00FFFFFF,&H00101010,&H96000000,1,0,0,0,100,100,1,0,1,6,3,2,110,110,700,1
+Style: Note,DejaVu Sans,44,&H00F2F2F2,&H00FFFFFF,&H64000000,&H64000000,1,0,0,0,100,100,2,0,3,10,0,8,90,90,215,1
+Style: Tag,DejaVu Sans,30,&H00D0D0D0,&H00FFFFFF,&H80000000,&H80000000,0,0,0,0,100,100,0,0,3,6,0,7,30,30,30,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.20,0:00:02.40,Cap,,0,0,0,,Sweden built a warship so powerful…
+Dialogue: 0,0:00:02.70,0:00:04.00,Cap,,0,0,0,,…it sank on its first voyage.
+Dialogue: 0,0:00:04.20,0:00:06.80,Cap,,0,0,0,,The king wanted two gun decks. Sixty-four cannons.
+Dialogue: 0,0:00:07.00,0:00:09.30,Cap,,0,0,0,,First, a test: thirty men ran across the deck.
+Dialogue: 0,0:00:13.90,0:00:16.10,Cap,,0,0,0,,She rolled so hard, the admiral stopped the test.
+Dialogue: 0,0:00:17.40,0:00:18.40,Cap,,0,0,0,,They sailed anyway.
+Dialogue: 0,0:00:21.10,0:00:23.80,Cap,,0,0,0,,A breeze. She leaned… and came back.
+Dialogue: 0,0:00:24.20,0:00:25.40,Cap,,0,0,0,,Then, a stronger gust.
+Dialogue: 0,0:00:26.00,0:00:27.60,Cap,,0,0,0,,The lower gunports were open.
+Dialogue: 0,0:00:31.00,0:00:33.00,Cap,,0,0,0,,Within sight of the city, she sank.
+Dialogue: 0,0:00:33.60,0:00:35.00,Cap,,0,0,0,,At least thirty people died.
+Dialogue: 0,0:00:35.60,0:00:37.00,Cap,,0,0,0,,The designer was dead.
+Dialogue: 0,0:00:37.20,0:00:39.40,Cap,,0,0,0,,The builders said the king approved the plans.
+Dialogue: 0,0:00:39.60,0:00:40.60,Cap,,0,0,0,,Nobody was punished.
+Dialogue: 0,0:00:41.00,0:00:42.60,Cap,,0,0,0,,She sank in twenty minutes.
+Dialogue: 0,0:00:42.80,0:00:45.60,Cap,,0,0,0,,Then she lay underwater for 333 years…
+Dialogue: 0,0:00:46.00,0:00:47.80,Cap,,0,0,0,,…until they brought her back,
+Dialogue: 0,0:00:48.20,0:00:49.40,Cap,,0,0,0,,almost whole.
+Dialogue: 0,0:00:04.20,0:00:06.80,Note,,0,0,0,,STOCKHOLM · 1628
+Dialogue: 0,0:00:18.80,0:00:20.90,Note,,0,0,0,,10 AUGUST 1628
+Dialogue: 0,0:00:46.00,0:00:47.90,Note,,0,0,0,,1961
+Dialogue: 0,0:00:00.00,0:00:01.60,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S01
+Dialogue: 0,0:00:01.60,0:00:04.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S02
+Dialogue: 0,0:00:04.00,0:00:06.90,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S03
+Dialogue: 0,0:00:06.90,0:00:09.40,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S04
+Dialogue: 0,0:00:09.40,0:00:12.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S05a
+Dialogue: 0,0:00:12.00,0:00:12.80,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S05b
+Dialogue: 0,0:00:12.80,0:00:14.10,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S05c
+Dialogue: 0,0:00:14.10,0:00:15.20,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S06a
+Dialogue: 0,0:00:15.20,0:00:16.20,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S06b
+Dialogue: 0,0:00:16.20,0:00:18.60,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S07
+Dialogue: 0,0:00:18.60,0:00:21.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S08
+Dialogue: 0,0:00:21.00,0:00:24.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S09
+Dialogue: 0,0:00:24.00,0:00:25.80,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S10
+Dialogue: 0,0:00:25.80,0:00:28.20,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S11
+Dialogue: 0,0:00:28.20,0:00:30.20,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S12
+Dialogue: 0,0:00:30.20,0:00:35.40,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S13
+Dialogue: 0,0:00:35.40,0:00:40.80,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S14
+Dialogue: 0,0:00:40.80,0:00:45.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S15
+Dialogue: 0,0:00:45.00,0:00:48.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S16
+Dialogue: 0,0:00:48.00,0:00:50.40,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S17

@@ -316,6 +316,13 @@ One hero, one threat or mystery, one turn, one payoff, one ending. No competing 
 5. Stronger cinematic compositions.
 6. More distinctive environments and props.
 
+**V1.1 (Episode 2, 2026-11-15, built inside production)**
+- **Foot planting:** 2-bone leg IK and foot locks, used as `ch.pose({ feet: { L: [x,y,z], R: [...] }, footPitch })`. Targets are ankle positions in the character's root space, solved after the body pose, so hip and spine motion bends the knees instead of sliding the feet.
+- **Gait:** `gait(dist, { stride, lift, run })` gives a procedural walk or run with planted stance feet, hip bob and sway, and arm swing.
+- **Costumes:** the build script takes `-- out.glb <costume>`, with `roman` (V1, unchanged), `sailor1628[:capHex]`, `officer1628`, `council1628` and `shipwright1628`. All share the same rig, face shell and proportions.
+- **Runtime options:** `loadCPlus(THREE, { url, faceRes, face: { stache }, recolor: { materialName: hex } })`.
+- **Lesson:** a vertical 9:16 frame is narrow, only about 0.8 m wide at 2 m with a 40° lens. Foreground characters must stand almost on the lens axis, so probe their screen positions (`probe_expr.mjs` + `Vector3.project`).
+
 The approved **C+ "Cinematic Expressive"** direction is now a real, reusable, rigged 3D character. Blender is used only to **build and rig**; rendering stays in our three.js engine. Cost: $0 cash, 0 credits.
 
 **Files (all reusable):**
@@ -542,6 +549,8 @@ studio/
   - Archimedes (elder, robe);
   - Roman soldiers and crew, period extras;
   - Marcellus (commander).
+- **Stockholm 1628 (Episode 2):** `sets/stockholm.js` (harbour, shores, town, castle tower, quay, instanced crowds, inquiry room, seabed) and the **Vasa** galleon (`blender/build_vasa.py` → `props/models/vasa.glb`, runtime `props/vasa.js`). The ship has hinged gunport lids, cannons that run out, heel/pitch/sink controls, a 1961 wreck look and a painted stern.
+- **C+ 1628 costumes:** sailor (3 cap colours), officer, councillor, shipwright.
 - **Also available:** workshop and Roman-harbour sets, 45 CC0 props, and two owned music scores (Claw 80 s; ep01 31 s).
 
 ---

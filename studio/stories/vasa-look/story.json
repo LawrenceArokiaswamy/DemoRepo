@@ -1,0 +1,143 @@
+{
+ "title": "Vasa look-dev",
+ "period": "baroque",
+ "set": "stockholm",
+ "fps": 30,
+ "duration": 5,
+ "business": "business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "golden",
+  "shadowBox": [
+   -80,
+   5,
+   -5,
+   32
+  ]
+ },
+ "shots": [
+  {
+   "name": "wide",
+   "a": 0,
+   "b": 1,
+   "attach": "ship",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      60,
+      14,
+      70
+     ],
+     "look": [
+      0,
+      12,
+      0
+     ],
+     "fov": 50,
+     "focus": 90,
+     "ap": 0.0001
+    }
+   ]
+  },
+  {
+   "name": "stern",
+   "a": 1,
+   "b": 2,
+   "attach": "ship",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -42,
+      3,
+      14
+     ],
+     "look": [
+      -20,
+      9,
+      0
+     ],
+     "fov": 45,
+     "focus": 25,
+     "ap": 0.0001
+    }
+   ]
+  },
+  {
+   "name": "deck",
+   "a": 2,
+   "b": 3,
+   "attach": "deck",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      8,
+      7.6,
+      3
+     ],
+     "look": [
+      -1.5,
+      6.5,
+      -1
+     ],
+     "fov": 40,
+     "focus": 8,
+     "ap": 0.0002
+    }
+   ]
+  },
+  {
+   "name": "gundeck",
+   "a": 3,
+   "b": 4,
+   "attach": "deck",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      6,
+      1.9,
+      1.5
+     ],
+     "look": [
+      -6,
+      1.4,
+      -4.6
+     ],
+     "fov": 60,
+     "focus": 5,
+     "ap": 0.0001
+    }
+   ]
+  },
+  {
+   "name": "harbour",
+   "a": 4,
+   "b": 5,
+   "attach": "ship",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      140,
+      40,
+      90
+     ],
+     "look": [
+      -60,
+      5,
+      -20
+     ],
+     "fov": 45,
+     "focus": 150,
+     "ap": 0.0001
+    }
+   ]
+  }
+ ]
+}
