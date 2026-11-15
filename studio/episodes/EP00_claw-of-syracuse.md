@@ -183,3 +183,14 @@ See Bible §J.
 - POV plus reverse shot for eyelines.
 - Callbacks reuse the original composition.
 - Check every render for black frames and voice overlaps.
+
+## 10. Final corrections before publication approval (2026-11-15)
+1. **Resolution query.** The owner saw 512×910. ffprobe of the delivery file, master, committed file and source frames all show 1080×1920 at 30/1. 512×910 is the Claude app's downscaled attachment preview. The deliverable is native, not upscaled.
+2. **Ending glare (shots 19–20).** Exposure 0.62 → 0.52, sun-glow sprite off, bloom 0.08, `hazeScale` 0.2. Re-rendered 164 frames. The fleet, the claw and Archimedes' face now read.
+3. **RECONSTRUCTION label.** Was 30 px italic. Now 40 px upright, on a soft dark box below the top UI bar, reading "RECONSTRUCTION · exact design unknown".
+4. **Caption sync.**
+   - Words were spread across whole lines, including dramatic pauses ("Up. Up.", "And then…"), so some captions showed during silence.
+   - Captions now follow voiced segments only, phrases are pinned to segments, and the dash and short final words stay with their phrase.
+   - Scan result: 44 captions, 0 shown during silence, 0 overlapping.
+5. **Final specs.** Delivery copy 1080×1920, 9:16, H.264 yuv420p, 30/1 fps, 1,391 frames, 46.37 s, AAC 48 kHz stereo, 29.2 MB. Master 111.6 MB (local). −14.1 LUFS, true peak −1.3 dBTP. No black or frozen frames. SSIM 0.967.
+6. **Status.** Delivered for the owner's publication approval. Not published.

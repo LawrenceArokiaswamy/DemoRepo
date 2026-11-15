@@ -270,6 +270,12 @@ Cue sheets are in video time; build them per episode (Claw v2: `build_scratch_au
 - **Format:** ASS rendered by libass in ffmpeg (`-vf ass=captions.ass`).
 - **Typography:** DejaVu Sans Bold, white with a dark outline (≈5 px at 1080 wide) and a soft shadow.
 - **Chunks:** 1–3 words at a time, timed to word timings. Key words highlighted in the accent colour (amber `&H0040D8FF`).
+- **Timing (PROVEN in Claw v2 `build_final.py`):**
+  - Spread words only over **voiced** time; skip pauses inside a line.
+  - When a line's punctuation phrases match its voiced segments one for one, pin each phrase to its segment.
+  - Keep "—" and tiny final words attached to their phrase.
+  - Never let chunks overlap (they stack).
+  - QA scan: no caption shown while the voice track is silent (< −37 dB).
 - **Position:**
   - centred horizontally;
   - caption block about **35–40% of frame height above the bottom edge**, i.e. bottom-aligned with `MarginV` ≈ 700 at 1920 tall;

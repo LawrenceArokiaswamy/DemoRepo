@@ -75,12 +75,46 @@ ts = lambda x: f'0:{int(x // 60):02d}:{x % 60:05.2f}'; ev = []; raw_ev = []
 FACE = [sh[1], sh[5], sh[7], sh[10]]   # tight face close-ups: captions go above the head instead of across the face
 style_at = lambda x: 'CapHi' if any(a <= x < b for a, b in FACE) else 'Cap'
 for i, (_, text) in enumerate(LINES):
-    words = text.split(); tot = sum(syl(x) for x in words); speech = D[i] - 0.09; t0 = st[i] + 0.03; acc = 0; chunk = []; cs = t0
+    words = [x.replace('§', '\u00a0') for x in text.replace(' —', '§—').split()]; tot = sum(syl(x) for x in words); acc = 0; chunk = []
+    # voiced intervals of this line's clip: words are spread over speaking time only (pauses inside a line are skipped)
+    c = C[i]; win = int(0.02 * SR); e = np.sqrt(np.convolve(c ** 2, np.ones(win) / win, 'same')); v = e > 0.012
+    iv = []; k = 0
+    while k < len(v):
+        if v[k]:
+            j = k
+            while j < len(v) and (v[j] or (j + int(0.15 * SR) < len(v) and v[j:j + int(0.15 * SR)].any())): j += 1
+            iv.append((k / SR, j / SR)); k = j
+        else: k += 1
+    iv = [q for q in iv if q[1] - q[0] > 0.06] or iv; vt = sum(b - a for a, b in iv)
+    def at_voiced(f):   # fraction of voiced time -> clip time
+        r = f * vt
+        for a, b in iv:
+            if r <= b - a: return a + r
+            r -= b - a
+        return iv[-1][1]
+    # phrases split at punctuation; if they match the voiced intervals one-to-one, pin each phrase to its own interval
+    ph, cur = [], []
+    for wd in words:
+        cur.append(wd)
+        if wd.endswith(('.', ',', '…', '—')): ph.append(cur); cur = []
+    if cur: ph.append(cur)
+    if len(ph) == len(iv) and len(iv) > 1:
+        bounds = []   # syllable fraction where each phrase starts
+        cum = 0
+        for q in ph: bounds.append(cum / tot); cum += sum(syl(x) for x in q)
+        bounds.append(1.0)
+        def at_voiced(f):
+            for k in range(len(iv)):
+                if f <= bounds[k + 1] + 1e-9:
+                    u = (f - bounds[k]) / max(1e-9, bounds[k + 1] - bounds[k]); return iv[k][0] + u * (iv[k][1] - iv[k][0])
+            return iv[-1][1]
+    T = lambda f: st[i] + at_voiced(f); cs = T(0)
     for j, wd in enumerate(words):
         chunk.append(wd); acc += syl(wd)
-        if len(chunk) == 3 or j == len(words) - 1 or wd.endswith(('.', ',', '…', '—')) or (len(chunk) == 2 and syl(wd) > 2):
-            ce = t0 + speech * acc / tot; txt = ' '.join(('{\\c&H0040D8FF&}' + x + '{\\c&HFFFFFF&}') if x.strip('…') in KEY or x in KEY else x for x in chunk)
-            raw_ev.append([cs, ce + 0.05, txt]); chunk = []; cs = ce
+        short_last = j == len(words) - 2 and len(words[-1]) <= 3   # keep a tiny final word ('it.') with its phrase
+        if (len(chunk) >= 3 and not short_last) or len(chunk) == 4 or j == len(words) - 1 or wd.endswith(('.', ',', '…', '—')) or (len(chunk) == 2 and syl(wd) > 2):
+            ce = T(acc / tot) if acc < tot else st[i] + iv[-1][1]; txt = ' '.join(('{\\c&H0040D8FF&}' + x + '{\\c&HFFFFFF&}') if x.split('\u00a0')[0].strip('…') in KEY or x in KEY else x for x in chunk)
+            raw_ev.append([cs, ce + 0.05, txt]); chunk = []; cs = T(min(1.0, acc / tot + 1e-3))
 for k, (a, b, txt) in enumerate(raw_ev):   # never let two chunks overlap (they would stack)
     if k + 1 < len(raw_ev): b = min(b, raw_ev[k + 1][0])
     ev.append(f'Dialogue: 0,{ts(a)},{ts(b)},{style_at((a + b) / 2)},,0,0,0,,{txt}')
