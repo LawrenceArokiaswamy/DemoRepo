@@ -416,9 +416,9 @@
    ]
   },
   {
-   "name": "S09c diner1 sad",
+   "name": "S09c diner1 hesitates: glances around, does not type",
    "a": 28.55,
-   "b": 29.3,
+   "b": 30.0,
    "attach": "diner1",
    "keys": [
     {
@@ -440,9 +440,9 @@
    ]
   },
   {
-   "name": "S09d insert: how to leave a relationship safely (deleted)",
-   "a": 29.3,
-   "b": 30.85,
+   "name": "S09d insert: how to leave a relationship safely (held whole, then deleted)",
+   "a": 30.0,
+   "b": 31.9,
    "attach": "table",
    "keys": [
     {
@@ -464,13 +464,13 @@
    ]
   },
   {
-   "name": "S09e diner3 hesitates",
-   "a": 30.85,
-   "b": 31.6,
+   "name": "S09e diner3 gives up: sighs, lowers the phone, looks away",
+   "a": 31.9,
+   "b": 33.15,
    "attach": "diner3",
    "keys": [
     {
-     "t": 30.85,
+     "t": 31.9,
      "pos": [
       0.14,
       1.16,
@@ -484,30 +484,6 @@
      "fov": 38,
      "focus": 1.4,
      "ap": 0.0012
-    }
-   ]
-  },
-  {
-   "name": "S09f insert: am I depressed or just tired (deleted)",
-   "a": 31.6,
-   "b": 33.15,
-   "attach": "table",
-   "keys": [
-    {
-     "t": 0,
-     "pos": [
-      -0.38,
-      1.03,
-      0.0
-     ],
-     "look": [
-      0.0,
-      1.03,
-      0.0
-     ],
-     "fov": 34,
-     "focus": 0.38,
-     "ap": 0.002
     }
    ]
   },
@@ -552,58 +528,90 @@
    ]
   },
   {
-   "name": "S10 weeks later: pan across the room, bubbles over everyone, laughter",
+   "name": "S10a weeks later: diner laughs under her own search bubble",
    "a": 35.4,
-   "b": 41.8,
-   "attach": "world",
+   "b": 36.5,
+   "attach": "diner3",
    "keys": [
     {
      "t": 35.4,
      "pos": [
-      0.4,
-      1.45,
-      0.6
+      0.16,
+      1.42,
+      1.95
      ],
      "look": [
-      -5.0,
-      1.55,
-      -2.2
+      0.0,
+      1.36,
+      0.0
      ],
-     "fov": 50,
-     "focus": 5,
-     "ap": 0.0004
-    },
+     "fov": 40,
+     "focus": 1.95,
+     "ap": 0.001
+    }
+   ]
+  },
+  {
+   "name": "S10a2 weeks later: another diner, bubble pops, he laughs it off",
+   "a": 36.5,
+   "b": 37.6,
+   "attach": "diner1",
+   "keys": [
     {
-     "t": 38.6,
+     "t": 36.5,
      "pos": [
-      0.4,
-      1.45,
-      0.6
+      -0.16,
+      1.42,
+      1.95
      ],
      "look": [
-      0.4,
-      1.4,
-      -5.0
+      0.0,
+      1.36,
+      0.0
      ],
-     "fov": 50,
-     "focus": 5,
-     "ap": 0.0004
+     "fov": 40,
+     "focus": 1.95,
+     "ap": 0.001
+    }
+   ]
+  },
+  {
+   "name": "S10b callback: his old search pops up; she bursts out laughing; he relaxes and laughs",
+   "a": 37.6,
+   "b": 41.8,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 37.6,
+     "pos": [
+      -1.45,
+      1.4,
+      -1.05
+     ],
+     "look": [
+      0.52,
+      1.38,
+      0.37
+     ],
+     "fov": 44,
+     "focus": 2.3,
+     "ap": 0.0008
     },
     {
      "t": 41.8,
      "pos": [
-      0.4,
-      1.45,
-      0.6
+      -1.3,
+      1.38,
+      -0.95
      ],
      "look": [
-      5.0,
-      1.55,
-      -3.0
+      0.52,
+      1.36,
+      0.37
      ],
-     "fov": 50,
-     "focus": 5,
-     "ap": 0.0004
+     "fov": 44,
+     "focus": 2.1,
+     "ap": 0.0008
     }
    ]
   },
@@ -622,7 +630,7 @@
      ],
      "look": [
       0.78,
-      1.1,
+      1.0,
       0.0
      ],
      "fov": 40,
@@ -638,7 +646,7 @@
      ],
      "look": [
       0.78,
-      1.09,
+      0.99,
       0.0
      ],
      "fov": 40,

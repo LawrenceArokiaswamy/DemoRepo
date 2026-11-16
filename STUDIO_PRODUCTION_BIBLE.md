@@ -808,6 +808,14 @@ Keep an original identity; never copy the reference.
   - **Check render logs for `Shader Error` after any shader edit.** A broken `onBeforeCompile` (a varying declared in the wrong string) does not crash. It renders every character black, and this was caught only by comparing against the Gate 2 frames. `grep -ci "shader error"` on the render output must return 0.
   - Close-up cameras on C+ v2 heads need about 1.4 m distance at fov 38. At 0.85 m the face overfills the frame.
 
+- **Revision 2 lessons (owner review of animatic v1).** Stories must read without narration:
+  - **Every story beat needs a readable human reaction, not just information.** Follow an information shot (a phone or a bubble) with a face reacting to it. Never place three similar phone close-ups back to back.
+  - **Payoffs work best as callbacks:** reuse an earlier embarrassing element (his old search bubble) and change the reaction from shame to laughter.
+  - **Text must be fully legible at rest:** wrap long queries instead of scrolling them, hold them whole for at least 0.7 s, and show one bubble per beat, centred.
+  - **Test text at phone size:** render full-resolution frames and view them at 390×693.
+  - **Wide shots of a spread-out room fail in 9:16.** Use quick close-ups for "everyone" beats.
+  - **No near-static holds longer than about 2 s.** Endings need a small action, such as the thumb approaching, hesitating and retreating.
+
 **Approved Episode 3 story decisions (owner, 2026-11-16):**
 - Keep the 9:41 opening, the two dating-search jokes, the turn to serious consequences, and the final ethical dilemma.
 - Show the consequences with empathy: people stop seeking help when they need it most.

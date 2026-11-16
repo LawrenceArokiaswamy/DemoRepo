@@ -7,7 +7,7 @@
   - The exact 11-line narration script is approved; no rewrite or retiming.
   - On-screen query changed: "how to leave a toxic relationship" is now "how to leave a relationship safely".
   - Story structure, the 13-shot plan, the 50 s target and the blinking-cursor ending are approved in principle.
-  - **The animatic MP4 is awaiting the owner's visual review.**
+  - Animatic v1 reviewed: **conditional approval**, with 4 targeted fixes (§3b). **Revision 2 is awaiting final visual approval.**
 - **Audio budget ceiling, valid only after visual approval of the animatic: 10.76 credits.**
   - Grady narration: 2.76 credits. Generate it first.
   - Music: up to 8.00 credits. Choose the duration (50 s for 7.27, or 55 s for 8.00) from the actual narration timing.
@@ -85,6 +85,19 @@ All four Gate 2 corrections are applied:
 | S11 | 41.8–50.0 | Final: empty search bar with a blinking cursor in the foreground. He looks up at the camera on the question and holds |
 
 **Estimated final duration:** about 50 s at the planned pace. Real Grady delivery has run 10–15% longer, so expect about 52–56 s after the conform. A 50 s score fits if the voice lands at 50 s or less; otherwise recommend 55 s.
+
+## 3b. Revision 2 (owner conditional approval, 2026-11-16): four targeted fixes; narration unchanged
+
+| Note | Change |
+|---|---|
+| 1. Date joke | Search bubbles are 40% larger, in bolder type, centred, one at a time (his shrinks away as hers pops). After his search he ducks his head, blushes, looks away, and a sweat drop appears. After hers she gives an awkward sideways glance with a tight grin and a blush, then looks away. |
+| 2. Sensitive searches | Two phone inserts instead of three, with readable human reactions between them: S09c, a diner hesitates and glances around without typing; S09e, a diner sighs, lowers the phone and looks away. "how to leave a relationship safely" now wraps onto three lines and is **held whole for 0.7 s** before it is deleted, with no scrolling text. "am I depressed or just tired" was dropped to avoid a third repeated phone close-up. |
+| 3. Weeks-later twist | Two quick diner close-ups laughing under their own bubbles ("is it weird to talk to plants", "can dogs eat cheese"). Then a callback: his old search "how to seem interesting on a date" pops up again; he tenses and sweats, she bursts out laughing, he exhales, relaxes and laughs with her. It reads without narration. |
+| 4. Ending | The empty search bar and blinking cursor stay. A thumb (the viewer's point of view) approaches the field, hovers, pulls back, then creeps back and stops just short. He goes from a sideways glance with knitted brows to an uncertain look up into the camera on the question, then swallows. |
+
+- **Mobile test:** key text frames were rendered at full 1080×1920 and checked downscaled to 390×693 (phone viewing size). These all read: both date bubbles, the share card, the wrapped relationship query, the diner bubbles, the callback bubble and the ending search bar.
+- **Re-render:** only S04–S05 and S09–S11 were re-rendered (about 1,000 of 1,500 preview frames). The S01–S03 and S06–S08 frames were reused.
+- The length is still 50.0 s, and the 11 narration lines and timings are unchanged.
 
 ## 4. Facts and sources
 - **Premise:** fiction (labelled).
