@@ -1,0 +1,651 @@
+{
+ "title": "EP03 What If Everyone Could See Your Internet History (animatic)",
+ "period": "modern",
+ "set": "restaurant",
+ "fps": 30,
+ "duration": 50.0,
+ "business": "business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "interior_evening",
+  "shadowBox": [
+   0.4,
+   1,
+   -3,
+   9
+  ],
+  "ao": {
+   "radius": 0.4,
+   "intensity": 0.85,
+   "samples": 12
+  },
+  "override": {
+   "fill": {
+    "sky": "#ffd9a8",
+    "ground": "#3a2a22",
+    "intensity": 0.45
+   }
+  }
+ },
+ "shots": [
+  {
+   "name": "S01 HOOK insert: 9:41 ALERT, his face blurred behind",
+   "a": 0.0,
+   "b": 2.8,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -0.42,
+      1.03,
+      0.0
+     ],
+     "look": [
+      0.0,
+      1.04,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.42,
+     "ap": 0.002
+    },
+    {
+     "t": 2.8,
+     "pos": [
+      -0.36,
+      1.03,
+      0.0
+     ],
+     "look": [
+      0.0,
+      1.04,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.36,
+     "ap": 0.002
+    }
+   ]
+  },
+  {
+   "name": "S02 low wide: phones flare in a wave",
+   "a": 2.8,
+   "b": 5.0,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 2.8,
+     "pos": [
+      -1.3,
+      1.0,
+      1.3
+     ],
+     "look": [
+      0.6,
+      1.0,
+      -5.0
+     ],
+     "fov": 50,
+     "focus": 5,
+     "ap": 0.0004
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      -0.7,
+      1.0,
+      1.1
+     ],
+     "look": [
+      0.8,
+      1.0,
+      -5.0
+     ],
+     "fov": 50,
+     "focus": 5,
+     "ap": 0.0004
+    }
+   ]
+  },
+  {
+   "name": "S03a diner reaction",
+   "a": 5.0,
+   "b": 5.8,
+   "attach": "diner0",
+   "keys": [
+    {
+     "t": 5.0,
+     "pos": [
+      0.14,
+      1.16,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.12,
+      0.0
+     ],
+     "fov": 38,
+     "focus": 1.4,
+     "ap": 0.0012
+    }
+   ]
+  },
+  {
+   "name": "S03b diner reaction",
+   "a": 5.8,
+   "b": 6.6,
+   "attach": "diner1",
+   "keys": [
+    {
+     "t": 5.8,
+     "pos": [
+      -0.14,
+      1.16,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.12,
+      0.0
+     ],
+     "fov": 38,
+     "focus": 1.4,
+     "ap": 0.0012
+    }
+   ]
+  },
+  {
+   "name": "S03c diner reaction",
+   "a": 6.6,
+   "b": 7.4,
+   "attach": "diner3",
+   "keys": [
+    {
+     "t": 6.6,
+     "pos": [
+      0.14,
+      1.16,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.12,
+      0.0
+     ],
+     "fov": 38,
+     "focus": 1.4,
+     "ap": 0.0012
+    }
+   ]
+  },
+  {
+   "name": "S04 two-shot: his search bubble",
+   "a": 7.4,
+   "b": 13.0,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 7.4,
+     "pos": [
+      -1.7,
+      1.4,
+      -1.3
+     ],
+     "look": [
+      0.52,
+      1.36,
+      0.37
+     ],
+     "fov": 46,
+     "focus": 2.5,
+     "ap": 0.0008
+    },
+    {
+     "t": 13.0,
+     "pos": [
+      -1.58,
+      1.38,
+      -1.18
+     ],
+     "look": [
+      0.52,
+      1.36,
+      0.37
+     ],
+     "fov": 46,
+     "focus": 2.4,
+     "ap": 0.0008
+    }
+   ]
+  },
+  {
+   "name": "S05 her bubble; his deadpan turn",
+   "a": 13.0,
+   "b": 16.6,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 13.0,
+     "pos": [
+      -1.52,
+      1.38,
+      -1.12
+     ],
+     "look": [
+      0.52,
+      1.36,
+      0.37
+     ],
+     "fov": 46,
+     "focus": 2.3,
+     "ap": 0.0008
+    },
+    {
+     "t": 16.6,
+     "pos": [
+      -1.36,
+      1.36,
+      -1.0
+     ],
+     "look": [
+      0.52,
+      1.34,
+      0.37
+     ],
+     "fov": 46,
+     "focus": 2.1,
+     "ap": 0.0008
+    }
+   ]
+  },
+  {
+   "name": "S06 insert montage: sharing with Boss / Mom / Everyone nearby",
+   "a": 16.6,
+   "b": 21.2,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -0.38,
+      1.03,
+      0.0
+     ],
+     "look": [
+      0.0,
+      1.03,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.38,
+     "ap": 0.002
+    }
+   ]
+  },
+  {
+   "name": "S07 hands: phones face-down",
+   "a": 21.2,
+   "b": 23.2,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 21.2,
+     "pos": [
+      -0.75,
+      1.22,
+      -1.0
+     ],
+     "look": [
+      0.6,
+      0.92,
+      -0.15
+     ],
+     "fov": 42,
+     "focus": 1.7,
+     "ap": 0.001
+    },
+    {
+     "t": 23.2,
+     "pos": [
+      -0.62,
+      1.18,
+      -0.9
+     ],
+     "look": [
+      0.6,
+      0.9,
+      -0.15
+     ],
+     "fov": 42,
+     "focus": 1.6,
+     "ap": 0.001
+    }
+   ]
+  },
+  {
+   "name": "S08 next day: quiet, cool",
+   "a": 23.2,
+   "b": 25.6,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 23.2,
+     "pos": [
+      0.4,
+      1.1,
+      1.6
+     ],
+     "look": [
+      0.3,
+      1.0,
+      -4.0
+     ],
+     "fov": 46,
+     "focus": 5,
+     "ap": 0.0004
+    },
+    {
+     "t": 25.6,
+     "pos": [
+      0.4,
+      1.1,
+      1.3
+     ],
+     "look": [
+      0.3,
+      1.0,
+      -4.0
+     ],
+     "fov": 46,
+     "focus": 5,
+     "ap": 0.0004
+    }
+   ]
+  },
+  {
+   "name": "S09a diner0 worried",
+   "a": 25.6,
+   "b": 27.0,
+   "attach": "diner0",
+   "keys": [
+    {
+     "t": 25.6,
+     "pos": [
+      0.14,
+      1.16,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.1,
+      0.0
+     ],
+     "fov": 38,
+     "focus": 1.4,
+     "ap": 0.0012
+    }
+   ]
+  },
+  {
+   "name": "S09b insert: is this mole normal (deleted)",
+   "a": 27.0,
+   "b": 28.55,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -0.38,
+      1.03,
+      0.0
+     ],
+     "look": [
+      0.0,
+      1.03,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.38,
+     "ap": 0.002
+    }
+   ]
+  },
+  {
+   "name": "S09c diner1 sad",
+   "a": 28.55,
+   "b": 29.3,
+   "attach": "diner1",
+   "keys": [
+    {
+     "t": 28.55,
+     "pos": [
+      -0.14,
+      1.16,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.1,
+      0.0
+     ],
+     "fov": 38,
+     "focus": 1.4,
+     "ap": 0.0012
+    }
+   ]
+  },
+  {
+   "name": "S09d insert: how to leave a toxic relationship (deleted)",
+   "a": 29.3,
+   "b": 30.85,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -0.38,
+      1.03,
+      0.0
+     ],
+     "look": [
+      0.0,
+      1.03,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.38,
+     "ap": 0.002
+    }
+   ]
+  },
+  {
+   "name": "S09e diner3 hesitates",
+   "a": 30.85,
+   "b": 31.6,
+   "attach": "diner3",
+   "keys": [
+    {
+     "t": 30.85,
+     "pos": [
+      0.14,
+      1.16,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.1,
+      0.0
+     ],
+     "fov": 38,
+     "focus": 1.4,
+     "ap": 0.0012
+    }
+   ]
+  },
+  {
+   "name": "S09f insert: am I depressed or just tired (deleted)",
+   "a": 31.6,
+   "b": 33.15,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      -0.38,
+      1.03,
+      0.0
+     ],
+     "look": [
+      0.0,
+      1.03,
+      0.0
+     ],
+     "fov": 34,
+     "focus": 0.38,
+     "ap": 0.002
+    }
+   ]
+  },
+  {
+   "name": "S09g the room: heads down, questions unasked",
+   "a": 33.15,
+   "b": 35.4,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 33.15,
+     "pos": [
+      0.4,
+      1.15,
+      1.2
+     ],
+     "look": [
+      0.3,
+      1.0,
+      -4.0
+     ],
+     "fov": 46,
+     "focus": 5,
+     "ap": 0.0004
+    },
+    {
+     "t": 35.4,
+     "pos": [
+      0.4,
+      1.2,
+      1.5
+     ],
+     "look": [
+      0.3,
+      1.0,
+      -4.0
+     ],
+     "fov": 46,
+     "focus": 5,
+     "ap": 0.0004
+    }
+   ]
+  },
+  {
+   "name": "S10 weeks later: pan across the room, bubbles over everyone, laughter",
+   "a": 35.4,
+   "b": 41.8,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 35.4,
+     "pos": [
+      0.4,
+      1.45,
+      0.6
+     ],
+     "look": [
+      -5.0,
+      1.55,
+      -2.2
+     ],
+     "fov": 50,
+     "focus": 5,
+     "ap": 0.0004
+    },
+    {
+     "t": 38.6,
+     "pos": [
+      0.4,
+      1.45,
+      0.6
+     ],
+     "look": [
+      0.4,
+      1.4,
+      -5.0
+     ],
+     "fov": 50,
+     "focus": 5,
+     "ap": 0.0004
+    },
+    {
+     "t": 41.8,
+     "pos": [
+      0.4,
+      1.45,
+      0.6
+     ],
+     "look": [
+      5.0,
+      1.55,
+      -3.0
+     ],
+     "fov": 50,
+     "focus": 5,
+     "ap": 0.0004
+    }
+   ]
+  },
+  {
+   "name": "S11 final: empty search bar, blinking cursor; he looks up",
+   "a": 41.8,
+   "b": 50.0,
+   "attach": "table",
+   "keys": [
+    {
+     "t": 41.8,
+     "pos": [
+      -0.55,
+      1.12,
+      0.0
+     ],
+     "look": [
+      0.78,
+      1.1,
+      0.0
+     ],
+     "fov": 40,
+     "focus": 1.3,
+     "ap": 0.0012
+    },
+    {
+     "t": 50.0,
+     "pos": [
+      -0.5,
+      1.12,
+      0.0
+     ],
+     "look": [
+      0.78,
+      1.09,
+      0.0
+     ],
+     "fov": 40,
+     "focus": 1.25,
+     "ap": 0.0012
+    }
+   ]
+  }
+ ]
+}

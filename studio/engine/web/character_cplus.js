@@ -35,8 +35,11 @@ export async function loadCPlus(THREE, o = {}) {   // o: { url, faceRes, face: {
   const V2 = o.look === 'v2', rimU = { c: { value: new THREE.Color(o.rim || '#ffd7a8') }, k: { value: o.rimK ?? 0.35 } };
   const grad2 = (() => { const d = new Uint8Array([o.shadowLevel ?? 175, o.shadowLevel ?? 175, o.shadowLevel ?? 175, 255, 255, 255, 255, 255]); const t = new THREE.DataTexture(d, 2, 1); t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t; })();
   const v2mat = new Map(), toV2 = (mt) => { if (!v2mat.has(mt)) { const t = new THREE.MeshToonMaterial({ color: mt.color.clone(), gradientMap: grad2 });
-      t.onBeforeCompile = (sh) => { sh.uniforms.rimC = rimU.c; sh.uniforms.rimK = rimU.k; sh.fragmentShader = 'uniform vec3 rimC; uniform float rimK;\n' + sh.fragmentShader.replace('#include <opaque_fragment>',
-        'float _f = 1.0 - max(dot(normalize(vViewPosition), normal), 0.0); outgoingLight += rimC * rimK * smoothstep(0.55, 0.95, _f);\n#include <opaque_fragment>'); };
+      t.onBeforeCompile = (sh) => { sh.uniforms.rimC = rimU.c; sh.uniforms.rimK = rimU.k; sh.fragmentShader = 'uniform vec3 rimC; uniform float rimK; uniform float paintK; varying vec3 vPW;\n' + sh.fragmentShader.replace('#include <opaque_fragment>',
+        'float _f = 1.0 - max(dot(normalize(vViewPosition), normal), 0.0); outgoingLight += rimC * rimK * smoothstep(0.55, 0.95, _f);\n' +
+        'float _n = sin(vPW.x * 37.0 + sin(vPW.y * 23.0)) * sin(vPW.z * 31.0 + sin(vPW.x * 19.0)) * 0.5 + sin(vPW.y * 61.0 + vPW.z * 47.0) * 0.25; outgoingLight *= 1.0 + paintK * _n;\n#include <opaque_fragment>')
+      sh.uniforms.paintK = { value: o.paintK ?? 0.0 };
+      sh.vertexShader = 'varying vec3 vPW;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\nvPW = (modelMatrix * vec4(transformed, 1.0)).xyz;'); };   // paintK: subtle painted value variation (breaks the plastic gradient)
       t.customProgramCacheKey = () => 'cplusv2'; v2mat.set(mt, t); } return v2mat.get(mt); };
   if (V2) { faceMat.gradientMap = grad2; }
   for (const m of meshes) {

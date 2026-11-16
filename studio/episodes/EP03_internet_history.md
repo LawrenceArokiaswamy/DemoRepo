@@ -1,8 +1,9 @@
 # Episode 3: "What If Everyone Could See Your Entire Internet History?"
 
 **Status**
-- Preproduction: **script and storyboard awaiting owner approval** (2026-11-15).
-- No paid audio generated; no animatic yet.
+- Story and storyboard **approved with script notes** (2026-11-16).
+- **Unpaid animatic delivered for review** (`renders/ep03_animatic.mp4`).
+- No paid audio generated.
 
 **Category:** scientific/social hypothetical (*What If?*).
 - The premise is **fiction** and is labelled as such.
@@ -25,56 +26,62 @@
   4. **Twist:** once everyone's history is exposed, shame stops working.
   5. **Open ending:** kinder, or afraid to ask?
 
-## 2. Script (≈102 words; planned ≈54 s at the Grady voice's measured pace of ~120–125 wpm with pauses)
+## 2. Script: REVISED per owner notes (2026-11-16), used in the animatic
+
+> **Note:** the owner's message referred to "the revised narration script provided in my message", but no script text was included. This revision follows every note: the Penney line is removed from the narration, the help-seeking consequence is added, and the episode ends on the owner's line. The script can be swapped for the owner's exact text and retimed before paid narration.
+
+About 105 words. Placements are planned in animation time; picture will be conformed to the recorded voice (the Episode 2 time-map method).
 
 | # | Time (planned) | Narration | Purpose |
 |---|---|---|---|
-| 1 | 0.2–4.8 | "At 9:41 tonight, every search you've ever made goes public." | **Hook:** the impossible premise in one sentence |
-| 2 | 5.0–7.2 | "For everyone. All at once." | Scale |
-| 3 | 7.6–13.2 | "At first, it's funny. He searched: *how to seem interesting on a date.*" | Humor |
-| 4 | 13.6–17.2 | "She searched: *how to leave a date early.*" | Humor payoff (a reversal) |
-| 5 | 17.8–22.0 | "Then your boss can see it. Your family. Strangers." | Shock / escalation |
-| 6 | 22.6–24.4 | "So people stop searching." | The turn |
-| 7 | 24.8–31.2 | "No one looks up a scary symptom, or how to leave a bad relationship." | Consequences (empathy) |
-| 8 | 31.8–38.8 | "And this part isn't fiction: after the 2013 surveillance revelations, visits to sensitive Wikipedia articles dropped." | Real-world anchor |
-| 9 | 39.6–44.8 | "But weeks later, the shame stops working. Everyone's history is weird." | Twist |
-| 10 | 45.6–52.0 | "So would a world with no secrets make us kinder… or just afraid to ask?" | Thought-provoking ending / discussion prompt |
-| — | 52.0–54.5 | *(hold on the final image; blinking empty search bar)* | Space for the question |
+| 1 | 0.2–4.4 | "At 9:41 tonight, every search you've ever made goes public." | Hook |
+| 2 | 4.8–6.8 | "For everyone. All at once." | Scale |
+| 3 | 7.6–12.8 | "At first, it's funny. He searched: *how to seem interesting on a date.*" | Humor |
+| 4 | 13.2–16.2 | "She searched: *how to leave a date early.*" | Humor payoff |
+| 5 | 16.8–20.8 | "Then your boss can see it. Your family. Strangers." | Shock |
+| 6 | 21.4–23.0 | "So people stop searching." | The turn |
+| 7 | 23.4–25.2 | "Even when they need it most." | Emotional stakes |
+| 8 | 25.8–32.0 | "No one looks up a scary symptom. No one asks how to leave a bad relationship." | Consequences, with empathy |
+| 9 | 32.6–35.2 | "Questions that could have helped… go unasked." | The cost |
+| 10 | 35.8–41.6 | "Weeks later, people realize everyone's history is weird… and the shame starts to fade." | Twist (fictional; no research claim) |
+| 11 | 42.6–47.4 | "If every search became public… would you still dare to ask?" | Ethical dilemma ending |
+| — | 47.4–50.0 | *(hold: empty search bar, blinking cursor, his face)* | Space for the question |
 
 **Captions:**
-- Episode 1/2 style at about 36% height.
-- Search queries appear **as on-screen "search bubbles"** (designed UI cards), so the jokes read on mute.
-- A small "Fiction" tag on screen at 0–3 s; a "Research: Penney (2016)" tag during line 8.
+- Same style as Episodes 1 and 2.
+- The search queries are on-screen bubbles and phone UI, so they read on mute.
+- A "FICTION · WHAT IF?" tag shows at 0–3 s.
+- **Removed:** the "Research: Penney (2016)" on-screen tag.
 
-## 3. Storyboard (13 shots)
+## 3. Storyboard (13 shots, approved; animatic timings)
 
-The four Gate 2 weaknesses are designed in:
-- **A: the ending.** Reactions from many diners at large size, shown through low angles and a quick reaction montage.
-- **B: phone close-ups.** A front-facing screen, controlled exposure and a dark surround.
-- **C: material finish.** Less plastic-looking skin, hair and clothing, and smaller noses (§5).
-- **D: composition.** The subject stays at least 40% of frame height in medium shots, with no more than about 20% empty floor, ceiling or wall.
+All four Gate 2 corrections are applied:
+- **A:** diner reactions in close-ups at 1.4 m, and a room pan with bubbles over everyone;
+- **B:** a front-facing vertical insert phone;
+- **C:** material finish;
+- **D:** tighter two-shots.
 
-| Shot | Time | Picture | Camera / acting | FX / sound |
-|---|---|---|---|---|
-| **S01 HOOK** | 0–2.6 | **Front-facing phone screen fills the lower half:** a big "9:41" and a red **ALERT: Your search history is now PUBLIC**. In the soft background the hero's face lights blue | Slow push in; screen exposure balanced (B) | Buzz plus chime; the room murmur cuts out |
-| S02 | 2.6–5.0 | **Low, table-level wide:** at 4–5 tables, phones flare one after another toward the camera; heads snap down; faces lit blue | Low camera between tables, diners large in frame (A, D); lateral slide | Cascade of rising chimes |
-| S03 | 5.0–7.6 | Close-ups snapped in sequence: three diners' shocked faces (0.8 s each) | Quick cuts; snap-and-hold | Gasps (synth), stingers |
-| S04 | 7.6–13.4 | **Two-shot, adjacent seats:** a **search bubble** pops above him: *"how to seem interesting on a date"*. She reads it; one brow up | Gate 2 framing tightened (D); bubble pop with overshoot | Bubble "pop" |
-| S05 | 13.4–17.4 | **Her bubble** pops: *"how to leave a date early"*. He turns slowly to look at it, deadpan; she gives a sheepish grin | Push in; comedic hold | Pop; a single comic "plink" |
-| S06 | 17.4–22.4 | **Phone insert montage (front-facing, B):** "Sharing with: **Boss** ✓", "**Mom** ✓", "**Everyone nearby (2,431)** ✓" (three cards in 4.5 s) | Clean UI cards, each held 1.3 s or more | Three dings, descending |
-| S07 | 22.4–24.6 | **Hands:** he slowly lays his phone face-down; in the background others do the same | Close, low; a shallow-focus rack | Soft thud; the murmur drops away |
-| S08 | 24.6–31.4 | **Next day, cooler light, quiet room.** A diner (woman, green top) hovers over an **empty search bar**: types *"is it normal to…"*, stops, deletes | Medium close, eye level; the insert alternates with her face (worried, then resigned) | Typing ticks, backspace; near silence |
-| S09 | 31.4–39.4 | **Insert on a phone:** an illustrative line chart dips at "June 2013", labelled "Illustration · Penney (2016)" | Front-facing, readable; the line draws on | Low pulse |
-| S10 | 39.4–45.4 | **Weeks later, warm light returns.** Search bubbles above *everyone*: *"why do I sneeze at the sun"*, *"can dogs eat cheese"*, *"how to fold a fitted sheet"*. Diners laugh; she points at his bubble, laughing; he laughs | Low medium-wide, many faces large (A, D); lamps brighten | Warm laughter swell, pops |
-| S11 | 45.4–52.0 | **Final close-up:** the hero looks into camera, phone in hand, an empty search bar with a blinking cursor reflected in his eyes | Slow push; hold | Music resolves; cursor blink tick |
-| S12 | 52.0–54.5 | Hold; end on the question | — | — |
+| Shot | Time | Picture |
+|---|---|---|
+| S01 | 0–2.8 | Insert: phone shows 9:41 and the red ALERT ("Your search history is now PUBLIC"); his face soft behind |
+| S02 | 2.8–5.0 | Low wide: phones flare across the room in a wave |
+| S03 | 5.0–7.4 | Three diners' reactions, 0.8 s each (snap-and-hold) |
+| S04 | 7.4–13.0 | Two-shot; his bubble: *how to seem interesting on a date*; she reads it |
+| S05 | 13.0–16.6 | Her bubble: *how to leave a date early*; his deadpan turn; sweat drop |
+| S06 | 16.6–21.2 | Insert: "Sharing your history with" Boss ✓ → Mom ✓ → Everyone nearby ✓ |
+| S07 | 21.2–23.2 | He turns his phone face-down |
+| S08 | 23.2–25.6 | Next day: cool, quiet room; phones face-down |
+| S09 | 25.6–35.4 | Diner faces intercut with inserts. Three queries are typed, then deleted: *is this mole normal*, *how to leave a toxic relationship*, *am I depressed or just tired*. Ends on the room |
+| S10 | 35.4–41.8 | Weeks later: warm light, a pan across the room. Harmless "weird search" bubbles over every diner; the couple laughs |
+| S11 | 41.8–50.0 | Final: empty search bar with a blinking cursor in the foreground. He looks up at the camera on the question and holds |
+
+**Estimated final duration:** about 50 s at the planned pace. Real Grady delivery has run 10–15% longer, so expect about 52–56 s after the conform. A 50 s score fits if the voice lands at 50 s or less; otherwise recommend 55 s.
 
 ## 4. Facts and sources
 - **Premise:** fiction (labelled).
-- **Line 8, real:** after the June 2013 NSA/PRISM revelations, traffic to 48 privacy-sensitive (terrorism-keyword) Wikipedia articles showed a statistically significant drop and a lasting change in trend.
+- **Not spoken (owner decision 2026-11-16).** Cited only in the YouTube description and these notes as background on how being watched changes searching behavior. The episode does not claim the study shows embarrassment fades. Background: after the June 2013 NSA/PRISM revelations, traffic to 48 privacy-sensitive (terrorism-keyword) Wikipedia articles showed a statistically significant drop and a lasting change in trend.
   - Source: Jonathon W. Penney, *Chilling Effects: Online Surveillance and Wikipedia Use*, 31 Berkeley Tech. L.J. 117 (2016). [SSRN](https://papers.ssrn.com/abstract=2769645) · [Citizen Lab summary](https://citizenlab.ca/2016/04/jon-penney-publishes-paper-chilling-effects-online-surveillance/).
   - Reported sizes differ (≈20% vs ≈30%), so **no percentage is stated**.
-  - The S09 chart is labelled "illustration", not data.
 
 ## 5. Asset reuse and production plan
 - **Reused (no new building):**

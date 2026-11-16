@@ -797,6 +797,24 @@ Keep an original identity; never copy the reference.
   - no more than about 20% empty floor, ceiling or wall;
   - backgrounds support the story and don't compete with it.
 
+*B3. Episode 3 animatic (2026-11-16): implemented and checked in the 0.33-scale animatic only. Not yet verified at full resolution or approved by the owner.*
+- **Material finish (Gate 2 note C), applied:** `rimK 0.22`, `paintK 0.06` (painted world-position value noise in the v2 toon shader) and modern noses at 74% size.
+  - The hair strand-gradient texture has **not** been built; it stays planned.
+- **Close-up fill:** a soft warm point light near the camera, only in close and medium character shots (`S.fill` in `stories/ep03/business.js`). Pendant lamps alone leave cel-shaded faces too dark for reaction shots.
+- **Search bubbles:** a reusable UI-card sprite with a pop. In a two-shot, pull bubbles 30% toward the pair's midpoint so they stay inside a 9:16 frame. Over a wide room, show them at about 1.9× size.
+- **Phone insert camera:** a vertical phone placed in the table frame, facing the insert camera. One rig covers the alert, the sharing cards, typing then deleting, and the empty search bar with a blinking cursor.
+- **Showing the whole room in 9:16:** the restaurant's diners are spread ±4.5 m apart. One static wide cannot hold them, so "it's happening to everyone" uses a slow pan across the room.
+- **Lessons:**
+  - **Check render logs for `Shader Error` after any shader edit.** A broken `onBeforeCompile` (a varying declared in the wrong string) does not crash. It renders every character black, and this was caught only by comparing against the Gate 2 frames. `grep -ci "shader error"` on the render output must return 0.
+  - Close-up cameras on C+ v2 heads need about 1.4 m distance at fov 38. At 0.85 m the face overfills the frame.
+
+**Approved Episode 3 story decisions (owner, 2026-11-16):**
+- Keep the 9:41 opening, the two dating-search jokes, the turn to serious consequences, and the final ethical dilemma.
+- Show the consequences with empathy: people stop seeking help when they need it most.
+- No real research is spoken in the narration. Penney (2016) is cited only in the source notes and the YouTube description, and the episode must not imply the study shows the embarrassment fades.
+- End on an empty search bar with a blinking cursor: "If every search became public… would you still dare to ask?"
+- Audio after animatic approval only: prefer a 50 s score if the cut fits, otherwise 55 s.
+
 *C. PLANNED / EXPERIMENTAL (not started)*:
 - shot-language toolkit (camera presets, whip-pan transitions, still-frame composition overlay);
 - stylised FX library;

@@ -84,7 +84,8 @@ def head_shape(p):   # soft cranium + cheek bulge + gentle forward jaw
     if zn < -0.45: k = (-0.45 - zn) / 0.55; x *= 1 - 0.28 * k; y -= 0.035 * k; z += 0.02 * k  # jaw tapers, chin forward
     return Vector((x, y * 0.94, z))
 head = ellipsoid('Head', HEAD_C, (HEAD_R, HEAD_R, HEAD_R * 1.04), 'skin', 56, 40, head_shape)
-nose = ellipsoid('Nose', HEAD_C + Vector((0.004, -0.214, -0.05)), (0.044, 0.04, 0.034), 'skin', 20, 14, lambda p: Vector((p.x, p.y - max(0, -p.z) * 0.3, p.z)))
+NS = 0.74 if SLIM else 1.0   # modern builds: smaller, softer nose (Gate 2 finish note)
+nose = ellipsoid('Nose', HEAD_C + Vector((0.004, -0.214 + (0.008 if SLIM else 0), -0.05)), (0.044 * NS, 0.04 * NS, 0.034 * NS), 'skin', 20, 14, lambda p: Vector((p.x, p.y - max(0, -p.z) * 0.3, p.z)))
 ears = [ellipsoid(f'Ear.{s}', HEAD_C + Vector((sx * 0.218, 0.02, 0.0)), (0.028, 0.045, 0.06), 'skin', 16, 12) for s, sx in (('L', 1), ('R', -1))]
 # (C+ hair tuft dropped in 3D: at the temple it read as a bruise / black eye next to the eye; the silhouette doesn't need it)
 
