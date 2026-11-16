@@ -3,7 +3,16 @@
 **Status**
 - Story and storyboard **approved with script notes** (2026-11-16).
 - **Unpaid animatic delivered for review** (`renders/ep03_animatic.mp4`, 50.0 s, 0.33-scale render upscaled to 1080×1920, captions and free sound effects; 1,500 frames at about 0.9–1.4 s/frame).
-- No paid audio generated.
+- **Owner decisions (2026-11-16):**
+  - The exact 11-line narration script is approved; no rewrite or retiming.
+  - On-screen query changed: "how to leave a toxic relationship" is now "how to leave a relationship safely".
+  - Story structure, the 13-shot plan, the 50 s target and the blinking-cursor ending are approved in principle.
+  - **The animatic MP4 is awaiting the owner's visual review.**
+- **Audio budget ceiling, valid only after visual approval of the animatic: 10.76 credits.**
+  - Grady narration: 2.76 credits. Generate it first.
+  - Music: up to 8.00 credits. Choose the duration (50 s for 7.27, or 55 s for 8.00) from the actual narration timing.
+- No paid audio has been generated.
+- The Episode 2 final cut and publishing package remain **separate, still-pending decisions**. Approving Episode 3 does not approve them.
 
 **Category:** scientific/social hypothetical (*What If?*).
 - The premise is **fiction** and is labelled as such.
@@ -71,7 +80,7 @@ All four Gate 2 corrections are applied:
 | S06 | 16.6–21.2 | Insert: "Sharing your history with" Boss ✓ → Mom ✓ → Everyone nearby ✓ |
 | S07 | 21.2–23.2 | He turns his phone face-down |
 | S08 | 23.2–25.6 | Next day: cool, quiet room; phones face-down |
-| S09 | 25.6–35.4 | Diner faces intercut with inserts. Three queries are typed, then deleted: *is this mole normal*, *how to leave a toxic relationship*, *am I depressed or just tired*. Ends on the room |
+| S09 | 25.6–35.4 | Diner faces intercut with inserts. Three queries are typed, then deleted: *is this mole normal*, *how to leave a relationship safely* (owner change 2026-11-16), *am I depressed or just tired*. Ends on the room |
 | S10 | 35.4–41.8 | Weeks later: warm light, a pan across the room. Harmless "weird search" bubbles over every diner; the couple laughs |
 | S11 | 41.8–50.0 | Final: empty search bar with a blinking cursor in the foreground. He looks up at the camera on the question and holds |
 

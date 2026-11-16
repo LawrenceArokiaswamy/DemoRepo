@@ -87,7 +87,7 @@ export function frame(t, C, vt) {
   if (t < T.S02) screen(S.ins, 'alert|' + cl(0.15 + t * 0.12).toFixed(2));
   else if (t < T.S07) screen(S.ins, 'share|' + (t < 18.0 ? 'Boss' : t < 19.4 ? 'Mom' : 'Everyone nearby'));
   else if (t >= T.S11) screen(S.ins, 'search|^' + (Math.floor(t * 2.5) % 2));
-  else { const k = Math.floor((t - 27.0) / 2.3), qs = ['is this mole normal', 'how to leave a toxic relationship', 'am I depressed or just tired'], q = qs[cl(k, 0, 2)], lt = (t - 27.0) % 2.3;
+  else { const k = Math.floor((t - 27.0) / 2.3), qs = ['is this mole normal', 'how to leave a relationship safely', 'am I depressed or just tired'], q = qs[cl(k, 0, 2)], lt = (t - 27.0) % 2.3;
     const typed = lt < 0.9 ? q.slice(0, Math.floor(q.length * lt / 0.9)) : lt < 1.15 ? q : q.slice(0, Math.max(0, Math.floor(q.length * (1 - (lt - 1.15) / 0.35)))); screen(S.ins, 'search|' + typed + '^' + (Math.floor(t * 3) % 2)); }
   // ---- HERO
   const glance = snap(t, 0.5, 0.16), shock = snap(t, 1.2, 0.12), relax = rmp(t, 7.0, 7.4), heBub = snap(t, T.BUB_HE, 0.14), deadpan = snap(t, 14.4, 0.2);

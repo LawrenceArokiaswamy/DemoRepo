@@ -17,7 +17,7 @@ SH = [
  ('S09a diner0 worried', 25.6, 27.0, 'diner0', [K(25.6, [0.14, 1.16, 1.4], [0.0, 1.1, 0.0], 38, 1.4, 0.0012)]),
  ('S09b insert: is this mole normal (deleted)', 27.0, 28.55, 'table', INS),
  ('S09c diner1 sad', 28.55, 29.3, 'diner1', [K(28.55, [-0.14, 1.16, 1.4], [0.0, 1.1, 0.0], 38, 1.4, 0.0012)]),
- ('S09d insert: how to leave a toxic relationship (deleted)', 29.3, 30.85, 'table', INS),
+ ('S09d insert: how to leave a relationship safely (deleted)', 29.3, 30.85, 'table', INS),
  ('S09e diner3 hesitates', 30.85, 31.6, 'diner3', [K(30.85, [0.14, 1.16, 1.4], [0.0, 1.1, 0.0], 38, 1.4, 0.0012)]),
  ('S09f insert: am I depressed or just tired (deleted)', 31.6, 33.15, 'table', INS),
  ('S09g the room: heads down, questions unasked', 33.15, 35.4, 'world', [K(33.15, [0.4, 1.15, 1.2], [0.3, 1.0, -4.0], 46, 5, 0.0004), K(35.4, [0.4, 1.2, 1.5], [0.3, 1.0, -4.0], 46, 5, 0.0004)]),
