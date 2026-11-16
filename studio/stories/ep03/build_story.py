@@ -36,7 +36,8 @@ VO = [(0.2, 4.4, "At 9:41 tonight, every search you've ever made goes public."),
 def ts(x): return f'{int(x // 3600)}:{int(x % 3600 // 60):02d}:{x % 60:05.2f}'
 hdr = open('../vasa/captions_animatic.ass').read().split('[Events]')[0] + '[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n'
 # lines over phone inserts go to the top of frame so the screen stays readable; line 1 splits at the S01/S02 cut
-def cap(a, b, x, top=False): return f'Dialogue: 0,{ts(a)},{ts(b)},Cap,,0,0,{150 if top else 0},,' + ('{\\an8}' if top else '') + x
-TOP = {4, 7}   # line indices (0-based) wholly or mostly over inserts: line 5 (S06 share cards), line 8 (S09 typing)
-ev = [cap(0.2, 2.8, VO[0][2], True), cap(2.8, VO[0][1], VO[0][2])] + [cap(a, b, x, i in TOP) for i, (a, b, x) in enumerate(VO) if i] + [f'Dialogue: 0,{ts(0.2)},{ts(3.0)},Note,,0,0,120,,{{\\an2}}FICTION · WHAT IF?'] + [f'Dialogue: 0,{ts(a)},{ts(b)},Tag,,0,0,0,,ANIMATIC · temp script text, no voice · {n.split(" ")[0]}' for n, a, b, *_ in SH]
+def cap(a, b, x, pos=''): return f'Dialogue: 0,{ts(a)},{ts(b)},Cap,,0,0,{150 if pos == "top" else 230 if pos == "low" else 0},,' + ('{\\an8}' if pos == 'top' else '') + x
+# caption placement per shot (revision 2): top over phone inserts and the ending phone; low under faces/bubbles in two-shots and the weeks-later close-ups
+POS = {4: 'top', 7: 'top', 10: 'top', 2: 'low', 3: 'low', 9: 'low'}
+ev = [cap(0.2, 2.8, VO[0][2], 'top'), cap(2.8, VO[0][1], VO[0][2])] + [cap(a, b, x, POS.get(i, '')) for i, (a, b, x) in enumerate(VO) if i] + [f'Dialogue: 0,{ts(0.2)},{ts(3.0)},Note,,0,0,120,,{{\\an2}}FICTION · WHAT IF?'] + [f'Dialogue: 0,{ts(a)},{ts(b)},Tag,,0,0,0,,ANIMATIC · temp script text, no voice · {n.split(" ")[0]}' for n, a, b, *_ in SH]
 open('captions_animatic.ass', 'w').write(hdr + '\n'.join(ev) + '\n'); print('shots', len(SH))

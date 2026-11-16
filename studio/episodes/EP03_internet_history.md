@@ -98,6 +98,8 @@ All four Gate 2 corrections are applied:
 - **Mobile test:** key text frames were rendered at full 1080×1920 and checked downscaled to 390×693 (phone viewing size). These all read: both date bubbles, the share card, the wrapped relationship query, the diner bubbles, the callback bubble and the ending search bar.
 - **Re-render:** only S04–S05 and S09–S11 were re-rendered (about 1,000 of 1,500 preview frames). The S01–S03 and S06–S08 frames were reused.
 - The length is still 50.0 s, and the 11 narration lines and timings are unchanged.
+- Caption placement is set per shot: top of frame over phone inserts and the ending phone; low, under faces and bubbles, for lines 3, 4 and 10.
+- Delivered as `renders/ep03_animatic_v2.mp4`. v1 is kept for comparison.
 
 ## 4. Facts and sources
 - **Premise:** fiction (labelled).

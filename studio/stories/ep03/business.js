@@ -116,7 +116,7 @@ export function frame(t, C, vt) {
     hf = t < 37.95 ? X('relaxed', 'happy', 0.5) : t < 39.2 ? { ...E('scared'), mouth: 'grimace', mo: 0.4, cheek: 1, brow: [14, 18] } : t < 39.8 ? { ...E('relaxed'), cheek: 1, open: [0.45, 0.45] } : { ...E('happy'), cheek: 1 };
     hb = { head: [-0.02 + 0.2 * tense - 0.12 * lh + la, -0.15 * tense, 0.04], neck: [0.05 * tense, 0, 0], chest: [br + 0.07 * tense + 0.05 * sigh - 0.06 * lh + la * 0.5, 0, 0], upperarmL: [-0.15, 0, 0.12], forearmL: [-0.45, 0, 0], upperarmR: [-0.62, 0, -0.2], forearmR: [-0.85, 0, 0] };
     hG = [0.6 * tense, 0.35 * tense]; hSq = -0.035 * tense - 0.03 * sigh; }
-  if (t >= T.S11) { hf = t < 43.6 ? E('concern') : t < 45.4 ? { ...E('concern'), brow: [12, -6], mouth: 'flat', open: [0.85, 0.85] } : t < 48.0 ? { ...E('concern'), brow: [14, 4], mouth: 'grimace', mo: 0.15 } : { ...E('concern'), brow: [10, 10], mouth: 'flat' };
+  if (t >= T.S11) { hf = t < 43.6 ? E('concern') : t < 45.4 ? { ...E('concern'), brow: [12, -6], mouth: 'flat', open: [0.85, 0.85] } : t < 48.0 ? { ...E('concern'), brow: [14, 4], mouth: 'grimace', mo: 0.15, open: [1.0, 1.0] } : { ...E('concern'), brow: [10, 10], mouth: 'flat' };
     if (t >= 43.8 && t < 44.35) hG = [0.6, 0.2]; if (t >= 48.0 && t < 48.7) hG = [0, 0.6]; hSq = 0.02 * rmp(t, 48.9, 49.05) * (1 - rmp(t, 49.05, 49.3)); }
   seat(S.hero, TB, 1, { face: hf, gaze: hG, blink: S.CP.blinkAt(t, [9.0, 15.8, 30.0, 39.0, 43.3, 46.5, 49.4]), squash: 0.03 * shock * (1 - rmp(t, 1.4, 1.8)) + hSq, bones: hb });
   // ---- PARTNER
