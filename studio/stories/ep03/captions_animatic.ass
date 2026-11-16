@@ -12,18 +12,19 @@ Style: Tag,DejaVu Sans,30,&H00D0D0D0,&H00FFFFFF,&H80000000,&H80000000,0,0,0,0,10
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 0,0:00:00.20,0:00:04.40,Cap,,0,0,0,,At 9:41 tonight, every search you've ever made goes public.
+Dialogue: 0,0:00:00.20,0:00:02.80,Cap,,0,0,150,,{\an8}At 9:41 tonight, every search you've ever made goes public.
+Dialogue: 0,0:00:02.80,0:00:04.40,Cap,,0,0,0,,At 9:41 tonight, every search you've ever made goes public.
 Dialogue: 0,0:00:04.80,0:00:06.80,Cap,,0,0,0,,For everyone. All at once.
 Dialogue: 0,0:00:07.60,0:00:12.80,Cap,,0,0,0,,At first, it's funny. He searched: how to seem interesting on a date.
 Dialogue: 0,0:00:13.20,0:00:16.20,Cap,,0,0,0,,She searched: how to leave a date early.
-Dialogue: 0,0:00:16.80,0:00:20.80,Cap,,0,0,0,,Then your boss can see it. Your family. Strangers.
+Dialogue: 0,0:00:16.80,0:00:20.80,Cap,,0,0,150,,{\an8}Then your boss can see it. Your family. Strangers.
 Dialogue: 0,0:00:21.40,0:00:23.00,Cap,,0,0,0,,So people stop searching.
 Dialogue: 0,0:00:23.40,0:00:25.20,Cap,,0,0,0,,Even when they need it most.
-Dialogue: 0,0:00:25.80,0:00:32.00,Cap,,0,0,0,,No one looks up a scary symptom. No one asks how to leave a bad relationship.
+Dialogue: 0,0:00:25.80,0:00:32.00,Cap,,0,0,150,,{\an8}No one looks up a scary symptom. No one asks how to leave a bad relationship.
 Dialogue: 0,0:00:32.60,0:00:35.20,Cap,,0,0,0,,Questions that could have helped… go unasked.
 Dialogue: 0,0:00:35.80,0:00:41.60,Cap,,0,0,0,,Weeks later, people realize everyone's history is weird… and the shame starts to fade.
 Dialogue: 0,0:00:42.60,0:00:47.40,Cap,,0,0,0,,If every search became public… would you still dare to ask?
-Dialogue: 0,0:00:00.20,0:00:03.00,Note,,0,0,0,,FICTION · WHAT IF?
+Dialogue: 0,0:00:00.20,0:00:03.00,Note,,0,0,120,,{\an2}FICTION · WHAT IF?
 Dialogue: 0,0:00:00.00,0:00:02.80,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S01
 Dialogue: 0,0:00:02.80,0:00:05.00,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S02
 Dialogue: 0,0:00:05.00,0:00:05.80,Tag,,0,0,0,,ANIMATIC · temp script text, no voice · S03a

@@ -2,7 +2,7 @@
 
 **Status**
 - Story and storyboard **approved with script notes** (2026-11-16).
-- **Unpaid animatic delivered for review** (`renders/ep03_animatic.mp4`).
+- **Unpaid animatic delivered for review** (`renders/ep03_animatic.mp4`, 50.0 s, 0.33-scale render upscaled to 1080×1920, captions and free sound effects; 1,500 frames at about 0.9–1.4 s/frame).
 - No paid audio generated.
 
 **Category:** scientific/social hypothetical (*What If?*).
