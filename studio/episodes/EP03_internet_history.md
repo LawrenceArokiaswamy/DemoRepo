@@ -164,3 +164,13 @@ Animatic → owner review → paid narration (after approval) → conform → fi
   - The new audio was remuxed into both files; the picture was not re-encoded.
   - Caption onsets were checked against the voice: all within ±0.04 s, except the last caption, which leads by 0.2 s.
   - Final file SHA-256 (first 16 hex): `531f2d43d77351c4`.
+
+## 10. Handoff (owner: creatively approved, 2026-11-16)
+- **Development is closed.** The story, visuals, pacing, narration, ending and cut are locked.
+- **Upload file:** `final_videos/EP03_Internet_History/EP03_Internet_History_UPLOAD.mp4`. It is byte-identical to the production master, not the proxy.
+  - 302,014,340 B; SHA-256 `77bf44cc8f202a1df97ae29b774309ea4def2ee182997b2d7545cbb9dbd73bb9`.
+  - Verified on the master itself: native 1080×1920, 30 fps, 1,500 frames, 50.000 s.
+  - Its audio is the corrected mix (correlation 0.9996 with `audio/final_mix.wav`, now committed).
+- **Title (owner-selected):** "What If Everyone Could See Your Search History?"
+- **Backup:** `final_videos/EP03_Internet_History/BACKUP.md`. The owner's own copies come first, then the proxy in git, then a rebuild from git.
+- **Next:** the owner uploads, then we record the URL and retention, and the lessons go into the next episode. No further spend.

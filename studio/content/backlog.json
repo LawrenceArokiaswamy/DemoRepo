@@ -28,14 +28,17 @@
   },
   {
    "id": "EP03",
-   "working_title": "What If Everyone Could See Your Entire Internet History?",
+   "working_title": "What If Everyone Could See Your Search History?",
    "category": "What If? (social/technology)",
    "story_folder": "studio/stories/ep03-motion (tests); episode folder TBD",
-   "production_status": "Script — awaiting owner approval",
-   "credits_spent": 0,
+   "production_status": "Approved — upload-ready; awaiting the owner's YouTube upload",
+   "credits_spent": 10.03,
    "publication_url": null,
    "performance": null,
-   "notes": "Owner-selected new category (2026-11-15). Script/storyboard: studio/episodes/EP03_internet_history.md. Gate 1 stills + Gate 2 motion test approved."
+   "notes": "Owner-selected new category (2026-11-15). Script/storyboard: studio/episodes/EP03_internet_history.md. Gate 1 stills + Gate 2 motion test approved. Creatively approved 2026-11-16. Record the YouTube URL and retention metrics after publication.",
+   "duration_s": 50.0,
+   "deliverable": "studio/final_videos/EP03_Internet_History/EP03_Internet_History_UPLOAD.mp4",
+   "upload_file": "studio/final_videos/EP03_Internet_History/EP03_Internet_History_UPLOAD.mp4"
   }
  ],
  "backlog": [

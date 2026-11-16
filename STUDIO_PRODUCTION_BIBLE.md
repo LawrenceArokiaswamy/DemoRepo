@@ -827,6 +827,10 @@ Keep an original identity; never copy the reference.
   - **Fit UI-card text to its field** (measure it, then wrap). A name that fits at 0.33 scale can overflow at full resolution.
   - **Faces in close-ups take low captions.** The default mid-screen caption position lands on the eyes of a 1.4 m close-up.
   - **In bash loops, run ffmpeg with `-nostdin`**, or it swallows the loop's input.
+  - **The upload file is the master, not the proxy.** YouTube re-encodes everything, so upload the highest-quality file and keep the ≤50 MB proxy in git as the backup.
+  - **Commit the final mix** (`stories/<ep>/audio/final_mix.wav`), because `build/` is gitignored. With it, the master can be rebuilt from git without credits.
+  - **Every handoff gets a `BACKUP.md`:** the owner downloads the file, checks the SHA-256 and keeps two copies; the proxy stays in git; a rebuild recipe is included.
+  - **Measure narration-to-bed balance from the stems before sign-off.** Target a median voice lead of at least 10 dB over the music and SFX across core speech. The `mix.sh` music level for dialogue-dense episodes is −25 LUFS.
 
 **Approved Episode 3 story decisions (owner, 2026-11-16):**
 - Keep the 9:41 opening, the two dating-search jokes, the turn to serious consequences, and the final ethical dilemma.

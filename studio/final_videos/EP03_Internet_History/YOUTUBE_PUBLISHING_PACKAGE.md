@@ -1,10 +1,11 @@
 # EP03 · What If Everyone Could See Your Search History?: YouTube publishing package
 
-**Status:** packaged, **awaiting owner review and approval**. Not published.
-**Upload file:** `EP03_Internet_History_UPLOAD.mp4`. It goes into this folder only after the owner approves the final cut; until then the review copy is `renders/ep03_final_review.mp4`.
+**Status:** **creatively approved (owner, 2026-11-16) and ready for the owner's upload.** It has not been published.
+**Upload file:** `EP03_Internet_History_UPLOAD.mp4` in this folder (the production master, 302 MB, SHA-256 `77bf44cc…`). Specs and QA: `metadata.md`. Backup: `BACKUP.md`.
+**Title (owner-selected):** What If Everyone Could See Your Search History?
 
 ## 1. Title options
-1. **What If Everyone Could See Your Search History?** ← **recommended**
+1. **What If Everyone Could See Your Search History?** ← **SELECTED by the owner**
 2. At 9:41, Every Search You've Ever Made Goes Public
 3. What If Your Internet History Went Public Tonight?
 
@@ -61,5 +62,5 @@ Shorts thumbnail support varies by account and app; this is the same note as Epi
 - **Altered or synthetic content:** an animated dramatisation; the narration voice is AI-generated (ElevenLabs). Answer YouTube's disclosure prompt per its current wording.
 
 ## 9. Publication
-- Status: **awaiting owner approval**.
+- Status: **approved and ready for the owner's upload.** Upload the downloaded copy of `EP03_Internet_History_UPLOAD.mp4`; do not upload automatically.
 - YouTube URL: _(add after publication)_.
