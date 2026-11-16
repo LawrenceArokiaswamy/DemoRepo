@@ -84,7 +84,7 @@ export function frame(t, C, vt) {
   const day2 = t >= T.S08 && t < T.S10, later = t >= T.S10 && t < T.S11; RS.lamps.forEach((l, i) => { l.intensity = S.lampsBase[i] * (day2 ? 0.45 : later ? 1.25 : 1); }); RS.hemi.color.copy(S.hemi0).lerp(new THREE.Color('#9fb8e8'), day2 ? 0.7 : 0);
   // ---- table phone
   const ph = TB.seat(1).lerp(new THREE.Vector3(TB.x, 0, TB.z), 0.55); S.phone.g.position.set(ph.x, TB.top + 0.012, ph.z); S.phone.g.scale.setScalar(1.6); S.phone.g.rotation.set(t >= 22.0 && t < T.S10 ? Math.PI : 0, TB.rot + 0.9 + Math.PI, 0);
-  const on = t >= 0.3 && !(t >= 22.0 && t < T.S10); screen(S.phone, on ? 'alert|0.6' : 'off'); S.phone.glow.material.opacity = on ? 0.9 : 0; S.phone.light.intensity = on && !(vt >= T.S06 && vt < T.S07) ? (vt >= T.S07 && vt < T.S08 ? 0.4 : 1.6) : 0;
+  const on = t >= 0.3 && !(t >= 22.0 && t < T.S10); screen(S.phone, on ? 'alert|0.6' : 'off'); S.phone.glow.material.opacity = on ? 0.9 : 0; S.phone.light.intensity = on && !(t >= T.S06 && t < T.S07) ? (t >= T.S07 && t < T.S08 ? 0.4 : 1.6) : 0;
   // ---- insert phone: front-facing in front of the table, visible only during insert shots
   const ins = (t < T.S02) || (t >= T.S06 && t < T.S07) || (t >= 27.0 && t < 28.55) || (t >= 30.0 && t < 31.9) || t >= T.S11; S.ins.g.visible = ins;
   { const lp = t >= T.S11 ? new THREE.Vector3(-0.16, 1.0, 0.02) : new THREE.Vector3(0, 1.02, 0); lp.applyAxisAngle(new THREE.Vector3(0, 1, 0), TB.rot).add(new THREE.Vector3(TB.x, 0, TB.z)); S.ins.g.position.copy(lp); }
@@ -92,7 +92,7 @@ export function frame(t, C, vt) {
   if (t < T.S02) screen(S.ins, 'alert|' + cl(0.15 + t * 0.12).toFixed(2));
   else if (t < T.S07) screen(S.ins, 'share|' + (t < 18.0 ? 'Boss' : t < 19.4 ? 'Mom' : 'Everyone nearby'));
   else if (t >= T.S11) screen(S.ins, 'search|^' + (Math.floor(t * 2.5) % 2));
-  else { const two = t >= 30.0, q = two ? 'how to leave a relationship safely' : 'is this mole normal', lt = t - (two ? 30.0 : 27.0), ty = two ? [0.05, 0.75, 1.5, 1.85] : [0, 0.9, 1.15, 1.5];   // typed, held whole, deleted
+  else { const two = t >= 30.0, q = two ? 'how to leave a relationship safely' : 'is this mole normal', lt = t - (two ? 30.0 : 27.0), ty = two ? [0.05, 0.65, 1.55, 1.85] : [0, 0.9, 1.15, 1.5];   // typed, held whole, deleted
     const typed = lt < ty[1] ? q.slice(0, Math.floor(q.length * rmp(lt, ty[0], ty[1]))) : lt < ty[2] ? q : q.slice(0, Math.max(0, Math.floor(q.length * (1 - rmp(lt, ty[2], ty[3])))));
     screen(S.ins, 'search|' + typed + '^' + (Math.floor(t * 3) % 2)); }
   { const on = t >= 42.3; S.thumb.visible = on && S.ins.g.visible; if (on) { const V = (x, y, z) => new THREE.Vector3(x, y, z), A = V(0.07, 0.02, 0.12), H = V(-0.004, 0.014, -0.012), Bk = V(0.03, 0.024, 0.06), H2 = V(-0.002, 0.009, -0.014);
@@ -146,7 +146,7 @@ export function frame(t, C, vt) {
     const sOn = worry || hes || (quit && t < 32.7), dOn = t >= tw && !(t >= 22.0 && t < T.S10); screen(dp, sOn ? 'search|^' + (Math.floor(t * 3) % 2) : dOn ? 'alert|0.5' : 'off'); const dim = t >= T.S10 ? 0.35 : 1; dp.glow.material.opacity = sOn ? 0.5 : dOn ? 0.85 * lit * dim : 0; dp.light.intensity = sOn ? 0.8 : dOn ? 1.2 * lit * dim : 0; });
   // ---- close-up fill: a soft warm key near the camera in close and medium character shots (toon faces need a clear key)
   if (!S.fill) { S.fill = new THREE.PointLight('#ffe2c0', 0, 4, 1.5); S.C.scene.add(S.fill); }
-  const dc = (vt >= 5.0 && vt < 7.4) || (vt >= 25.6 && vt < 27.0) || (vt >= 28.55 && vt < 30.0) || (vt >= 31.9 && vt < 33.15) || (vt >= T.S10 && vt < 37.6); const med = (vt >= T.S04 && vt < T.S06) || (vt >= T.S07 && vt < T.S08) || (vt >= 37.6 && vt < T.S11), fin = vt >= T.S11; S.fill.intensity = dc ? (vt >= T.S10 && vt < 37.6 ? 0.5 : 2.0) : med ? 0.9 : fin ? 0.6 : 0; S.fill.position.copy(C.camera.position).add(new THREE.Vector3(0, 0.35, 0));
+  const dc = (t >= 5.0 && t < 7.4) || (t >= 25.6 && t < 27.0) || (t >= 28.55 && t < 30.0) || (t >= 31.9 && t < 33.15) || (t >= T.S10 && t < 37.6); const med = (t >= T.S04 && t < T.S06) || (t >= T.S07 && t < T.S08) || (t >= 37.6 && t < T.S11), fin = t >= T.S11; S.fill.intensity = dc ? (t >= T.S10 && t < 37.6 ? 0.5 : 2.0) : med ? 0.9 : fin ? 0.6 : 0; S.fill.position.copy(C.camera.position).add(new THREE.Vector3(0, 0.35, 0));
   // ---- symbols + bubbles
   S.hero.root.updateMatrixWorld(true); const hp = S.hero.bones.head.getWorldPosition(new THREE.Vector3()), right = new THREE.Vector3().setFromMatrixColumn(C.camera.matrixWorld, 0);
   const shk = snap(t, 1.24, 0.12) * (1 - rmp(t, 2.6, 2.8)); S.shock.visible = shk > 0.01 && t < T.S02; S.shock.scale.set(0.3 * shk, 0.3 * shk, 1); S.shock.position.copy(hp).addScaledVector(right, 0.33).add(new THREE.Vector3(0, 0.3, 0));
@@ -156,5 +156,5 @@ export function frame(t, C, vt) {
   const place = (b, ch, k, bob, big = false, mid = null) => { b.visible = k > 0.01; if (!b.visible) return; ch.root.updateMatrixWorld(true); const h = ch.bones.head.getWorldPosition(new THREE.Vector3()); b.position.copy(h).add(new THREE.Vector3(0, (big ? 0.42 : 0.5) + Math.sin(t * 2 + bob) * 0.015, 0)); if (mid) b.position.lerp(mid.clone().setY(b.position.y), 0.5); const [w0, h0] = b.userData.wh || (b.userData.wh = [b.scale.x, b.scale.y]); const z = big ? 1.25 : 1; b.scale.set(w0 * k * z, h0 * k * z, 1); };
   place(S.bHe, S.hero, t >= T.BUB_HE && t < 13.35 ? heBub * (1 - ss(rmp(t, 13.1, 13.35))) : t >= 37.9 && t < T.S11 ? snap(t, 37.9, 0.14) : 0, 0, false, mid); place(S.bShe, S.partner, t >= T.BUB_SHE && t < T.S06 ? sheBub : 0, 1.3, false, mid);
   S.bWeird.forEach((b, i) => place(b, S.diners[i], t >= T.S10 && t < 37.6 ? snap(t, (i === 1 ? 36.62 : T.S10 + 0.15), 0.14) : 0, i, true));
-  const px = vt < 1e9 ? 4.6 : 4.6; for (const ch of [S.hero, S.partner, ...S.diners]) ch.update(C.camera, px);
+  const px = t < 1e9 ? 4.6 : 4.6; for (const ch of [S.hero, S.partner, ...S.diners]) ch.update(C.camera, px);
 }

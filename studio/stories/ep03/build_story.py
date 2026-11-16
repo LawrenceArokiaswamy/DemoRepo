@@ -28,6 +28,18 @@ SH = [
 base = json.load(open('../ep03-motion/story.json'))
 story = {**base, 'title': 'EP03 What If Everyone Could See Your Internet History (animatic)', 'duration': 50.0, 'business': 'business.js',
          'shots': [{'name': n, 'a': a, 'b': b, 'attach': at, 'keys': ks} for n, a, b, at, ks in SH]}
+# final conform (build_final.py): shots and camera keys are authored in animation time; the director wants video time
+import os
+if os.path.exists('build/timeline.json'):
+    TLJ = json.load(open('build/timeline.json')); TM = TLJ['timeMap']
+    def w2v(w):
+        for (v0, w0), (v1, w1) in zip(TM, TM[1:]):
+            if w <= w1 + 1e-9: return round(v0 + (v1 - v0) * (w - w0) / max(1e-6, (w1 - w0)), 4)
+        return TM[-1][0]
+    for sh in story['shots']:
+        sh['a'], sh['b'] = w2v(sh['a']), w2v(sh['b'])
+        for k in sh['keys']: k['t'] = w2v(k['t'])
+    story['timeMap'] = TM; story['duration'] = TLJ['duration']; story['title'] = story['title'].replace(' (animatic)', '')
 json.dump(story, open('story.json', 'w'), indent=1)
 VO = [(0.2, 4.4, "At 9:41 tonight, every search you've ever made goes public."), (4.8, 6.8, 'For everyone. All at once.'), (7.6, 12.8, "At first, it's funny. He searched: how to seem interesting on a date."),
       (13.2, 16.2, 'She searched: how to leave a date early.'), (16.8, 20.8, 'Then your boss can see it. Your family. Strangers.'), (21.4, 23.0, 'So people stop searching.'), (23.4, 25.2, 'Even when they need it most.'),

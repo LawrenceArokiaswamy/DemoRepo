@@ -1,5 +1,5 @@
 {
- "title": "EP03 What If Everyone Could See Your Internet History (animatic)",
+ "title": "EP03 What If Everyone Could See Your Internet History",
  "period": "modern",
  "set": "restaurant",
  "fps": 30,
@@ -34,11 +34,11 @@
   {
    "name": "S01 HOOK insert: 9:41 ALERT, his face blurred behind",
    "a": 0.0,
-   "b": 2.8,
+   "b": 2.9345,
    "attach": "table",
    "keys": [
     {
-     "t": 0,
+     "t": 0.0,
      "pos": [
       -0.42,
       1.03,
@@ -54,7 +54,7 @@
      "ap": 0.002
     },
     {
-     "t": 2.8,
+     "t": 2.9345,
      "pos": [
       -0.36,
       1.03,
@@ -73,12 +73,12 @@
   },
   {
    "name": "S02 low wide: phones flare in a wave",
-   "a": 2.8,
-   "b": 5.0,
+   "a": 2.9345,
+   "b": 5.238,
    "attach": "world",
    "keys": [
     {
-     "t": 2.8,
+     "t": 2.9345,
      "pos": [
       -1.3,
       1.0,
@@ -94,7 +94,7 @@
      "ap": 0.0004
     },
     {
-     "t": 5.0,
+     "t": 5.238,
      "pos": [
       -0.7,
       1.0,
@@ -113,12 +113,12 @@
   },
   {
    "name": "S03a diner reaction",
-   "a": 5.0,
-   "b": 5.8,
+   "a": 5.238,
+   "b": 6.038,
    "attach": "diner0",
    "keys": [
     {
-     "t": 5.0,
+     "t": 5.238,
      "pos": [
       0.14,
       1.16,
@@ -137,12 +137,12 @@
   },
   {
    "name": "S03b diner reaction",
-   "a": 5.8,
-   "b": 6.6,
+   "a": 6.038,
+   "b": 6.838,
    "attach": "diner1",
    "keys": [
     {
-     "t": 5.8,
+     "t": 6.038,
      "pos": [
       -0.14,
       1.16,
@@ -161,12 +161,12 @@
   },
   {
    "name": "S03c diner reaction",
-   "a": 6.6,
-   "b": 7.4,
+   "a": 6.838,
+   "b": 7.638,
    "attach": "diner3",
    "keys": [
     {
-     "t": 6.6,
+     "t": 6.838,
      "pos": [
       0.14,
       1.16,
@@ -185,12 +185,12 @@
   },
   {
    "name": "S04 two-shot: his search bubble",
-   "a": 7.4,
-   "b": 13.0,
+   "a": 7.638,
+   "b": 13.271,
    "attach": "table",
    "keys": [
     {
-     "t": 7.4,
+     "t": 7.638,
      "pos": [
       -1.7,
       1.4,
@@ -206,7 +206,7 @@
      "ap": 0.0008
     },
     {
-     "t": 13.0,
+     "t": 13.271,
      "pos": [
       -1.58,
       1.38,
@@ -225,12 +225,12 @@
   },
   {
    "name": "S05 her bubble; his deadpan turn",
-   "a": 13.0,
-   "b": 16.6,
+   "a": 13.271,
+   "b": 16.838,
    "attach": "table",
    "keys": [
     {
-     "t": 13.0,
+     "t": 13.271,
      "pos": [
       -1.52,
       1.38,
@@ -246,7 +246,7 @@
      "ap": 0.0008
     },
     {
-     "t": 16.6,
+     "t": 16.838,
      "pos": [
       -1.36,
       1.36,
@@ -265,12 +265,12 @@
   },
   {
    "name": "S06 insert montage: sharing with Boss / Mom / Everyone nearby",
-   "a": 16.6,
-   "b": 21.2,
+   "a": 16.838,
+   "b": 21.4563,
    "attach": "table",
    "keys": [
     {
-     "t": 0,
+     "t": 0.0,
      "pos": [
       -0.38,
       1.03,
@@ -289,12 +289,12 @@
   },
   {
    "name": "S07 hands: phones face-down",
-   "a": 21.2,
-   "b": 23.2,
+   "a": 21.4563,
+   "b": 23.438,
    "attach": "table",
    "keys": [
     {
-     "t": 21.2,
+     "t": 21.4563,
      "pos": [
       -0.75,
       1.22,
@@ -310,7 +310,7 @@
      "ap": 0.001
     },
     {
-     "t": 23.2,
+     "t": 23.438,
      "pos": [
       -0.62,
       1.18,
@@ -329,12 +329,12 @@
   },
   {
    "name": "S08 next day: quiet, cool",
-   "a": 23.2,
-   "b": 25.6,
+   "a": 23.438,
+   "b": 25.838,
    "attach": "world",
    "keys": [
     {
-     "t": 23.2,
+     "t": 23.438,
      "pos": [
       0.4,
       1.1,
@@ -350,7 +350,7 @@
      "ap": 0.0004
     },
     {
-     "t": 25.6,
+     "t": 25.838,
      "pos": [
       0.4,
       1.1,
@@ -369,12 +369,12 @@
   },
   {
    "name": "S09a diner0 worried",
-   "a": 25.6,
-   "b": 27.0,
+   "a": 25.838,
+   "b": 27.238,
    "attach": "diner0",
    "keys": [
     {
-     "t": 25.6,
+     "t": 25.838,
      "pos": [
       0.14,
       1.16,
@@ -393,12 +393,12 @@
   },
   {
    "name": "S09b insert: is this mole normal (deleted)",
-   "a": 27.0,
-   "b": 28.55,
+   "a": 27.238,
+   "b": 28.788,
    "attach": "table",
    "keys": [
     {
-     "t": 0,
+     "t": 0.0,
      "pos": [
       -0.38,
       1.03,
@@ -417,12 +417,12 @@
   },
   {
    "name": "S09c diner1 hesitates: glances around, does not type",
-   "a": 28.55,
-   "b": 30.0,
+   "a": 28.788,
+   "b": 30.238,
    "attach": "diner1",
    "keys": [
     {
-     "t": 28.55,
+     "t": 28.788,
      "pos": [
       -0.14,
       1.16,
@@ -441,12 +441,12 @@
   },
   {
    "name": "S09d insert: how to leave a relationship safely (held whole, then deleted)",
-   "a": 30.0,
-   "b": 31.9,
+   "a": 30.238,
+   "b": 32.138,
    "attach": "table",
    "keys": [
     {
-     "t": 0,
+     "t": 0.0,
      "pos": [
       -0.38,
       1.03,
@@ -465,12 +465,12 @@
   },
   {
    "name": "S09e diner3 gives up: sighs, lowers the phone, looks away",
-   "a": 31.9,
-   "b": 33.15,
+   "a": 32.138,
+   "b": 33.4274,
    "attach": "diner3",
    "keys": [
     {
-     "t": 31.9,
+     "t": 32.138,
      "pos": [
       0.14,
       1.16,
@@ -489,12 +489,12 @@
   },
   {
    "name": "S09g the room: heads down, questions unasked",
-   "a": 33.15,
-   "b": 35.4,
+   "a": 33.4274,
+   "b": 35.8384,
    "attach": "world",
    "keys": [
     {
-     "t": 33.15,
+     "t": 33.4274,
      "pos": [
       0.4,
       1.15,
@@ -510,7 +510,7 @@
      "ap": 0.0004
     },
     {
-     "t": 35.4,
+     "t": 35.8384,
      "pos": [
       0.4,
       1.2,
@@ -529,12 +529,12 @@
   },
   {
    "name": "S10a weeks later: diner laughs under her own search bubble",
-   "a": 35.4,
-   "b": 36.5,
+   "a": 35.8384,
+   "b": 37.1467,
    "attach": "diner3",
    "keys": [
     {
-     "t": 35.4,
+     "t": 35.8384,
      "pos": [
       0.16,
       1.42,
@@ -553,12 +553,12 @@
   },
   {
    "name": "S10a2 weeks later: another diner, bubble pops, he laughs it off",
-   "a": 36.5,
-   "b": 37.6,
+   "a": 37.1467,
+   "b": 38.5292,
    "attach": "diner1",
    "keys": [
     {
-     "t": 36.5,
+     "t": 37.1467,
      "pos": [
       -0.16,
       1.42,
@@ -577,12 +577,12 @@
   },
   {
    "name": "S10b callback: his old search pops up; she bursts out laughing; he relaxes and laughs",
-   "a": 37.6,
-   "b": 41.8,
+   "a": 38.5292,
+   "b": 42.4724,
    "attach": "table",
    "keys": [
     {
-     "t": 37.6,
+     "t": 38.5292,
      "pos": [
       -1.45,
       1.4,
@@ -598,7 +598,7 @@
      "ap": 0.0008
     },
     {
-     "t": 41.8,
+     "t": 42.4724,
      "pos": [
       -1.3,
       1.38,
@@ -617,12 +617,12 @@
   },
   {
    "name": "S11 final: empty search bar, blinking cursor; he looks up",
-   "a": 41.8,
+   "a": 42.4724,
    "b": 50.0,
    "attach": "table",
    "keys": [
     {
-     "t": 41.8,
+     "t": 42.4724,
      "pos": [
       -0.55,
       1.12,
@@ -655,5 +655,79 @@
     }
    ]
   }
+ ],
+ "timeMap": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   0.2,
+   0.2
+  ],
+  [
+   5.038,
+   4.8
+  ],
+  [
+   7.838,
+   7.6
+  ],
+  [
+   11.016,
+   10.3
+  ],
+  [
+   13.438,
+   13.2
+  ],
+  [
+   17.038,
+   16.8
+  ],
+  [
+   18.779,
+   18.0
+  ],
+  [
+   19.821,
+   19.4
+  ],
+  [
+   21.638,
+   21.4
+  ],
+  [
+   23.638,
+   23.4
+  ],
+  [
+   26.038,
+   25.8
+  ],
+  [
+   32.838,
+   32.6
+  ],
+  [
+   36.267,
+   35.8
+  ],
+  [
+   40.54,
+   39.2
+  ],
+  [
+   43.067,
+   42.6
+  ],
+  [
+   45.603,
+   45.6
+  ],
+  [
+   50.0,
+   50.0
+  ]
  ]
 }
