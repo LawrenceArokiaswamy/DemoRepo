@@ -816,6 +816,12 @@ Keep an original identity; never copy the reference.
   - **Wide shots of a spread-out room fail in 9:16.** Use quick close-ups for "everyone" beats.
   - **No near-static holds longer than about 2 s.** Endings need a small action, such as the thumb approaching, hesitating and retreating.
 
+- **Final-render lessons (Episode 3 final, 2026-11-16):**
+  - **The painted-noise finish (`paintK`) makes the video hard to compress.** CRF 19 produced about 48 Mb/s (300 MB for 50 s). Keep the CRF master local, and make the review/upload copy with **two-pass encoding at about 7.1 Mb/s** (≈45 MB for 50 s). It stays native 1080×1920 and comfortably above YouTube's Shorts encode.
+  - **Fit UI-card text to its field** (measure it, then wrap). A name that fits at 0.33 scale can overflow at full resolution.
+  - **Faces in close-ups take low captions.** The default mid-screen caption position lands on the eyes of a 1.4 m close-up.
+  - **In bash loops, run ffmpeg with `-nostdin`**, or it swallows the loop's input.
+
 **Approved Episode 3 story decisions (owner, 2026-11-16):**
 - Keep the 9:41 opening, the two dating-search jokes, the turn to serious consequences, and the final ethical dilemma.
 - Show the consequences with empathy: people stop seeking help when they need it most.

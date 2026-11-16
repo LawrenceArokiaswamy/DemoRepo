@@ -1,0 +1,7 @@
+{
+ "out_dir": "final_videos/EP03_Internet_History",
+ "bg": {"img": "design/thumbs/ep03_date_wide.jpg", "crop": [380, 380, 1560, 1044]},
+ "lines": ["YOUR SEARCHES", "GO PUBLIC"],
+ "hi": ["GO PUBLIC"],
+ "cover": {"img": "design/thumbs/ep03_alert_tall.jpg", "crop": [0, 0, 1080, 1920]}
+}

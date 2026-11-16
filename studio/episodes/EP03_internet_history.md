@@ -137,3 +137,25 @@ All four Gate 2 corrections are applied:
 
 ## 8. After approval
 Animatic → owner review → paid narration (after approval) → conform → final animation and render → sound → captions → QA → **publishing package** (thumbnail, cover, 3 titles, description, 5 hashtags, tags, metadata) → owner approval.
+
+## 9. Final production (2026-11-16, after owner approval of V2)
+- **Audio spend:** 10.03 of the approved 10.76 credits. Cash: $0.
+  - Grady narration (Eleven v4, exact Episode 1/2 voice): 2.76.
+  - ElevenLabs Music v2.5, 50 s: 7.27.
+- **Timing:** the raw narration measured 45.06 s, which conforms (atempo 1.05) to a **50.0 s** cut, so the 50 s score was chosen.
+- **Conform:** `stories/ep03/build_final.py` uses the Episode 2 method. Each line starts on its V2 beat, or later if the previous line is still running. Five word anchors lock picture to sound:
+  - his bubble on "how to seem…";
+  - the Mom card on "Your family";
+  - the "Everyone nearby" card on "Strangers";
+  - the relax on "the shame starts to fade";
+  - the look-up on "would you still dare to ask?".
+  Picture playback rates stay between 0.69× and 1.35×, so there are no freezes and no rushes. The script and the V2 storyboard are unchanged, and the third sensitive search was not restored.
+- **Render:** native 1080×1920 at 30 fps, 1,500 frames at 3.4–3.6 s/frame (≈1.5 h CPU), with 0 shader errors.
+- **QA fixes made in the final pass:** neither is a redesign, and neither changed timing.
+  - The "Everyone nearby" share card overflowed its field. It now wraps onto two lines; 52 frames were re-rendered.
+  - Captions on the three diner close-ups covered the eyes. They moved to the low position.
+- **Files:**
+  - Master: `renders/ep03_final_master.mp4` (CRF 19, local, gitignored, about 300 MB).
+  - Review/upload copy: `renders/ep03_final_review.mp4`, under 50 MB, committed.
+  - Package: `final_videos/EP03_Internet_History/`.
+- **Status:** awaiting owner review. Not published. Episode 2 decisions are separate.

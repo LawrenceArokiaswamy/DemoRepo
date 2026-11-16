@@ -55,7 +55,7 @@ def syl(wd): return max(1, len(re.findall(r'[aeiouy]+', wd.lower())))
 def ts(x): return f'{int(x // 3600)}:{int(x % 3600 // 60):02d}:{x % 60:05.2f}'
 def place(w):   # w = animation time at chunk start
     if w < 2.8 or 16.6 <= w < 21.2 or 27.0 <= w < 28.55 or 30.0 <= w < 31.9 or w >= 41.8: return 'top'
-    if 7.4 <= w < 16.6 or 35.4 <= w < 41.8: return 'low'
+    if 7.4 <= w < 16.6 or 35.4 <= w < 41.8 or 25.6 <= w < 27.0 or 28.55 <= w < 30.0 or 31.9 <= w < 33.15: return 'low'   # diner close-ups: keep the eyes clear (final QA)
     return ''
 HI = {'9:41', 'public', 'everyone', 'funny', 'boss', 'family', 'strangers', 'stop', 'most', 'symptom', 'relationship', 'unasked', 'weird', 'shame', 'dare'}
 ev = []

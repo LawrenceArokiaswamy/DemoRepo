@@ -41,8 +41,8 @@ what if, what if everyone could see your search history, search history, interne
 ```
 
 ## 5. Images
-- **Thumbnail (16:9):** `thumbnail_1280x720.png`. The date two-shot with his search bubble, plus a shocked phone-lit inset; the text reads "YOUR SEARCHES / GO PUBLIC".
-- **Vertical cover (9:16):** `cover_1080x1920.png`. The 9:41 alert.
+- **Thumbnail (16:9):** `thumbnail_1280x720.png`. The date two-shot with his search bubble and both reactions (his sweat drop, her amused look). The text reads "YOUR SEARCHES / GO PUBLIC". There is no inset, because one would hide her face. Checked readable at 320×180.
+- **Vertical cover (9:16):** `cover_1080x1920.png`. The 9:41 alert ("Your search history is now PUBLIC"), with the same headline in the top third.
 
 ## 6. Shorts cover
 Shorts thumbnail support varies by account and app; this is the same note as Episode 2 (Bible §K):
