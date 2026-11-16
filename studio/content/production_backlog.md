@@ -10,7 +10,7 @@ Validation: **Unvalidated** = comparable-video research not yet done (no audienc
 ## In production
 
 - **EP00 The Claw of Syracuse** (Extraordinary history) — QA — ready for owner publication approval · credits spent 16.38 · `studio/stories/claw-of-syracuse`
-- **EP03 What If Everyone Could See Your Search History?** (What If? (social/technology)) — Approved — upload-ready; awaiting the owner's YouTube upload · credits spent 10.03 · `studio/stories/ep03-motion (tests); episode folder TBD`
+- **EP03 What If Everyone Could See Your Search History?** (What If? (social/technology)) — Approved — upload-ready; awaiting the owner's YouTube upload · credits spent 10.03 · `studio/stories/ep03`
 
 ## Summary
 
