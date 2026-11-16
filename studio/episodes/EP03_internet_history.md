@@ -159,3 +159,8 @@ Animatic → owner review → paid narration (after approval) → conform → fi
   - Review/upload copy: `renders/ep03_final_review.mp4`, under 50 MB, committed.
   - Package: `final_videos/EP03_Internet_History/`.
 - **Status:** awaiting owner review. Not published. Episode 2 decisions are separate.
+- **Final technical QA, second pass (2026-11-16, owner request):** the narration-to-bed balance was measured from the stems. Across core speech the narration led the music and SFX by a median 9.7 dB, and in 9 windows the bed was within 3 dB of the voice.
+  - Fix: music normalised to −25 LUFS before ducking, and SFX lowered 2 dB. The narration now leads by a median 10.9 dB; the remaining close windows are deliberate SFX hits.
+  - The new audio was remuxed into both files; the picture was not re-encoded.
+  - Caption onsets were checked against the voice: all within ±0.04 s, except the last caption, which leads by 0.2 s.
+  - Final file SHA-256 (first 16 hex): `531f2d43d77351c4`.

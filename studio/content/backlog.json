@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-15",
+ "updated": "2026-11-16",
  "status_flow": [
   "Idea",
   "Researching",
@@ -888,6 +888,271 @@
    "publication_url": null,
    "performance": null,
    "notes": ""
+  },
+  {
+   "id": "AD01",
+   "working_title": "The Message From Tomorrow",
+   "category": "Original cinematic horror (After Dark)",
+   "premise": "A man gets a text from his own number: 'Don't open the door at 3:17.' At 3:17 someone knocks, speaking in his own voice.",
+   "hooks": [
+    "At 3:09 AM, he got a text from himself.",
+    "Don't open the door at 3:17.",
+    "The knock came at 3:17. The voice was his."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "WAIT, WHAT? a text from his own number",
+    "DREAD: the hum stops; a knock; his own voice",
+    "TWIST: 'He's already inside' vs. a second message saying the opposite; which one do you trust?"
+   ],
+   "key_visual_moments": [
+    "Phone lights a face: message from 'Me'",
+    "Shadow of feet under the door",
+    "Frozen between the locked door and the dark bedroom doorway"
+   ],
+   "characters": [
+    "Theo (C+ adult, grey hoodie)",
+    "his voice through the door"
+   ],
+   "environments": [
+    "Ashgrove House flat: living room, hall, front door, bedroom doorway"
+   ],
+   "props_and_effects": [
+    "messaging UI (from the EP03 phone rig)",
+    "door light strip, knob turn, knock shake",
+    "fridge light"
+   ],
+   "reusable_assets": [
+    "C+ v2 characters",
+    "EP03 phone insert rig + UI cards",
+    "sfxlib, mix.sh, conform pipeline"
+   ],
+   "research_sources": [
+    "Original fiction: no research claims"
+   ],
+   "factual_caveats": [
+    "Fiction; no gore; YouTube-safe 13+; not a recreation of any existing creepypasta, film or game"
+   ],
+   "estimated_credits": 5,
+   "estimated_production_days": 4.5,
+   "editorial_score": null,
+   "research_status": "N/A (original fiction)",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Pilot; recommended first. One-time flat set and After Dark preset (~1.5-2 days, included). Credits are quotes only: ~2-11 depending on music choice. Proposal: studio/content/AFTER_DARK_series_proposal.md. Do not produce until the owner approves; no credits without approval."
+  },
+  {
+   "id": "AD02",
+   "working_title": "The Neighbours Can Hear You",
+   "category": "Original cinematic horror (After Dark)",
+   "premise": "A new tenant hears the family next door describing what he is doing, as he does it.",
+   "hooks": [
+    "The neighbours were describing everything he did.",
+    "Flat 4B has been empty for years.",
+    "He recorded the wall. Only one voice was on the tape."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "CURIOUS: voices through the wall",
+    "DREAD: they narrate his actions live",
+    "TWIST: the recording has only his own voice, answering them"
+   ],
+   "key_visual_moments": [
+    "Ear against the wall",
+    "Kettle moment narrated through the wall",
+    "Playback waveform with one voice"
+   ],
+   "characters": [
+    "tenant (C+ adult)",
+    "building manager"
+   ],
+   "environments": [
+    "Ashgrove House flat (reused)"
+   ],
+   "props_and_effects": [
+    "voice-through-wall filter",
+    "recorder/phone UI"
+   ],
+   "reusable_assets": [
+    "AD01 flat set",
+    "After Dark preset"
+   ],
+   "research_sources": [
+    "Original fiction: no research claims"
+   ],
+   "factual_caveats": [
+    "Fiction; no gore; YouTube-safe 13+; not a recreation of any existing creepypasta, film or game"
+   ],
+   "estimated_credits": 3,
+   "estimated_production_days": 2.5,
+   "editorial_score": null,
+   "research_status": "N/A (original fiction)",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Second: cheapest, audio-led; tests whether quieter stories driven by sound hold attention. Proposal: studio/content/AFTER_DARK_series_proposal.md. Do not produce until the owner approves; no credits without approval."
+  },
+  {
+   "id": "AD03",
+   "working_title": "Missing: Tomorrow",
+   "category": "Original cinematic horror (After Dark)",
+   "premise": "A woman finds a missing-person poster of herself in the lobby, dated tomorrow.",
+   "hooks": [
+    "The missing poster had her face on it. Dated tomorrow.",
+    "Everyone said she looked just like her.",
+    "Under the poster was another one, dated today."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "UNEASE: her face on a poster",
+    "PARANOIA: neighbours' remarks",
+    "TWIST: the second poster shows today's outfit and 'Last seen 3:17 AM'"
+   ],
+   "key_visual_moments": [
+    "Poster close-up with tomorrow's date",
+    "Tearing it down",
+    "Second poster underneath"
+   ],
+   "characters": [
+    "young woman (C+ adult)",
+    "neighbours"
+   ],
+   "environments": [
+    "Ashgrove House lobby (new)"
+   ],
+   "props_and_effects": [
+    "poster textures",
+    "noticeboard"
+   ],
+   "reusable_assets": [
+    "C+ cast",
+    "After Dark preset"
+   ],
+   "research_sources": [
+    "Original fiction: no research claims"
+   ],
+   "factual_caveats": [
+    "Fiction; no gore; YouTube-safe 13+; not a recreation of any existing creepypasta, film or game"
+   ],
+   "estimated_credits": 4,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "N/A (original fiction)",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Fourth: needs the lobby set and a second lead. Proposal: studio/content/AFTER_DARK_series_proposal.md. Do not produce until the owner approves; no credits without approval."
+  },
+  {
+   "id": "AD04",
+   "working_title": "The Voice Log",
+   "category": "Original cinematic horror (After Dark)",
+   "premise": "His smart speaker's history shows commands at 3:17 every night, in his voice.",
+   "hooks": [
+    "His speaker logged commands every night at 3:17.",
+    "'Is he asleep yet?' It was his voice.",
+    "A new entry appeared while he was reading."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "CURIOUS: strange log entries",
+    "DREAD: 'Keep the lights off'",
+    "TWIST: a live entry, 'He's reading the log', and the lights go off"
+   ],
+   "key_visual_moments": [
+    "Speaker ring glowing in the dark",
+    "Scrolling voice log on the phone",
+    "Lights out"
+   ],
+   "characters": [
+    "tenant (C+ adult)"
+   ],
+   "environments": [
+    "Ashgrove House flat (reused)"
+   ],
+   "props_and_effects": [
+    "smart-speaker prop",
+    "log UI (from the EP03 search-history screen)"
+   ],
+   "reusable_assets": [
+    "AD01 flat set",
+    "EP03 UI system"
+   ],
+   "research_sources": [
+    "Original fiction: no research claims"
+   ],
+   "factual_caveats": [
+    "Fiction; no gore; YouTube-safe 13+; not a recreation of any existing creepypasta, film or game"
+   ],
+   "estimated_credits": 3,
+   "estimated_production_days": 2.5,
+   "editorial_score": null,
+   "research_status": "N/A (original fiction)",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Third: bridges to the channel's privacy and psychology themes (Episode 3). Proposal: studio/content/AFTER_DARK_series_proposal.md. Do not produce until the owner approves; no credits without approval."
+  },
+  {
+   "id": "AD05",
+   "working_title": "The Thirteenth Floor",
+   "category": "Original cinematic horror (After Dark)",
+   "premise": "Ashgrove House has 12 floors. At 3:17 a 13th button appears in the lift.",
+   "hooks": [
+    "The building has 12 floors. The lift has 13 buttons.",
+    "Floor 13 was his own corridor.",
+    "He saw himself asleep, typing a warning."
+   ],
+   "target_duration_s": "45-60",
+   "emotional_arc": [
+    "CURIOUS: a button that shouldn't exist",
+    "UNCANNY: a copy of his own corridor",
+    "LOOP: he sees himself typing 'Don't open the door at 3:17'"
+   ],
+   "key_visual_moments": [
+    "Button 13 lighting up",
+    "Doors open on an identical corridor",
+    "Himself asleep on the sofa, phone in hand"
+   ],
+   "characters": [
+    "Theo (from AD01)"
+   ],
+   "environments": [
+    "lift (new)",
+    "corridor",
+    "AD01 flat"
+   ],
+   "props_and_effects": [
+    "lift doors and panel"
+   ],
+   "reusable_assets": [
+    "AD01 flat set and cast"
+   ],
+   "research_sources": [
+    "Original fiction: no research claims"
+   ],
+   "factual_caveats": [
+    "Fiction; no gore; YouTube-safe 13+; not a recreation of any existing creepypasta, film or game"
+   ],
+   "estimated_credits": 5,
+   "estimated_production_days": 3,
+   "editorial_score": null,
+   "research_status": "N/A (original fiction)",
+   "production_status": "Idea",
+   "publication_url": null,
+   "performance": null,
+   "notes": "Finale: ties the series loop back to AD01. Publish only if episodes 1-4 build an audience. Proposal: studio/content/AFTER_DARK_series_proposal.md. Do not produce until the owner approves; no credits without approval."
+  }
+ ],
+ "content_categories": [
+  {
+   "name": "Original cinematic horror shorts",
+   "added": "2026-11-16",
+   "series": "After Dark (working title)",
+   "position": "Occasional strand (at most ~1 in 4 uploads), not a channel pivot; the brand stays history, science, mysteries, psychology, alternate realities and animated storytelling",
+   "rules": "Psychological suspense, mystery, sound design, character reactions and clever twists. No gore, no cheap jump scares (at most one loud event per episode). YouTube-safe for viewers 13+. Original stories only.",
+   "proposal": "studio/content/AFTER_DARK_series_proposal.md"
   }
  ]
 }

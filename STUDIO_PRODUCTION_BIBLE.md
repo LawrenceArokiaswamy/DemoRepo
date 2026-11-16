@@ -42,6 +42,12 @@ It must have our own identity and never copy another creator's characters, art, 
 
 Technology serves the story; never the reverse.
 
+**Content strand added (owner decision 2026-11-16): original cinematic horror shorts, "After Dark" (working title).**
+- This is an occasional strand, not a pivot. At most about 1 in 4 uploads are horror, and the channel stays a blend of history, science, mysteries, psychology, alternate realities and animated storytelling.
+- Horror rules: psychological suspense, mystery, sound design, character reactions and clever twists. No gore and no cheap jump scares.
+- Proposal and five concepts: `studio/content/AFTER_DARK_series_proposal.md`. Backlog IDs AD01–AD05.
+- Production waits for owner approval, and no credits are spent without it.
+
 **Visual identity today (PROVEN):**
 - 2D "pebble-folk" cartoon characters drawn on canvas cards (big heads, round expressive eyes, bold outlines, period costumes);
 - staged inside 3D worlds rendered with three.js (CC0 Poly Haven assets, procedural props);
@@ -55,7 +61,7 @@ Known weakness: flat cards in a photoreal-ish world can look like two styles. Se
 
 ### B.1 Topic selection
 - Choose stories with one clear human (or creature) at the centre, a real threat or mystery, and a visual WOW moment that can be shown, not just told.
-- Prefer topics that reuse existing sets, props and cast (see F.5). Check `studio/content/production_backlog.md` (15 permanent topics; never remove one silently).
+- Prefer topics that reuse existing sets, props and cast (see F.5). Check `studio/content/production_backlog.md` (permanent topics, including the After Dark strand; never remove one silently).
 
 ### B.2 Research and fact-checking
 - Verify key claims against primary or reputable secondary sources. Record the sources in the episode record.
