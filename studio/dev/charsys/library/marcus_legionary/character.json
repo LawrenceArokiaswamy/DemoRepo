@@ -5,7 +5,7 @@
   "roman soldier",
   "legionary"
  ],
- "version": "0.1",
+ "version": "0.2",
  "status": "draft (awaiting owner review)",
  "description": "Legionary of the early 2nd century AD (Trajanic, c. AD 100-115): lorica segmentata over a red wool tunic, focale scarf, Imperial-type helmet with cheek and neck guards (no crest in battle), cingulum belt with studded apron, gladius on the right hip, curved rectangular scutum, hobnailed caligae. Clean-shaven, cropped dark hair. Alert, economical movement.",
  "attributes": {
@@ -66,5 +66,11 @@
   "eyes": "solid dot + 1 highlight",
   "noses": "none (house style)",
   "fill": "flat colour + soft gradient, no grain"
- }
+ },
+ "acting": {
+  "scared": "raise_shield",
+  "surprised": "raise_shield",
+  "angry": "hand_on_sword"
+ },
+ "acting_notes": "Contained, quick; trained reflexes: shield up when startled or afraid, hand to the gladius when angry."
 }

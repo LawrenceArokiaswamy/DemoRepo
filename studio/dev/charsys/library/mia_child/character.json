@@ -6,7 +6,7 @@
   "kid",
   "young girl"
  ],
- "version": "0.1",
+ "version": "0.2",
  "status": "draft (awaiting owner review)",
  "description": "Child around 7: large head-to-body ratio, short limbs, round cheeks with blush, bigger sparkly eyes, tousled light-brown hair with a cowlick, yellow striped T-shirt, navy shorts, red sneakers. Quick, bouncy, big reactions.",
  "attributes": {
@@ -23,7 +23,7 @@
  "scale": 88,
  "motion": "child",
  "garment": "striped_tee",
- "hair": "kid_tousled",
+ "hair": "pigtails_bangs",
  "facialHair": "none",
  "footwear": "sneaker",
  "colors": {
@@ -32,7 +32,8 @@
   "stripe": "#3d7fb8",
   "shorts": "#3d5a80",
   "hair": "#8a5a33",
-  "shoe": "#d9534f"
+  "shoe": "#d9534f",
+  "tie": "#e8505b"
  },
  "face": {
   "eyeSize": 1.22,
@@ -54,5 +55,10 @@
   "eyes": "solid dot + 1 highlight",
   "noses": "none (house style)",
   "fill": "flat colour + soft gradient, no grain"
- }
+ },
+ "acting": {
+  "happy": "jump",
+  "surprised": "jump"
+ },
+ "acting_notes": "Fast, bouncy, big reactions; jumps when excited or startled."
 }

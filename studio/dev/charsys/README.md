@@ -24,7 +24,7 @@ character.json (library) ─► build preset + overrides ─► skeleton(pose) �
 | `BUILDS` | adult, slim_tall, elderly, child, stocky. Each is a proportion preset with per-character `body_overrides` |
 | `GARMENTS` | hoodie, cardigan_shirt, striped_tee (with shorts), sweater_skirt, legionary (tunic, lorica segmentata, focale, cingulum and apron, gladius) |
 | `SLEEVE` | the Theo v3 continuous bent sleeve, in long, short and tunic variants |
-| `HAIR` | crop, bald_sides, kid_tousled, bob_wavy, plus raster override (Theo's sheet hair) |
+| `HAIR` | crop, bald_sides, kid_tousled, bob_wavy, silver_swept (Walter), pigtails_bangs (Mia), plus raster override (Theo's sheet hair) |
 | `FACIAL_HAIR` | moustache |
 | Headgear | galea |
 | Glasses, earrings | |
@@ -38,7 +38,7 @@ character.json (library) ─► build preset + overrides ─► skeleton(pose) �
 - shock lines and worry lines;
 - per-character tuning: wrinkles (crow's feet, forehead, smile lines, under-eye), blush, eye size, sparkle, brow thickness and colour, face width.
 
-**Expressions** (`EXPR`): neutral, happy, curious, surprised, scared, sad, angry. They blend through `mixExpr`.
+**Face rig (`face_rig.js`, 2026-11-17):** replaces the legacy `EXPR` set for all drawing. It has continuous controls (brows, lids, eyes, pupils, mouth, cheeks, accents, tilt, squash), 12 core emotions at three intensities, visemes, body acting with character secondary actions, and the instruction API `scriptFromInstructions()` → `actingState()`. See `studio/content/CHARSYS_ACTING_EVALUATION.md`. Legacy callers without a rig face get the neutral rig face.
 
 **Motion presets** (`MOTION`): young_adult, elderly, child, soldier, poised. Each sets tempo, shrug size, bounce, tremor, breathing rate and amplitude, and recoil. One performance script plays differently per character.
 
@@ -56,6 +56,10 @@ character.json (library) ─► build preset + overrides ─► skeleton(pose) �
 | `library/lineup_validation.png` | The five-character lineup |
 | `library/walk_cycle_validation.png` | Walk validation |
 | `lookup.py` | Reuse-first character lookup |
+| `face_rig.js` | Facial rig, emotions, body acting, instruction API |
+| `acting.html` | Modes: `?mode=expr&id=`, `?mode=ref&id=` (reference template), `?mode=act&id=` (acting test), `?mode=quiz`; `window.runChecks()` |
+| `check_faces.mjs` | Automated face checks → `out/face_checks.json`, `out/quiz_key.json` |
+| `library/<id>/reference_sheet.png`, `expressions_12.png` | New reference template; 12-emotion sheet |
 | `SCRIPT_TO_CHARACTER_SPEC.md` | Script → characters procedure and schema |
 
 ## 3. Adding a character

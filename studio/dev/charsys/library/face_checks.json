@@ -1,0 +1,101 @@
+{
+ "cases": 390,
+ "issues": 0,
+ "issueList": [],
+ "autoClamps": {
+  "browLiftedOffEyesOrGlasses": 228,
+  "browPulledUnderBrim": 39
+ },
+ "distinctness": {
+  "theo": {
+   "closest5": [
+    [
+     "scared",
+     "worried",
+     6.4
+    ],
+    [
+     "suspicious",
+     "worried",
+     7.79
+    ],
+    [
+     "sad",
+     "suspicious",
+     8.33
+    ],
+    [
+     "happy",
+     "suspicious",
+     9.08
+    ],
+    [
+     "happy",
+     "worried",
+     9.11
+    ]
+   ],
+   "mean": 19.76
+  },
+  "walter_elderly": {
+   "closest5": [
+    [
+     "scared",
+     "worried",
+     5.14
+    ],
+    [
+     "suspicious",
+     "worried",
+     5.6
+    ],
+    [
+     "happy",
+     "suspicious",
+     6.92
+    ],
+    [
+     "scared",
+     "suspicious",
+     7.23
+    ],
+    [
+     "happy",
+     "worried",
+     7.46
+    ]
+   ],
+   "mean": 19.23
+  },
+  "marcus_legionary": {
+   "closest5": [
+    [
+     "suspicious",
+     "worried",
+     6.73
+    ],
+    [
+     "scared",
+     "worried",
+     13.95
+    ],
+    [
+     "sad",
+     "worried",
+     14.17
+    ],
+    [
+     "worried",
+     "relieved",
+     15.1
+    ],
+    [
+     "sad",
+     "suspicious",
+     16
+    ]
+   ],
+   "mean": 26.17
+  }
+ }
+}

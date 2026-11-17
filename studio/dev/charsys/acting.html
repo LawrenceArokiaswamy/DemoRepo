@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// CHARSYS acting validation: ?mode=expr&id= | ref&id= | act&id= | quiz | check   (render_canvas.mjs calls drawFrame(t))
+import { BUILDS, MOTION, skeleton, drawCharacter } from './charsys.js';
+import { CORE12, EMOTIONS, MOUTHS, NEUTRAL, emotionParams, bodyParams, mixParams, actingState, handsFor, applySecondary, faceGeometry, INTENSITY } from './face_rig.js';
+const Q = new URLSearchParams(location.search), mode = Q.get('mode') || 'expr', ID = Q.get('id') || 'theo';
+const load = (s) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = s; });
+async function getChar(id) { const J = await (await fetch(`library/${id}/character.json`)).json(); const C = { ...J, body: { ...BUILDS[J.build], ...(J.body_overrides || {}) }, motionP: MOTION[J.motion] };
+  if (J.raster) C.raster = { hair: true, front: await load(J.raster.hair_front), back34: await load(J.raster.hair_34), torso: await load(J.raster.torso), torso34: await load(J.raster.torso34) }; return C; }
+const IDS = ['theo', 'walter_elderly', 'marcus_legionary', 'mia_child', 'elena_adult'], CH = {}; for (const id of IDS) CH[id] = await getChar(id);
+const cv = document.getElementById('c'), g = cv.getContext('2d'), L = (a, b, k) => a + (b - a) * k, cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+// ---- build a pose from an acting state (face rig + body acting + hands + character secondary actions)
+function poseFrom(C, st, t, yaw = 0, dir = 1, blink = 0) { const b = st.body, M = C.motionP, trem = Math.sin(t * 27) * 0.012 * (b.tremor || 0) * (0.4 + M.tremor);
+  const p = { yaw, dir, breath: Math.sin(t * M.breathRate * (b.exhale ? 0.6 : 1)) * M.breathAmp * (1 + (b.exhale || 0)), shrug: b.shrug * M.shrug + 0.0, lean: (b.lean || 0) * (0.6 + 0.4 * M.recoil) + trem, hunch: b.slump || 0, crouch: b.crouch || 0,
+    bob: (b.bob || 0) * (1 + M.bounce) * Math.max(0, Math.sin(t * 8)) * (b.bob > 0.1 ? 1 : 0.4), headDy: (b.headDy || 0), headDx: trem * 1.5,
+    face: { rig: st.face, yawH: yaw, tilt: b.tilt || 0, blink } };
+  const K = skeleton(C, p), hA = handsFor(b.handsPrev ?? b.hands, K, t), hB = handsFor(b.handsCur ?? b.hands, K, t), k = b.handsK ?? 1;
+  let hands = [0, 1].map((i) => [L(hA[i][0], hB[i][0], k), L(hA[i][1], hB[i][1], k)]);
+  if (C.prop === 'scutum') { if (!st.secondary || st.secondary !== 'raise_shield') { hands[0] = [L(hands[0][0], K.shoulders[0][0] - 0.1, 0.7), L(hands[0][1], K.hipY - 0.1, 0.7)]; } p.propHand = 0; p.armBend = [-1, 1]; }
+  if (C.prop === 'cane') { hands[1] = [K.shoulders[1][0] + 0.45, K.hipY + 0.25]; p.propHand = 1; }
+  if (st.secPrev && st.secPrevK > 0) hands = applySecondary(st.secPrev, K, hands, p, t, st.secPrevK);
+  if (st.secondary && st.secK > 0) hands = applySecondary(st.secondary, K, hands, p, t, st.secK);
+  p.hands = hands; return p; }
+const still = (C, emo, inten, t = 0.6) => actingState(C, [{ emotion: emo, intensity: inten, at: 0, transition: 0.01 }], t);
+function bg(W, H) { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#ece6e0'); gr.addColorStop(1, '#d7cec7'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+function label(txt, x, y, size = 28, col = '#2a2228', w = 700) { g.font = `${w} ${size}px Inter, DejaVu Sans`; g.fillStyle = col; g.textAlign = 'center'; g.fillText(txt, x, y); }
+function bust(C, st, x0, y0, w, h, t = 0.6, yaw = 0, headFrac = 0.17, cy = 0.36) {   // head + shoulders + hands in a cell; label area is outside the cell
+  g.save(); g.beginPath(); g.roundRect(x0, y0, w, h, 16); g.fillStyle = '#f6f1ec'; g.fill(); g.clip(); const p = poseFrom(C, st, t, yaw), K = skeleton(C, p), S = w * headFrac;
+  drawCharacter(g, C, p, t, S, [x0 + w / 2 - K.headC[0] * S, y0 + h * cy - K.headC[1] * S]); g.restore(); }
+// ---------------- A. 12 core emotions ----------------
+function expr(id, inten = 0.72) { const C = CH[id], W = 2400, cw = 560, ch = 600, H = 120 + 3 * (ch + 70) + 20; cv.width = W; cv.height = H; bg(W, H);
+  label(`${C.name.split(' (')[0]} — 12 core emotions (clear intensity ${inten})`, W / 2, 70, 40);
+  CORE12.forEach((e, i) => { const x = 40 + (i % 4) * (cw + 20), y = 110 + Math.floor(i / 4) * (ch + 70); bust(C, still(C, e, inten), x, y, cw, ch, 0.6, 0, 0.27, 0.36); label(e.toUpperCase(), x + cw / 2, y + ch + 46, 32); });
+  return cv.toDataURL('image/png'); }
+// ---------------- reference template ----------------
+function ref(id) { const C = CH[id], W = 2400, H = 4300; cv.width = W; cv.height = H; bg(W, H); label(`${C.name} — v${C.version} — ${C.status}`, W / 2, 64, 36);
+  label('TURNAROUND', 160, 130, 24); const n = still(C, 'neutral', 0);
+  [['FRONT', 0, false], ['THREE-QUARTER', 0.5, false], ['SIDE', 1, false], ['BACK', 0, true]].forEach(([nm, yaw, back], i) => { const p = poseFrom(C, n, 0.3, yaw); p.back = back; p.face.yawH = yaw; drawCharacter(g, C, p, 0.3, C.scale * 0.95, [360 + i * 560, 860]); label(nm, 360 + i * 560, 920, 24); });
+  let y = 980; label('12 CORE EMOTIONS (clear)', 190, y, 24); y += 20;
+  CORE12.forEach((e, i) => { const x = 40 + (i % 6) * 390, yy = y + Math.floor(i / 6) * 470; bust(C, still(C, e, 0.72), x, yy, 370, 410, 0.6, 0, 0.27, 0.37); label(e.toUpperCase(), x + 185, yy + 444, 24); }); y += 2 * 470 + 50;
+  label('INTENSITY: SUBTLE · CLEAR · EXTREME', 280, y, 24); y += 20; const imp = ['happy', 'sad', 'scared', 'angry', 'surprised'];
+  imp.forEach((e, r) => { ['subtle', 'clear', 'extreme'].forEach((lv, c2) => { const x = 40 + (r % 5) * 470 + c2 * 150, yy = y; bust(C, still(C, e, INTENSITY[lv]), x, yy, 140, 190, 0.6, 0, 0.2, 0.42); label(lv, x + 70, yy + 216, 18, '#4a3e46', 600); }); label(e.toUpperCase(), 40 + r * 470 + 220, y + 250, 24); }); y += 300;
+  label('MOUTH SHAPES (speech · gasp · laugh · cry)', 330, y, 24); y += 20;
+  Object.entries(MOUTHS).forEach(([m, mp], i) => { const x = 40 + i * 234, st = still(C, 'neutral', 0); st.face = { ...st.face, ...mp, curve: mp.curve ?? 0 }; bust(C, st, x, y, 220, 260, 0.6, 0, 0.26, 0.42); label(m, x + 110, y + 290, 22); }); y += 340;
+  label('EMOTION BODY POSES', 220, y, 24); y += 20; const poses = [['happy', 1.0], ['sad', 0.95], ['scared', 0.95], ['angry', 0.9], ['surprised', 1.0], ['embarrassed', 0.8]];
+  poses.forEach(([e, k], i) => { const x = 40 + i * 390; g.save(); g.beginPath(); g.roundRect(x, y, 370, 760, 16); g.fillStyle = '#f6f1ec'; g.fill(); g.clip(); const p = poseFrom(C, still(C, e, k), 0.5); drawCharacter(g, C, p, 0.5, C.scale * 0.78, [x + 185, y + 720]); g.restore(); label(`${e} (${k})`, x + 185, y + 795, 22); }); y += 840;
+  g.textAlign = 'left'; g.font = '600 26px Inter, DejaVu Sans'; g.fillStyle = '#2a2228'; g.fillText('ACTING: ' + (C.acting_notes || ''), 40, y + 10); g.fillText('SECONDARY ACTIONS: ' + (Object.entries(C.acting || {}).map(([a, b]) => `${a} → ${b}`).join(' · ') || 'none (scene-driven)'), 40, y + 50);
+  return cv.toDataURL('image/png'); }
+// ---------------- B. acting test: Neutral → Curious → Happy → Shocked → Scared → Sad → Relieved ----------------
+export const SCRIPT = [{ emotion: 'neutral', intensity: 0, at: 0, transition: 0.01 }, { emotion: 'curious', intensity: 0.75, at: 1.1, transition: 0.5 }, { emotion: 'happy', intensity: 0.92, at: 2.7, transition: 0.45 },
+  { emotion: 'surprised', intensity: 0.95, at: 4.4, transition: 0.12 }, { emotion: 'scared', intensity: 0.9, at: 5.8, transition: 0.45 }, { emotion: 'sad', intensity: 0.92, at: 7.4, transition: 0.8 }, { emotion: 'relieved', intensity: 0.85, at: 9.3, transition: 0.9 }];
+function act(id, t) { const C = CH[id], W = 1080, H = 1920; cv.width = W; cv.height = H; const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#efe7df'); gr.addColorStop(1, '#cfc3b9'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const st = actingState(C, SCRIPT, t), blink = [0.6, 2.2, 3.9, 6.9, 9.0, 10.6].some((b) => t > b && t < b + 0.13) ? 1 : 0;
+  if (['curious', 'worried', 'suspicious'].includes(SCRIPT.find((s, i) => t >= s.at && (!SCRIPT[i + 1] || t < SCRIPT[i + 1].at))?.emotion)) st.face.look = [st.face.look[0] + Math.sin(t * 3) * 0.2, st.face.look[1]];
+  const p = poseFrom(C, st, t, 0, 1, blink), K = skeleton(C, p), S = id === 'mia_child' ? 270 : 245; drawCharacter(g, C, p, t, S, [W / 2 - K.headC[0] * S, 640 - K.headC[1] * S]);
+  return cv.toDataURL('image/png'); }
+// ---------------- C. blind phone-size quiz (no labels on faces; key separate) ----------------
+let KEY = []; function quiz() { const W = 1170, ids = ['theo', 'walter_elderly', 'marcus_legionary'], cell = 180, H = 120 + ids.length * 4 * (cell + 40); cv.width = W; cv.height = H; bg(W, H); label('Which emotion? (numbers only — answer key in quiz_key.json)', W / 2, 60, 30);
+  let n = 1; KEY = []; ids.forEach((id, r) => { const order = CORE12.map((e, i) => [Math.sin(i * 12.9898 + r * 78.233) * 43758.5453 % 1, e]).sort((a, b) => a[0] - b[0]).map((a) => a[1]);
+    order.forEach((e, i) => { const x = 30 + (i % 6) * (cell + 15), y = 100 + (r * 2 + Math.floor(i / 6)) * (cell + 40) * 2 / 2 + r * 0; const yy = 100 + (r * 2 + Math.floor(i / 6)) * (cell + 44); bust(CH[id], still(CH[id], e, 0.72), x, yy, cell, cell, 0.6, 0, 0.2, 0.4); label(String(n), x + cell / 2, yy + cell + 30, 22); KEY.push({ n, id, emotion: e }); n++; }); });
+  window.quizKey = KEY; return cv.toDataURL('image/png'); }
+// ---------------- automated checks ----------------
+window.runChecks = () => { const issues = [], notes = { clampsDown: 0, clampsUp: 0, cases: 0 }, emos = ['neutral', ...CORE12];
+  for (const id of IDS) { const C = CH[id], f = C.face || {}, cfg = { face: f, colors: C.colors, glasses: C.glasses, browCeil: C.headgear === 'galea' ? -0.52 : -0.98 };
+    for (const e of emos) for (const k of [0.35, 0.7, 1.0]) for (const yaw of [0, 0.5]) { const P = emotionParams(e, k), G = faceGeometry(cfg, P, yaw, 1); notes.cases++; const tag = `${id}/${e}/${k}/yaw${yaw}`;
+      for (const b of G.brows) { if (b.e.hidden) continue; if (b.clampedDown) notes.clampsDown++; if (b.clampedUp) notes.clampsUp++;
+        const lo = Math.max(b.innerY, b.outerY) + b.thick / 2, hi = Math.min(b.innerY, b.outerY) - b.arch - b.thick / 2;
+        if (lo > b.e.top - 0.02) issues.push(`${tag}: brow touches eye`); if (hi < cfg.browCeil - 1e-3) issues.push(`${tag}: brow hidden under headgear`); if (C.glasses && lo > (G.eyY - 0.21)) issues.push(`${tag}: brow overlaps glasses`); }
+      for (const ey of G.eyes) { if (ey.hidden) continue; if (Math.abs(ey.ex) + ey.sw > 0.93 * (f.wide || 1)) issues.push(`${tag}: eye leaves the head`); }
+      const M = G.mouth; if (M.W < 0.05) issues.push(`${tag}: mouth vanished`); for (const e2 of G.eyes) { if (e2.hidden) continue; if (M.samples.some(([x, y]) => ((x - e2.ex) / (e2.sw + 0.03)) ** 2 + ((y - e2.ey) / (e2.shh + 0.03)) ** 2 < 1)) { issues.push(`${tag}: mouth meets eyes`); break; } } if (M.bottom > 0.95) issues.push(`${tag}: mouth leaves the chin`);
+      if (C.facialHair === 'moustache' && P.jaw > 0.3 && M.bottom - Math.max(M.top, 0.34) < 0.08) issues.push(`${tag}: moustache hides open mouth`); } }
+  // distinctness at phone size: render each clear expression head (96 px) and compare pixels pairwise
+  const dist = {}, oc = document.createElement('canvas'); oc.width = oc.height = 96; const og = oc.getContext('2d');
+  for (const id of ['theo', 'walter_elderly', 'marcus_legionary']) { const C = CH[id], imgs = {};
+    for (const e of CORE12) { og.setTransform(1, 0, 0, 1, 0, 0); og.fillStyle = '#fff'; og.fillRect(0, 0, 96, 96); const st = still(C, e, 0.72), p = poseFrom(C, st, 0.6), K = skeleton(C, p), S = 30; drawCharacter(og, C, p, 0.6, S, [48 - K.headC[0] * S, 50 - K.headC[1] * S]); imgs[e] = og.getImageData(0, 0, 96, 96).data.slice(); }
+    const pairs = []; for (let a = 0; a < CORE12.length; a++) for (let b = a + 1; b < CORE12.length; b++) { const A = imgs[CORE12[a]], B = imgs[CORE12[b]]; let d = 0; for (let i = 0; i < A.length; i += 4) d += Math.abs(A[i] - B[i]) + Math.abs(A[i + 1] - B[i + 1]) + Math.abs(A[i + 2] - B[i + 2]); pairs.push([CORE12[a], CORE12[b], +(d / (A.length / 4) / 3).toFixed(2)]); }
+    pairs.sort((x, y) => x[2] - y[2]); dist[id] = { closest5: pairs.slice(0, 5), mean: +(pairs.reduce((s, x) => s + x[2], 0) / pairs.length).toFixed(2) }; }
+  return JSON.stringify({ cases: notes.cases, issues: issues.length, issueList: issues.slice(0, 60), autoClamps: { browLiftedOffEyesOrGlasses: notes.clampsDown, browPulledUnderBrim: notes.clampsUp }, distinctness: dist }, null, 1); };
+window.drawFrame = (t) => mode === 'expr' ? expr(ID) : mode === 'ref' ? ref(ID) : mode === 'act' ? act(ID, t) : mode === 'quiz' ? quiz() : (cv.width = 4, cv.height = 4, cv.toDataURL());
+window.ready = true;
+</script></body></html>

@@ -5,7 +5,7 @@
   "woman",
   "adult woman"
  ],
- "version": "0.1",
+ "version": "0.2",
  "status": "draft (awaiting owner review)",
  "description": "Woman in her 30s: taller, slimmer silhouette, wavy auburn bob with side-swept bangs, mustard knit sweater, teal A-line skirt to the knee, small gold earrings, dark ankle boots. Composed, precise gestures.",
  "attributes": {
@@ -54,5 +54,7 @@
   "eyes": "solid dot + 1 highlight",
   "noses": "none (house style)",
   "fill": "flat colour + soft gradient, no grain"
- }
+ },
+ "acting": {},
+ "acting_notes": "Poised, precise gestures."
 }

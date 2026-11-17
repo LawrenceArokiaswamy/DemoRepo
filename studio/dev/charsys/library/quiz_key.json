@@ -1,0 +1,182 @@
+[
+ {
+  "n": 1,
+  "id": "theo",
+  "emotion": "suspicious"
+ },
+ {
+  "n": 2,
+  "id": "theo",
+  "emotion": "embarrassed"
+ },
+ {
+  "n": 3,
+  "id": "theo",
+  "emotion": "relieved"
+ },
+ {
+  "n": 4,
+  "id": "theo",
+  "emotion": "worried"
+ },
+ {
+  "n": 5,
+  "id": "theo",
+  "emotion": "happy"
+ },
+ {
+  "n": 6,
+  "id": "theo",
+  "emotion": "scared"
+ },
+ {
+  "n": 7,
+  "id": "theo",
+  "emotion": "disgusted"
+ },
+ {
+  "n": 8,
+  "id": "theo",
+  "emotion": "surprised"
+ },
+ {
+  "n": 9,
+  "id": "theo",
+  "emotion": "confused"
+ },
+ {
+  "n": 10,
+  "id": "theo",
+  "emotion": "angry"
+ },
+ {
+  "n": 11,
+  "id": "theo",
+  "emotion": "curious"
+ },
+ {
+  "n": 12,
+  "id": "theo",
+  "emotion": "sad"
+ },
+ {
+  "n": 13,
+  "id": "walter_elderly",
+  "emotion": "surprised"
+ },
+ {
+  "n": 14,
+  "id": "walter_elderly",
+  "emotion": "angry"
+ },
+ {
+  "n": 15,
+  "id": "walter_elderly",
+  "emotion": "disgusted"
+ },
+ {
+  "n": 16,
+  "id": "walter_elderly",
+  "emotion": "suspicious"
+ },
+ {
+  "n": 17,
+  "id": "walter_elderly",
+  "emotion": "scared"
+ },
+ {
+  "n": 18,
+  "id": "walter_elderly",
+  "emotion": "sad"
+ },
+ {
+  "n": 19,
+  "id": "walter_elderly",
+  "emotion": "curious"
+ },
+ {
+  "n": 20,
+  "id": "walter_elderly",
+  "emotion": "confused"
+ },
+ {
+  "n": 21,
+  "id": "walter_elderly",
+  "emotion": "worried"
+ },
+ {
+  "n": 22,
+  "id": "walter_elderly",
+  "emotion": "happy"
+ },
+ {
+  "n": 23,
+  "id": "walter_elderly",
+  "emotion": "embarrassed"
+ },
+ {
+  "n": 24,
+  "id": "walter_elderly",
+  "emotion": "relieved"
+ },
+ {
+  "n": 25,
+  "id": "marcus_legionary",
+  "emotion": "happy"
+ },
+ {
+  "n": 26,
+  "id": "marcus_legionary",
+  "emotion": "sad"
+ },
+ {
+  "n": 27,
+  "id": "marcus_legionary",
+  "emotion": "worried"
+ },
+ {
+  "n": 28,
+  "id": "marcus_legionary",
+  "emotion": "embarrassed"
+ },
+ {
+  "n": 29,
+  "id": "marcus_legionary",
+  "emotion": "relieved"
+ },
+ {
+  "n": 30,
+  "id": "marcus_legionary",
+  "emotion": "angry"
+ },
+ {
+  "n": 31,
+  "id": "marcus_legionary",
+  "emotion": "scared"
+ },
+ {
+  "n": 32,
+  "id": "marcus_legionary",
+  "emotion": "confused"
+ },
+ {
+  "n": 33,
+  "id": "marcus_legionary",
+  "emotion": "disgusted"
+ },
+ {
+  "n": 34,
+  "id": "marcus_legionary",
+  "emotion": "curious"
+ },
+ {
+  "n": 35,
+  "id": "marcus_legionary",
+  "emotion": "suspicious"
+ },
+ {
+  "n": 36,
+  "id": "marcus_legionary",
+  "emotion": "surprised"
+ }
+]
