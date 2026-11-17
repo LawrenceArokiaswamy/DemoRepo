@@ -1,0 +1,130 @@
+{
+ "title": "Plate A reuse check: the same painted wall from other camera angles (no new generation)",
+ "period": "modern",
+ "set": "../../../stories/ad01_style_test/set",
+ "fps": 30,
+ "duration": 5.0,
+ "business": "../ad01_style_test/business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "night",
+  "shadowBox": [
+   0,
+   1,
+   -2,
+   4
+  ],
+  "ao": {
+   "radius": 0.4,
+   "intensity": 0.9,
+   "samples": 12
+  },
+  "override": {
+   "key": {
+    "color": "#9fb8ff",
+    "intensity": 0.9
+   },
+   "fill": {
+    "sky": "#2a3660",
+    "ground": "#120e16",
+    "intensity": 0.4
+   },
+   "rim": {
+    "color": "#b8c8ff",
+    "intensity": 0.7
+   },
+   "fog": {
+    "color": "#0b0f1c",
+    "near": 5,
+    "far": 16
+   },
+   "exposure": 1.0
+  }
+ },
+ "shots": [
+  {
+   "name": "R1 wide establishing from the room corner",
+   "a": 0,
+   "b": 2.5,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      1.9,
+      1.55,
+      1.3
+     ],
+     "look": [
+      -0.55,
+      1.15,
+      -2.7
+     ],
+     "fov": 52,
+     "focus": 4.0,
+     "ap": 0.0004
+    },
+    {
+     "t": 2.5,
+     "pos": [
+      1.9,
+      1.55,
+      1.3
+     ],
+     "look": [
+      -0.55,
+      1.15,
+      -2.7
+     ],
+     "fov": 52,
+     "focus": 4.0,
+     "ap": 0.0004
+    }
+   ]
+  },
+  {
+   "name": "R2 low angle toward the door, Theo foreground right",
+   "a": 2.5,
+   "b": 5.0,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 2.5,
+     "pos": [
+      1.35,
+      0.75,
+      -0.55
+     ],
+     "look": [
+      -1.3,
+      1.0,
+      -3.0
+     ],
+     "fov": 42,
+     "focus": 2.3,
+     "ap": 0.0008
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      1.35,
+      0.75,
+      -0.55
+     ],
+     "look": [
+      -1.3,
+      1.0,
+      -3.0
+     ],
+     "fov": 42,
+     "focus": 2.3,
+     "ap": 0.0008
+    }
+   ]
+  }
+ ],
+ "plateA": "/stories/ad01_style_test_plateA/plateA.jpg"
+}

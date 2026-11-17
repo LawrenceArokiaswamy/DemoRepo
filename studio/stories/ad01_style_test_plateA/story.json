@@ -1,0 +1,130 @@
+{
+ "title": "AD01 beat 1 STYLE TEST V1: baseline + Higgsfield plate A as the back wall",
+ "period": "modern",
+ "set": "../../../stories/ad01_style_test/set",
+ "fps": 30,
+ "duration": 5.0,
+ "business": "../ad01_style_test/business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "night",
+  "shadowBox": [
+   0,
+   1,
+   -2,
+   4
+  ],
+  "ao": {
+   "radius": 0.4,
+   "intensity": 0.9,
+   "samples": 12
+  },
+  "override": {
+   "key": {
+    "color": "#9fb8ff",
+    "intensity": 0.9
+   },
+   "fill": {
+    "sky": "#2a3660",
+    "ground": "#120e16",
+    "intensity": 0.4
+   },
+   "rim": {
+    "color": "#b8c8ff",
+    "intensity": 0.7
+   },
+   "fog": {
+    "color": "#0b0f1c",
+    "near": 5,
+    "far": 16
+   },
+   "exposure": 1.0
+  }
+ },
+ "shots": [
+  {
+   "name": "S1 insert over his shoulder: the message from 'Me'",
+   "a": 0.0,
+   "b": 1.8,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 0.0,
+     "pos": [
+      -0.75,
+      1.45,
+      -1.95
+     ],
+     "look": [
+      0.0,
+      0.86,
+      -1.64
+     ],
+     "fov": 21,
+     "focus": 1.0,
+     "ap": 0.0015
+    },
+    {
+     "t": 1.8,
+     "pos": [
+      -0.72,
+      1.42,
+      -1.92
+     ],
+     "look": [
+      0.0,
+      0.86,
+      -1.64
+     ],
+     "fov": 20,
+     "focus": 0.96,
+     "ap": 0.0015
+    }
+   ]
+  },
+  {
+   "name": "S2 his phone-lit face, slow push-in; the door over his shoulder",
+   "a": 1.8,
+   "b": 5.0,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 1.8,
+     "pos": [
+      0.95,
+      1.2,
+      0.25
+     ],
+     "look": [
+      -0.05,
+      1.06,
+      -2.0
+     ],
+     "fov": 36,
+     "focus": 2.45,
+     "ap": 0.0008
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      0.78,
+      1.18,
+      -0.15
+     ],
+     "look": [
+      -0.05,
+      1.07,
+      -2.0
+     ],
+     "fov": 36,
+     "focus": 2.05,
+     "ap": 0.0008
+    }
+   ]
+  }
+ ],
+ "plateA": "/stories/ad01_style_test_plateA/plateA.jpg"
+}

@@ -13,6 +13,15 @@ export async function init(C) {
     recolor: { top: '#5d616b', hair: '#3a2418' }, rim: '#b8c8ff', rimK: 0.22, paintK: 0.06, shadowLevel: 178 });   // grey hoodie, cold rim
   C.scene.add(S.hero.root);
   S.phone = makePhone(); C.scene.add(S.phone.g);
+  // V1 of the hybrid test (owner-approved 2026-11-17): the painted back wall replaces our back-wall geometry. Baseline (no "plateA" in story.json) is unchanged.
+  if (C.story.plateA) {
+    const tex = await new THREE.TextureLoader().loadAsync(C.story.plateA); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+    const hide = []; C.scene.traverse((o) => { if ((o.isMesh || o.isSprite) && o !== S.hero.root && o.getWorldPosition(new THREE.Vector3()).z < -2.8) hide.push(o); });
+    for (const o of hide) o.visible = false; S.RS.hall.visible = false;
+    // the plate was painted over a straight-on render (camera z = 1.4, fov 36.4, 16:9) of this wall, so it maps 1:1 onto the wall plane: 5.2 m x 2.94 m centred at y 1.35
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 5.2 * 1536 / 2720), new THREE.MeshBasicMaterial({ map: tex, color: '#d6dae6', fog: false }));
+    plate.position.set(0, 1.35, -2.99); plate.userData.keepMaterial = true; C.scene.add(plate); S.plate = plate;
+  }
   // a faint cold fill near the camera so the expression reads (After Dark rule: close-ups only, about 0.3)
   S.fill = new THREE.PointLight('#a8bce8', 0.3, 4, 1.6); C.scene.add(S.fill);
 }
