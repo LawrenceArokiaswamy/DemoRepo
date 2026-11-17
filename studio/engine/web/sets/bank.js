@@ -75,14 +75,14 @@ export async function build() {
   for (const [x, z, ry] of [[-7.6, -12.6, Math.PI * 0.8], [7.6, -12.6, -Math.PI * 0.8], [7.6, 8.6, -Math.PI * 0.25]]) await place('security_camera_01', { x, y: 4.7, z, ry, h: 0.35 });
   await place('fire_alarm', { x: -7.95, y: 1.9, z: 6.5, ry: Math.PI / 2, h: 0.25 });
   // ---------- the vault: round steel door ajar in the back wall (behind the counter, right), lit interior with deposit boxes
-  { const vx = 5.0, vz = -12.9, R = 1.35, steel = std({ color: '#9aa1a8', metalness: 0.9, roughness: 0.3 });
+  { const vx = 6.3, vz = -12.9, R = 1.35, steel = std({ color: '#9aa1a8', metalness: 0.9, roughness: 0.3 });
     const frame = new THREE.Mesh(new THREE.TorusGeometry(R + 0.12, 0.16, 16, 64), steel); frame.position.set(vx, 1.55, vz + 0.05); add(frame);
     const inside = new THREE.Mesh(new THREE.CircleGeometry(R, 48), std({ map: ctex(512, 512, (g, w, h) => { g.fillStyle = '#4a5560'; g.fillRect(0, 0, w, h); for (let y = 0; y < 12; y++) for (let x = 0; x < 12; x++) { g.fillStyle = (x + y) % 3 ? '#b8a46a' : '#a8955e'; g.fillRect(8 + x * 42, 8 + y * 42, 36, 36); g.fillStyle = '#3a3324'; g.fillRect(24 + x * 42, 24 + y * 42, 6, 6); } }), emissive: '#6a7684', emissiveIntensity: 0.5, roughness: 0.4, metalness: 0.5 }));
     inside.position.set(vx, 1.55, vz + 0.02); scene.add(inside);
-    const door = new THREE.Group(); const disc = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.45, 64), steel); disc.rotation.x = Math.PI / 2; disc.position.x = R; door.add(disc);
-    for (let k = 0; k < 3; k++) { const sp = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.03, 8, 24), steel); sp.position.set(R, 0, 0.26); sp.rotation.z = k * Math.PI / 3; door.add(sp); const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.7, 8), steel); bar.rotation.z = k * Math.PI / 3; bar.position.set(R, 0, 0.27); door.add(bar); }
-    for (let k = 0; k < 12; k++) { const a = k / 12 * Math.PI * 2, b = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.5, 12), steel); b.position.set(R + Math.cos(a) * (R - 0.12), Math.sin(a) * (R - 0.12), 0); b.rotation.x = Math.PI / 2; door.add(b); }
-    door.traverse((o) => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); door.position.set(vx - R, 1.55, vz + 0.3); door.rotation.y = -0.85; scene.add(door); BANK.props.vault = door;
+    const door = new THREE.Group(); const disc = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.45, 64), steel); disc.rotation.x = Math.PI / 2; disc.position.x = -R; door.add(disc);
+    for (const fz of [0.26, -0.26]) for (let k = 0; k < 3; k++) { const sp = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.03, 8, 24), steel); sp.position.set(-R, 0, fz); sp.rotation.z = k * Math.PI / 3; door.add(sp); const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.7, 8), steel); bar.rotation.z = k * Math.PI / 3; bar.position.set(-R, 0, fz * 1.04); door.add(bar); }
+    for (let k = 0; k < 12; k++) { const a = k / 12 * Math.PI * 2, b = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.5, 12), steel); b.position.set(-R + Math.cos(a) * (R - 0.12), Math.sin(a) * (R - 0.12), 0); b.rotation.x = Math.PI / 2; door.add(b); }
+    door.traverse((o) => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); door.position.set(vx + R, 1.55, vz + 0.3); door.rotation.y = 1.45; scene.add(door); BANK.props.vault = door;
     const vl = new THREE.PointLight('#bcd6ff', 5, 5, 2); vl.position.set(vx, 1.6, vz + 0.6); scene.add(vl); }
   // ---------- chandeliers + wall sconces (warm practicals, glow sprites for bloom)
   for (const z of [-4, 2.5]) { await place('Chandelier_01', { x: 0, z, top: 6.0, h: 1.6 }); glow(0, 4.75, z, '#ffcf8a', 1.6, 0.3); }
