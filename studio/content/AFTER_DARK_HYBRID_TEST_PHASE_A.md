@@ -160,3 +160,56 @@ They are judged at phone size (390×693) and full size.
 2. **Credit approval, in the owner's words:** "Approve up to 10.5 Higgsfield credits from the existing balance for the Ashgrove backdrop test: plate A (painted back wall, 3.5), plate B (sofa-angle plate, 3.5), at most one retry (3.5). No cash, no plan change, no credit purchase."
    - Or, for the minimum: "plate A only, up to 7.0 credits".
 3. **Permission to upload our two reference renders to Higgsfield** (`media_upload`). They are our own original renders, contain no personal data, and the upload is free.
+
+---
+
+## 9. Paid test result: Plate A (2026-11-17, owner-approved, cap 7.0 credits)
+**Spend:**
+- **3.5 credits in total**: 1 × Seedream 5.5, 2K, 16:9, transaction 05:28:03Z.
+- **The retry was not needed**, so 3.5 of the authorised 7.0 remain unspent.
+- Balance 254.77 → **251.27**. Cash $0.
+
+**Model terms.** Higgsfield's record for Seedream 5.5 (provider ByteDance) carries no model-specific licence or terms. Outputs fall under Higgsfield's Terms of Use §4.4 (commercial use), and the owner confirmed Starter includes commercial use.
+- Caveat: higgsfield.ai web pages could not be opened from this session; only the model record was checked.
+
+**Upload.** The single character-free layout reference was uploaded after adding `upload.higgsfield.ai` to the environment's allowlist (owner approval prompt).
+
+**Files:**
+| What | File |
+|---|---|
+| The plate (2720×1536 PNG) | `design/ad01_test/plateA_backwall_seedream.png` |
+| V1 render | `renders/ad01_style_test_plateA.mp4`: 1080×1920, 30 fps, 150 frames, 5.000 s, 0 black frames |
+| Side by side, 540 px each | `renders/ad01_hybrid_compare_side_by_side.mp4` |
+| Phone-size sheet | `design/ad01_test/compare_phone_size.jpg` |
+| Reuse angles | `design/ad01_test/plateA_reuse_angles.jpg` |
+
+**Integration.**
+- The plate is mapped 1:1 onto the back-wall plane, inside the test folder only, with our back-wall geometry hidden.
+- Theo, the phone, the message, the acting and the camera timing are unchanged.
+
+**Evaluation at phone size (390×693) and full size:**
+| Criterion | V0 baseline | V1 + plate A | Notes |
+|---|---|---|---|
+| Character consistency (gate) | ✓ | ✓ identical | Theo is our render in both |
+| Text readability (gate) | ✓ | ✓ identical | The insert shot sees no wall |
+| Visual richness / cinematic lighting | 2 | **3.5** | Worn patterned wallpaper and a framed painting make a real apartment. The plate's strongest elements (the moon window, the door glow) are mostly outside this framing |
+| Perspective | 5 | **5** | Exact; it *is* the wall plane. Correct from three different cameras |
+| Integration / seams | 5 | **4** | No seams at phone or full size. Painted wall behind toon characters reads as a classic painted-background look. Minor issues: (a) the painted door leaks light only on its hinge side, so the warm accent behind his shoulder is lost; (b) seen at a steep angle, the painted window and door read flat; (c) the plate doesn't react to our lights (the phone glow). None is visible at phone size except (a) |
+| Face readability | 4 | **4** | The reaction pops equally; the background is busier but stays dark |
+| Reuse potential | 5 | **5** | Proven for free: wide corner and low-angle renders (`plateA_reuse_angles.jpg`) reuse the same plate with correct perspective. It serves every Ashgrove episode. Other walls still show our plainer wallpaper; the full room needs 3–4 plates |
+| Cost (amortised) | 5 | **5** | 3.5 credits ÷ about 4 episodes ≈ 0.9 credits per episode |
+| **Weighted score** | **4.05** | **4.18** | |
+
+**Pass/fail, honestly applied.**
+- By the pre-agreed rule (weighted improvement ≥ 0.8), **V1 does not pass**: +0.13.
+- **The rule itself was flawed.** The baseline already maxes integration, reuse and cost, so even a perfect richness score (2 → 5) could add at most +0.75. No backdrop could ever have passed it.
+- **Corrected rule** for future tests: the target criterion must improve by at least 1.5, with no regression of more than 1 elsewhere, and both gates must hold. **Under that rule V1 passes:** richness +1.5, integration −1, gates hold.
+
+**Recommendation:** adopt plate A **conditionally**, as the Ashgrove set's back wall, with three free fixes before AD01 production:
+1. **Stage for the plate.** Frame key shots so the painted window and door are in view. Wide and low angles show the biggest gain; the tight sofa reverse shows the least.
+2. **Keep our own 3D door-leak lights on top of the plate** at the door edges, so the warm accent survives in any framing.
+3. **Lift the plate by about 10%** and add a faint phone-glow falloff on the wall, using our own lights.
+
+**No further paid work is requested now.**
+- The next plates (about 3 more walls, ≈ 10.5 credits) are worth quoting only when AD01 is approved for production.
+- AI video inserts stay parked.
