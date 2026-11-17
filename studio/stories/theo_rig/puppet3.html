@@ -58,8 +58,9 @@ function head(cx, cy, r, P) {   // P: { ex (expression), yaw 0..1 (0 front, 1 = 
   const mx = fx + 0.02 * r, my = 0.36 * r, mw = 0.16 * r * E.mw; g.lineWidth = 0.056 * r; g.strokeStyle = INK; g.lineCap = 'round';
   if (E.mouth === 'flat') { g.beginPath(); g.moveTo(mx - mw, my); g.lineTo(mx + mw, my); g.stroke(); }
   else if (E.mouth === 'frown') { g.beginPath(); g.moveTo(mx - mw, my + 0.03 * r); g.quadraticCurveTo(mx, my - 0.05 * r, mx + mw, my + 0.03 * r); g.stroke(); }
-  else if (E.mouth === 'wobble') { g.beginPath(); g.moveTo(mx - mw, my); for (let i = 1; i <= 4; i++) g.lineTo(mx - mw + i * mw / 2, my + (i % 2 ? -0.035 : 0.035) * r); g.stroke(); }
-  else { const ow = mw * 1.05, oh = 0.17 * r * E.mw; g.beginPath(); g.ellipse(mx, my + 0.03 * r, ow, oh, 0, 0, Math.PI * 2); g.fillStyle = '#7a2a2c'; g.fill(); g.lineWidth = 0.04 * r; g.stroke();
+  else if (E.mouth === 'wobble') { const tt = P.t || 0, ph = tt * 17; g.beginPath(); g.moveTo(mx - mw, my + 0.05 * r); for (let i = 1; i <= 5; i++) { const x = mx - mw + i * mw * 2 / 6, a = (0.03 + 0.018 * Math.sin(ph + i * 1.7)) * r; g.lineTo(x + 0.006 * r * Math.sin(ph * 1.3 + i), my + (i % 2 ? -a : a)); } g.lineTo(mx + mw, my + 0.05 * r); g.stroke(); }   // trembling, corners pulled down
+  else { const tt = P.t || 0, op = P.mopen ?? 1, q = 1 + 0.07 * Math.sin(tt * 29) * op, ow = mw * 1.05 * (0.75 + 0.25 * op) * (2 - q), oh = 0.17 * r * E.mw * (0.25 + 0.75 * op) * q;   // gasp opens with overshoot, then quivers
+    g.beginPath(); g.ellipse(mx, my + 0.03 * r, ow, oh, 0, 0, Math.PI * 2); g.fillStyle = '#7a2a2c'; g.fill(); g.lineWidth = 0.04 * r; g.stroke();
     g.save(); g.clip(); g.beginPath(); g.ellipse(mx, my + 0.03 * r + oh * 0.75, ow * 0.75, oh * 0.5, 0, 0, Math.PI * 2); g.fillStyle = '#e07c84'; g.fill(); g.fillStyle = '#ffffff'; g.fillRect(mx - ow, my + 0.03 * r - oh, ow * 2, oh * 0.38); g.restore(); }
   g.restore();
   // hair (front -> 3/4 swap mid-turn; drawn over the skull top like the sheet)
@@ -73,12 +74,12 @@ function head(cx, cy, r, P) {   // P: { ex (expression), yaw 0..1 (0 front, 1 = 
 // ---------- the whole puppet ----------
 function img(I, x, y, w, rot = 0, ax = 0.5, ay = 0.5, sy = 1) { const h = w * I.height / I.width; g.save(); g.translate(x, y); g.rotate(rot); g.scale(1, sy); g.drawImage(I, -ax * w, -ay * h, w, h); g.restore(); }
 function puppet(Pz) {   // v2: body, sleeves, mitts, phone and shadow are layers cut from the parts kit (approved style); head as v1
-  const { hip, br, chestDy, headPos, r, phone, phRot, lit, hunch } = Pz;
-  const BW = 640, BH = BW * BODY.height / BODY.width, top = 905 + chestDy + 14 * hunch, cx = hip[0] + 40;
+  const { hip, br, chestDy, headPos, r, phone, phRot, lit, hunch, shrug = 0 } = Pz;
+  const BW = 640, BH = BW * BODY.height / BODY.width, top = 905 + chestDy + 14 * hunch - 26 * shrug, cx = hip[0] + 40;
   // contact shadow on the seat + under the feet
   g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha = 0.55; img(SHADOW, cx, top + BH * 0.5, BW * 1.15); g.globalAlpha = 0.45; img(SHADOW, cx, top + BH - 18, BW * 1.05); g.restore();
   // seated body (hood, torso, legs, shoes) with breathing + hunch (shoulders rise, chest compresses)
-  g.save(); g.translate(cx, top + BH); g.scale(1 - 0.02 * hunch, 1 + br - 0.035 * hunch); g.drawImage(BODY, -BW / 2, -BH, BW, BH); g.restore();
+  g.save(); g.translate(cx, top + BH + 26 * shrug); g.scale(1 - 0.02 * hunch - 0.015 * shrug, 1 + br - 0.035 * hunch + 0.03 * shrug); g.drawImage(BODY, -BW / 2, -BH, BW, BH); g.restore();
   // phone light on the hoodie front
   if (lit > 0.01) { g.save(); g.globalCompositeOperation = 'screen'; const pg = g.createRadialGradient(phone[0], phone[1] - 30, 20, phone[0], phone[1], 330); pg.addColorStop(0, `rgba(150,175,235,${0.17 * lit})`); pg.addColorStop(1, 'rgba(120,165,255,0)'); g.fillStyle = pg; g.fillRect(cx - 360, top, 720, BH * 0.7); g.restore(); }
   head(headPos[0], headPos[1], r, Pz.face);
@@ -87,7 +88,7 @@ function puppet(Pz) {   // v2: body, sleeves, mitts, phone and shadow are layers
   if (lit > 0.01) { g.save(); g.globalCompositeOperation = 'screen'; const gl = g.createRadialGradient(phone[0], phone[1] - 60, 10, phone[0], phone[1] - 60, 240); gl.addColorStop(0, `rgba(140,185,255,${0.5 * lit})`); gl.addColorStop(1, 'rgba(140,185,255,0)'); g.fillStyle = gl; g.fillRect(phone[0] - 260, phone[1] - 320, 520, 520); g.restore(); }
   img(PHONE, phone[0], phone[1], 150, phRot);
   // arms: kit sleeve on the upper arm (rotated along the IK bone), black stick forearm, kit mitt at the grip
-  const sh = [[cx - 195, top + 170 + 10 * hunch], [cx + 55, top + 160 + 10 * hunch]], hands = [grip(-66, 52), grip(66, 44)];
+  const sh = [[cx - 195, top + 170 + 10 * hunch - 8 * shrug], [cx + 55, top + 160 + 10 * hunch - 8 * shrug]], hands = [grip(-66, 52), grip(66, 44)];
   for (const i of [0, 1]) { const [el, hd] = ik(sh[i], hands[i], i ? 112 : 150, i ? 128 : 170, i ? -1 : 1), ang = Math.atan2(el[1] - sh[i][1], el[0] - sh[i][0]) - Math.PI / 2, len = Math.hypot(el[0] - sh[i][0], el[1] - sh[i][1]);
     stroke([el, hd], 19);
     const cuff = [L(el[0], hd[0], 0.42), L(el[1], hd[1], 0.42)], sw = i ? 50 : 58;   // one continuous bent sleeve: shoulder -> elbow -> cuff
@@ -108,7 +109,7 @@ function perform(t) {
   let phone = LP(lap, read, lift); phone = LP(phone, sink, turn * 0.8); phone[1] += 10 * ant - 6 * rec;
   const phRot = L(1.25, -0.08, lift) + 0.12 * turn;
   // head: down to the phone, tilts on concern, recoils on the hit, turns to the door (screen-right)
-  const headPos = [490 + 14 * turn + trem * 0.5, 748 + 22 * (1 - lift) * (t < 1.2 ? 1 : 0) + 6 * ant + 4 * breath - 18 * hit + 10 * turn];
+  const shr = Math.max(0, Math.sin(Math.PI * rmp(t, T.HIT - 0.04, T.HIT + 0.55))); const headPos = [490 + 14 * turn + trem * 0.5 + 0 * shr, 748 + 22 * (1 - lift) * (t < 1.2 ? 1 : 0) + 6 * ant + 4 * breath - 18 * hit + 10 * turn];
   const tilt = (t < T.CUT2 ? 0.05 * lift : 0.06) + 0.06 * ss(rmp(t, T.CONC, T.CONC + 0.4)) - 0.1 * hit + 0.13 * turn;
   // expression track
   let ex = t < T.LIGHT ? EX.neutral : t < T.CONC ? lerpEx(EX.neutral, EX.reading, ss(rmp(t, T.LIGHT, T.LIGHT + 0.4))) : t < T.HIT ? lerpEx(EX.reading, EX.concerned, ss(rmp(t, T.CONC, T.CONC + 0.35))) : t < T.TURN ? lerpEx(EX.concerned, EX.scared, cl(hit)) : lerpEx(EX.scared, EX.dread, ss(rmp(t, T.TURN, T.TURN + 0.4)));
@@ -118,7 +119,7 @@ function perform(t) {
   if (t >= T.TURN - 0.08) look = [L(0, 1.0, ss(rmp(t, T.TURN - 0.08, T.TURN + 0.05))), L(0, -0.2, turn)];   // eyes lead the head
   const blinks = [0.85, T.BL, T.TURN + 0.42]; let blink = 0; for (const b of blinks) { const k = (t - b) / 0.16; if (k > 0 && k < 1) blink = Math.sin(Math.PI * k); }
   return { hip, br: 0.008 * breath / 2.4, chestDy: -8 * hit + 5 * ant, headPos, r: 238, phone, phRot, lit, hunch: ss(rmp(t, T.TURN, T.TURN + 0.5)),
-    face: { ex, yaw: L(0.22, 1, cl(turn)), tilt, look, blink, lit } };
+    face: { ex, yaw: L(0.22, 1, cl(turn)), tilt, look, blink, lit, t, mopen: t < T.HIT ? 0.3 : ob(rmp(t, T.HIT, T.HIT + 0.14), 2.4) }, shrug: Math.max(0, Math.sin(Math.PI * rmp(t, T.HIT - 0.04, T.HIT + 0.55))) };
 }
 // ---------- camera + frame ----------
 window.drawFrame = (t) => {

@@ -176,3 +176,10 @@ This gives the rig the AI drawing quality while keeping in-house, zero-credit, c
   - mouth shapes;
   - a walk cycle from the kit's legs;
   - a `compose.py` preset.
+
+**Owner note, 2026-11-17: "the mouth isn't moving when scared".** Fixed for free in `puppet3.html`:
+- the gasp snaps open with an overshoot, then quivers;
+- the dread mouth trembles every frame with its corners pulled down;
+- the shoulders shrug up on the scare, then settle into the hunch.
+
+**Lesson for the production rig:** every expression needs secondary motion (open/close timing, tremble, corner pulls), not a static shape. See `design/theo_rig/mouth_shrug_sequence.jpg`.
