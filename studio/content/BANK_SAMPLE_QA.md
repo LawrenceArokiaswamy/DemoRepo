@@ -143,3 +143,23 @@
 **Nothing further is produced until the owner reviews this sample.**
 
 **If approved:** finish the remaining 16 shots with the same assets, lighting and shot plan (`PRODUCTION_PLAN.md` §5). Quote the narration and voices before any spend.
+
+---
+## v2 HYBRID (2026-11-17, owner-approved credits)
+**File:** `renders/bank_dilemma_sample_v2_hybrid.mp4`.
+- H.264, 1080×1920, 30 fps, 435 frames, 14.50 s, 15.8 MB.
+- −14.1 LUFS, −1.5 dBFS peak.
+- No black or frozen frames.
+
+**Comparison:** `renders/bank_v1_vs_v2_hybrid.mp4` (v1 CG on the left, v2 hybrid on the right).
+
+**Spend: 11.00 credits.** 4 photoreal plates (GPT Image 2.6, high, 2K) at 2.75 each. Balance 228.77 → **217.77** (verified). Within the 10–20 credits per video the owner approved.
+
+**What changed:**
+- The bank is a photographic, bright, modern branch: teller line, ATMs, queue display, marble, a sunny street. The plates are projected onto our 3D layout, so camera moves keep depth and characters stand on the real floor with real shadows.
+- Characters are lit bright and clean, with no dark shadow side and no moody grade.
+
+**Remaining issues:**
+- In S3, Nate's raised arm still partly covers the bag once it lands.
+- The voices are still temporary text-to-speech.
+- Stick figures over photographs is a deliberate style. It reads clearly, but it is a stylistic choice, not realism.
