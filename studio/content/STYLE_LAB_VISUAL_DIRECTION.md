@@ -148,3 +148,48 @@ No audience-performance claims are made; retention can only be measured after pu
 **Do not pursue C.**
 
 **Approval needed:** none to keep current. Adopting B would need explicit owner approval of the ≈ 5–8-day build; no production change was made.
+
+---
+
+## 8. Owner direction: "I exactly want this", so a reference-style test was run (2026-11-17, approved up to 11.25 credits)
+**Method:** the reference's own method.
+- AI illustration per shot: GPT Image 2.6, medium quality, 1k, 9:16.
+- The hero shot is used as the character reference for the other shots.
+- One AI motion shot: Kling 3.0, 5 s, std, sound off, animated from the hero still.
+- Free compositing (`stories/style_lab/compose_ref_style.py`):
+  - fast cuts;
+  - push-ins and a snap-zoom on the shock;
+  - **our exact message drawn on the blank phone screen**, readable at 390×693;
+  - light grain.
+
+**Original design:** Theo has a round head, the signature hair curl and a grey hoodie. No reference character was copied.
+
+**Spend:** **7.75 credits**, verified in transactions: 3 × 0.5 images plus 6.25 for the clip. Balance ≈ 243.52. Cash $0.
+
+**Files:**
+- Stills: `design/style_ref_test/shot_A_shock.png`, `shot_B_reading.png`, `shot_D_insert.png`.
+- Generated clip: `motion_turn_kling.mp4`.
+- Result: `renders/style_ref_test_AD01.mp4` (1080×1920, 30 fps, 150 frames, 5.0 s).
+- Side by side: `renders/style_ref_vs_current_side_by_side.mp4`.
+- Sheet: `design/style_ref_test/ref_style_sheet.jpg`.
+
+**Result:** this is the reference look.
+- Richly illustrated apartment: moonlit window, door glow, damask wallpaper, a worn sofa.
+- A caricatured stick figure with very readable faces.
+- Real motion on the hero shot: the head turns to the door.
+
+**Character consistency:**
+- Reading and shock stills: near-identical.
+- The motion clip drifts slightly: the hoodie turns bluer and the sweat drop disappears.
+- A locked character sheet plus a per-shot reference keeps this manageable; the check stays in QA.
+
+**Cost per 50 s Short in this style** (estimate; credits at today's quotes):
+| Item | Credits |
+|---|---|
+| 25–35 illustrated shots × 0.5 (medium, 1k), plus about 25% retries | ≈ 16–22 |
+| Optional: 2k images (1.0 each) | about double the image cost |
+| 2–3 AI motion hero shots × 6.25 | ≈ 12.5–19 |
+| Narration and music (current standard) | ≈ 10 |
+| **Total** | **≈ 40–50 credits per Short**; ≈ 26–32 with stills plus our own camera motion only |
+
+**Production time:** about 1 working day per Short once the template exists (script and voice as today; generation ≈ 1–2 h; composition automated). This is faster than today's 3–5 days.
