@@ -94,3 +94,40 @@ This gives the rig the AI drawing quality while keeping in-house, zero-credit, c
 - **Gate:** before any episode, one 5 s re-test with the parts-kit body must reach at least 4 out of 5 on likeness, integration and polish at phone size, side by side with the AI reference.
 - **NO-GO** on hand-drawing the body in code, and on all-AI animation per episode as the default.
 - **Not started:** no After Dark production, no pilot spend.
+
+---
+
+## 6. Parts-kit retest (owner-approved kit, 2026-11-17)
+**Spend:** **2.0 credits** of the approved 6–8. Two 2k parts sheets:
+- `design/theo_rig/parts_kit/kit_A.png`: 3 torsos, 4 sleeves, 4 forearm and mitt poses, seated legs.
+- `kit_B.png`: seated body (front and ¾), phone (back and flat), 2 grip mitts, contact shadow.
+
+**Cutting:** `stories/theo_rig/cut_parts.py` split them automatically into 20 transparent layers (`layers/kitA`, `layers/kitB`), clean on the first pass.
+
+**Rig v2:** `stories/theo_rig/puppet2.html`.
+- The head, face and hair are as in v1.
+- Body, sleeves, mitts, phone and contact shadow come from the kit.
+- Forearms are black sticks, which is exactly how the style draws them.
+- The hunch on the scare and a phone-light pass are added.
+- Render: 0.16 s/frame.
+
+**Files:**
+- `renders/theo_rig_v2_AD01.mp4` (1080×1920, 30 fps, 150 frames, 5.0 s);
+- `renders/theo_rig_v2_vs_ai_side_by_side.mp4`;
+- `design/theo_rig/compare_v2_phone_size.jpg`.
+
+**Gate (≥ 4 on likeness, integration and polish at phone size):**
+| | v1 | v2 | Gate |
+|---|---|---|---|
+| Likeness | 4 | **4** | ✅ |
+| Integration | 2.5 | **3** | ❌ |
+| Polish | 2.5 | **3.5** | ❌ |
+
+**What still holds v2 back, all bounded and known:**
+1. **The background:** the plate is a paint-out of a scene that had Theo in it, so a smudge shows around him. A production plate is generated *empty* (1.0 credit per location, reused for the whole series).
+2. **The pose:** v2 is square-on, while the AI shot is ¾ and sunk into the sofa. The kit already has the ¾ seated body; it needs the matching ¾ shoulder and arm placement.
+3. **The face:** brow, mouth and outline strokes are thinner than the sheet's, so they should be thickened to the sheet's line weights.
+4. **The arms:** the sleeve-to-stick transition needs a cuff and an elbow overlap.
+5. **The phone light:** too blue on the hoodie; needs warmer ambient matching.
+
+**Estimate to reach the gate:** ≈ ½–1 working day plus 1.0 credit for an empty apartment plate. Not done: it would be a new iteration, and that needs the owner's approval.
