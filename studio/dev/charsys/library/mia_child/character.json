@@ -1,0 +1,58 @@
+{
+ "id": "mia_child",
+ "name": "Mia (young child, validation)",
+ "aliases": [
+  "child",
+  "kid",
+  "young girl"
+ ],
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "description": "Child around 7: large head-to-body ratio, short limbs, round cheeks with blush, bigger sparkly eyes, tousled light-brown hair with a cowlick, yellow striped T-shirt, navy shorts, red sneakers. Quick, bouncy, big reactions.",
+ "attributes": {
+  "age": "~7",
+  "life_stage": "child",
+  "gender_presentation": "girl (owner may change)",
+  "period": "present day",
+  "region": "unspecified",
+  "occupation": "school child",
+  "role": "validation"
+ },
+ "build": "child",
+ "body_overrides": {},
+ "scale": 88,
+ "motion": "child",
+ "garment": "striped_tee",
+ "hair": "kid_tousled",
+ "facialHair": "none",
+ "footwear": "sneaker",
+ "colors": {
+  "skin": "#f6d9c3",
+  "main": "#f2d36b",
+  "stripe": "#3d7fb8",
+  "shorts": "#3d5a80",
+  "hair": "#8a5a33",
+  "shoe": "#d9534f"
+ },
+ "face": {
+  "eyeSize": 1.22,
+  "sparkle": 1.3,
+  "blush": true,
+  "eyeY": 0.08,
+  "mouthY": 0.02
+ },
+ "source": {
+  "script": "owner brief (validation lineup)",
+  "references": []
+ },
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ }
+}

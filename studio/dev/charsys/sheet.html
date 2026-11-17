@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// CHARSYS sheets: ?mode=lineup | turn&id=<id> | action   (rendered headless by render_canvas.mjs; drawFrame(t) -> PNG data URL)
+import { BUILDS, MOTION, EXPR, mixExpr, skeleton, drawCharacter, ob, rmp } from './charsys.js';
+const Q = new URLSearchParams(location.search), mode = Q.get('mode') || 'lineup';
+const IDS = ['theo', 'walter_elderly', 'marcus_legionary', 'mia_child', 'elena_adult'];
+const load = (s) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = s; });
+async function getChar(id) { const J = await (await fetch(`library/${id}/character.json`)).json();
+  const C = { ...J, body: { ...BUILDS[J.build], ...(J.body_overrides || {}) }, motionP: MOTION[J.motion] };
+  if (J.raster) C.raster = { hair: true, front: await load(J.raster.hair_front), back34: await load(J.raster.hair_34), torso: await load(J.raster.torso), torso34: await load(J.raster.torso34) };
+  return C; }
+const CH = {}; for (const id of IDS) CH[id] = await getChar(id);
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+const ss = (x) => x * x * (3 - 2 * x), L = (a, b, k) => a + (b - a) * k, cl = (x) => Math.max(0, Math.min(1, x));
+const face = (ex, yawH = 0, o = {}) => ({ ex, yawH, tilt: 0, look: [0, 0], blink: 0, mopen: 1, ...o });
+function relaxedHands(C, pose) { const K = skeleton(C, pose), P = K.P; return [[K.shoulders[0][0] - 0.1, K.hipY + 0.32], [K.shoulders[1][0] + 0.1, K.hipY + 0.32]]; }
+function standPose(C, yaw = 0, o = {}) { const p = { yaw, dir: 1, face: face(EXPR.neutral, yaw), ...o }; p.hands = o.hands || relaxedHands(C, p);
+  if (C.prop === 'scutum') { const K = skeleton(C, p); p.hands[0] = [K.shoulders[0][0] - 0.1, K.hipY - 0.1]; p.propHand = 0; p.armBend = [-1, 1]; }
+  if (C.prop === 'cane') { const K = skeleton(C, p); p.hands[1] = [K.shoulders[1][0] + 0.45, K.hipY + 0.25]; p.propHand = 1; }
+  return p; }
+function bg(W, H, top = '#e9e2dc', bot = '#d4cbc4') { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, top); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+function label(txt, x, y, size = 30, col = '#2a2228') { g.font = `700 ${size}px Inter, DejaVu Sans`; g.fillStyle = col; g.textAlign = 'center'; g.fillText(txt, x, y); }
+// ---------------- lineup ----------------
+function lineup() { const W = 2400, H = 1350; cv.width = W; cv.height = H; bg(W, H); g.fillStyle = '#c9bfb7'; g.fillRect(0, 1130, W, 220);
+  label('STUDIO CHARACTER SYSTEM — validation lineup (shared skeleton, different builds, costumes, faces)', W / 2, 70, 34);
+  const xs = [270, 735, 1200, 1665, 2130], names = ['Theo · master base (approved)', 'Elderly man · ~78', 'Roman legionary · c. AD 100–115', 'Child · ~7', 'Adult woman · 30s'];
+  IDS.forEach((id, i) => { const C = CH[id]; drawCharacter(g, C, standPose(C, 0), 0, C.scale * 1.15, [xs[i], 1130]); label(names[i], xs[i], 1200, 26); label(`build: ${C.build} · motion: ${C.motion}`, xs[i], 1240, 20, '#5a4e56'); });
+  return cv.toDataURL('image/png'); }
+// ---------------- turnaround + expressions for one character ----------------
+function turn(id) { const W = 2400, H = 1500, C = CH[id]; cv.width = W; cv.height = H; bg(W, H); g.fillStyle = '#c9bfb7'; g.fillRect(0, 860, W, 40);
+  label(`${C.name} — v${C.version} — ${C.status}`, W / 2, 60, 32);
+  const views = [['FRONT', { yaw: 0 }], ['THREE-QUARTER', { yaw: 0.5 }], ['SIDE', { yaw: 1 }], ['BACK', { yaw: 0, back: true }]];
+  views.forEach(([n, v], i) => { const p = standPose(C, v.yaw, { back: v.back }); drawCharacter(g, C, p, 0, C.scale * 1.0, [380 + i * 560, 860]); label(n, 380 + i * 560, 930, 24); });
+  const exprs = ['neutral', 'happy', 'curious', 'surprised', 'scared', 'sad', 'angry'];
+  exprs.forEach((e, i) => { const x0 = 40 + i * 334, y0 = 990, w = 320, h = 480; g.save(); g.beginPath(); g.roundRect(x0, y0, w, h, 18); g.fillStyle = '#f3ede8'; g.fill(); g.clip();
+    const S = C.scale * 1.35, p = standPose(C, 0, { face: face(EXPR[e], 0, { mopen: 1 }) }), K = skeleton(C, p); drawCharacter(g, C, p, 0.5, S, [x0 + w / 2, y0 + h * 0.5 - (K.headC[1]) * S]); g.restore(); label(e.toUpperCase(), x0 + w / 2, y0 + h - 14, 22); });
+  return cv.toDataURL('image/png'); }
+// ---------------- action: notice -> surprise -> turn (same script, three characters) ----------------
+const ACT = ['walter_elderly', 'marcus_legionary', 'mia_child'];
+function perform(C, t) {   // one shared performance, timed and scaled by the character's motion preset
+  const M = C.motionP, T = (x) => x * M.tempo, notice = ss(rmp(t, T(0.7), T(0.95))), ant = Math.sin(Math.PI * rmp(t, T(1.25), T(1.5))), hit = ob(rmp(t, T(1.5), T(1.68)), 1.8);
+  const turnH = ss(rmp(t, T(2.3), T(2.7))), turnB = ss(rmp(t, T(2.45), T(2.95))), breath = Math.sin(t * M.breathRate) * M.breathAmp, trem = t > T(1.6) ? Math.sin(t * 27) * 0.012 * M.tremor : 0;
+  const shrug = Math.max(0, Math.sin(Math.PI * rmp(t, T(1.46), T(2.1)))) * M.shrug, jump = M.bounce * Math.max(0, Math.sin(Math.PI * rmp(t, T(1.5), T(1.95)))) * 0.55;
+  let ex = EXPR.neutral; if (t > T(0.7)) ex = mixExpr(EXPR.neutral, EXPR.curious, notice); if (t > T(1.5)) ex = mixExpr(EXPR.curious, EXPR.surprised, Math.min(1, hit)); if (t > T(2.4)) ex = mixExpr(EXPR.surprised, C.id === 'mia_child' ? EXPR.curious : EXPR.scared, ss(rmp(t, T(2.4), T(2.9))));
+  const look = [L(0, 1, notice) * (1 - 0.6 * turnH), L(0, -0.1, notice)], blink = [0.35, T(2.05), T(3.6)].some((b) => t > b && t < b + 0.13) ? 1 : 0;
+  const yaw = 0.5 * turnB, p = { yaw, dir: 1, breath, bob: jump - 0.08 * ant * M.recoil, crouch: 0.35 * ant, shrug, lean: -0.18 * M.recoil * Math.max(0, Math.sin(Math.PI * rmp(t, T(1.5), T(2.3)))) + trem,
+    headDx: trem * 2, face: face(ex, L(0, 0.55, turnH), { tilt: 0.06 * notice * (1 - turnH) - 0.05 * hit * (1 - turnH), look, blink, mopen: t < T(1.5) ? 0.3 : ob(rmp(t, T(1.5), T(1.64)), 2.4) }) };
+  const K = skeleton(C, p), sh = K.shoulders, hip = K.hipY;
+  let hands = [[sh[0][0] - 0.1, hip + 0.32], [sh[1][0] + 0.1, hip + 0.32]];
+  const up = Math.min(1, hit) * (1 - 0.4 * turnB);
+  if (C.id === 'mia_child') hands = [[L(hands[0][0], sh[0][0] - 0.35, up), L(hands[0][1], K.headC[1] + 0.6, up)], [L(hands[1][0], sh[1][0] + 0.35, up), L(hands[1][1], K.headC[1] + 0.6, up)]];   // hands fly up
+  if (C.id === 'walter_elderly') { hands[0] = [L(hands[0][0], sh[0][0] + 0.55, up), L(hands[0][1], sh[0][1] + 0.55, up)]; hands[1] = [sh[1][0] + 0.45, hip + 0.25 + trem * 3]; p.propHand = 1; }   // hand to chest, leans on cane
+  if (C.id === 'marcus_legionary') { hands[0] = [L(sh[0][0] - 0.15, sh[0][0] + 0.2, up), L(hip - 0.35, sh[0][1] + 0.55, up)]; hands[1] = [L(hands[1][0], sh[1][0] + 0.15, up), L(hands[1][1], hip - 0.1, up)]; p.propHand = 0; p.armBend = [-1, 1]; }   // shield up, hand to sword
+  p.hands = hands; return p; }
+function stimulus(x, y, t, T) { const k = ob(rmp(t, T(0.6), T(0.8)), 1.4), fade = 1 - rmp(t, T(3.2), T(3.8)); if (k <= 0 || fade <= 0) return; g.save(); g.translate(x, y); g.scale(k, k); g.globalAlpha = fade;
+  g.strokeStyle = '#1c1a1e'; g.lineWidth = 7; g.lineCap = 'round'; for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + t * 0.6; g.beginPath(); g.moveTo(Math.cos(a) * 34, Math.sin(a) * 34); g.lineTo(Math.cos(a) * 60, Math.sin(a) * 60); g.stroke(); }
+  g.fillStyle = '#f5c542'; g.beginPath(); g.arc(0, 0, 26, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#1c1a1e'; g.font = '900 36px Inter, DejaVu Sans'; g.textAlign = 'center'; g.fillText('!', 0, 13); g.restore(); }
+function action(t) { const W = 1080, H = 1920; cv.width = W; cv.height = H; const pal = [['#e7ddd3', '#cdbfb3'], ['#e3d6c3', '#c8b49b'], ['#dde4e8', '#bfccd4']];
+  ACT.forEach((id, i) => { const C = CH[id], y0 = i * 640; g.save(); g.beginPath(); g.rect(0, y0, W, 636); g.clip(); const gr = g.createLinearGradient(0, y0, 0, y0 + 640); gr.addColorStop(0, pal[i][0]); gr.addColorStop(1, pal[i][1]); g.fillStyle = gr; g.fillRect(0, y0, W, 640);
+    g.fillStyle = 'rgba(0,0,0,0.07)'; g.fillRect(0, y0 + 560, W, 80); const T = (x) => x * C.motionP.tempo; stimulus(900, y0 + 230, t, T);
+    drawCharacter(g, C, perform(C, t), t, C.scale * (C.id === 'mia_child' ? 1.12 : 0.98), [440, y0 + 600]); label(C.name.split(' (')[0] + ' — ' + C.attributes.life_stage, 190, y0 + 46, 26); g.restore(); });
+  g.fillStyle = '#1c1a1e'; g.fillRect(0, 636, W, 4); g.fillRect(0, 1276, W, 4); return cv.toDataURL('image/png'); }
+function walk() { const W = 2400, H = 1500, ids = ['walter_elderly', 'mia_child', 'elena_adult']; cv.width = W; cv.height = H; bg(W, H); label('WALK CYCLE — same skeleton, per-build stride and tempo (6 phases each)', W / 2, 50, 30);
+  ids.forEach((id, r) => { const C = CH[id], M = C.motionP; for (let k = 0; k < 6; k++) { const ph = k / 6 * Math.PI * 2, stride = id === 'walter_elderly' ? 0.32 : id === 'mia_child' ? 0.45 : 0.55;
+    const p = { yaw: 0.85, dir: 1, walk: ph, stride, bob: Math.abs(Math.sin(ph)) * 0.06, face: face(EXPR.neutral, 0.85) }; const K = skeleton(C, p), sh = K.shoulders, sw = Math.sin(ph) * stride * 0.9;
+    p.hands = [[sh[0][0] - sw, K.hipY + 0.3], [sh[1][0] + sw, K.hipY + 0.3]]; if (C.prop === 'cane') p.propHand = 1;
+    drawCharacter(g, C, p, 0, C.scale * 0.5, [300 + k * 360, 480 + r * 460]); } label(C.name.split(' (')[0], 90, 380 + r * 460, 24); }); return cv.toDataURL('image/png'); }
+window.drawFrame = (t) => mode === 'lineup' ? lineup() : mode === 'turn' ? turn(Q.get('id')) : mode === 'walk' ? walk() : action(t);
+window.ready = true;
+</script></body></html>

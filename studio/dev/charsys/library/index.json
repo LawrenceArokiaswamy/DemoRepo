@@ -1,0 +1,79 @@
+{
+ "characters": [
+  {
+   "id": "theo",
+   "name": "Theo",
+   "aliases": [
+    "theo"
+   ],
+   "status": "approved (master animation base, owner 2026-11-17)",
+   "version": "3.0",
+   "tags": [
+    "young adult",
+    "present day",
+    "unspecified"
+   ]
+  },
+  {
+   "id": "walter_elderly",
+   "name": "Walter (elderly man, validation)",
+   "aliases": [
+    "elderly man",
+    "old man"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "elderly",
+    "present day",
+    "retired"
+   ]
+  },
+  {
+   "id": "marcus_legionary",
+   "name": "Marcus (Roman legionary, validation)",
+   "aliases": [
+    "roman soldier",
+    "legionary"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "adult",
+    "c. AD 100-115 (Roman Empire, Trajan)",
+    "legionary (miles)"
+   ]
+  },
+  {
+   "id": "mia_child",
+   "name": "Mia (young child, validation)",
+   "aliases": [
+    "child",
+    "kid",
+    "young girl"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "child",
+    "present day",
+    "school child"
+   ]
+  },
+  {
+   "id": "elena_adult",
+   "name": "Elena (adult woman, validation)",
+   "aliases": [
+    "woman",
+    "adult woman"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "adult",
+    "present day",
+    "unspecified"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "id": "theo",
+ "name": "Theo",
+ "aliases": [
+  "theo"
+ ],
+ "version": "3.0",
+ "status": "approved (master animation base, owner 2026-11-17)",
+ "description": "Modern young adult (20s), round pale head, short messy dark-brown hair, grey hoodie with pocket and drawstrings, black stick limbs, mitt hands.",
+ "attributes": {
+  "age": "20s",
+  "life_stage": "young adult",
+  "gender_presentation": "male",
+  "period": "present day",
+  "region": "city apartment",
+  "occupation": "unspecified",
+  "role": "After Dark protagonist"
+ },
+ "build": "adult",
+ "body_overrides": {
+  "shoulderW": 0.9
+ },
+ "scale": 100,
+ "motion": "young_adult",
+ "garment": "hoodie",
+ "hair": "raster",
+ "facialHair": "none",
+ "footwear": "shoe",
+ "raster": {
+  "hair_front": "/stories/theo_rig/layers/hair_front.png",
+  "hair_34": "/stories/theo_rig/layers/hair_34.png",
+  "torso": "/stories/theo_rig/layers/kitA/part_00.png",
+  "torso34": "/stories/theo_rig/layers/kitA/part_01.png"
+ },
+ "colors": {
+  "skin": "#f3d8c6",
+  "main": "#9c908e",
+  "sleeve": "#9c908e",
+  "hair": "#4a3226",
+  "shoe": "#3b3437"
+ },
+ "face": {},
+ "source": {
+  "script": "AD01 The Message From Tomorrow",
+  "references": [
+   "design/characters/theo_model_sheet.png"
+  ]
+ },
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ }
+}

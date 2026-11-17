@@ -1,0 +1,58 @@
+{
+ "id": "elena_adult",
+ "name": "Elena (adult woman, validation)",
+ "aliases": [
+  "woman",
+  "adult woman"
+ ],
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "description": "Woman in her 30s: taller, slimmer silhouette, wavy auburn bob with side-swept bangs, mustard knit sweater, teal A-line skirt to the knee, small gold earrings, dark ankle boots. Composed, precise gestures.",
+ "attributes": {
+  "age": "30s",
+  "life_stage": "adult",
+  "gender_presentation": "female",
+  "period": "present day",
+  "region": "unspecified",
+  "occupation": "unspecified",
+  "role": "validation"
+ },
+ "build": "slim_tall",
+ "body_overrides": {
+  "torsoH": 1.85
+ },
+ "scale": 96,
+ "motion": "poised",
+ "garment": "sweater_skirt",
+ "hair": "bob_wavy",
+ "facialHair": "none",
+ "footwear": "shoe",
+ "earrings": true,
+ "colors": {
+  "skin": "#ebc3a2",
+  "main": "#d9a441",
+  "sleeve": "#d9a441",
+  "skirt": "#2f6b74",
+  "hair": "#8c3b22",
+  "shoe": "#4a3328"
+ },
+ "face": {
+  "eyeSep": 0.35,
+  "mouthW": 0.9,
+  "browThick": 0.95
+ },
+ "source": {
+  "script": "owner brief (validation lineup)",
+  "references": []
+ },
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ }
+}

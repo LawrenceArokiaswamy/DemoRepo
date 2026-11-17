@@ -1,0 +1,63 @@
+{
+ "id": "walter_elderly",
+ "name": "Walter (elderly man, validation)",
+ "aliases": [
+  "elderly man",
+  "old man"
+ ],
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "description": "Man around 78: smaller stooped frame, rounder belly, bald crown with white side hair, bushy white brows and moustache, round glasses, olive cardigan over a pale-blue collared shirt, brown shoes, walking cane. Moves slower, smaller reactions, slight tremor.",
+ "attributes": {
+  "age": "~78",
+  "life_stage": "elderly",
+  "gender_presentation": "male",
+  "period": "present day",
+  "region": "unspecified",
+  "occupation": "retired",
+  "role": "validation"
+ },
+ "build": "elderly",
+ "body_overrides": {},
+ "scale": 96,
+ "headScale": 1.0,
+ "motion": "elderly",
+ "garment": "cardigan_shirt",
+ "hair": "bald_sides",
+ "facialHair": "moustache",
+ "footwear": "shoe",
+ "glasses": true,
+ "prop": "cane",
+ "colors": {
+  "skin": "#efd2bd",
+  "main": "#6f7f5e",
+  "shirt": "#c9d8e6",
+  "button": "#d9c9a6",
+  "hair": "#ebe8e2",
+  "brow": "#ebe8e2",
+  "shoe": "#5a3c2c",
+  "wood": "#7a5236"
+ },
+ "face": {
+  "wide": 1.04,
+  "eyeSize": 0.85,
+  "browThick": 1.35,
+  "browW": 1.15,
+  "wrinkles": true,
+  "mouthY": 0.04
+ },
+ "source": {
+  "script": "owner brief (validation lineup)",
+  "references": []
+ },
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ }
+}
