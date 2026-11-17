@@ -1,0 +1,119 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script type="module">
+// STYLE B (style lab, isolated): premium flat-2D stick figure in an illustrated apartment. Canvas renderer, deterministic per t.
+// Layers: illustrated wall (Plate A, reused, no new generation) with parallax -> painted sofa -> Theo (ink tube limbs, hoodie bean torso,
+// egg head + signature curl) -> lighting (phone underlight, moon rim, door bloom) -> grade, vignette, grain. Insert shot: pixel-exact phone UI.
+import { EXPR, lerpExpr, headPath, hairCurl, drawFeatures, INK, SKIN, HAIR } from './face.js';
+const C = document.getElementById('c'), g = C.getContext('2d'), W = 1080, H = 1920;
+const img = new Image(); img.src = '/stories/ad01_style_test_plateA/plateA.jpg'; await img.decode();
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), rmp = (t, a, b) => cl((t - a) / (b - a)), ss = (x) => x * x * (3 - 2 * x), L = (a, b, k) => a + (b - a) * k;
+const ob = (x) => { const c = 1.7; x = cl(x); return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+// noise tile for painterly grain on shapes
+const nz = document.createElement('canvas'); nz.width = nz.height = 256; { const q = nz.getContext('2d'), d = q.createImageData(256, 256); for (let i = 0; i < d.data.length; i += 4) { const v = 118 + Math.random() * 20; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } q.putImageData(d, 0, 0); }
+const NZ = g.createPattern(nz, 'repeat');
+function paintShape(path, base, dark, light, ang = Math.PI / 2, x0 = 0, y0 = 0, x1 = 0, y1 = 400) {   // gradient fill + soft grain + ink outline
+  const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, light); gr.addColorStop(0.55, base); gr.addColorStop(1, dark);
+  path(); g.fillStyle = gr; g.fill(); g.save(); path(); g.clip(); g.globalCompositeOperation = 'overlay'; g.globalAlpha = 0.35; g.fillStyle = NZ; g.fillRect(-2000, -2000, 6000, 6000); g.restore();
+}
+const T = { CUT: 1.8, READ: 2.2, HIT: 3.35, LOOK: 3.95, END: 5.0 };
+const E = EXPR;
+// ---------------- the face shot ----------------
+function faceShot(t) {
+  const push = ss(rmp(t, T.CUT, T.END)), zoom = L(1.24, 1.34, push), hit = ob(rmp(t, T.HIT, T.HIT + 0.18)), look = ss(rmp(t, T.LOOK, T.LOOK + 0.35));
+  const breath = Math.sin(t * 2.4) * 4;
+  // camera: push-in around the face; parallax: wall moves 55% of the character layer
+  const fx = 590, fy = 800;
+  const cam = (k) => { g.translate(W / 2, H * 0.44); g.scale(L(1, zoom, k), L(1, zoom, k)); g.translate(-W / 2 + (fx - W / 2) * (zoom - 1) * 0.0, -H * 0.44); };
+  // --- wall (Plate A crop), darkened to 3 AM
+  g.save(); cam(0.55); const sx = 600 - 30 * look, sy = 60, sw = 800, sh = 1422; g.drawImage(img, sx, sy, sw, sh, -10, -10, W + 20, H + 20); g.restore();
+  g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = '#7e8bb2'; g.fillRect(0, 0, W, H); g.restore();
+  // door bloom (the painted door leak, boosted; it breathes slightly)
+  g.save(); cam(0.55); g.globalCompositeOperation = 'screen'; const db = g.createRadialGradient(150, 1420, 10, 150, 1420, 420); db.addColorStop(0, `rgba(255,170,90,${0.55 + 0.06 * Math.sin(t * 5.3)})`); db.addColorStop(1, 'rgba(255,170,90,0)'); g.fillStyle = db; g.fillRect(-200, 800, 900, 1200); g.restore();
+  g.save(); cam(1);
+  // --- sofa (painted shapes)
+  const sofa = { back: () => { g.beginPath(); g.roundRect(-60, 1120, 1200, 420, 70); }, seat: () => { g.beginPath(); g.roundRect(-60, 1470, 1200, 230, 50); }, arm: () => { g.beginPath(); g.roundRect(960, 1230, 200, 520, 60); } };
+  paintShape(sofa.back, '#343b52', '#1d2131', '#4c5878', 0, 0, 1120, 0, 1540); g.lineWidth = 8; g.strokeStyle = INK; sofa.back(); g.stroke();
+  for (const [x0, x1] of [[60, 530], [550, 1020]]) { const cu = () => { g.beginPath(); g.roundRect(x0, 1150, x1 - x0, 290, 50); }; paintShape(cu, '#3b4360', '#22273a', '#5a6688', 0, 0, 1150, 0, 1440); g.lineWidth = 7; g.strokeStyle = INK; cu(); g.stroke(); }
+  // his cast shadow on the backrest (moon from behind-right throws it to the left; phone glow pushes a soft one up)
+  g.save(); g.globalCompositeOperation = 'multiply'; const sh2 = g.createRadialGradient(540, 1250, 40, 540, 1250, 330); sh2.addColorStop(0, 'rgba(20,18,30,0.7)'); sh2.addColorStop(1, 'rgba(20,18,30,0)'); g.fillStyle = sh2; g.fillRect(150, 950, 800, 700); g.restore();
+  // --- Theo
+  const cx = 590, hipY = 1420, chestY = 1030 + breath * 0.5 + 10 * hit - 10 * look;
+  const tube = (pts, w, col) => { g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(...pts[0]); for (const p of pts.slice(1)) g.lineTo(...p); g.lineWidth = w + 14; g.strokeStyle = INK; g.stroke(); g.lineWidth = w; g.strokeStyle = col; g.stroke(); };
+  // seated: seat top behind the thighs, thighs come toward camera (foreshortened), seat front, shins + feet in front of it
+  const seatTop = () => { g.beginPath(); g.roundRect(-60, 1400, 1200, 150, 40); }; paintShape(seatTop, '#3d4560', '#262b3d', '#56627f', 0, 0, 1400, 0, 1550); g.lineWidth = 8; g.strokeStyle = INK; seatTop(); g.stroke();
+  const seatFront = () => { g.beginPath(); g.roundRect(-60, 1530, 1200, 200, 30); }; paintShape(seatFront, '#2b3146', '#151826', '#3f4862', 0, 0, 1530, 0, 1730); g.lineWidth = 8; g.strokeStyle = INK; seatFront(); g.stroke();
+  tube([[cx - 60, hipY], [cx - 105, 1545]], 52, '#2b2f3c'); tube([[cx + 60, hipY], [cx + 105, 1545]], 52, '#2b2f3c');
+  tube([[cx - 105, 1545], [cx - 115, 1790]], 44, '#2b2f3c'); tube([[cx + 105, 1545], [cx + 118, 1790]], 44, '#2b2f3c');
+  for (const s of [-1, 1]) { g.beginPath(); g.arc(cx + s * 105, 1545, 36, 0, Math.PI * 2); g.fillStyle = '#343846'; g.fill(); g.lineWidth = 8; g.strokeStyle = INK; g.stroke(); g.beginPath(); g.arc(cx + s * 98, 1535, 14, 3.6, 5.2); g.lineWidth = 6; g.strokeStyle = 'rgba(150,180,255,0.45)'; g.stroke(); }   // knees toward camera
+  for (const s of [-1, 1]) { g.beginPath(); g.ellipse(cx + s * 122, 1805, 58, 26, 0, 0, Math.PI * 2); g.fillStyle = '#1e1b24'; g.fill(); g.lineWidth = 7; g.strokeStyle = INK; g.stroke(); }
+  // torso: hoodie bean (shoulders 300 wide -> hips 250), hood bump behind neck
+  const torso = () => { g.beginPath(); g.moveTo(cx - 150, chestY + 30); g.quadraticCurveTo(cx - 160, chestY - 10, cx - 100, chestY - 20); g.lineTo(cx + 100, chestY - 20); g.quadraticCurveTo(cx + 160, chestY - 10, cx + 150, chestY + 30);
+    g.quadraticCurveTo(cx + 140, hipY - 140, cx + 108, hipY + 10); g.quadraticCurveTo(cx, hipY + 36, cx - 108, hipY + 10); g.quadraticCurveTo(cx - 140, hipY - 140, cx - 150, chestY + 30); g.closePath(); };
+  g.beginPath(); g.ellipse(cx, chestY - 18, 120, 46, 0, Math.PI, 0); g.fillStyle = '#4f5461'; g.fill(); g.lineWidth = 9; g.strokeStyle = INK; g.stroke();   // hood
+  paintShape(torso, '#5c616e', '#262933', '#8e9aba', 0, 0, chestY - 40, 0, hipY + 20); g.lineWidth = 10; g.strokeStyle = INK; torso(); g.stroke();
+  g.save(); torso(); g.clip(); g.fillStyle = 'rgba(14,14,26,0.38)'; g.beginPath(); g.moveTo(cx - 160, chestY - 30); g.quadraticCurveTo(cx - 60, chestY + 200, cx - 120, hipY + 40); g.lineTo(cx - 200, hipY + 40); g.closePath(); g.fill();
+  g.lineWidth = 6; g.strokeStyle = 'rgba(20,18,30,0.7)'; g.beginPath(); g.moveTo(cx - 70, hipY - 90); g.quadraticCurveTo(cx, hipY - 70, cx + 70, hipY - 90); g.moveTo(cx - 92, chestY + 150); g.quadraticCurveTo(cx - 70, chestY + 190, cx - 96, chestY + 240); g.moveTo(cx + 96, chestY + 160); g.quadraticCurveTo(cx + 74, chestY + 200, cx + 100, chestY + 250); g.stroke();
+  g.beginPath(); g.roundRect(cx - 80, hipY - 130, 160, 70, 18); g.lineWidth = 6; g.stroke(); g.restore();   // kangaroo pocket
+  g.beginPath(); g.moveTo(cx - 20, chestY + 10); g.lineTo(cx - 28, chestY + 110); g.moveTo(cx + 20, chestY + 10); g.lineTo(cx + 28, chestY + 110); g.lineWidth = 6; g.strokeStyle = '#d9dce6'; g.stroke();   // drawstrings
+  // phone + arms (hands meet at the phone)
+  const ph = { x: cx + 6 + 10 * look, y: 1215 - 8 * hit + 34 * look, w: 92, h: 168, r: -0.06 + 0.1 * look };   // phone sinks as he turns to the door
+  const handL = [ph.x - 52, ph.y + 52], handR = [ph.x + 52, ph.y + 48];
+  tube([[cx - 145, chestY + 40], [cx - 175, chestY + 210], handL], 40, '#5d6270'); tube([[cx + 145, chestY + 40], [cx + 178, chestY + 205], handR], 40, '#5d6270');
+  g.save(); g.translate(ph.x, ph.y); g.rotate(ph.r); g.beginPath(); g.roundRect(-ph.w / 2, -ph.h / 2, ph.w, ph.h, 16); g.fillStyle = '#16161e'; g.fill(); g.lineWidth = 7; g.strokeStyle = INK; g.stroke();
+  g.beginPath(); g.roundRect(-ph.w / 2 + 5, -ph.h / 2 + 5, ph.w - 10, ph.h - 10, 12); g.lineWidth = 3; g.strokeStyle = 'rgba(150,200,255,0.55)'; g.stroke(); g.restore();   // screen edge glow seen from behind
+  for (const [hx, hy] of [handL, handR]) { g.beginPath(); g.arc(hx, hy, 30, 0, Math.PI * 2); g.fillStyle = SKIN; g.fill(); g.lineWidth = 8; g.strokeStyle = INK; g.stroke(); }
+  // neck + head
+  const tilt = -0.05 * (1 - hit) + 0.04 * hit - 0.1 * look, hx = cx + 6 - 30 * look, hy = fy + breath + 14 * (1 - hit) - 6 * hit, s = 380;
+  g.beginPath(); g.moveTo(cx, chestY - 10); g.lineTo(hx, hy + 0.45 * s); g.lineWidth = 34; g.strokeStyle = INK; g.stroke(); g.lineWidth = 20; g.strokeStyle = SKIN; g.stroke();
+  // head fill: skin with phone underlight (bright from below) and moon-cool top
+  g.save(); headPath(g, hx, hy, s, tilt); const hg = g.createLinearGradient(0, hy - s / 2, 0, hy + s / 2); hg.addColorStop(0, '#b9a6a8'); hg.addColorStop(0.55, '#f0d9c6'); hg.addColorStop(1, '#fff3e6'); g.fillStyle = hg; g.fill();
+  g.clip(); g.globalCompositeOperation = 'overlay'; g.globalAlpha = 0.25; g.fillStyle = NZ; g.fillRect(0, 0, W, H); g.restore();
+  // features
+  let ex = t < T.READ ? E.tired : t < T.HIT ? lerpExpr(E.tired, E.frown, ss(rmp(t, T.READ, T.READ + 0.35))) : t < T.LOOK ? lerpExpr(E.frown, E.shock, hit) : lerpExpr(E.shock, E.dread, look);
+  const bl = [0.9, 2.95, 4.65].some((b) => t >= b && t < b + 0.12); if (bl) ex = { ...ex, lid: 1 };
+  g.save(); headPath(g, hx, hy, s, tilt); g.clip(); drawFeatures(g, hx, hy + 0.02 * s, s, ex, { yaw: -0.55 * look, skin: '#f2dccb' }); g.restore();
+  hairCurl(g, hx, hy, s, tilt); headPath(g, hx, hy, s, tilt); g.lineWidth = 11; g.strokeStyle = INK; g.stroke();
+  if (t > T.HIT + 0.2) { const k = ss(rmp(t, T.HIT + 0.2, T.HIT + 0.45)), dx = hx + 0.36 * s, dy = hy - 0.18 * s + 40 * ss(rmp(t, T.HIT + 0.45, T.END)); g.save(); g.translate(dx, dy); g.scale(k, k); g.beginPath(); g.moveTo(0, -34); g.quadraticCurveTo(26, 2, 18, 20); g.quadraticCurveTo(0, 38, -18, 20); g.quadraticCurveTo(-26, 2, 0, -34); g.fillStyle = '#a8dcff'; g.fill(); g.lineWidth = 7; g.strokeStyle = INK; g.stroke(); g.beginPath(); g.ellipse(-6, 10, 5, 9, -0.3, 0, Math.PI * 2); g.fillStyle = '#fff'; g.fill(); g.restore(); }
+  // moon rim (cool, from behind-right): edge highlight on head, hoodie shoulder
+  g.save(); g.globalCompositeOperation = 'screen'; g.lineWidth = 7; g.strokeStyle = 'rgba(150,180,255,0.7)'; g.beginPath(); g.arc(hx, hy - 10, s * 0.5, -1.25, 0.2); g.stroke();
+  g.beginPath(); g.moveTo(cx + 108, chestY - 16); g.quadraticCurveTo(cx + 162, chestY - 8, cx + 152, chestY + 60); g.stroke(); g.restore();
+  // phone underlight on face/hands/chest
+  g.save(); g.globalCompositeOperation = 'screen'; const pg = g.createRadialGradient(ph.x, ph.y - 60, 20, ph.x, ph.y - 60, 330); pg.addColorStop(0, `rgba(150,195,255,${0.3 + 0.08 * hit})`); pg.addColorStop(1, 'rgba(150,195,255,0)'); g.fillStyle = pg; g.fillRect(0, 600, W, 1100); g.restore();
+  g.restore();
+}
+// ---------------- the insert (pixel-exact phone UI, over his shoulder) ----------------
+function insert(t) {
+  g.save(); g.drawImage(img, 800, 900, 700, 1244, -40, -40, W + 80, H + 80); g.filter = 'none'; g.restore();
+  g.save(); g.fillStyle = 'rgba(8,10,22,0.78)'; g.fillRect(0, 0, W, H); g.restore();
+  const z = L(1, 1.04, ss(rmp(t, 0, T.CUT))); g.save(); g.translate(W / 2, H * 0.47); g.scale(z, z); g.rotate(-0.04);
+  // his shoulder/hoodie edge (foreground, left) and hands holding the phone
+  g.save(); g.fillStyle = '#4b505d'; g.beginPath(); g.ellipse(-560, -420, 330, 700, 0.2, 0, Math.PI * 2); g.fill(); g.lineWidth = 12; g.strokeStyle = INK; g.stroke(); g.restore();
+  const PW = 470, PH = 940; g.beginPath(); g.roundRect(-PW / 2, -PH / 2, PW, PH, 56); g.fillStyle = '#121218'; g.fill(); g.lineWidth = 12; g.strokeStyle = INK; g.stroke();
+  const sx = -PW / 2 + 18, sy = -PH / 2 + 18, sw = PW - 36, sh = PH - 36;
+  g.save(); g.beginPath(); g.roundRect(sx, sy, sw, sh, 42); g.clip(); g.fillStyle = '#0d1020'; g.fillRect(sx, sy, sw, sh);
+  g.textAlign = 'center'; g.fillStyle = '#e8ecf8'; g.font = '700 30px Inter, DejaVu Sans'; g.fillText('3:09 AM', 0, sy + 54);
+  g.fillStyle = '#1b2036'; g.fillRect(sx, sy + 80, sw, 150);
+  // avatar: his own face (the new design, small)
+  g.save(); g.beginPath(); g.arc(0, sy + 140, 44, 0, Math.PI * 2); g.fillStyle = '#2a3150'; g.fill(); g.clip(); headPath(g, 0, sy + 150, 78, 0); g.fillStyle = SKIN; g.fill(); drawFeatures(g, 0, sy + 152, 78, E.tired); hairCurl(g, 0, sy + 150, 78, 0); g.restore();
+  g.fillStyle = '#ffffff'; g.font = '700 34px Inter, DejaVu Sans'; g.fillText('Me', 0, sy + 216);
+  const pop = t >= 0.35 ? ob(rmp(t, 0.35, 0.55)) : 0;
+  if (pop > 0) { g.save(); g.translate(sx + 34, sy + 280); g.scale(pop, pop); g.fillStyle = '#e9ecf4'; g.beginPath(); g.roundRect(0, 0, 340, 176, 30); g.fill();
+    g.fillStyle = '#10131f'; g.textAlign = 'left'; g.font = '800 40px Inter, DejaVu Sans'; ["Don't open", 'the door', 'at 3:17.'].forEach((s, i) => g.fillText(s, 26, 56 + i * 47)); g.restore(); }
+  if (t >= 1.15) { const d = Math.floor((t - 1.15) * 4) % 3; g.fillStyle = '#2a3150'; g.beginPath(); g.roundRect(sx + 34, sy + 486, 130, 66, 33); g.fill(); for (let i = 0; i < 3; i++) { g.fillStyle = i === d ? '#fff' : '#7d86a8'; g.beginPath(); g.arc(sx + 66 + i * 33, sy + 519, 9, 0, Math.PI * 2); g.fill(); } }
+  g.fillStyle = '#1b2036'; g.beginPath(); g.roundRect(sx + 20, sy + sh - 84, sw - 40, 58, 29); g.fill(); g.fillStyle = '#6a7290'; g.textAlign = 'left'; g.font = '28px Inter, DejaVu Sans'; g.fillText('Message', sx + 50, sy + sh - 46);
+  g.restore();
+  // thumbs
+  for (const [x, y, r] of [[-250, 330, 0.5], [250, 300 - 26 * Math.max(0, Math.sin(t * 7.5)) * (t < 1.1 ? 1 : 0), -0.4]]) { g.save(); g.translate(x, y); g.rotate(r); g.beginPath(); g.ellipse(0, 0, 60, 110, 0, 0, Math.PI * 2); g.fillStyle = SKIN; g.fill(); g.lineWidth = 11; g.strokeStyle = INK; g.stroke(); g.restore(); }
+  g.restore();
+  // screen glow onto everything
+  g.save(); g.globalCompositeOperation = 'screen'; const gg = g.createRadialGradient(W / 2, H * 0.47, 100, W / 2, H * 0.47, 900); gg.addColorStop(0, 'rgba(110,150,255,0.22)'); gg.addColorStop(1, 'rgba(110,150,255,0)'); g.fillStyle = gg; g.fillRect(0, 0, W, H); g.restore();
+}
+function grade(t) {
+  g.save(); const v = g.createRadialGradient(W / 2, H * 0.45, H * 0.25, W / 2, H * 0.5, H * 0.75); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(4,4,12,0.62)'); g.fillStyle = v; g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = 'overlay'; g.globalAlpha = 0.18; g.translate((t * 977) % 256, (t * 613) % 256); g.fillStyle = NZ; g.fillRect(-256, -256, W + 512, H + 512); g.restore();
+}
+window.drawFrame = (t) => { g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  if (t < T.CUT) insert(t); else faceShot(t); grade(t); return C.toDataURL('image/jpeg', 0.95); };
+window.ready = true;
+</script></body></html>
