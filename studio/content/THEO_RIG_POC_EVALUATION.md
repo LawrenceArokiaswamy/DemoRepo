@@ -131,3 +131,48 @@ This gives the rig the AI drawing quality while keeping in-house, zero-credit, c
 5. **The phone light:** too blue on the hoodie; needs warmer ambient matching.
 
 **Estimate to reach the gate:** ≈ ½–1 working day plus 1.0 credit for an empty apartment plate. Not done: it would be a new iteration, and that needs the owner's approval.
+
+---
+
+## 7. Finishing pass: rig v3 (owner-approved, 2026-11-17)
+**Spend:** **1.0 credit** for an **empty 2k apartment plate** (`design/theo_rig/plate_apartment_empty_2k.png`), reusable for every Ashgrove episode.
+- Total spent on the rig: 3.0 credits (kit 2.0, plate 1.0). Cash $0.
+
+**Changes, all inside `stories/theo_rig/` (`puppet3.html`):**
+- the empty plate: no paint-out smudge, sharp at 2k;
+- the kit's **¾ seated body** sunk onto the cushion, with a matching ¾ head rest angle;
+- face line weights matched to the sheet (outline, brows, mouth) and slightly larger eyes;
+- a stronger caricature gasp and dread, plus worry lines;
+- **continuous bent sleeves** with cuffs, and a foreshortened far arm;
+- warmer phone light on the hoodie.
+
+**Files:**
+- `renders/theo_rig_v3_AD01.mp4` (1080×1920, 30 fps, 150 frames, 5.0 s);
+- `renders/theo_rig_v3_vs_ai_side_by_side.mp4`;
+- `design/theo_rig/compare_v3_phone_size.jpg`.
+- Render speed: 0.22 s/frame; the full compose with the insert takes about 80 s.
+
+**Gate (≥ 4, phone size):**
+| | Score | |
+|---|---|---|
+| Likeness | 4 | ✅ |
+| Integration | 4 | ✅ |
+| Polish | 4 at phone size, 3.5 full-screen | ✅, borderline |
+
+**Remaining difference from the AI shots:** the AI faces carry extra caricature line detail (cheek lines, mouth interiors with teeth on every expression), and their forearms curve organically. Neither blocks production; both improve with the pose and expression library.
+
+**Recommendation: GO for the in-house illustrated pipeline.**
+- **Per-episode character animation: 0 credits.**
+- **Per Short:**
+  - location plates at 1.0 each (reused across the series);
+  - inserts at 1.0 each;
+  - narration and music ≈ 10;
+  - **≈ 15–20 credits per Short** in total, against 56–76 for all-AI.
+- Paid AI is reserved for the shots listed in §4.
+- **Next build (needs the owner's go-ahead):** about 4–6 working days for the production rig tooling, including:
+  - a pose and expression library;
+  - timeline JSON authoring;
+  - a front, ¾ and side head turnaround;
+  - mouth shapes;
+  - a walk cycle from the kit's legs;
+  - a `compose.py` preset.
