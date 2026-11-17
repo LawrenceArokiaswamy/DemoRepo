@@ -1,0 +1,67 @@
+{
+ "id": "masked_robber",
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ },
+ "name": "The masked robber",
+ "aliases": [
+  "robber",
+  "masked man",
+  "gunman",
+  "antagonist"
+ ],
+ "description": "Stocky, restless, loud. Charcoal knit balaclava with an eye band and mouth opening (expressions stay readable), black hoodie, dark gloves, boots. Carries a handgun (simple dark silhouette, never detailed) and a navy duffel.",
+ "attributes": {
+  "age": "~30s",
+  "life_stage": "adult",
+  "gender_presentation": "male",
+  "period": "present day",
+  "region": "unspecified",
+  "occupation": "criminal",
+  "role": "antagonist (bank_dilemma)"
+ },
+ "build": "stocky",
+ "body_overrides": {},
+ "scale": 96,
+ "headScale": 1.0,
+ "motion": "young_adult",
+ "garment": "hoodie",
+ "hair": "none",
+ "facialHair": "none",
+ "footwear": "shoe",
+ "headgear": "balaclava",
+ "colors": {
+  "skin": "#d6a27c",
+  "mask": "#3a3c42",
+  "main": "#26282d",
+  "sleeve": "#26282d",
+  "hair": "#3a3c42",
+  "brow": "#2a2224",
+  "shoe": "#1f1d1d",
+  "bag": "#2c3a52"
+ },
+ "face": {
+  "wide": 1.04,
+  "eyeSize": 0.95,
+  "browThick": 1.15,
+  "mouthY": 0.0
+ },
+ "acting": {
+  "angry": null
+ },
+ "acting_notes": "Impatient: twitchy head moves, shouts with the whole body; overconfident until the phone buzzes.",
+ "source": {
+  "script": "stories/bank_dilemma (sample)",
+  "references": [],
+  "uncertain": []
+ }
+}

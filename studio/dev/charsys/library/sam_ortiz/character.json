@@ -1,0 +1,64 @@
+{
+ "id": "sam_ortiz",
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ },
+ "name": "Sam Ortiz (protagonist's best friend)",
+ "aliases": [
+  "best friend",
+  "your friend",
+  "Sam",
+  "hostage"
+ ],
+ "description": "Mid 30s, slim and tall, warm and expressive. Black curly hair, clean-shaven, light-brown skin, big readable eyes. Blue denim jacket over a mustard tee. Reacts big: fear reads from far away.",
+ "attributes": {
+  "age": "~35",
+  "life_stage": "adult",
+  "gender_presentation": "male",
+  "period": "present day",
+  "region": "unspecified",
+  "occupation": "unspecified",
+  "role": "hostage / best friend (bank_dilemma)"
+ },
+ "build": "slim_tall",
+ "body_overrides": {},
+ "scale": 96,
+ "headScale": 1.0,
+ "motion": "young_adult",
+ "garment": "jacket_tee",
+ "hair": "curly_top",
+ "facialHair": "none",
+ "footwear": "sneaker",
+ "colors": {
+  "skin": "#d9a47c",
+  "main": "#4e6f9c",
+  "shirt": "#e2ac3f",
+  "hair": "#1d1a1c",
+  "brow": "#1d1a1c",
+  "shoe": "#e9e4dc",
+  "seams": true,
+  "open": 0.18
+ },
+ "face": {
+  "wide": 0.98,
+  "eyeSize": 1.08,
+  "browThick": 1.05,
+  "mouthY": 0.0
+ },
+ "acting": {},
+ "acting_notes": "Big, readable fear; trembles; looks to the protagonist for help.",
+ "source": {
+  "script": "stories/bank_dilemma (sample)",
+  "references": [],
+  "uncertain": []
+ }
+}

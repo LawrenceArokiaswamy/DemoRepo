@@ -1,0 +1,64 @@
+{
+ "id": "priya_teller",
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ },
+ "name": "Priya (bank teller)",
+ "aliases": [
+  "teller",
+  "bank employee",
+  "cashier"
+ ],
+ "description": "Early 30s, bank teller: crisp white shirt, navy vest, name badge, black bob. Reusable as any bank or office staff by recolouring.",
+ "attributes": {
+  "age": "~32",
+  "life_stage": "adult",
+  "gender_presentation": "female",
+  "period": "present day",
+  "region": "unspecified",
+  "occupation": "bank teller",
+  "role": "background (bank_dilemma)"
+ },
+ "build": "slim_tall",
+ "body_overrides": {},
+ "scale": 96,
+ "headScale": 1.0,
+ "motion": "poised",
+ "garment": "shirt_vest",
+ "hair": "bob_wavy",
+ "facialHair": "none",
+ "footwear": "shoe",
+ "earrings": true,
+ "colors": {
+  "skin": "#c99476",
+  "main": "#24365a",
+  "shirt": "#f4f2ee",
+  "button": "#d8c48a",
+  "badge": "#2c5a8a",
+  "hair": "#1b1718",
+  "brow": "#1b1718",
+  "shoe": "#1f1d1d"
+ },
+ "face": {
+  "wide": 0.97,
+  "eyeSize": 1.0,
+  "browThick": 0.95,
+  "mouthY": 0.0
+ },
+ "acting": {},
+ "acting_notes": "Frozen behind the glass, hands up; small, held breaths.",
+ "source": {
+  "script": "stories/bank_dilemma (sample)",
+  "references": [],
+  "uncertain": []
+ }
+}

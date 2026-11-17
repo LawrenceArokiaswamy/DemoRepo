@@ -1,0 +1,4 @@
+{ "title": "What If Your Best Friend's Life Depended on Your Next Move? (representative sample)",
+  "set": "bank", "period": "present day", "fps": 30, "duration": 14.5, "cast": {}, "performances": {},
+  "shots": [ { "a": 0, "b": 99, "keys": [ { "t": 0, "pos": [0, 1.6, 4], "look": [0, 1.2, -5], "fov": 35, "focus": 6 } ] } ],
+  "business": "business.js" }

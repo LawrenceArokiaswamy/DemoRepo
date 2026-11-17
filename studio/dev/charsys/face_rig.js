@@ -34,6 +34,8 @@ export const EMOTIONS = {
                extreme: { blush: 1.3, sweat: 1, tremble: 0.3 }, body: { shrug: 0.3, headDy: 0.06, hands: 'fidget', tilt: 0.08 }, bodyX: {} },
   worried:   { face: { browY: [0.16, 0.08], browAng: [0.55, 0.4], eyeH: 1.0, look: [-0.75, 0.15], curve: -0.3, mouthW: 0.7, mouthX: -0.07, cornerL: 0.05, cornerR: -0.03, upperLip: 0.5, tremble: 0.5, worry: 1, sweat: 0.45 },
                extreme: { tremble: 0.8, sweat: 0.7, eyeWhite: 0.6, pupil: 0.6 }, body: { shrug: 0.4, hands: 'wring', tremor: 0.4 }, bodyX: { tremor: 0.7 } },
+  focused:   { face: { browY: [-0.07, -0.07], browAng: [-0.22, -0.22], browArch: [0.02, 0.02], lidUp: [0.3, 0.3], lidLow: [0.22, 0.22], pupil: 0.9, curve: -0.08, mouthW: 0.72 },   // intense concentration / resolve (not in CORE12)
+               extreme: { lidUp: [0.4, 0.4], browY: [-0.1, -0.1], mouthW: 0.65 }, body: { shrug: -0.08, lean: 0.04, hands: 'relaxed' }, bodyX: {} },
   relieved:  { face: { browY: [0.04, 0.04], browAng: [0.3, 0.3], lidUp: [0.85, 0.85], curve: 0.75, mouthW: 1.05, jaw: 0.1, round: 0.25, blush: 0.2, tilt: -0.08 },
                extreme: { lidUp: [0.85, 0.85], curve: 0.75 }, body: { shrug: -0.35, headDy: 0.03, hands: 'chest1', exhale: 1 }, bodyX: {} },
 };

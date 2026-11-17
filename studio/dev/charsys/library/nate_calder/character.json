@@ -1,0 +1,72 @@
+{
+ "id": "nate_calder",
+ "version": "0.1",
+ "status": "draft (awaiting owner review)",
+ "line_art": {
+  "ink": "#1c1a1e",
+  "head_outline": "0.088 R",
+  "brow": "0.105 R",
+  "mouth": "0.056 R",
+  "limb": "body.limbW (0.075-0.095 R)",
+  "eyes": "solid dot + 1 highlight",
+  "noses": "none (house style)",
+  "fill": "flat colour + soft gradient, no grain"
+ },
+ "name": "Nate Calder (former military marksman)",
+ "aliases": [
+  "you",
+  "protagonist",
+  "the sniper",
+  "former sniper",
+  "Nate"
+ ],
+ "description": "Late 30s, athletic, calm. Short dark buzz cut, short dark beard (mouth always clear), medium-brown skin, olive field jacket with chest pockets over a charcoal tee, dark boots. Dog tags under the collar (story cue). Moves economically; stillness under pressure.",
+ "attributes": {
+  "age": "~38",
+  "life_stage": "adult",
+  "gender_presentation": "male",
+  "period": "present day",
+  "region": "North America (unspecified city)",
+  "occupation": "former military marksman, now civilian",
+  "role": "protagonist (bank_dilemma)"
+ },
+ "build": "athletic",
+ "body_overrides": {},
+ "scale": 96,
+ "headScale": 1.0,
+ "motion": "soldier",
+ "garment": "jacket_tee",
+ "hair": "buzz",
+ "facialHair": "short_beard",
+ "footwear": "shoe",
+ "colors": {
+  "skin": "#b98160",
+  "main": "#5d6a47",
+  "shirt": "#2e3136",
+  "hair": "#2a221e",
+  "beard": "#2f2621",
+  "brow": "#241c18",
+  "shoe": "#3a2d24",
+  "pockets": true,
+  "open": 0.1
+ },
+ "face": {
+  "wide": 1.02,
+  "eyeSize": 0.92,
+  "browThick": 1.2,
+  "browW": 1.05,
+  "mouthY": 0.0
+ },
+ "acting": {
+  "scared": null,
+  "surprised": null
+ },
+ "acting_notes": "Contained reactions (soldier motion: small shrug, no tremor). Fear shows in the eyes and breathing, not the body. \"focused\" = intense concentration. Hands raised = compliance.",
+ "source": {
+  "script": "stories/bank_dilemma (sample)",
+  "references": [],
+  "uncertain": [
+   "branch of service and years deliberately unspecified (fiction)"
+  ]
+ }
+}

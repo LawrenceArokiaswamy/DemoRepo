@@ -1,0 +1,33 @@
+{
+ "title": "Bank environment stills",
+ "set": "bank",
+ "period": "present day",
+ "fps": 30,
+ "duration": 5,
+ "cast": {},
+ "performances": {},
+ "shots": [
+  {
+   "a": 0,
+   "b": 99,
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      0,
+      1.6,
+      4
+     ],
+     "look": [
+      0,
+      1.2,
+      -5
+     ],
+     "fov": 35,
+     "focus": 6
+    }
+   ]
+  }
+ ],
+ "business": "../bank_dilemma/business.js"
+}

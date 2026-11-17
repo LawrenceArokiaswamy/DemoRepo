@@ -11,10 +11,14 @@ def save(path, data): os.makedirs(os.path.dirname(path), exist_ok=True); open(pa
 MODELS = ['WoodenTable_03','bench_vice_01','hand_plane_no4','vintage_hand_drill','handsaw_wood','wooden_hammer_01','brass_blowtorch','vintage_oil_lamp','Lantern_01','wooden_bookshelf_worn',
           'book_encyclopedia_set_01','chemistry_set','vintage_microscope','magnifying_glass_01','alarm_clock_01','mantel_clock_01','wooden_crate_01','Barrel_02','wicker_basket_01',
           'wooden_stool_01','brass_pot_01','wooden_candlestick','standing_chalkboard_01','seadogs_compass','wooden_bucket_01','vintage_grandfather_clock_01','pocket_watch','brass_goblets','spinning_wheel_01',
-          'antique_ceramic_vase_01','ceramic_vase_01','ceramic_vase_02','ceramic_vase_03','jug_01','wooden_bucket_02','trowel_01','rusted_spade_01','wicker_basket_02','wooden_crate_02','coast_rocks_01','coast_rocks_02','stone_01','wooden_bowl_01','planter_pot_clay','rock_07']
+          'antique_ceramic_vase_01','ceramic_vase_01','ceramic_vase_02','ceramic_vase_03','jug_01','wooden_bucket_02','trowel_01','rusted_spade_01','wicker_basket_02','wooden_crate_02','coast_rocks_01','coast_rocks_02','stone_01','wooden_bowl_01','planter_pot_clay','rock_07',
+          # bank set (2026-11-17)
+          'sofa_02','modern_arm_chair_01','coffee_table_round_01','potted_plant_01','potted_plant_02','pachira_aquatica_01','security_camera_01','wall_clock','metal_trash_can',
+          'office_notepads','clipboard','stationery_supplies','fancy_picture_frame_01','WetFloorSign_01','fire_alarm','modern_ceiling_lamp_01','Chandelier_01','binder_notebook','classic_laptop']
 TEXTURES = [('brown_planks_05', '1k'), ('brick_wall_02', '1k'), ('dark_planks', '1k'), ('plastered_wall', '1k'), ('large_sandstone_blocks', '2k'), ('coast_sand_01', '2k'),
-            ('seaworn_sandstone_brick', '1k'), ('wood_planks', '1k'), ('dirty_concrete', '1k'), ('gravelly_sand', '1k'), ('castle_wall_varriation', '2k'), ('rock_face_02', '1k') , ('dark_wooden_planks', '1k'), ('rough_wood', '1k')]
-HDRIS = [('artist_workshop', '1k'), ('qwantani_morning_puresky', '2k'), ('qwantani_sunrise_puresky', '2k'), ('kloofendal_misty_morning_puresky', '2k')]
+            ('seaworn_sandstone_brick', '1k'), ('wood_planks', '1k'), ('dirty_concrete', '1k'), ('gravelly_sand', '1k'), ('castle_wall_varriation', '2k'), ('rock_face_02', '1k') , ('dark_wooden_planks', '1k'), ('rough_wood', '1k'),
+            ('marble_tiles', '2k'), ('marble_01', '1k'), ('dark_wood', '1k'), ('plastered_wall_02', '1k'), ('fabric_leather_02', '1k'), ('brushed_concrete', '1k')]
+HDRIS = [('artist_workshop', '1k'), ('qwantani_morning_puresky', '2k'), ('qwantani_sunrise_puresky', '2k'), ('kloofendal_misty_morning_puresky', '2k'), ('bank_vault', '1k')]
 for m in MODELS:
     if os.path.exists(f'{OUT}/models/{m}/{m}.gltf'): continue
     try:

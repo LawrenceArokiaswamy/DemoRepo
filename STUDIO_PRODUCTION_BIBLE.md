@@ -401,6 +401,19 @@ The approved **C+ "Cinematic Expressive"** direction is now a real, reusable, ri
 2. A 2D concept detail doesn't always survive 3D; judge it in the 3D render.
 3. Never reuse a scratch render directory. A stale folder mixed in old frames, so always render into a fresh directory.
 
+### C.9 Cinematic standard: 2D actors in 3D worlds (DRAFT 2026-11-17, awaiting owner approval)
+- **Full standard:** `studio/content/CINEMATIC_PRODUCTION_STANDARD.md`.
+- **Reference story:** `stories/bank_dilemma/` (sample S1–S5, 14.5 s; QA report: `studio/content/BANK_SAMPLE_QA.md`).
+- **Characters:** `dev/charsys` (face rig plus `perform.js`), staged as lit cards by the story's `business.js`. This provides:
+  - view selection;
+  - eye-lines to world targets;
+  - high-res face windows for close-ups;
+  - a 2D lighting pass driven by the set's key light;
+  - envelope lip-sync;
+  - 2D → 3D prop hand-off.
+- **New reusable set:** `engine/web/sets/bank.js`. Its CC0 assets are added to `tools/fetch_assets.py`.
+- **Not yet promoted** into the engine as a shared module. Once approved, move the card and actor code from `stories/bank_dilemma/business.js` into `engine/web/actors2d.js`.
+
 ### C.8 Consistency (ASPIRATIONAL improvements, not yet built)
 - Toon or outline post-pass to unify flat cards and 3D surfaces.
 - Shadows cast from card silhouettes.

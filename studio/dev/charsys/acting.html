@@ -8,7 +8,7 @@ const Q = new URLSearchParams(location.search), mode = Q.get('mode') || 'expr', 
 const load = (s) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = s; });
 async function getChar(id) { const J = await (await fetch(`library/${id}/character.json`)).json(); const C = { ...J, body: { ...BUILDS[J.build], ...(J.body_overrides || {}) }, motionP: MOTION[J.motion] };
   if (J.raster) C.raster = { hair: true, front: await load(J.raster.hair_front), back34: await load(J.raster.hair_34), torso: await load(J.raster.torso), torso34: await load(J.raster.torso34) }; return C; }
-const IDS = ['theo', 'walter_elderly', 'marcus_legionary', 'mia_child', 'elena_adult'], CH = {}; for (const id of IDS) CH[id] = await getChar(id);
+const IDS = ['theo', 'walter_elderly', 'marcus_legionary', 'mia_child', 'elena_adult', 'nate_calder', 'sam_ortiz', 'masked_robber', 'priya_teller'], CH = {}; for (const id of IDS) CH[id] = await getChar(id);
 const cv = document.getElementById('c'), g = cv.getContext('2d'), L = (a, b, k) => a + (b - a) * k, cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 // ---- build a pose from an acting state (face rig + body acting + hands + character secondary actions)
 function poseFrom(C, st, t, yaw = 0, dir = 1, blink = 0) { const b = st.body, M = C.motionP, trem = Math.sin(t * 27) * 0.012 * (b.tremor || 0) * (0.4 + M.tremor);

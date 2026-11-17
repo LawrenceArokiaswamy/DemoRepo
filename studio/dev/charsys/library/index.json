@@ -74,6 +74,78 @@
     "present day",
     "unspecified"
    ]
+  },
+  {
+   "id": "nate_calder",
+   "name": "Nate Calder (former military marksman)",
+   "aliases": [
+    "you",
+    "protagonist",
+    "the sniper",
+    "former sniper",
+    "Nate"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "adult",
+    "present day",
+    "former military",
+    "protagonist"
+   ]
+  },
+  {
+   "id": "sam_ortiz",
+   "name": "Sam Ortiz (protagonist's best friend)",
+   "aliases": [
+    "best friend",
+    "your friend",
+    "Sam",
+    "hostage"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "adult",
+    "present day",
+    "best friend",
+    "hostage"
+   ]
+  },
+  {
+   "id": "masked_robber",
+   "name": "The masked robber",
+   "aliases": [
+    "robber",
+    "masked man",
+    "gunman",
+    "antagonist"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "adult",
+    "present day",
+    "criminal",
+    "masked"
+   ]
+  },
+  {
+   "id": "priya_teller",
+   "name": "Priya (bank teller)",
+   "aliases": [
+    "teller",
+    "bank employee",
+    "cashier"
+   ],
+   "status": "draft (awaiting owner review)",
+   "version": "0.1",
+   "tags": [
+    "adult",
+    "present day",
+    "bank staff",
+    "office"
+   ]
   }
  ]
 }
