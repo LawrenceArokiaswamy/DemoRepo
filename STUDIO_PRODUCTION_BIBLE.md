@@ -42,6 +42,17 @@ It must have our own identity and never copy another creator's characters, art, 
 
 Technology serves the story; never the reverse.
 
+**New visual direction (owner decision 2026-11-17).**
+- The illustrated stick-figure style, matched to the owner's reference.
+- Generated stills plus 2–3 animated hero clips per Short, composited by `engine/illustrated/compose.py`.
+- The locked character sheet and prompt blocks are in `engine/illustrated/README.md`.
+- Lessons:
+  - Generate stills at 2k (never upscale).
+  - No film grain.
+  - Animate between two of our own stills (start and end frames) for on-model motion.
+  - All on-screen text is drawn by us.
+- The C+/three.js pipeline stays intact for Episode 3 and is kept as a fallback.
+
 **Content strand added (owner decision 2026-11-16): original cinematic horror shorts, "After Dark" (working title).**
 - This is an occasional strand, not a pivot. At most about 1 in 4 uploads are horror, and the channel stays a blend of history, science, mysteries, psychology, alternate realities and animated storytelling.
 - Horror rules: psychological suspense, mystery, sound design, character reactions and clever twists. No gore and no cheap jump scares.

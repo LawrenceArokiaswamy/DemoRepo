@@ -1,0 +1,8 @@
+{ "fps": 30, "base": "../../../design/style_ref_test",
+  "shots": [
+    {"type": "insert", "image": "h_insert.png", "dur": 1.2, "zoom": [1.12, 1.17], "center": [0.5, 0.48], "screen": [228, 325, 523, 1006],
+     "msg": {"clock": "3:09 AM", "sender": "Me", "avatar": "avatar_theo.png", "lines": ["Don't open", "the door", "at 3:17."], "at": 0.3, "typing_at": 0.9}},
+    {"type": "still", "image": "h_reading.png", "dur": 0.9, "zoom": [1.02, 1.06], "center": [0.5, 0.42]},
+    {"type": "still", "image": "shot_H_exactstyle_hair.png", "dur": 0.4, "zoom": [1.02, 1.09], "center": [0.5, 0.40], "snap": true},
+    {"type": "clip", "video": "h_motion_turn.mp4", "dur": 2.5, "offset": 0.0, "speed": 2.0, "zoom": [1.09, 1.02], "center": [0.5, 0.40]}
+  ] }

@@ -44,6 +44,6 @@ for f in range(150):
     elif t < 2.5: fr = frame_of(src['A'], 1.02 + 0.07 * (1 - (1 - cl((t - 2.1) / 0.13)) ** 3), 0.5, 0.40)   # SHOCK: snap-zoom
     else:                                                                                   # generated motion: the turn to the door
         ct = OFF + (t - 2.5) * SPD; i = min(len(clip) - 1, int(ct * clipfps)); fr = frame_of(Image.open(os.path.join(CLIP, clip[i])).convert('RGB'), 1.09 - 0.07 * ss(cl((t - 2.5) / 0.6)), 0.5, 0.40)
-    n = np.asarray(fr).astype(np.int16) + (np.asarray(grain[f % 6].resize((W, H))).astype(np.int8)[..., None] * 0.6).astype(np.int16)
-    Image.fromarray(n.clip(0, 255).astype(np.uint8)).save(os.path.join(OUT, f'f{f:04d}.jpg'), quality=94)
+    fr = fr.filter(ImageFilter.UnsharpMask(radius=1.6, percent=70, threshold=2))   # crisp line art; no grain (it smeared fine lines)
+    fr.save(os.path.join(OUT, f'f{f:04d}.png'))
 print('done', OUT)
