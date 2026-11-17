@@ -1,0 +1,130 @@
+{
+ "title": "AD01 painted-wall reference: Ashgrove back wall, straight on, no character",
+ "period": "modern",
+ "set": "../../../stories/ad01_style_test/set",
+ "fps": 30,
+ "duration": 0.2,
+ "business": "../ad01_style_test/business.js",
+ "cast": {},
+ "performances": {},
+ "extras": [],
+ "kicks": [],
+ "style": {
+  "preset": "night",
+  "shadowBox": [
+   0,
+   1,
+   -2,
+   4
+  ],
+  "ao": {
+   "radius": 0.4,
+   "intensity": 0.9,
+   "samples": 12
+  },
+  "override": {
+   "key": {
+    "color": "#9fb8ff",
+    "intensity": 0.9
+   },
+   "fill": {
+    "sky": "#2a3660",
+    "ground": "#120e16",
+    "intensity": 0.4
+   },
+   "rim": {
+    "color": "#b8c8ff",
+    "intensity": 0.7
+   },
+   "fog": {
+    "color": "#0b0f1c",
+    "near": 5,
+    "far": 16
+   },
+   "exposure": 1.0
+  }
+ },
+ "shots": [
+  {
+   "name": "A: back wall straight on (render frame 0 with LANDSCAPE=1, 16:9)",
+   "a": 0,
+   "b": 0.1,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 0,
+     "pos": [
+      0.0,
+      1.35,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.35,
+      -3.0
+     ],
+     "fov": 36.4,
+     "focus": 4.4,
+     "ap": 0.0001
+    },
+    {
+     "t": 0.1,
+     "pos": [
+      0.0,
+      1.35,
+      1.4
+     ],
+     "look": [
+      0.0,
+      1.35,
+      -3.0
+     ],
+     "fov": 36.4,
+     "focus": 4.4,
+     "ap": 0.0001
+    }
+   ]
+  },
+  {
+   "name": "B: the S2 face-shot start camera, no character (render frame 4, 9:16)",
+   "a": 0.1,
+   "b": 0.2,
+   "attach": "world",
+   "keys": [
+    {
+     "t": 0.1,
+     "pos": [
+      0.95,
+      1.2,
+      0.25
+     ],
+     "look": [
+      -0.05,
+      1.06,
+      -2.0
+     ],
+     "fov": 36,
+     "focus": 2.45,
+     "ap": 0.0001
+    },
+    {
+     "t": 0.2,
+     "pos": [
+      0.95,
+      1.2,
+      0.25
+     ],
+     "look": [
+      -0.05,
+      1.06,
+      -2.0
+     ],
+     "fov": 36,
+     "focus": 2.45,
+     "ap": 0.0001
+    }
+   ]
+  }
+ ],
+ "plateRef": true
+}
