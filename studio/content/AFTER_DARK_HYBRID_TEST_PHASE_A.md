@@ -11,6 +11,20 @@
   - `stories/ad01_style_test/` (its own set file, loaded through the director's existing `set` path);
   - `stories/ad01_plate_ref/`.
 
+## 0. Phase A results (V0, the in-house baseline)
+- **Files:**
+  - `renders/ad01_style_test_inhouse.mp4`: native **1080×1920, 30 fps, 150 frames, 5.000 s**, 31.2 MB, no audio (a visual test).
+  - Phone-size sheet: `design/ad01_test/inhouse_sheet.jpg`.
+- **Render:** 2.65 s/frame (≈ 7 min of CPU), 0 shader errors, 0 black frames.
+- **What works:**
+  - The insert message is fully legible at 390×693.
+  - Theo holds the phone in both hands (the arm pose was solved numerically: hands within 2–3 cm of the phone).
+  - The reading → frown → eyes-widen → swallow reaction reads clearly; the underlit phone face sells the hour.
+  - The warm leak round the door sits behind his left shoulder.
+- **What is weak, the target of the paid test:** the flat behind him is dark, plain and blocky. Walls read as flat stripes, the window and door barely register, and nothing says "a real lived-in apartment". **Richness and lighting score: 2/5.**
+- **Reference frames for the paint-over:** `design/ad01_test/ref_A_backwall_16x9.jpg` and `ref_B_s2cam_9x16.jpg`, character-free and evenly lit.
+  - Ref A still shows the sofa in front of the wall. The plate-A prompt asks for the wall surface only; if the sofa gets painted in anyway, the plate still works as a straight-on camera plate.
+
 ## 1. Shot specification (locked; the same for every version)
 | | |
 |---|---|
