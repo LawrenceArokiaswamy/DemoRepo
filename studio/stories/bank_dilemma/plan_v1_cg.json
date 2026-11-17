@@ -1,0 +1,542 @@
+{
+ "note": "Representative sample (Stage B): beats 1-3 of 'The Bank Robbery Dilemma'. Times in video seconds. Camera pos absolute (metres); look = actor target. win = high-res face window (px per head-radius).",
+ "actors": {
+  "pair": {
+   "kind": "pair",
+   "ids": [
+    "sam_ortiz",
+    "masked_robber"
+   ],
+   "x": -0.7,
+   "z": -6.4,
+   "facing": 0.32
+  },
+  "nate": {
+   "id": "nate_calder",
+   "x": 1.0,
+   "z": -1.2,
+   "facing": -2.82,
+   "dogtags": 1
+  },
+  "priya": {
+   "id": "priya_teller",
+   "x": -1.6,
+   "z": -10.15,
+   "facing": 0.15
+  },
+  "elena": {
+   "id": "elena_adult",
+   "x": -2.35,
+   "z": -1.55,
+   "facing": 1.0
+  },
+  "mia": {
+   "id": "mia_child",
+   "x": -1.95,
+   "z": -1.35,
+   "facing": 0.8
+  },
+  "walter": {
+   "id": "walter_elderly",
+   "x": 2.15,
+   "z": -4.6,
+   "facing": -2.1
+  }
+ },
+ "scripts": {
+  "sam_ortiz": [
+   {
+    "emotion": "scared",
+    "intensity": 0.9,
+    "at": 0,
+    "hands": "chest",
+    "look": "nate"
+   },
+   {
+    "emotion": "scared",
+    "intensity": 1.0,
+    "at": 3.35,
+    "transition": 0.12
+   },
+   {
+    "emotion": "worried",
+    "intensity": 0.95,
+    "at": 4.9,
+    "transition": 0.6,
+    "look": "nate"
+   },
+   {
+    "emotion": "scared",
+    "intensity": 1.0,
+    "at": 6.9,
+    "transition": 0.15
+   },
+   {
+    "emotion": "worried",
+    "intensity": 1.0,
+    "at": 8.7,
+    "transition": 0.6,
+    "look": "nate"
+   },
+   {
+    "emotion": "scared",
+    "intensity": 0.9,
+    "at": 11.0,
+    "transition": 0.8,
+    "look": "nate"
+   }
+  ],
+  "masked_robber": [
+   {
+    "emotion": "angry",
+    "intensity": 0.55,
+    "at": 0,
+    "look": "nate"
+   },
+   {
+    "emotion": "angry",
+    "intensity": 1.0,
+    "at": 3.3,
+    "transition": 0.12,
+    "look": "wide"
+   },
+   {
+    "emotion": "angry",
+    "intensity": 0.6,
+    "at": 4.9,
+    "transition": 0.5,
+    "look": "nate"
+   },
+   {
+    "emotion": "angry",
+    "intensity": 0.9,
+    "at": 5.9,
+    "transition": 0.3,
+    "look": "nate"
+   },
+   {
+    "emotion": "suspicious",
+    "intensity": 0.75,
+    "at": 9.6,
+    "transition": 0.6,
+    "look": "nate"
+   }
+  ],
+  "nate_calder": [
+   {
+    "emotion": "scared",
+    "intensity": 0.35,
+    "at": 0,
+    "hands": "up",
+    "look": "robber"
+   },
+   {
+    "emotion": "surprised",
+    "intensity": 0.55,
+    "at": 7.55,
+    "transition": 0.12,
+    "hands": "up",
+    "look": "bag"
+   },
+   {
+    "emotion": "worried",
+    "intensity": 0.55,
+    "at": 8.7,
+    "transition": 0.5,
+    "hands": "up",
+    "look": "sam"
+   },
+   {
+    "emotion": "focused",
+    "intensity": 0.8,
+    "at": 10.6,
+    "transition": 0.9,
+    "hands": "up",
+    "look": "sam"
+   },
+   {
+    "emotion": "focused",
+    "intensity": 1.0,
+    "at": 12.4,
+    "transition": 1.2,
+    "hands": "up",
+    "look": "robber"
+   }
+  ],
+  "priya_teller": [
+   {
+    "emotion": "scared",
+    "intensity": 0.85,
+    "at": 0,
+    "hands": "up",
+    "look": "robber"
+   },
+   {
+    "emotion": "scared",
+    "intensity": 1.0,
+    "at": 3.35,
+    "transition": 0.12
+   }
+  ],
+  "elena_adult": [
+   {
+    "emotion": "scared",
+    "intensity": 0.8,
+    "at": 0,
+    "crouch": 0.55,
+    "hands": "chest",
+    "look": "robber"
+   },
+   {
+    "emotion": "scared",
+    "intensity": 1.0,
+    "at": 3.35,
+    "transition": 0.15
+   }
+  ],
+  "mia_child": [
+   {
+    "emotion": "scared",
+    "intensity": 0.9,
+    "at": 0,
+    "crouch": 0.35,
+    "hands": "face",
+    "look": "elena"
+   }
+  ],
+  "walter_elderly": [
+   {
+    "emotion": "scared",
+    "intensity": 0.6,
+    "at": 0,
+    "look": "robber"
+   },
+   {
+    "emotion": "surprised",
+    "intensity": 0.8,
+    "at": 3.35,
+    "transition": 0.12
+   },
+   {
+    "emotion": "worried",
+    "intensity": 0.85,
+    "at": 4.7,
+    "transition": 0.6
+   }
+  ]
+ },
+ "dialogue": [
+  {
+   "who": "masked_robber",
+   "file": "audio/r1.wav",
+   "env": "r1",
+   "at": 3.35
+  },
+  {
+   "who": "masked_robber",
+   "file": "audio/r2.wav",
+   "env": "r2",
+   "at": 5.95
+  }
+ ],
+ "narration": [
+  {
+   "file": "audio/n1.wav",
+   "at": 0.35
+  },
+  {
+   "file": "audio/n2.wav",
+   "at": 10.3
+  }
+ ],
+ "bag": {
+  "release": 6.95,
+  "land": 7.55,
+  "rest": 8.25,
+  "land_at": [
+   0.3,
+   -3.55
+  ],
+  "rest_at": [
+   0.62,
+   -2.75
+  ]
+ },
+ "shots": [
+  {
+   "id": "S1",
+   "name": "CU_SAM",
+   "a": 0.0,
+   "b": 2.9,
+   "verb": "hook",
+   "purpose": "Emotional hook: the friend's terror, gun at his temple, before we know where we are.",
+   "keys": [
+    {
+     "t": 0.0,
+     "pos": [
+      -0.82,
+      1.62,
+      -3.35
+     ],
+     "look": [
+      -0.88,
+      1.5,
+      -6.4
+     ],
+     "fov": 28
+    },
+    {
+     "t": 2.9,
+     "pos": [
+      -0.84,
+      1.6,
+      -3.8
+     ],
+     "look": [
+      -0.9,
+      1.5,
+      -6.4
+     ],
+     "fov": 28
+    }
+   ],
+   "ap": 0.0014,
+   "res": {
+    "pair": 150
+   },
+   "win": {
+    "pair": {
+     "on": "sam",
+     "size": 5.2,
+     "res": 420
+    }
+   }
+  },
+  {
+   "id": "S2",
+   "name": "WIDE_ESTABLISH",
+   "a": 2.9,
+   "b": 5.7,
+   "verb": "establish",
+   "purpose": "Reveal the bank, the hostages, the robber and YOU (foreground) in one geography; slow crane down.",
+   "keys": [
+    {
+     "t": 2.9,
+     "pos": [
+      1.8,
+      5.0,
+      7.6
+     ],
+     "look": [
+      -0.6,
+      0.6,
+      -4.6
+     ],
+     "fov": 48
+    },
+    {
+     "t": 5.7,
+     "pos": [
+      1.6,
+      4.3,
+      6.8
+     ],
+     "look": [
+      -0.6,
+      0.8,
+      -5.0
+     ],
+     "fov": 46
+    }
+   ],
+   "ap": 0.0004,
+   "res": {}
+  },
+  {
+   "id": "S3",
+   "name": "OTS_OFFER",
+   "a": 5.7,
+   "b": 9.4,
+   "verb": "build",
+   "purpose": "Over your shoulder: the offer, the bag thrown at your feet. The choice is physically handed to you.",
+   "keys": [
+    {
+     "t": 5.7,
+     "pos": [
+      1.64,
+      1.6,
+      -0.4
+     ],
+     "look": "mid:pair",
+     "fov": 38
+    },
+    {
+     "t": 7.5,
+     "pos": [
+      1.62,
+      1.6,
+      -0.45
+     ],
+     "look": "mid:pair",
+     "fov": 38
+    },
+    {
+     "t": 8.1,
+     "pos": [
+      1.62,
+      1.58,
+      -0.48
+     ],
+     "look": [
+      0.45,
+      0.45,
+      -3.1
+     ],
+     "fov": 38
+    },
+    {
+     "t": 9.4,
+     "pos": [
+      1.6,
+      1.6,
+      -0.55
+     ],
+     "look": [
+      0.0,
+      0.95,
+      -4.6
+     ],
+     "fov": 36
+    }
+   ],
+   "ap": 0.0012,
+   "res": {
+    "pair": 220,
+    "nate": 200
+   }
+  },
+  {
+   "id": "S4",
+   "name": "CU_NATE",
+   "a": 9.4,
+   "b": 12.4,
+   "verb": "react",
+   "purpose": "Your reaction: shock hardens into focus as the narrator hints at a secret.",
+   "keys": [
+    {
+     "t": 9.4,
+     "pos": [
+      0.84,
+      1.52,
+      -3.45
+     ],
+     "look": "head:nate",
+     "fov": 28
+    },
+    {
+     "t": 12.4,
+     "pos": [
+      0.87,
+      1.52,
+      -3.1
+     ],
+     "look": "head:nate",
+     "fov": 27
+    }
+   ],
+   "ap": 0.0018,
+   "res": {
+    "nate": 150
+   },
+   "win": {
+    "nate": {
+     "on": "nate",
+     "size": 4.6,
+     "res": 480
+    }
+   },
+   "fill": {
+    "nate": 0.34
+   }
+  },
+  {
+   "id": "S5",
+   "name": "ECU_EYES",
+   "a": 12.4,
+   "b": 14.5,
+   "verb": "reveal",
+   "purpose": "The hidden identity: eyes of a trained marksman; the room falls silent; title card.",
+   "keys": [
+    {
+     "t": 12.4,
+     "pos": [
+      0.93,
+      1.49,
+      -2.45
+     ],
+     "look": "eyes:nate",
+     "fov": 24
+    },
+    {
+     "t": 14.5,
+     "pos": [
+      0.94,
+      1.49,
+      -2.3
+     ],
+     "look": "eyes:nate",
+     "fov": 24
+    }
+   ],
+   "ap": 0.002,
+   "res": {
+    "nate": 150
+   },
+   "win": {
+    "nate": {
+     "on": "nate",
+     "size": 2.6,
+     "res": 1000
+    }
+   },
+   "fill": {
+    "nate": 0.34
+   }
+  }
+ ],
+ "captions": [
+  {
+   "a": 0.35,
+   "b": 2.75,
+   "text": "Your best friend has a gun pointed at his head.",
+   "who": "N"
+  },
+  {
+   "a": 3.35,
+   "b": 4.8,
+   "text": "\"Everybody, stay down!\"",
+   "who": "R"
+  },
+  {
+   "a": 5.95,
+   "b": 9.45,
+   "text": "\"Fill the bag. A hundred grand is yours. And you walk out with me.\"",
+   "who": "R"
+  },
+  {
+   "a": 10.3,
+   "b": 12.35,
+   "text": "But there's one thing he doesn't know about you…",
+   "who": "N"
+  }
+ ],
+ "graphics": [
+  {
+   "a": 12.75,
+   "b": 14.5,
+   "type": "identity_card",
+   "line1": "FORMER MILITARY MARKSMAN",
+   "line2": "8 YEARS · 2 TOURS"
+  }
+ ]
+}

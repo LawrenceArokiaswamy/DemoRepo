@@ -8,21 +8,43 @@ import { BANK, makeDuffel } from '/engine/web/sets/bank.js';
 import { drawCharacter, drawArmOnly, skeleton } from '/dev/charsys/charsys.js';
 import { loadChar, stateAt, poseFrom, blinkAt } from '/dev/charsys/perform.js';
 const J = async (p) => (await fetch(p)).json();
-const PLAN = await J(new URLSearchParams(location.search).get('story') + '/plan.json'), ENV = await J('/stories/bank_dilemma/audio/env.json');
+const STORY = new URLSearchParams(location.search).get('story'), PLAN = await J(STORY + '/plan.json'), ENV = await J('/stories/bank_dilemma/audio/env.json');
 const MR = 0.27;   // metres per head radius (adult ~1.75 m)
 const L = (a, b, k) => a + (b - a) * k, cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), ss = (x) => { x = cl(x); return x * x * x * (x * (x * 6 - 15) + 10); };
-const CH = {}, ACT = {}; let bag, CTXr;
+const CH = {}, ACT = {}; let bag, CTXr, A_blob;
 const PAIR = { sam: -1.35, robber: 1.35 };   // pair card layout (R, card-local x)
 
 const blobTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'), r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, 'rgba(20,14,10,0.7)'); r.addColorStop(0.5, 'rgba(20,14,10,0.35)'); r.addColorStop(1, 'rgba(20,14,10,0)'); g.fillStyle = r; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
+// ---------------- hybrid photoreal plates: AI-painted plate per camera, projected onto the 3D layout (depth/shadow proxy) ----------------
+const PLATES = {}, ORIG = new Map(); let SETOBJ = [], plateKey = null, catcher;
+const projMat = (tex) => new THREE.ShaderMaterial({ uniforms: { map: { value: tex }, vp: { value: new THREE.Matrix4() }, gain: { value: 1 } },
+  vertexShader: 'varying vec4 vW; void main(){ vW = modelMatrix * vec4(position, 1.); gl_Position = projectionMatrix * viewMatrix * vW; }',
+  fragmentShader: 'uniform sampler2D map; uniform mat4 vp; uniform float gain; varying vec4 vW; void main(){ vec4 c = vp * vW; if (c.w <= 0.0) { gl_FragColor = vec4(0.05, 0.05, 0.05, 1.); return; } vec2 uv = clamp(c.xy / c.w * 0.5 + 0.5, 0.001, 0.999); gl_FragColor = vec4(texture2D(map, uv).rgb * gain, 1.); }' });
+function setPlate(sh, CTX) {
+  const key = sh.plate ? sh.plate.file : null; if (key === plateKey) return; plateKey = key;
+  const on = !!key, P = on ? PLATES[key] : null;
+  if (on) { const pc = new THREE.PerspectiveCamera(sh.plate.cam.fov, 1080 / 1920, 0.05, 200); pc.position.set(...sh.plate.cam.pos); pc.lookAt(...sh.plate.cam.look); pc.updateMatrixWorld(); pc.updateProjectionMatrix();
+    P.mat.uniforms.vp.value.multiplyMatrices(pc.projectionMatrix, pc.matrixWorldInverse); P.mat.uniforms.gain.value = sh.plate.gain ?? 1; }
+  for (const root of SETOBJ) root.traverse((o) => {
+    if (!ORIG.has(o)) ORIG.set(o, { vis: o.visible, mat: o.material });
+    const or = ORIG.get(o), fx = o.isSprite || o.isPoints || (o.material && !Array.isArray(o.material) && (o.material.transparent || o.material.isMeshBasicMaterial && !o.isMesh));
+    if (o.isLight) return;
+    if (!on) { o.visible = or.vis; if (o.isMesh) o.material = or.mat; return; }
+    if (fx) { o.visible = false; return; } if (o.isMesh) { o.material = P.mat; o.castShadow = false; } });
+  catcher.visible = on; const r = CTX.renderer;
+  if (on) { r.toneMapping = THREE.NoToneMapping; CTX.bloom.strength = 0.1; CTX.grade.uniforms.shT.value.set('#f4f6fa'); CTX.grade.uniforms.hiT.value.set('#fffcf6'); CTX.grade.uniforms.con.value = 0.06; CTX.grade.uniforms.vig.value = 0.2;
+    BANK.lights.key.position.set(-1.5, 12, 3); BANK.lights.key.target.position.set(0, 0, -3); BANK.lights.key.target.updateMatrixWorld(); }
+}
 export async function init(CTX) {
-  CTXr = CTX;
+  CTXr = CTX; SETOBJ = [...CTX.scene.children];
+  catcher = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.34 })); catcher.rotation.x = -Math.PI / 2; catcher.position.set(0, 0.006, -2); catcher.receiveShadow = true; catcher.visible = false; CTX.scene.add(catcher);
+  const tl = new THREE.TextureLoader(); for (const sh of PLAN.shots) if (sh.plate && !PLATES[sh.plate.file]) { const tex = await tl.loadAsync(STORY + '/' + sh.plate.file); tex.colorSpace = THREE.SRGBColorSpace; PLATES[sh.plate.file] = { tex, mat: projMat(tex) }; }
   for (const a of Object.values(PLAN.actors)) for (const id of a.ids || [a.id]) CH[id] = CH[id] || await loadChar(id);
   for (const [key, a] of Object.entries(PLAN.actors)) { const wR = a.kind === 'pair' ? 9.5 : 6.4, hR = 8.2, c = document.createElement('canvas'), w = document.createElement('canvas');
     c.width = 2; c.height = 2; w.width = 2; w.height = 2; const card = makeCard(1, 1, c), win = makeCard(1, 1, w); win.mesh.castShadow = false; win.mesh.visible = false;
     for (const m of [card.mesh, win.mesh]) { m.material.emissive.setRGB(0.2, 0.19, 0.19); }
-    const blob = new THREE.Mesh(new THREE.CircleGeometry(1, 40), new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false, opacity: 0.75 })); blob.rotation.x = -Math.PI / 2; blob.position.set(a.x, 0.008, a.z); blob.scale.set(a.kind === 'pair' ? 1.3 : 0.55, a.kind === 'pair' ? 0.6 : 0.42, 1); CTX.scene.add(blob);
-    ACT[key] = { key, ...a, wR, hR, c, g: c.getContext('2d'), card, w, wg: w.getContext('2d'), win, res: 0, seed: Object.keys(ACT).length * 3 + 2 }; }
+    const blob = new THREE.Mesh(new THREE.CircleGeometry(1, 40), new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false, opacity: 0.75 })); blob.rotation.x = -Math.PI / 2; blob.position.set(a.x, 0.008, a.z); A_blob = blob; blob.scale.set(a.kind === 'pair' ? 1.3 : 0.55, a.kind === 'pair' ? 0.6 : 0.42, 1); CTX.scene.add(blob);
+    ACT[key] = { blob: A_blob, key, ...a, wR, hR, c, g: c.getContext('2d'), card, w, wg: w.getContext('2d'), win, res: 0, seed: Object.keys(ACT).length * 3 + 2 }; }
   bag = makeDuffel('#2c3a52'); bag.scale.set(1, 0.6, 1); bag.visible = false;
   CTX.grade.uniforms.shT.value.set('#aebfdc'); CTX.grade.uniforms.hiT.value.set('#ffeedd'); CTX.grade.uniforms.con.value = 0.28; CTX.grade.uniforms.vig.value = 0.42;
   CTX.bloom.strength = 0.32; CTX.bloom.threshold = 0.9; CTX.renderer.toneMappingExposure = 0.88;
@@ -90,7 +112,7 @@ function drawActor(A, g, S, gx, gy, t, view, camPos, camRight) {   // (gx, gy) =
 function ensure(cv, tex, W, H) { if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; tex.dispose(); } }
 // ---------------- per frame ----------------
 export function frame(wt, CTX, t) {
-  const { camera } = CTX, sh = shotAt(t), K = sh.keys; let i = 0; while (i < K.length - 2 && t > K[i + 1].t) i++;
+  const { camera } = CTX, sh = shotAt(t), K = sh.keys; setPlate(sh, CTX); const PL = !!sh.plate; let i = 0; while (i < K.length - 2 && t > K[i + 1].t) i++;
   const k0 = K[i], k1 = K[Math.min(i + 1, K.length - 1)], u = k1 === k0 ? 0 : ss((t - k0.t) / (k1.t - k0.t));
   const camPos = new THREE.Vector3(...k0.pos).lerp(new THREE.Vector3(...k1.pos), u);
   // subtle handheld breathing in close shots (smooth, never jittery)
@@ -110,11 +132,12 @@ export function frame(wt, CTX, t) {
   // key light direction (toward the light) for the 2D lighting pass
   const Ld = BANK.lights.key.position.clone().sub(BANK.lights.key.target.position).setY(0).normalize(), lightSide = Ld.dot(camRight) >= 0 ? 1 : -1, back = cl(-Ld.dot(camF) * -1);
   for (const A of Object.values(ACT)) {
+    if (PLAN.hideActors) { A.card.mesh.visible = A.win.mesh.visible = false; A.blob.visible = false; continue; }
     const Bs = cardBasis(A, camPos), view = viewFor(A, camPos, camRight), res = sh.res?.[A.key] ?? (camPos.distanceTo(new THREE.Vector3(A.x, 1, A.z)) < 7 ? 120 : 80);
     const W = Math.round(A.wR * res), H = Math.round(A.hR * res); ensure(A.c, A.card.tex, W, H); const g = A.g; g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H);
     const gx = W / 2, gy = H - groundR * res; drawActor(A, g, res, gx, gy, t, view, camPos, camRight);
-    lightCanvas(A.c, g, (x, y) => [gx + x * res, gy + y * res], res, lightSide, Math.max(0, Ld.dot(camF)), 'rgb(255,214,160)', 'rgba(120,135,170,1)');
-    { const f = sh.fill?.[A.key] ?? 0.2; for (const mm of [A.card.mesh, A.win.mesh]) mm.material.emissive.setRGB(f, f * 0.97, f * 0.95); }
+    lightCanvas(A.c, g, (x, y) => [gx + x * res, gy + y * res], res, lightSide, Math.max(0, Ld.dot(camF)), PL ? 'rgb(255,250,240)' : 'rgb(255,214,160)', PL ? 'rgba(170,180,200,1)' : 'rgba(120,135,170,1)', PL ? 0.35 : 1);
+    { const f = PL ? (sh.cardBright ?? 0.62) : (sh.fill?.[A.key] ?? 0.2); for (const mm of [A.card.mesh, A.win.mesh]) mm.material.emissive.setRGB(f, f * 0.97, f * 0.95); }
     A.card.tex.needsUpdate = true; const m = A.card.mesh; m.scale.set(A.wR * MR, A.hR * MR, 1); m.position.set(A.x, -groundR * MR, A.z); m.rotation.set(0, Bs.ry, 0); m.updateMatrixWorld();
     // high-res face window for close-ups (exactly overlays the body card)
     const wn = sh.win?.[A.key];
@@ -122,7 +145,7 @@ export function frame(wt, CTX, t) {
       const st = stateAt(C, PLAN.scripts[C.id], t), Kp = skeleton(C, poseFrom(C, st, t, view)), cx = (A.kind === 'pair' ? PAIR[who] : 0) + Kp.headC[0], cy = Kp.headC[1] + 0.35;
       const size = wn.size, WR = Math.round(size * wn.res); ensure(A.w, A.win.tex, WR, WR); const wg = A.wg; wg.setTransform(1, 0, 0, 1, 0, 0); wg.clearRect(0, 0, WR, WR);
       const ox = WR / 2 - cx * wn.res, oy = WR / 2 - cy * wn.res; drawActor(A, wg, wn.res, ox, oy, t, view, camPos, camRight);
-      lightCanvas(A.w, wg, (x, y) => [ox + x * wn.res, oy + y * wn.res], wn.res, lightSide, Math.max(0, Ld.dot(camF)), 'rgb(255,214,160)', 'rgba(120,135,170,1)');
+      lightCanvas(A.w, wg, (x, y) => [ox + x * wn.res, oy + y * wn.res], wn.res, lightSide, Math.max(0, Ld.dot(camF)), PL ? 'rgb(255,250,240)' : 'rgb(255,214,160)', PL ? 'rgba(170,180,200,1)' : 'rgba(120,135,170,1)', PL ? 0.35 : 1);
       A.win.tex.needsUpdate = true; const wm = A.win.mesh; wm.visible = true; wm.scale.set(size * MR, size * MR, 1); const p = local2world(A, Bs, cx, -(cy + size / 2), 0.004); wm.position.copy(p); wm.rotation.set(0, Bs.ry, 0);
        }
     else A.win.mesh.visible = false;

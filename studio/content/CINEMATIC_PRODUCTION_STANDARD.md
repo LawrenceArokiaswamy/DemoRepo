@@ -126,3 +126,27 @@ Design per scene and write it down in the plan: the motivation, then key, fill, 
 8. Owner approval.
 
 **Paid generation (narration, score) is quoted and approved before use.**
+
+---
+## 9. HYBRID REALISM (owner direction 2026-11-17, v2)
+**Direction:** "pixel-realistic" environments with our minimal stick-figure actors, bright and clean.
+
+**Method:**
+1. **Layout.** Block the scene in our 3D set. For each camera setup, render a **character-free layout reference** from a *projector camera*. That camera is slightly wider than the shot and covers the whole move (`stories/bank_dilemma_refs`).
+2. **Plate (Higgsfield).** GPT Image 2.6, high quality, 2K, 9:16, at **2.75 credits** per plate.
+   - The prompt says: "turn this layout render into a real photograph; keep the exact camera, perspective and element positions", plus genre cues (for a bank: queue display, ATMs, teller monitors).
+   - No people.
+   - Fictional signage only.
+3. **Projection (ours, 0 credits).** The plate is projected from its projector camera onto the 3D set (`business.js` `setPlate`).
+   - The set becomes an invisible-looking depth and shadow proxy.
+   - Push-ins, cranes and moderate tilts keep correct parallax.
+   - Characters stand on the real floor and are occluded by real counters.
+   - A shadow-catcher floor receives their real shadows.
+   - **Keep camera moves inside the projector frustum**, or edges smear.
+4. **Actors stay ours.** Bright, clean lighting (high emissive, faint shading, soft white rim). Same acting, eye-lines, lip-sync and face windows. No tone mapping in plate shots, so the photo keeps its true colours.
+5. **Reuse.** Plates are per camera setup. Reuse them for shots from the same setup (CU and ECU on one axis share a plate).
+
+**Budget:**
+- Plates: ≈ 4 for a 15 s sequence; ≈ 10–14 for a 55 s episode.
+- That's 11 credits for the sample, ≈ 28–38 credits per episode.
+- The owner approved 10–20 credits per video. Above that, reuse setups and plates across shots and episodes, and quote first.
