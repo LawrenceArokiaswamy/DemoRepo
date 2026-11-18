@@ -1,0 +1,10 @@
+PSY03 "Napoleon Was Short": credits
+
+Engine: adapted from the Lemo-Opuscar "Halftone Dossier" demo engine (index.html helpers: halftone, chars/charsPop, stamp, caption, HUD, dot wipe, paper, grain).
+  Lemo-Opuscar by Lemomo (LemoLab), https://github.com/lemomo-ai/lemo-opuscar, code under the MIT License.
+  The film's story, script, scenes, characters, timing, score and mix are original to this project. Films made with the library are ours, including commercially, with no credit required (library LICENSE, "Films you make").
+Render, mux, readcheck, srt and sfx tools: Lemo-Opuscar core/ (MIT).
+Voice: Kokoro-82M via kokoro-onnx (Apache-2.0), voice bm_george.
+Fonts (SIL Open Font License 1.1, via Fontsource): Alfa Slab One, Bagel Fat One, JetBrains Mono, Archivo Black.
+Score and sound effects: synthesized in code (mix.py, core/audio/sfx.py). No samples or third-party recordings.
+Facts and sources: FACTS.md.
