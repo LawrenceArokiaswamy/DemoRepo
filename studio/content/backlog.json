@@ -1200,6 +1200,66 @@
    "publication_url": null,
    "performance": null,
    "notes": null
+  },
+  {
+   "id": "PSY02",
+   "working_title": "Is Your Life Scripted?",
+   "category": "Psychology",
+   "premise": "Algorithms, defaults and shelf placement script most everyday choices; nobody needs to control you if they design your defaults.",
+   "hooks": [
+    "You didn't choose the last video you watched.",
+    "In Austria the box was already ticked.",
+    "Nobody has to control you if they design your defaults."
+   ],
+   "target_duration_s": "50-58",
+   "emotional_arc": [
+    "UNEASE",
+    "DISBELIEF",
+    "REFRAME (0.1% myth)",
+    "EMPOWERMENT"
+   ],
+   "key_visual_moments": [
+    "Puppet string on a phone",
+    "12% vs 99.98%",
+    "Pre-ticked box",
+    "Strings from brands to a few hands",
+    "Snapping the string"
+   ],
+   "characters": [
+    "One case-file figure"
+   ],
+   "environments": [
+    "Halftone Dossier case file"
+   ],
+   "props_and_effects": [
+    "phone",
+    "forms",
+    "shelf",
+    "stamps"
+   ],
+   "reusable_assets": [
+    "Lemo-Opuscar Halftone Dossier style"
+   ],
+   "research_sources": [
+    "Johnson & Goldstein (2003) Science 302:1338",
+    "Tubefilter/Quartz Jan 2018 (Neal Mohan, 70%)",
+    "Fed DFA via Center for American Progress 2025",
+    "Oxfam Behind the Brands (2013)",
+    "FTC slotting allowance reports"
+   ],
+   "factual_caveats": [
+    "Organ-donor figures are registered consent, not donations",
+    "70% is a 2018 YouTube statement",
+    "No conspiracy claims; the 0.1% control idea is explicitly answered 'No'"
+   ],
+   "estimated_credits": 0,
+   "estimated_production_days": 1,
+   "editorial_score": null,
+   "research_status": null,
+   "production_status": null,
+   "publication_url": null,
+   "performance": null,
+   "notes": null
   }
  ],
  "content_categories": [
