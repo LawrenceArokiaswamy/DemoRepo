@@ -1146,6 +1146,60 @@
    "publication_url": null,
    "performance": null,
    "notes": "Finale: ties the series loop back to AD01. Publish only if episodes 1-4 build an audience. Proposal: studio/content/AFTER_DARK_series_proposal.md. Do not produce until the owner approves; no credits without approval."
+  },
+  {
+   "id": "PSY01",
+   "working_title": "Your Brain Lies to You (Choice Blindness)",
+   "category": "Psychology",
+   "premise": "Scientists secretly swapped what people chose. Most never noticed, and then explained why they loved the thing they had rejected.",
+   "hooks": [
+    "Pick the face you find more attractive. Quick.",
+    "They handed people the face they REJECTED. Most never noticed.",
+    "What colour was his shirt at the start of this video?"
+   ],
+   "target_duration_s": "50-58",
+   "emotional_arc": [
+    "CURIOUS: a simple choice",
+    "DISBELIEF: nobody noticed the swap",
+    "UNEASE: your reasons are invented after the fact",
+    "PAYOFF: the viewer is fooled by the video itself (shirt colour changed twice)"
+   ],
+   "key_visual_moments": [
+    "Two faces, viewer picks",
+    "The card swap, like a magic trick",
+    "Jam jars: cinnamon-apple vs grapefruit",
+    "Reveal: the shirt changed twice"
+   ],
+   "characters": [
+    "Narrator-led; one recurring 'test subject' figure"
+   ],
+   "environments": [
+    "Stylised lab / case-file world"
+   ],
+   "props_and_effects": [
+    "photo cards",
+    "jam jars",
+    "case-file graphics"
+   ],
+   "reusable_assets": [
+    "Lemo-Opuscar style library (MIT code; films we make are ours)"
+   ],
+   "research_sources": [
+    "Johansson, Hall, Sikström & Olsson (2005) Science 310:116-119",
+    "Hall et al. (2010) Cognition 117(1):54-61",
+    "ScienceDaily 2005-10-07 summary; BPS Research Digest"
+   ],
+   "factual_caveats": [
+    "Quote conservative figures: fewer than 1 in 5 face swaps detected (ScienceDaily summary of the 2005 paper); jam pair cinnamon-apple vs grapefruit: fewer than 20% noticed (BPS digest). Sources differ (10-26%), so never claim a precise single number."
+   ],
+   "estimated_credits": 3,
+   "estimated_production_days": 1,
+   "editorial_score": null,
+   "research_status": null,
+   "production_status": null,
+   "publication_url": null,
+   "performance": null,
+   "notes": null
   }
  ],
  "content_categories": [
