@@ -1,0 +1,272 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Napoleon Was Short</title>
+<style>
+@font-face{font-family:'Slab';src:url(fonts/AlfaSlabOne.woff2) format('woff2');font-display:block}
+@font-face{font-family:'Bagel';src:url(fonts/BagelFatOne.woff2) format('woff2');font-display:block}
+@font-face{font-family:'Mono';font-weight:800;src:url(fonts/JetBrainsMono800.woff2) format('woff2');font-display:block}
+@font-face{font-family:'Sans';src:url(fonts/ArchivoBlack.woff2) format('woff2');font-display:block}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style></head>
+<body><canvas id="c"></canvas>
+<script>
+// PSY03 "Napoleon Was Short": Halftone Dossier style, drawn in Canvas 2D. render(t) is deterministic (no state between frames).
+const W = innerWidth || 1080, H = innerHeight || 1920, cv = document.getElementById('c'); cv.width = W; cv.height = H; const g = cv.getContext('2d');
+const PAPER = '#f2e8d0', INK = '#1b2550', OVER = '#2e63d6', HI = '#ffc933', RED = '#e0402e', SKIN = '#f3c7a1', BRAIN = '#f39bb4';
+// ---------- helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, k) => a + (b - a) * k, seg = (t, a, b) => clamp((t - a) / (b - a));
+const ss = (x) => { x = clamp(x); return x * x * (3 - 2 * x); }, eo = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const back = (x, s = 1.9) => { x = clamp(x); const c = s + 1; return 1 + c * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+// ---------- timeline (single source of truth: measured voice durations) ----------
+let TL = null, TEXTREG = [];
+const GAP = { L01: 0.35, L02: 0.45, L03: 0.5, L04: 0.45, L05: 0.45, L06: 0.45, L07: 0.45, L08: 0.45, L09: 0.5, L10: 1.45, L11: 0.55, L12: 0.85 };
+const CAP = {
+  L01: ['Napoleon was short. You’ve heard it so many times, it just feels true.', 'short'],
+  L02: ['He wasn’t. About 5′6″, or 7. Average for his time.', 'Average'],
+  L03: ['“Tiny Napoleon” came from British cartoons, and a mix-up between French and English inches.', 'British cartoons'],
+  L04: ['So why did you believe it? Because you’d heard it before.', 'heard it before'],
+  L05: ['In 1977, psychologists found that simply repeating a statement makes people rate it as more true.', 'repeating'],
+  L06: ['It’s called the illusory truth effect. Your brain mistakes familiar for true.', 'familiar'],
+  L07: ['In 2015, researchers showed that even knowing the right answer doesn’t fully protect you.', 'knowing'],
+  L08: ['Advertisers know this. Politicians know this. Your group chat runs on it.', 'group chat'],
+  L09: ['Quick test. Is the Great Wall of China visible from space with the naked eye?', 'naked eye'],
+  L10: ['Feels like yes, right? NASA says it’s generally not. You’ve just heard it 100 times.', 'generally not'],
+  L11: ['So next time something feels obviously true, ask: is it true, or just familiar?', 'just familiar'],
+  L12: ['Napoleon was short.', 'short'],
+};
+function buildTL(dur) {
+  const ids = Object.keys(GAP); let t = 0; const L = {};
+  for (const id of ids) { t += GAP[id]; L[id] = { t0: t, t1: t + dur[id], d: dur[id] }; t += dur[id]; }
+  const sc = ids.map((id, i) => ({ id, t0: i === 0 ? 0 : L[id].t0 - 0.3, line: L[id] })); for (let i = 0; i < sc.length; i++) sc[i].t1 = i < sc.length - 1 ? sc[i + 1].t0 : L.L12.t1 + 3.6;
+  return { L, sc, END: L.L12.t1 + 3.6 };
+}
+// ---------- paper ----------
+let PAPERTEX;
+function buildPaper() {
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const p = c.getContext('2d'); p.fillStyle = '#fff'; p.fillRect(0, 0, W, H);
+  const r = mulberry(11), sm = document.createElement('canvas'); sm.width = 60; sm.height = 107; const s = sm.getContext('2d');
+  for (let y = 0; y < 107; y++) for (let x = 0; x < 60; x++) { const v = 238 + r() * 17; s.fillStyle = `rgb(${v},${v - 3},${v - 9})`; s.fillRect(x, y, 1, 1); }
+  p.imageSmoothingEnabled = true; p.globalAlpha = 0.85; p.drawImage(sm, 0, 0, W, H); p.globalAlpha = 1;
+  const id = p.getImageData(0, 0, W, H), d = id.data; for (let i = 0; i < d.length; i += 4) { const n = (r() - 0.5) * 14; d[i] += n + 2; d[i + 1] += n; d[i + 2] += n - 3; } p.putImageData(id, 0, 0);
+  const vg = p.createRadialGradient(W / 2, H / 2, H * 0.3, W / 2, H / 2, H * 0.72); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(80,60,30,0.22)'); p.fillStyle = vg; p.fillRect(0, 0, W, H);
+  p.fillStyle = 'rgba(90,70,40,0.07)'; p.fillRect(0, H * 0.5 - 2, W, 4); p.fillStyle = 'rgba(255,255,255,0.35)'; p.fillRect(0, H * 0.5 + 2, W, 2);
+  PAPERTEX = c;
+}
+// ---------- halftone ----------
+function halftone(x0, y0, w, h, step, ang, col, dens, k = 0.68) {
+  const ca = Math.cos(ang), sa = Math.sin(ang), cx = x0 + w / 2, cy = y0 + h / 2, R = Math.hypot(w, h) / 2 + step; g.beginPath();
+  for (let v = -R; v <= R; v += step) for (let u = -R; u <= R; u += step) {
+    const x = cx + u * ca - v * sa, y = cy + u * sa + v * ca; if (x < x0 - step || x > x0 + w + step || y < y0 - step || y > y0 + h + step) continue;
+    const r = clamp(dens(x, y)) * step * k; if (r < 0.6) continue; g.moveTo(x + r, y); g.arc(x, y, r, 0, 7); }
+  g.fillStyle = col; g.fill();
+}
+// ---------- text ----------
+function font(f, s) { return `${f === 'Mono' ? '800 ' : ''}${s}px ${f}`; }
+function reg(id, text, x0, y0, x1, y1, pass) { TEXTREG.push({ id, text, x0, y0, x1, y1, ...(pass ? { pass: true } : {}) }); }
+function printText(str, x, y, f, s, col = INK, align = 'left', shadow = true, id) {
+  g.font = font(f, s); g.textAlign = align; g.textBaseline = 'alphabetic';
+  if (shadow) { g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = OVER; g.fillText(str, x + s * 0.06, y + s * 0.06); g.restore(); }
+  g.fillStyle = col; g.fillText(str, x, y); const w = g.measureText(str).width, x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+  if (id) reg(id, str, x0, y - s * 0.8, x0 + w, y + s * 0.2); return w;
+}
+// per-character drop-in headline (registered as one full text from its first visible frame)
+function headline(str, x, y, s, t, t0, id, col = INK, f = 'Slab') {
+  if (t < t0) return; g.font = font(f, s); let cx = x; const n = str.length, total = g.measureText(str).width;
+  for (let i = 0; i < n; i++) { const ch = str[i], cw = g.measureText(ch).width, k = seg(t, t0 + i * 0.045, t0 + i * 0.045 + 0.32), b = back(k), sq = 1 + 0.25 * Math.sin(Math.PI * k) * (1 - k);
+    if (k > 0) { g.save(); g.translate(cx + cw / 2, y - (1 - b) * 80); g.scale(1 / sq, sq); g.globalAlpha = k > 0.02 ? 1 : 0; printText(ch, 0, 0, f, s, col, 'center'); g.restore(); } cx += cw; }
+  reg(id, str, x, y - s * 0.8, x + total, y + s * 0.2);
+}
+function wrap(str, maxW) { const words = str.split(' '), lines = []; let cur = ''; for (const w of words) { const tt = cur ? cur + ' ' + w : w; if (g.measureText(tt).width > maxW && cur) { lines.push(cur); cur = w; } else cur = tt; } if (cur) lines.push(cur); return lines; }
+// caption bar: the spoken line (subtitles; checked via .srt, not readcheck)
+function caption(t) {
+  for (const [id, [txt, key]] of Object.entries(CAP)) { const Ln = TL.L[id], t0 = Ln.t0 - 0.1, t1 = Math.max(Ln.t1 + 0.6, Ln.t0 + 1.8); if (t < t0 || t > t1) continue;
+    const k = back(seg(t, t0, t0 + 0.3)), out = seg(t, t1 - 0.15, t1); if (out >= 1) continue; g.font = font('Sans', 42); const lines = wrap(txt, 860), lh = 56, bh = lines.length * lh + 46, bw = 940, x = W / 2, yb = 1415;
+    g.save(); g.translate(x, yb - bh / 2); g.scale(lerp(0.6, 1, k) * (1 - out * 0.4), lerp(0.6, 1, k) * (1 - out * 0.4)); g.globalAlpha = 1 - out;
+    rr(-bw / 2 + 10, -bh / 2 + 10, bw, bh, 36, OVER, true); rr(-bw / 2, -bh / 2, bw, bh, 36, INK);
+    lines.forEach((ln, i) => { const y = -bh / 2 + 23 + (i + 1) * lh - 14; const ki = ln.indexOf(key.split(' ')[0]); g.font = font('Sans', 42); g.textAlign = 'left';
+      let xx = -g.measureText(ln).width / 2; const parts = splitKey(ln, key); for (const [p, hot] of parts) { g.fillStyle = hot ? HI : PAPER; g.fillText(p, xx, y); xx += g.measureText(p).width; } });
+    g.restore(); }
+}
+function splitKey(ln, key) { const i = ln.indexOf(key); if (i < 0) { for (const w of key.split(' ')) { const j = ln.indexOf(w); if (j >= 0) return [[ln.slice(0, j), 0], [w, 1], [ln.slice(j + w.length), 0]]; } return [[ln, 0]]; } return [[ln.slice(0, i), 0], [key, 1], [ln.slice(i + key.length), 0]]; }
+function rr(x, y, w, h, r, col, mult) { g.save(); if (mult) g.globalCompositeOperation = 'multiply'; g.beginPath(); g.roundRect(x, y, w, h, r); g.fillStyle = col; g.fill(); g.restore(); }
+function outline(fill, lw = 7) { g.fillStyle = fill; g.fill(); g.lineWidth = lw; g.strokeStyle = INK; g.lineJoin = 'round'; g.stroke(); }
+// ---------- stamps ----------
+const STAMPC = {};
+function stampTex(text, col, size) { const key = text + col + size; if (STAMPC[key]) return STAMPC[key]; const c = document.createElement('canvas'), p = c.getContext('2d'); p.font = font('Sans', size);
+  const tw = p.measureText(text).width, w = tw + size * 1.4, h = size * 1.9; c.width = w + 20; c.height = h + 20; p.translate(10, 10); p.strokeStyle = col; p.fillStyle = col;
+  p.lineWidth = size * 0.12; p.beginPath(); p.roundRect(0, 0, w, h, size * 0.25); p.stroke(); p.lineWidth = size * 0.05; p.beginPath(); p.roundRect(size * 0.18, size * 0.18, w - size * 0.36, h - size * 0.36, size * 0.15); p.stroke();
+  p.font = font('Sans', size); p.textAlign = 'center'; p.textBaseline = 'middle'; p.fillText(text, w / 2, h / 2 + size * 0.06);
+  p.globalCompositeOperation = 'destination-out'; const r = mulberry(text.length * 31 + size); for (let i = 0; i < w * h / 70; i++) { p.globalAlpha = 0.25 + r() * 0.6; p.fillRect(r() * w, r() * h, 1 + r() * 4, 1 + r() * 3); }
+  return (STAMPC[key] = c); }
+function stamp(text, x, y, t, t0, rot = -0.12, col = RED, size = 92, id) {
+  if (t < t0) return 0; const u = t - t0, sc = u < 0.09 ? lerp(2.6, 1, (u / 0.09) ** 2) : 1 + 0.06 * Math.exp(-u * 14) * Math.cos(u * 40), tex = stampTex(text, col, size);
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(sc, sc); g.globalAlpha = 0.93 * clamp(u / 0.04); g.globalCompositeOperation = 'multiply'; g.drawImage(tex, -tex.width / 2, -tex.height / 2); g.restore();
+  reg(id || 'stamp-' + text, text, x - tex.width / 2, y - tex.height / 2, x + tex.width / 2, y + tex.height / 2); return u;
+}
+// ---------- HUD ----------
+function hud(t, chip, dark) { const c1 = dark ? PAPER : INK, c2 = dark ? INK : PAPER; g.font = font('Mono', 30);
+  const a = 'CASE PSY-03', aw = g.measureText(a).width + 40; rr(60, 196, aw, 56, 28, c1); g.fillStyle = c2; g.textAlign = 'left'; g.fillText(a, 80, 235); reg('hud-case', a, 60, 196, 60 + aw, 252, true);
+  if (chip) { const bw = g.measureText(chip).width + 40; rr(70 + aw, 196, bw, 56, 28, HI); g.fillStyle = INK; g.fillText(chip, 90 + aw, 235); reg('hud-chip-' + chip, chip, 70 + aw, 196, 70 + aw + bw, 252, true); }
+  g.fillStyle = Math.floor(t * 1.6) % 2 ? RED : 'rgba(0,0,0,0)'; g.beginPath(); g.arc(W - 250, 224, 13, 0, 7); g.fill(); g.fillStyle = c1; g.textAlign = 'right'; g.fillText('REC 18.11', W - 64, 235); reg('hud-rec', 'REC 18.11', W - 230, 196, W - 64, 252, true); }
+// ---------- characters (line boil at 10 fps) ----------
+const boil = (t, s) => { const f = Math.floor(t * 10); return [(hash(f * 7.1 + s) - 0.5) * 3, (hash(f * 3.3 + s * 2) - 0.5) * 3]; };
+function napoleon(x, yFeet, hCm, pxPerCm, t, mood = 0) {   // hCm: drawn height; the body is chunky, head ~ 1/4 of height
+  const Hh = hCm * pxPerCm, [bx, by] = boil(t, 1); g.save(); g.translate(x + bx, yFeet + by); const s = Hh / 520; g.scale(s, s);
+  const breath = Math.sin(t * 2.2) * 4;
+  // legs and boots
+  for (const sx of [-40, 40]) { g.beginPath(); g.roundRect(sx - 30, -170, 60, 150, 16); outline('#f4efe4'); g.beginPath(); g.roundRect(sx - 36, -70, 72, 70, 14); outline(INK); }
+  // coat
+  g.beginPath(); g.moveTo(-120, -160); g.quadraticCurveTo(-130, -330 - breath, -90, -360 - breath); g.lineTo(90, -360 - breath); g.quadraticCurveTo(130, -330 - breath, 120, -160); g.quadraticCurveTo(0, -140, -120, -160); g.closePath(); outline(INK);
+  g.beginPath(); g.moveTo(-40, -350 - breath); g.lineTo(40, -350 - breath); g.lineTo(26, -170); g.lineTo(-26, -170); g.closePath(); outline('#f4efe4', 5);   // waistcoat
+  for (let i = 0; i < 4; i++) { g.beginPath(); g.arc(-52, -320 + i * 36, 7, 0, 7); g.fillStyle = HI; g.fill(); g.beginPath(); g.arc(52, -320 + i * 36, 7, 0, 7); g.fill(); }
+  for (const sx of [-1, 1]) { g.beginPath(); g.ellipse(sx * 108, -352 - breath, 44, 18, sx * 0.25, 0, 7); outline(HI, 5); }   // epaulettes
+  g.beginPath(); g.ellipse(-30, -270, 34, 26, 0.3, 0, 7); outline(INK, 5);   // hand in the waistcoat
+  g.beginPath(); g.moveTo(120, -340); g.quadraticCurveTo(160, -260, 128, -190); g.lineWidth = 44; g.strokeStyle = INK; g.lineCap = 'round'; g.stroke(); g.lineWidth = 30; g.strokeStyle = '#26336a'; g.stroke();
+  g.beginPath(); g.arc(128, -184, 20, 0, 7); outline(SKIN, 5);
+  // head
+  const hy = -440 - breath; g.beginPath(); g.ellipse(0, hy, 78, 84, 0, 0, 7); outline(SKIN);
+  g.beginPath(); g.ellipse(0, hy + 20, 52, 30, 0, 0, Math.PI); g.fillStyle = 'rgba(255,255,255,0.25)'; g.fill();
+  const bl = (Math.floor(t * 30) % 100 < 4) ? 0.15 : 1; for (const sx of [-1, 1]) { g.beginPath(); g.ellipse(sx * 26, hy - 6, 13, 17 * bl, 0, 0, 7); g.fillStyle = INK; g.fill(); if (bl > 0.5) { g.beginPath(); g.arc(sx * 26 + 4, hy - 12, 5, 0, 7); g.fillStyle = '#fff'; g.fill(); } }
+  for (const sx of [-1, 1]) { g.beginPath(); g.moveTo(sx * 10, hy - 34 + (mood > 0 ? sx * 5 : 0)); g.lineTo(sx * 44, hy - 38 - (mood > 0 ? sx * 5 : 0)); g.lineWidth = 9; g.strokeStyle = INK; g.stroke(); }
+  g.beginPath(); g.moveTo(-16, hy + 38); g.quadraticCurveTo(0, hy + 38 + (mood < 0 ? -8 : 8), 16, hy + 38); g.lineWidth = 7; g.stroke();
+  g.beginPath(); g.moveTo(-60, hy - 60); g.quadraticCurveTo(-30, hy - 100, 30, hy - 82); g.lineTo(10, hy - 60); g.closePath(); g.fillStyle = INK; g.fill();   // curl of hair
+  // bicorne
+  g.beginPath(); g.moveTo(-150, hy - 62); g.quadraticCurveTo(0, hy - 210, 150, hy - 62); g.quadraticCurveTo(0, hy - 100, -150, hy - 62); outline(INK);
+  g.beginPath(); g.arc(70, hy - 112, 16, 0, 7); outline(RED, 4); g.beginPath(); g.arc(70, hy - 112, 7, 0, 7); g.fillStyle = PAPER; g.fill();
+  g.restore();
+}
+function brain(x, y, s, t, mood = 0) {   // mood: 0 neutral, 1 nod, -1 worried
+  const [bx, by] = boil(t, 9); g.save(); g.translate(x + bx, y + by + (mood === 1 ? Math.abs(Math.sin(t * 5)) * -14 : 0)); g.scale(s, s);
+  g.beginPath(); for (let i = 0; i <= 14; i++) { const a = Math.PI + i / 14 * Math.PI, r = 150 + (i % 2 ? 14 : -6); g.lineTo(Math.cos(a) * 190 * r / 150, Math.sin(a) * 140 * r / 150 + 10); } g.quadraticCurveTo(190, 120, 0, 120); g.quadraticCurveTo(-190, 120, -200, 10); g.closePath(); outline(BRAIN);
+  g.save(); g.clip(); halftone(-210, -160, 420, 290, 18, 0.5, 'rgba(200,80,120,0.55)', (xx, yy) => 0.15 + 0.5 * clamp((yy - 0) / 150)); g.restore();
+  g.lineWidth = 6; g.strokeStyle = INK; for (const [a, b, c, d] of [[-120, -60, -70, -10], [-40, -100, 10, -40], [60, -70, 120, -20], [-140, 30, -80, 60], [80, 20, 140, 50]]) { g.beginPath(); g.moveTo(a, b); g.quadraticCurveTo((a + c) / 2 + 30, (b + d) / 2 - 30, c, d); g.stroke(); }
+  g.beginPath(); g.moveTo(0, -120); g.quadraticCurveTo(-14, 0, 0, 110); g.stroke();
+  const bl = (Math.floor(t * 30) % 90 < 4) ? 0.12 : 1; for (const sx of [-1, 1]) { g.beginPath(); g.ellipse(sx * 55, 30, 24, 30 * bl, 0, 0, 7); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 5; g.stroke(); if (bl > 0.5) { g.beginPath(); g.arc(sx * 55 + (mood === -1 ? -6 : 4), 34, 12, 0, 7); g.fillStyle = INK; g.fill(); g.beginPath(); g.arc(sx * 55 + 8, 27, 4, 0, 7); g.fillStyle = '#fff'; g.fill(); } }
+  for (const sx of [-1, 1]) { g.beginPath(); g.moveTo(sx * 30, -10 + (mood === -1 ? -sx * 6 : 0)); g.lineTo(sx * 80, -18 + (mood === -1 ? sx * 8 : 0)); g.lineWidth = 8; g.stroke(); }
+  g.beginPath(); g.moveTo(-26, 88); g.quadraticCurveTo(0, mood === -1 ? 78 : 100, 26, 88); g.lineWidth = 6; g.stroke();
+  g.restore();
+}
+// ---------- height chart ----------
+function chart(yFloor, pxPerCm, x0 = 120, x1 = 960) { g.lineWidth = 3; g.strokeStyle = INK; g.font = font('Mono', 26); g.fillStyle = INK; g.textAlign = 'left';
+  for (let cm = 0; cm <= 200; cm += 10) { const y = yFloor - cm * pxPerCm; g.globalAlpha = cm % 50 ? 0.35 : 0.9; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); if (cm % 50 === 0 && cm) { g.globalAlpha = 1; g.fillText(cm + ' cm', x1 - 120, y - 8); } } g.globalAlpha = 1; }
+// ---------- dot wipe ----------
+function dotWipe(t, tc, col = INK) { const d = 0.44, u = (t - (tc - d / 2)) / d; if (u <= 0 || u >= 1) return; const step = 120;
+  g.beginPath(); for (let y = -step; y < H + step; y += step) for (let x = -step; x < W + step; x += step) { const delay = (x / W + y / H) * 0.18, k = clamp((u - delay) / 0.64), r = Math.sin(Math.PI * k) * step * 0.75; if (r > 0) { g.moveTo(x + r, y); g.arc(x, y, r, 0, 7); } } g.fillStyle = col; g.fill(); }
+// ---------- scenes ----------
+const SCN = {};
+SCN.L01 = (u, t, S) => { const pxcm = 4.2, yF = 1250; chart(yF, pxcm); napoleon(560, yF, 125, pxcm, t, -1); plate('SUSPECT: N. BONAPARTE', 560, 1300, t);
+  headline('NAPOLEON', 70, 470, 150, u, 0.2, 'h1a'); headline('WAS SHORT.', 70, 620, 150, u, 0.65, 'h1b'); stamp('EVERYONE KNOWS', 700, 860, u, S.line.d - 0.6 + 0.3, 0.1, RED, 64);
+  halftone(0, 0, W, H, 24, 0.3, 'rgba(46,99,214,0.18)', (x, y) => 0.5 * clamp(1 - Math.hypot(x - 560, y - 1000) / 520)); };
+SCN.L02 = (u, t, S) => { const pxcm = 4.2, yF = 1250, gk = ss(seg(u, 0.6, 3.0)), hcm = lerp(125, 169, gk); bigNum("5'7\"", 540, 900, u, 0.1);
+  chart(yF, pxcm); g.save(); g.setLineDash([18, 14]); g.lineWidth = 6; g.strokeStyle = OVER; const ah = 165 * pxcm; g.beginPath(); g.ellipse(810, yF - ah + 60, 52, 60, 0, 0, 7); g.moveTo(760, yF - ah + 130); g.lineTo(860, yF - ah + 130); g.lineTo(880, yF); g.moveTo(740, yF); g.lineTo(760, yF - ah + 130); g.stroke(); g.restore();
+  g.font = font('Mono', 26); g.fillStyle = OVER; g.textAlign = 'center'; g.fillText('TYPICAL MAN, c.1800', 810, yF + 50); reg('typ', 'TYPICAL MAN, c.1800', 640, yF + 25, 980, yF + 60);
+  napoleon(430, yF, hcm, pxcm, t, gk > 0.95 ? 1 : 0); const yTop = yF - hcm * pxcm; g.lineWidth = 6; g.strokeStyle = RED; g.beginPath(); g.moveTo(250, yTop); g.lineTo(610, yTop); g.stroke();
+  g.font = font('Bagel', 64); g.fillStyle = RED; g.textAlign = 'left'; g.fillText(Math.round(hcm) + ' cm', 120, yTop - 16); reg('cm', '169 cm', 120, yTop - 70, 330, yTop, true);
+  plate('SUSPECT: N. BONAPARTE', 430, 1300, t); stamp('AVERAGE', 540, 640, u, S.line.d + 0.05, -0.1, RED, 96); };
+SCN.L03 = (u, t, S) => { const pan = ss(seg(u, 2.4, 3.6)) * -560; g.save(); g.translate(0, pan);
+  // exhibit A: a printed cartoon sheet (our own generic drawing)
+  g.save(); g.translate(540, 760); g.rotate(-0.04); g.beginPath(); g.rect(-360, -300, 720, 600); outline('#fbf6e8', 6); g.save(); g.beginPath(); g.rect(-340, -280, 680, 470); g.clip();
+  halftone(-340, -280, 680, 470, 16, 0.8, 'rgba(27,37,80,0.35)', (x, y) => 0.25 + 0.3 * Math.sin(x * 0.01));
+  g.restore(); g.translate(0, 120); g.scale(0.55, 0.55); napoleon(0, 60, 60, 4.2 * 2.2, t, -1); g.restore();
+  g.save(); g.translate(540, 760); g.rotate(-0.04); printText('THE LITTLE TYRANT', 0, 250, 'Slab', 44, INK, 'center', false, 'print-title'); g.restore();
+  pin(250, 470); pin(830, 450); printText('EXHIBIT A', 70, 420, 'Bagel', 64, OVER, 'left', true, 'exA');
+  // rulers: French pouce vs English inch (x 120 px per cm)
+  const yR = 1250, k = 120; ruler(160, yR, 2.707 * k, '1 FRENCH INCH', '2.71 cm', u, 2.9, HI); ruler(160, yR + 170, 2.54 * k, '1 ENGLISH INCH', '2.54 cm', u, 3.3, PAPER);
+  headline('PROPAGANDA', 70, 1060, 104, u, 0.3, 'h3a'); headline('+ BAD MATH', 70, 1680, 104, u, 3.6, 'h3b', RED); g.restore(); };
+SCN.L04 = (u, t, S) => { chart(1250, 4.2); brain(540, 940, 1.15, t, -1); plate('SUSPECT: YOUR BRAIN', 540, 1300, t); headline('THE REAL', 70, 470, 140, u, 0.15, 'h4a'); headline('SUSPECT', 70, 610, 140, u, 0.5, 'h4b', RED); };
+SCN.L05 = (u, t, S) => { bigNum('1977', 540, 820, u, 0.05); printText('EXHIBIT B', 70, 420, 'Bagel', 64, OVER, 'left', true, 'exB');
+  const times = [1.1, 2.6, 4.1]; times.forEach((tc, i) => { if (u < tc) return; const k = back(seg(u, tc, tc + 0.35)); g.save(); g.translate(250 + i * 290, 1030 + (1 - k) * 300); g.rotate((i - 1) * 0.07); g.beginPath(); g.roundRect(-125, -150, 250, 300, 18); outline('#fbf6e8', 6);
+    g.font = font('Mono', 26); g.fillStyle = INK; g.textAlign = 'center'; g.fillText('WEEK ' + i * 2, 0, -100); g.font = font('Slab', 40); g.fillText('“THE', 0, -20); g.fillText('SAME', 0, 30); g.fillText('CLAIM”', 0, 80); g.restore(); reg('card' + i, 'WEEK ' + i * 2 + ' “THE SAME CLAIM”', 125 + i * 290, 880, 375 + i * 290, 1180, true); });
+  meter(540, 1280, 0.35 + 0.15 * times.filter((x) => u > x + 0.3).length, u); headline('REPEAT IT', 70, 560, 120, u, 0.2, 'h5'); };
+SCN.L06 = (u, t, S) => { halftone(0, 0, W, H, 22, 0.6, 'rgba(46,99,214,0.25)', (x, y) => 0.15 + 0.6 * seg(u, 0, S.line.d) * clamp(1 - Math.hypot(x - 540, y - 1000) / 700));
+  headline('ILLUSORY', 70, 500, 140, u, 0.1, 'h6a'); headline('TRUTH EFFECT', 70, 650, 118, u, 0.55, 'h6b', OVER);
+  if (u > 1.9) { const k = back(seg(u, 1.9, 2.25)); g.save(); g.translate(540, 1010); g.scale(k, k); g.beginPath(); g.roundRect(-430, -120, 860, 240, 30); outline(HI, 7); printText('FAMILIAR = TRUE?', 0, 30, 'Slab', 76, INK, 'center', false, 'eq'); g.restore(); }
+  stamp('FALSE', 560, 1020, u, S.line.d - 0.2, -0.16, RED, 120); };
+SCN.L07 = (u, t, S) => { bigNum('2015', 540, 780, u, 0.05); printText('EXHIBIT C', 70, 420, 'Bagel', 64, OVER, 'left', true, 'exC');
+  brain(540, 1040, 0.95, t, u > 2.2 ? 1 : 0); g.save(); g.translate(300, 1230); g.rotate(-0.15); g.beginPath(); g.roundRect(-110, -70, 220, 140, 12); outline(OVER, 6); g.font = font('Mono', 22); g.fillStyle = PAPER; g.textAlign = 'center'; g.fillText('CORRECT', 0, -8); g.fillText('ANSWERS', 0, 24); g.restore(); reg('book', 'CORRECT ANSWERS', 190, 1160, 410, 1300, true);
+  [1.2, 2.0, 2.8].forEach((tc, i) => { if (u < tc) return; const k = back(seg(u, tc, tc + 0.3)); g.save(); g.translate(790, 840 + i * 120); g.scale(k, k); g.beginPath(); g.roundRect(-150, -42, 300, 84, 42); outline(PAPER, 6); printText('LIE, AGAIN', 0, 14, 'Sans', 34, RED, 'center', false); g.restore(); });
+  headline('KNOWING', 70, 570, 120, u, 0.2, 'h7a'); stamp('STILL FOOLED', 560, 760, u, S.line.d - 0.1, 0.08, RED, 70); };
+SCN.L08 = (u, t, S) => { const pan = ss(seg(u, 0.2, 4.4)) * -260, shake = shk(u, S.line.d - 0.2); g.save(); g.translate(shake[0], pan + shake[1]);
+  const items = [[260, 520, 'billboard'], [800, 600, 'mic'], [300, 900, 'chat'], [800, 980, 'chat2']], bx = 540, by = 1500;
+  items.forEach(([x, y, kind], i) => { const tc = 0.3 + i * 1.0; if (u < tc) return; const k = back(seg(u, tc, tc + 0.3)); g.save(); g.translate(x, y); g.scale(k, k); exhibitIcon(kind); g.restore(); pin(x, y - 130);
+    const sk = ss(seg(u, tc + 0.2, tc + 0.8)); g.beginPath(); g.moveTo(x, y + 60); g.lineTo(lerp(x, bx, sk), lerp(y + 60, by - 150, sk)); g.lineWidth = 5; g.strokeStyle = RED; g.stroke(); });
+  brain(bx, by, 0.6, t, -1); g.restore(); headline('IT’S EVERYWHERE', 70, 400, 92, u, 0.1, 'h8'); };
+SCN.L09 = (u, t, S) => { g.fillStyle = INK; g.fillRect(0, 0, W, H); halftone(0, 0, W, H, 20, 0.4, OVER, (x, y) => 0.12 + 0.55 * clamp(1 - Math.hypot(x - 540, y - 2600) / 1100));
+  g.save(); g.beginPath(); g.arc(540, 2650, 1150, 0, 7); g.fillStyle = '#26408f'; g.fill(); g.clip(); halftone(0, 1400, W, 600, 18, 1.1, '#5f8ef0', (x, y) => 0.25 + 0.4 * hash(Math.floor(x / 90) + Math.floor(y / 90) * 13)); g.restore();
+  g.beginPath(); g.arc(540, 2650, 1150, Math.PI * 1.1, Math.PI * 1.9); g.lineWidth = 8; g.strokeStyle = PAPER; g.stroke();
+  printText('QUICK TEST', 540, 470, 'Slab', 110, HI, 'center', false, 'qt');
+  if (u > 0.8) { const k = back(seg(u, 0.8, 1.15)); g.save(); g.translate(540, 820); g.scale(k, k); g.beginPath(); g.roundRect(-450, -190, 900, 380, 30); outline(PAPER, 7);
+    ['IS THE GREAT WALL', 'VISIBLE FROM SPACE', 'WITH THE NAKED EYE?'].forEach((ln, i) => printText(ln, 0, -80 + i * 80, 'Slab', 60, INK, 'center', false)); g.restore(); reg('q', 'IS THE GREAT WALL VISIBLE FROM SPACE WITH THE NAKED EYE?', 90, 630, 990, 1010); }
+  if (u > 2.6) { const k = back(seg(u, 2.6, 2.9)); for (const [lab, x, c] of [['YES', 340, HI], ['NO', 740, PAPER]]) { g.save(); g.translate(x, 1120); g.scale(k, k); g.beginPath(); g.roundRect(-150, -60, 300, 120, 60); outline(c, 7); printText(lab, 0, 22, 'Sans', 56, INK, 'center', false); g.restore(); } reg('yn', 'YES NO', 190, 1060, 890, 1180, true); }
+  const tq = S.line.d + 0.1; if (u > tq) { const left = 3 - Math.floor((u - tq) / 0.45); const kk = (u - tq) / 1.35; g.beginPath(); g.arc(540, 1300, 70, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (1 - clamp(kk))); g.lineWidth = 14; g.strokeStyle = RED; g.stroke(); if (left > 0) printText(String(left), 540, 1325, 'Bagel', 70, PAPER, 'center', false); } };
+SCN.L10 = (u, t, S) => { const sh = shk(u, 0.0); g.save(); g.translate(sh[0], sh[1]); stamp('NOT VISIBLE*', 540, 760, u, 0.0, -0.08, RED, 112); g.font = font('Mono', 30); g.fillStyle = INK; g.textAlign = 'center'; g.fillText('* naked eye, low Earth orbit (NASA)', 540, 900); reg('nasa', '* naked eye, low Earth orbit (NASA)', 160, 870, 920, 910);
+  const n = Math.round(100 * ss(seg(u, 2.6, S.line.d - 0.2))); if (u > 2.4) { printText('HEARD IT:', 540, 1120, 'Slab', 80, INK, 'center', true); bigCounter(n + '×', 540, 1250); reg('heard', 'HEARD IT: 100×', 200, 1050, 880, 1280, true); } g.restore(); };
+SCN.L11 = (u, t, S) => { const pb = 1 - 0.08 * ss(seg(u, 0, 2)); g.save(); g.translate(540, 1000); g.scale(pb, pb); g.translate(-540, -1000);
+  g.beginPath(); g.roundRect(200, 760, 680, 600, 20); outline('#d9cdb0', 7); [['TRUE', 900], ['FAMILIAR', 1180]].forEach(([lab, y], i) => { g.beginPath(); g.roundRect(240, y - 120, 600, 230, 16); outline(i ? HI : PAPER, 6); g.beginPath(); g.roundRect(470, y - 20, 140, 26, 13); outline(INK, 3); printText(lab, 540, y + 70, 'Sans', 56, INK, 'center', false, 'dr' + i); });
+  const cx = 540 + Math.sin(u * 3.2) * 220 * (1 - seg(u, 3.8, 4.6)), cyy = 620; g.save(); g.translate(cx, cyy); g.rotate(Math.sin(u * 3.2) * 0.12); g.beginPath(); g.roundRect(-190, -70, 380, 140, 14); outline(PAPER, 6); printText('OBVIOUSLY TRUE?', 0, 14, 'Sans', 40, RED, 'center', false); g.restore(); g.restore();
+  headline('TRUE?', 70, 470, 130, u, 0.2, 'h11a'); headline('OR JUST FAMILIAR?', 70, 1640, 84, u, S.line.d - 1.6, 'h11b', OVER); reg('card11', 'OBVIOUSLY TRUE?', 350, 550, 730, 690, true); };
+SCN.L12 = (u, t, S) => { const pxcm = 4.2, yF = 1250; chart(yF, pxcm); napoleon(560, yF, 169, pxcm, t, 0); plate('SUSPECT: N. BONAPARTE', 560, 1300, t);
+  headline('NAPOLEON', 70, 470, 150, u, 0.05, 'h12a'); headline('WAS SHORT.', 70, 620, 150, u, 0.45, 'h12b'); stamp('WAS HE?', 640, 760, u, S.line.d + 0.5, -0.14, RED, 120);
+  if (u > S.line.d + 2.0) { g.font = font('Mono', 28); g.fillStyle = INK; g.textAlign = 'center'; g.fillText('SOURCES IN THE DESCRIPTION', 540, 1700); reg('src', 'SOURCES IN THE DESCRIPTION', 300, 1675, 780, 1710, true); } };
+// scene props
+function plate(txt, x, y, t) { g.font = font('Mono', 32); const w = g.measureText(txt).width + 60; rr(x - w / 2 + 8, y + 8, w, 70, 12, OVER, true); rr(x - w / 2, y, w, 70, 12, INK); g.fillStyle = PAPER; g.textAlign = 'center'; g.fillText(txt, x, y + 47); reg('plate-' + txt, txt, x - w / 2, y, x + w / 2, y + 70); }
+function bigNum(txt, x, y, u, t0) { const k = back(seg(u, t0, t0 + 0.4)); g.save(); g.translate(x, y); g.scale(k, k); g.font = font('Bagel', 420); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(255,201,51,0.55)'; g.fillText(txt, 0, 0);
+  const w = g.measureText(txt).width; g.save(); g.beginPath(); g.rect(-w / 2, -230, w, 460); g.clip(); g.globalCompositeOperation = 'source-atop'; g.restore(); g.restore(); reg('big-' + txt, txt, x - 400, y - 200, x + 400, y + 200, true); }
+function bigCounter(txt, x, y) { g.font = font('Bagel', 230); g.textAlign = 'center'; g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = OVER; g.fillText(txt, x + 12, y + 12); g.restore(); g.fillStyle = RED; g.fillText(txt, x, y); }
+function pin(x, y) { g.beginPath(); g.arc(x, y, 16, 0, 7); outline(RED, 5); g.beginPath(); g.arc(x - 5, y - 5, 5, 0, 7); g.fillStyle = '#fff'; g.fill(); }
+function ruler(x, y, len, lab, val, u, t0, col) { const k = ss(seg(u, t0, t0 + 0.5)), L = len * k; g.beginPath(); g.roundRect(x, y, Math.max(1, L), 70, 8); outline(col, 6); for (let i = 0; i <= 10; i++) { if (i / 10 > k) break; g.beginPath(); g.moveTo(x + len * i / 10, y); g.lineTo(x + len * i / 10, y + (i % 5 ? 22 : 38)); g.lineWidth = 4; g.strokeStyle = INK; g.stroke(); }
+  if (k > 0.05) { printText(lab, x, y - 18, 'Mono', 32, INK, 'left', false, 'r-' + lab); printText(val, x + L + 24, y + 52, 'Bagel', 56, RED, 'left', false, 'v-' + lab); } }
+function meter(x, y, v, u) { g.beginPath(); g.roundRect(x - 380, y - 40, 760, 80, 40); outline(PAPER, 6); g.beginPath(); g.roundRect(x - 372, y - 32, 744 * clamp(v), 64, 32); g.fillStyle = HI; g.fill(); g.font = font('Mono', 30); g.fillStyle = INK; g.textAlign = 'left'; g.fillText('FEELS TRUE', x - 380, y - 60); reg('meter', 'FEELS TRUE', x - 380, y - 95, x - 150, y - 55); }
+function exhibitIcon(kind) { if (kind === 'billboard') { g.beginPath(); g.rect(-180, -110, 360, 200); outline(HI, 7); printText('SAY IT', 0, -20, 'Slab', 54, INK, 'center', false); printText('AGAIN!', 0, 50, 'Slab', 54, RED, 'center', false); g.lineWidth = 10; g.beginPath(); g.moveTo(-100, 90); g.lineTo(-100, 160); g.moveTo(100, 90); g.lineTo(100, 160); g.strokeStyle = INK; g.stroke(); }
+  if (kind === 'mic') { g.beginPath(); g.roundRect(-110, 0, 220, 150, 12); outline(OVER, 7); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -80); g.lineWidth = 10; g.strokeStyle = INK; g.stroke(); g.beginPath(); g.ellipse(0, -110, 32, 44, 0, 0, 7); outline(INK, 5); printText('VOTE', 0, 95, 'Sans', 44, PAPER, 'center', false); }
+  if (kind === 'chat' || kind === 'chat2') { g.beginPath(); g.roundRect(-170, -120, 340, 230, 34); outline('#fbf6e8', 7); for (let i = 0; i < 3; i++) { g.beginPath(); g.roundRect(-140, -95 + i * 68, 260, 52, 26); g.fillStyle = i % 2 ? HI : '#d9e2fb'; g.fill(); g.font = font('Mono', 22); g.fillStyle = INK; g.textAlign = 'left'; g.fillText(kind === 'chat' ? 'fwd: fwd: fwd:' : 'did u know…', -120, -62 + i * 68); } } }
+function shk(u, t0) { const d = u - t0; if (d < 0 || d > 0.5) return [0, 0]; const a = 22 * (1 - d / 0.5) ** 2; return [Math.sin(d * 90) * a, Math.cos(d * 70) * a]; }
+// ---------- frame ----------
+function flashAt(t) { let f = 0; for (const [tc, a] of FLASH) { const d = t - tc; if (d >= 0 && d < 0.25) f = Math.max(f, a * (1 - d / 0.25)); } return f; }
+let FLASH = [], CUTS = [];
+window.render = (t) => {
+  TEXTREG = []; g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.fillStyle = PAPER; g.fillRect(0, 0, W, H);
+  const S = TL.sc.find((s) => t >= s.t0 && t < s.t1) || TL.sc[TL.sc.length - 1], u = t - S.line.t0, dark = S.id === 'L09';
+  // camera: gentle push per scene + beat pulse
+  const push = 1 + 0.035 * ss(seg(t, S.t0, S.t1)) + 0.004 * Math.max(0, Math.sin(t * Math.PI * 2 * 100 / 60)) ** 8;
+  g.save(); g.translate(W / 2, H / 2); g.scale(push, push); g.translate(-W / 2, -H / 2);
+  SCN[S.id](u, t, S); g.restore();
+  hud(t, { L03: 'EXHIBIT A', L05: 'EXHIBIT B', L07: 'EXHIBIT C', L09: 'TEST', L10: 'RESULT' }[S.id], dark);
+  caption(t);
+  // paper multiply over everything + dust
+  g.save(); g.globalCompositeOperation = 'multiply'; g.drawImage(PAPERTEX, 0, 0); g.restore();
+  const r = mulberry(Math.floor(t * 15) + 3); for (let i = 0; i < 260; i++) { g.fillStyle = i % 5 ? 'rgba(242,232,208,0.8)' : 'rgba(27,37,80,0.35)'; g.fillRect(r() * W, r() * H, 1 + r() * 2.5, 1 + r() * 2.5); }
+  for (const c of CUTS) if (c.wipe) dotWipe(t, c.t, c.col);
+  const f = flashAt(t); if (f > 0) { g.fillStyle = `rgba(255,255,255,${f})`; g.fillRect(0, 0, W, H); }
+  if (t > TL.END - 0.5) { g.fillStyle = `rgba(27,37,80,${seg(t, TL.END - 0.5, TL.END)})`; g.fillRect(0, 0, W, H); }
+};
+window.TEXTS = (t) => { window.render(t); return TEXTREG; };
+// ---------- load ----------
+(async () => {
+  const dur = await (await fetch('voice/dur.json')).json(); TL = buildTL(dur); window.DUR = +TL.END.toFixed(3);
+  const L = TL.L, ev = [];
+  for (const [id, v] of Object.entries(L)) ev.push({ t: v.t0, type: 'voice', id });
+  // scene changes: hard cuts on the two big hits (L04, L10), dot wipes elsewhere
+  TL.sc.forEach((s, i) => { if (i === 0) return; const hard = s.id === 'L04' || s.id === 'L10'; const col = [INK, OVER, RED, HI][i % 4]; CUTS.push({ t: s.t0, wipe: !hard, col }); ev.push({ t: hard ? s.t0 : s.t0 - 0.2, type: hard ? 'hit' : 'whoosh' }); });
+  // flashes and shutters (mugshots), stamps, cards, rulers, counter, clock
+  for (const [id, tt] of [['L01', 0.1], ['L04', 0.0], ['L12', 0.0]]) { FLASH.push([L[id].t0 + tt, 0.45]); ev.push({ t: L[id].t0 + tt, type: 'shutter' }); }
+  const st = (id, dt, big = 0) => ev.push({ t: L[id].t0 + dt, type: 'stamp', big });
+  st('L01', L.L01.d - 0.3); st('L02', L.L02.d + 0.05); st('L06', L.L06.d - 0.2); st('L07', L.L07.d - 0.1); st('L10', 0.0, 1); st('L12', L.L12.d + 0.5, 1);
+  FLASH.push([L.L12.t0 + L.L12.d + 0.5, 0.4]);
+  for (let k = 0; k < 16; k++) ev.push({ t: L.L02.t0 + 0.6 + k * 0.15, type: 'tick', v: 0.5 });
+  for (const tt of [2.9, 3.3]) ev.push({ t: L.L03.t0 + tt, type: 'slide' }); ev.push({ t: L.L03.t0 + 2.4, type: 'paper' });
+  for (const tt of [1.1, 2.6, 4.1]) ev.push({ t: L.L05.t0 + tt, type: 'slap' });
+  ev.push({ t: L.L06.t0 + 1.9, type: 'pop' }); for (const tt of [1.2, 2.0, 2.8]) ev.push({ t: L.L07.t0 + tt, type: 'pop' });
+  for (let i = 0; i < 4; i++) ev.push({ t: L.L08.t0 + 0.5 + i, type: 'pluck', i }); ev.push({ t: L.L08.t0 + L.L08.d - 0.2, type: 'thud' });
+  for (let i = 0; i < 3; i++) ev.push({ t: L.L09.t0 + L.L09.d + 0.1 + i * 0.45, type: 'clock' });
+  for (let i = 0; i < 12; i++) ev.push({ t: L.L10.t0 + 2.6 + i * (L.L10.d - 2.8) / 12, type: 'tick', v: 0.35 });
+  ev.push({ t: L.L12.t0 + L.L12.d + 1.0, type: 'bell' });
+  // music sections (seconds) for the score
+  ev.push({ t: 0, type: 'music', sec: 'A' }, { t: L.L04.t0, type: 'music', sec: 'B' }, { t: L.L08.t0, type: 'music', sec: 'C' }, { t: L.L09.t0, type: 'music', sec: 'silent' }, { t: L.L10.t0, type: 'music', sec: 'A' }, { t: L.L11.t0, type: 'music', sec: 'pad' }, { t: L.L12.t0, type: 'music', sec: 'silent' }, { t: L.L12.t0 + L.L12.d + 0.5, type: 'music', sec: 'tag' });
+  window.EV = ev.sort((a, b) => a.t - b.t); window.CAPS = Object.entries(CAP).map(([id, [text]]) => ({ t0: L[id].t0 - 0.1, t1: Math.max(L[id].t1 + 0.6, L[id].t0 + 1.8), text }));
+  buildPaper();
+  await Promise.all([['Slab', 'NAPOLEON'], ['Bagel', '1977'], ['Mono', 'CASE'], ['Sans', 'Quick']].map(([f, s]) => document.fonts.load(font(f, 40), s)));
+  await document.fonts.ready; window.READY = true;
+})();
+</script></body></html>

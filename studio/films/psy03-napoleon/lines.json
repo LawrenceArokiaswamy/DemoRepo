@@ -1,0 +1,74 @@
+[
+ {
+  "id": "L01",
+  "text": "Napoleon was short. You've heard it so many times, it just feels true.",
+  "voice": "bm_george",
+  "speed": 1.026
+ },
+ {
+  "id": "L02",
+  "text": "He wasn't. About five foot six, or seven. Average for his time.",
+  "voice": "bm_george",
+  "speed": 1.026
+ },
+ {
+  "id": "L03",
+  "text": "Tiny Napoleon came from British cartoons, and a mix-up between French and English inches.",
+  "voice": "bm_george",
+  "speed": 1.058
+ },
+ {
+  "id": "L04",
+  "text": "So why did you believe it? Because you'd heard it before.",
+  "voice": "bm_george",
+  "speed": 1.026
+ },
+ {
+  "id": "L05",
+  "text": "In nineteen seventy-seven, psychologists found that simply repeating a statement makes people rate it as more true.",
+  "voice": "bm_george",
+  "speed": 1.08
+ },
+ {
+  "id": "L06",
+  "text": "It's called the illusory truth effect. Your brain mistakes familiar for true.",
+  "voice": "bm_george",
+  "speed": 1.026
+ },
+ {
+  "id": "L07",
+  "text": "In twenty fifteen, researchers showed that even knowing the right answer doesn't fully protect you.",
+  "voice": "bm_george",
+  "speed": 1.08
+ },
+ {
+  "id": "L08",
+  "text": "Advertisers know this. Politicians know this. Your group chat runs on it.",
+  "voice": "bm_george",
+  "speed": 1.058
+ },
+ {
+  "id": "L09",
+  "text": "Quick test. Is the Great Wall of China visible from space with the naked eye?",
+  "voice": "bm_george",
+  "speed": 1.026
+ },
+ {
+  "id": "L10",
+  "text": "Feels like yes, right? NASA says it's generally not. You've just heard it a hundred times.",
+  "voice": "bm_george",
+  "speed": 1.058
+ },
+ {
+  "id": "L11",
+  "text": "So next time something feels obviously true, ask: is it true, or just familiar?",
+  "voice": "bm_george",
+  "speed": 1.004
+ },
+ {
+  "id": "L12",
+  "text": "Napoleon was short.",
+  "voice": "bm_george",
+  "speed": 0.972
+ }
+]
