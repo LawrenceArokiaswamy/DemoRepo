@@ -57,10 +57,10 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
 
       <div className="card">
         <div className="spread" style={{ marginBottom: 6 }}>
-          <h2 style={{ margin: 0 }}>Your knowledge map</h2>
+          <h2 style={{ margin: 0 }}>Your brain on <span className="gradient-text">{course.title}</span></h2>
           <span className="small muted">{view.placementDone ? "Placement complete" : view.started ? "Placement in progress" : "Not started"}</span>
         </div>
-        <p className="small muted">Each concept rests on the ones above it. The bar shows how well you can recall it right now.</p>
+        <p className="small muted">Every neuron is a concept. Foundations sit at the core; ideas built on them radiate outward. Neurons glow brighter as you master them, and signals fire along the connections you've built.</p>
         <KnowledgeMap concepts={concepts} />
       </div>
 

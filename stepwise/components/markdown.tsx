@@ -1,6 +1,25 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 
-/** Renders generated content. Raw HTML in the source is not rendered. */
+/**
+ * Renders AI-generated content safely: raw HTML is never rendered, unsafe URL
+ * schemes (javascript:, data:) are stripped, and images are not loaded.
+ */
 export function Md({ children }: { children: string }) {
-  return <ReactMarkdown>{children}</ReactMarkdown>;
+  return (
+    <ReactMarkdown
+      skipHtml
+      urlTransform={defaultUrlTransform}
+      disallowedElements={["img"]}
+      unwrapDisallowed
+      components={{
+        a: ({ href, children: c }) => (
+          <a href={href} target="_blank" rel="noopener noreferrer nofollow ugc">
+            {c}
+          </a>
+        ),
+      }}
+    >
+      {children}
+    </ReactMarkdown>
+  );
 }

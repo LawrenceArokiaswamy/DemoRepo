@@ -36,7 +36,7 @@ const now = () => Date.now();
 
 // ---------------------------------------------------------------- courses
 
-export async function createCourse(topic: string, goal: string): Promise<CourseRecord> {
+export async function createCourse(topic: string, goal: string, ownerId: string): Promise<CourseRecord> {
   const draft = await getProvider().generateCourse(topic, goal);
   const usedMisconceptionIds = new Set<string>();
   const graph: CourseGraph = validateGraph({
@@ -56,7 +56,8 @@ export async function createCourse(topic: string, goal: string): Promise<CourseR
   });
   if (graph.concepts.length === 0) throw new Error("The generated course had no concepts.");
   const course: CourseRecord = {
-    id: randomUUID().slice(0, 8),
+    id: randomUUID(), // unguessable: course links are unlisted, not public
+    ownerId,
     title: draft.title,
     description: draft.description,
     topic,
@@ -68,8 +69,8 @@ export async function createCourse(topic: string, goal: string): Promise<CourseR
   return course;
 }
 
-export function listCourses() {
-  return getStore().listCourses();
+export function listCourses(learnerId: string) {
+  return getStore().coursesFor(learnerId);
 }
 
 function requireCourse(courseId: string): CourseRecord {

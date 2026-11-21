@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CreateCourse } from "@/components/create-course";
+import { NeuralField } from "@/components/neural-field";
 import { aiMode, courseView, listCourses } from "@/src/service";
 import { learnerId } from "@/src/learner";
 
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const me = await learnerId();
   const mode = aiMode();
-  const courses = listCourses().map((c) => {
+  const courses = listCourses(me).map((c) => {
     const v = courseView(c.id, me);
     return { id: c.id, title: c.title, description: c.description, ...v.stats, started: v.started };
   });
@@ -18,7 +19,13 @@ export default async function Home() {
   return (
     <div className="container">
       <section className="hero">
-        <h1>Learn anything, to real mastery.</h1>
+        <div className="hero-bg"><NeuralField /></div>
+        <div className="eyebrow"><i /> Adaptive AI tutor · tracks every concept you learn</div>
+        <h1>
+          Learn anything.
+          <br />
+          <span className="gradient-text">Wire it into your brain.</span>
+        </h1>
         <p className="lead">
           Stepwise finds exactly where your understanding ends, teaches one step at a time from there, and tracks
           every concept until you truly hold it — then brings it back before you forget.

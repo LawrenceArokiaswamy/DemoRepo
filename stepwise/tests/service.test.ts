@@ -60,7 +60,7 @@ async function runLearner(learnerId: string, courseId: string, knows: Set<string
 }
 
 test("end to end: a beginner is taught every concept and reaches completion", async () => {
-  const course = await svc.createCourse("demo", "");
+  const course = await svc.createCourse("demo", "", "owner");
   assert.equal(course.graph.concepts.length, 8);
   const r = await runLearner("beginner", course.id, new Set());
   assert.ok(r.done, `did not finish in ${r.steps} steps`);
@@ -72,7 +72,7 @@ test("end to end: a beginner is taught every concept and reaches completion", as
 });
 
 test("end to end: placement skips what an expert already knows", async () => {
-  const course = await svc.createCourse("demo", "");
+  const course = await svc.createCourse("demo", "", "owner");
   const all = new Set(course.graph.concepts.map((c) => c.id));
   const expert = await runLearner("expert", course.id, new Set(all));
   const beginner = svc.courseView(course.id, "expert");
@@ -84,7 +84,7 @@ test("end to end: placement skips what an expert already knows", async () => {
 });
 
 test("end to end: a learner who knows the basics starts at the right place", async () => {
-  const course = await svc.createCourse("demo", "");
+  const course = await svc.createCourse("demo", "", "owner");
   const knows = new Set(["percent", "mean", "median", "probability"]);
   const r = await runLearner("intermediate", course.id, knows);
   assert.ok(r.done);
@@ -95,7 +95,7 @@ test("end to end: a learner who knows the basics starts at the right place", asy
 });
 
 test("answers are only accepted for the activity actually served", async () => {
-  const course = await svc.createCourse("demo", "");
+  const course = await svc.createCourse("demo", "", "owner");
   const served = await svc.next(course.id, "cheater");
   assert.ok(served.item);
   await assert.rejects(
@@ -108,7 +108,7 @@ test("answers are only accepted for the activity actually served", async () => {
 });
 
 test("every answer is recorded in the learning log with before/after belief", async () => {
-  const course = await svc.createCourse("demo", "");
+  const course = await svc.createCourse("demo", "", "owner");
   await runLearner("logged", course.id, new Set(), 25);
   const view = svc.courseView(course.id, "logged");
   assert.ok(view.stats.answered > 0);
@@ -138,7 +138,7 @@ test("with a generative provider, re-teaching asks for a new explanation and new
   };
   setProvider(generative);
   try {
-    const course = await svc.createCourse("anything", "");
+    const course = await svc.createCourse("anything", "", "owner");
     // a learner who never gets anything right
     for (let i = 0; i < 40; i++) {
       const s = await svc.next(course.id, "stuck");

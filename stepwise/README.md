@@ -4,26 +4,72 @@ An adaptive learning platform. Type any topic. Stepwise turns it into a graph of
 
 > "Stepwise" is a working name.
 
-## Run it
+## Try it on your computer (about 10 minutes)
 
-Requires Node.js 22.13 or later. Storage uses Node's built-in SQLite, so there is nothing to install.
+1. Install **Node.js 22** or later from https://nodejs.org (the "LTS" download).
+2. Download this repository (on GitHub: **Code → Download ZIP**, then unzip it), or `git clone` it.
+3. Open a terminal in the `stepwise` folder and run:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+4. Open **http://localhost:3000** in your browser. Click **Start the demo course**. It works without any key.
+5. To unlock "learn anything", get an API key (see below), then restart with it:
+
+   ```bash
+   ANTHROPIC_API_KEY=your-key-here npm run dev
+   ```
+
+   On Windows PowerShell: `$env:ANTHROPIC_API_KEY="your-key-here"; npm run dev`
+
+Checks for developers:
 
 ```bash
-cd stepwise
-npm install
-npm run dev            # http://localhost:3000
-```
-
-- **Without an API key** the app runs in demo mode with a built-in, hand-written course ("Statistics & probability foundations", 8 concepts).
-- **With `ANTHROPIC_API_KEY` set**, Claude generates a course on any topic: the concept graph, misconceptions, lessons and practice items. It also generates new explanations when one doesn't land, generates new questions when the bank runs out, and grades free-text explanations. The default model is `claude-opus-5-5`; override it with `STEPWISE_MODEL`.
-
-```bash
-npm test               # 19 tests: engine unit tests and end-to-end learner journeys
-npm run simulate       # adaptive engine vs. a fixed curriculum on 2,000 simulated learners
+npm test                 # 24 automated tests (engine, learner journeys, security)
+npm run simulate         # adaptive engine vs. fixed curriculum on 2,000 simulated learners
 npm run build && npm start
+npm run security-check -- http://localhost:3000   # 22 black-box security checks against a running server
 ```
 
-Data is stored in `data/stepwise.db`, or at the path in `STEPWISE_DB`.
+## Going live
+
+You need three things:
+
+| What | Where | Rough cost |
+|---|---|---|
+| **Anthropic API key** (powers "learn anything") | console.anthropic.com → API keys. Add billing and set a monthly spend limit there. | Pay per use. Generating a full course is roughly $1–3 once; every later learner of that course reuses it. Grading a written answer costs about a cent. |
+| **Hosting** that runs a Node.js server with a **persistent disk** (the database is a file) | Any host that runs Docker: Render, Railway, Fly.io, DigitalOcean App Platform, or a small VPS. Use the included `Dockerfile` and mount a volume at `/data`. | About $5–25 a month to start |
+| **A domain name** (optional at first) | Any registrar; point it at your host. HTTPS is provided by the host. | About $10–15 a year |
+
+Environment variables to set on the host:
+
+| Variable | Purpose |
+|---|---|
+| `ANTHROPIC_API_KEY` | Required for any-topic courses. Keep it secret: set it only in the host's environment/secret settings, never in code. |
+| `STEPWISE_TRUST_PROXY=1` | Set it when the host puts a load balancer in front of the app (almost all do), so rate limits use each visitor's real IP. |
+| `STEPWISE_COURSES_PER_DAY` | Global daily cap on new AI-generated courses (default 100). This is your spending brake. |
+| `STEPWISE_COURSES_PER_LEARNER_PER_DAY` / `STEPWISE_COURSES_PER_IP_PER_DAY` | Per-person caps (defaults 5 and 10). |
+
+Note: serverless hosts such as Vercel or Netlify do not keep files between requests, so the SQLite database would be lost there. Use a host with a disk, or move storage to Postgres first.
+
+## Security
+
+Built in:
+
+- **Strict Content-Security-Policy** with a per-request nonce: only the app's own scripts can run, which blocks injected scripts (XSS). Framing is blocked (clickjacking), as are plugins and cross-site form posts.
+- **Security headers**: HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`; no `X-Powered-By`.
+- **CSRF protection**: state-changing API calls from other sites are rejected (`Origin` / `Sec-Fetch-Site` checks), and the identity cookie is `SameSite=Lax`.
+- **Identity cookie**: random UUID, `HttpOnly`, `Secure`, validated on every request; malformed values are never trusted.
+- **Privacy**: courses are private to their creator (unguessable 128-bit ids); no page lists other people's courses or goals.
+- **Input handling**: 16 KB request cap, JSON validation, control characters stripped, length limits. All SQL uses parameterised statements.
+- **AI content safety**: generated Markdown is rendered without raw HTML or images, unsafe link schemes are stripped, and learner answers are passed to the model as delimited data, not instructions. Answer keys never reach the browser.
+- **Abuse and cost control**: rate limits per learner, per IP and globally, with the strictest caps on AI course generation.
+- **Errors**: unexpected errors are logged on the server; the browser only gets a generic message.
+- **Dependencies**: `npm audit` reports 0 known vulnerabilities. The Docker image runs as a non-root user.
+
+Still needed before taking payments or storing personal data: user accounts with proper authentication, a privacy policy and terms, backups of `/data`, and an independent penetration test. No software can honestly be guaranteed to pass *every* check; these are the standard protections, verified by `npm test` and `npm run security-check`.
 
 ## What makes it adaptive
 

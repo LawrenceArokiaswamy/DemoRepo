@@ -54,11 +54,7 @@ export function LearnSession({ courseId, courseTitle }: { courseId: string; cour
             </span>
           ) : null}
         </div>
-        {progress ? (
-          <div className="bar good" style={{ marginTop: 8 }}>
-            <span style={{ width: `${(progress.mastered / progress.total) * 100}%` }} />
-          </div>
-        ) : null}
+        {progress ? <SynapseRow mastered={progress.mastered} total={progress.total} /> : null}
       </div>
 
       {error ? (
@@ -77,12 +73,25 @@ export function LearnSession({ courseId, courseTitle }: { courseId: string; cour
   );
 }
 
+/** One neuron per concept; they light up and connect as concepts are mastered. */
+function SynapseRow({ mastered, total }: { mastered: number; total: number }) {
+  return (
+    <div className="synapse-row" role="img" aria-label={`${mastered} of ${total} concepts mastered`}>
+      {Array.from({ length: total }, (_, i) => (
+        <span key={i} style={{ display: "contents" }}>
+          {i > 0 ? <span className={`link ${i < mastered ? "on" : ""}`} /> : null}
+          <span className={`dot ${i < mastered ? "on" : ""}`} />
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function Activity({ courseId, served, onNext }: { courseId: string; served: ServedActivity; onNext: () => void }) {
   const a = served.activity;
   if (a.type === "complete") {
     return (
       <div className="card celebrate">
-        <div className="big">🎓</div>
         <h2>Course mastered</h2>
         <p className="muted">{a.reason}</p>
         <Link href={`/course/${courseId}`} className="btn btn-primary">See your progress</Link>
@@ -274,7 +283,7 @@ function Feedback({ result, onNext }: { result: AnswerResult; onNext: () => void
           </ul>
         ) : null}
         {result.newlyMastered ? (
-          <p style={{ marginTop: 12, fontWeight: 700, color: "var(--good)" }}>✓ Mastered “{result.conceptTitle}”. It's now on your review schedule.</p>
+          <div className="mastered-burst"><span className="spark" /> New connection: “{result.conceptTitle}” mastered. It's now on your review schedule.</div>
         ) : null}
       </div>
 

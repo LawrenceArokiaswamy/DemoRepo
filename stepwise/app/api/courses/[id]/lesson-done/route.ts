@@ -1,16 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { completeLesson } from "@/src/service";
-import { learnerId } from "@/src/learner";
-import { errorResponse } from "@/src/http";
+import { guarded } from "@/src/http";
+import { activityLimits } from "@/src/security/rate-limit";
 
 export const runtime = "nodejs";
 
-export async function POST(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
-  try {
+export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  return guarded(req, activityLimits, async (learner) => {
     const { id } = await ctx.params;
-    completeLesson(id, await learnerId());
+    completeLesson(id, learner);
     return NextResponse.json({ ok: true });
-  } catch (e) {
-    return errorResponse(e);
-  }
+  });
 }

@@ -1,34 +1,77 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CourseView } from "@/src/service";
 
 type Concept = CourseView["concepts"][number];
 
-const NODE_W = 160;
-const NODE_H = 58;
-const GAP_X = 22;
-const GAP_Y = 46;
-const PAD = 12;
-
 const STATUS_COLOR: Record<string, string> = {
   unseen: "var(--unseen)",
-  learning: "var(--accent)",
+  learning: "var(--neuron-b)",
   struggling: "var(--warn)",
-  mastered: "var(--good)",
+  mastered: "var(--neuron-a)",
   review: "var(--review)",
 };
 const STATUS_LABEL: Record<string, string> = {
-  unseen: "Not started",
-  learning: "Learning",
+  unseen: "Dormant",
+  learning: "Forming",
   struggling: "Needs help",
   mastered: "Mastered",
-  review: "Due for review",
+  review: "Fading — review",
 };
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
+const RING = 108;
+const MARGIN = 78;
 
-function wrap(title: string, max = 21): string[] {
+/** Small deterministic hash so each neuron gets the same organic shape every render. */
+function seeded(id: string) {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+function circularMean(angles: number[]) {
+  const s = angles.reduce((a, t) => a + Math.sin(t), 0);
+  const c = angles.reduce((a, t) => a + Math.cos(t), 0);
+  return Math.atan2(s, c);
+}
+
+/** Radial layout: foundations at the core, advanced concepts radiating outward near what they build on. */
+function layout(concepts: Concept[]) {
+  const byDepth: Concept[][] = [];
+  for (const c of concepts) (byDepth[c.depth] ??= []).push(c);
+  const maxDepth = byDepth.length - 1;
+  const angle = new Map<string, number>();
+  const pos = new Map<string, { x: number; y: number }>();
+  const singleRoot = (byDepth[0]?.length ?? 0) === 1;
+  const radius = (d: number) => (singleRoot ? d * RING : 62 + d * RING);
+  const size = 2 * (radius(maxDepth) + MARGIN);
+  const cx = size / 2, cy = size / 2;
+
+  byDepth.forEach((ring, d) => {
+    if (!ring) return;
+    const desired = ring.map((c) => {
+      const parents = c.prerequisites.map((p) => angle.get(p)).filter((a): a is number => a !== undefined);
+      return { c, a: parents.length ? circularMean(parents) : 0 };
+    });
+    if (d > 0) desired.sort((x, y) => x.a - y.a);
+    const offset = d === 0 ? -Math.PI / 2 : desired[0].a;
+    desired.forEach(({ c }, i) => {
+      const a = offset + (i / ring.length) * Math.PI * 2 + (d % 2 ? Math.PI / ring.length / 2 : 0) * (ring.length > 1 ? 1 : 0);
+      angle.set(c.id, a);
+      const r = radius(d);
+      pos.set(c.id, { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) });
+    });
+  });
+  return { size, pos, cx, cy, rings: Array.from({ length: maxDepth + 1 }, (_, d) => radius(d)) };
+}
+
+function wrap(title: string, max = 18): string[] {
   const words = title.split(" ");
   const lines: string[] = [""];
   for (const w of words) {
@@ -36,83 +79,126 @@ function wrap(title: string, max = 21): string[] {
     if ((cur + " " + w).trim().length > max && cur) lines.push(w);
     else lines[lines.length - 1] = (cur + " " + w).trim();
   }
-  if (lines.length > 2) return [lines[0], lines.slice(1).join(" ").slice(0, max - 1) + "…"];
-  return lines;
+  return lines.length > 2 ? [lines[0], lines.slice(1).join(" ").slice(0, max - 1) + "…"] : lines;
 }
 
 export function KnowledgeMap({ concepts }: { concepts: Concept[] }) {
   const [active, setActive] = useState<string | null>(null);
+  const [motion, setMotion] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setMotion(!mq.matches);
+  }, []);
 
-  const layout = useMemo(() => {
-    const rows: Concept[][] = [];
-    for (const c of concepts) (rows[c.depth] ??= []).push(c);
-    const widest = Math.max(...rows.map((r) => r?.length ?? 0));
-    const width = widest * NODE_W + (widest - 1) * GAP_X + PAD * 2;
-    const pos = new Map<string, { x: number; y: number }>();
-    rows.forEach((row, depth) => {
-      if (!row) return;
-      const rowW = row.length * NODE_W + (row.length - 1) * GAP_X;
-      const x0 = (width - rowW) / 2;
-      row.forEach((c, i) => pos.set(c.id, { x: x0 + i * (NODE_W + GAP_X), y: PAD + depth * (NODE_H + GAP_Y) }));
-    });
-    return { width, height: PAD * 2 + rows.length * NODE_H + (rows.length - 1) * GAP_Y, pos };
-  }, [concepts]);
-
-  const selected = concepts.find((c) => c.id === active) ?? null;
+  const L = useMemo(() => layout(concepts), [concepts]);
+  const byId = useMemo(() => new Map(concepts.map((c) => [c.id, c])), [concepts]);
+  const selected = active ? byId.get(active) ?? null : null;
+  const related = useMemo(() => {
+    if (!selected) return new Set<string>();
+    const s = new Set<string>([selected.id, ...selected.prerequisites]);
+    for (const c of concepts) if (c.prerequisites.includes(selected.id)) s.add(c.id);
+    return s;
+  }, [selected, concepts]);
 
   return (
     <div>
-      <div className="legend" style={{ marginBottom: 10 }}>
+      <div className="legend">
         {Object.entries(STATUS_LABEL).map(([k, v]) => (
-          <span key={k}><i style={{ background: STATUS_COLOR[k] }} />{v}</span>
+          <span key={k}><i style={{ background: STATUS_COLOR[k], boxShadow: `0 0 8px ${STATUS_COLOR[k]}` }} />{v}</span>
         ))}
       </div>
       <div className="map map-wrap">
-        <svg viewBox={`0 0 ${layout.width} ${layout.height}`} width={layout.width} role="img" aria-label="Knowledge map">
+        <svg viewBox={`0 0 ${L.size} ${L.size}`} role="img" aria-label="Knowledge map shaped like a neural network" className="brain">
+          <defs>
+            <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="7" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <radialGradient id="core" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="var(--neuron-a)" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="var(--neuron-a)" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <circle cx={L.cx} cy={L.cy} r={L.size / 2} fill="url(#core)" />
+          {L.rings.map((r, i) => (r > 0 ? <circle key={i} cx={L.cx} cy={L.cy} r={r} className="ring" /> : null))}
+
+          {/* axons */}
           {concepts.flatMap((c) =>
             c.prerequisites.map((p) => {
-              const a = layout.pos.get(p)!;
-              const b = layout.pos.get(c.id)!;
-              const x1 = a.x + NODE_W / 2, y1 = a.y + NODE_H, x2 = b.x + NODE_W / 2, y2 = b.y;
-              const my = (y1 + y2) / 2;
-              return <path key={`${p}-${c.id}`} className="edge" d={`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`} />;
+              const a = L.pos.get(p)!, b = L.pos.get(c.id)!;
+              const src = byId.get(p)!;
+              const mx = (a.x + b.x) / 2 + (L.cx - (a.x + b.x) / 2) * 0.18;
+              const my = (a.y + b.y) / 2 + (L.cy - (a.y + b.y) / 2) * 0.18;
+              const d = `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`;
+              const firing = src.status === "mastered" || src.status === "review";
+              const dim = selected && !(related.has(p) && related.has(c.id));
+              const id = `ax-${p}-${c.id}`;
+              return (
+                <g key={id} opacity={dim ? 0.15 : 1}>
+                  <path id={id} d={d} className="axon" style={{ strokeOpacity: 0.25 + src.recall * 0.6, stroke: firing ? "var(--neuron-a)" : "var(--axon)" }} />
+                  {firing && motion ? (
+                    <circle r={3.5} className="signal">
+                      <animateMotion dur={`${2.2 + (seeded(id)() * 1.8).toFixed(2)}s`} repeatCount="indefinite" begin={`${(seeded(id + "b")() * 2).toFixed(2)}s`}>
+                        <mpath href={`#${id}`} />
+                      </animateMotion>
+                    </circle>
+                  ) : null}
+                </g>
+              );
             }),
           )}
+
+          {/* neurons */}
           {concepts.map((c) => {
-            const { x, y } = layout.pos.get(c.id)!;
-            const lines = wrap(c.title);
+            const { x, y } = L.pos.get(c.id)!;
+            const rand = seeded(c.id);
             const color = STATUS_COLOR[c.status];
+            const r = 19 + c.pKnown * 8;
+            const dendrites = Array.from({ length: 6 }, (_, i) => {
+              const a = (i / 6) * Math.PI * 2 + rand() * 0.8;
+              const len = r + 6 + rand() * 10;
+              const bend = (rand() - 0.5) * 10;
+              const ex = Math.cos(a) * len, ey = Math.sin(a) * len;
+              return `M${Math.cos(a) * r * 0.8},${Math.sin(a) * r * 0.8} Q${ex / 2 - Math.sin(a) * bend},${ey / 2 + Math.cos(a) * bend} ${ex},${ey}`;
+            });
+            const lines = wrap(c.title);
+            const dim = selected && !related.has(c.id);
             return (
               <g
                 key={c.id}
-                className={`node ${active === c.id ? "active" : ""}`}
+                className={`neuron st-${c.status} ${active === c.id ? "active" : ""}`}
                 transform={`translate(${x},${y})`}
+                opacity={dim ? 0.3 : 1}
                 onClick={() => setActive(active === c.id ? null : c.id)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActive(active === c.id ? null : c.id); } }}
                 tabIndex={0}
                 role="button"
-                aria-label={`${c.title}: ${STATUS_LABEL[c.status]}, ${pct(c.pKnown)}`}
-                onKeyDown={(e) => { if (e.key === "Enter") setActive(c.id); }}
+                aria-pressed={active === c.id}
+                aria-label={`${c.title}: ${STATUS_LABEL[c.status]}, mastery ${pct(c.pKnown)}`}
               >
-                <rect width={NODE_W} height={NODE_H} rx={10} />
-                <rect x={0} y={0} width={5} height={NODE_H} rx={2} style={{ fill: color, stroke: "none" }} />
-                {lines.map((l, i) => (
-                  <text key={i} x={14} y={20 + i * 15} fontWeight={600}>{l}</text>
+                {dendrites.map((d, i) => (
+                  <path key={i} d={d} className="dendrite" style={{ stroke: color }} />
                 ))}
-                <rect x={14} y={NODE_H - 12} width={NODE_W - 28} height={4} rx={2} style={{ fill: "var(--surface-2)", stroke: "none" }} />
-                <rect x={14} y={NODE_H - 12} width={(NODE_W - 28) * c.recall} height={4} rx={2} style={{ fill: color, stroke: "none" }} />
+                {c.status === "learning" || c.status === "struggling" ? <circle r={r} className="ripple" style={{ stroke: color }} /> : null}
+                <circle r={r} style={{ fill: color, opacity: 0.3 + c.recall * 0.45 }} filter={c.recall > 0.5 ? "url(#glow)" : undefined} />
+                <circle r={r * 0.55} style={{ fill: color, opacity: 0.55 + c.recall * 0.45 }} />
+                <circle r={r} className="soma-ring" style={{ stroke: color }} />
+                {lines.map((l, i) => (
+                  <text key={i} y={r + 24 + i * 15} textAnchor="middle" className="neuron-label">{l}</text>
+                ))}
               </g>
             );
           })}
         </svg>
       </div>
-      {selected ? <ConceptDetail c={selected} /> : <p className="small muted" style={{ textAlign: "center", marginTop: 8 }}>Select a concept to see everything we know about it.</p>}
+      {selected ? <ConceptDetail c={selected} /> : <p className="small muted center">Tap a neuron to see everything we know about that concept.</p>}
     </div>
   );
 }
 
 function ConceptDetail({ c }: { c: Concept }) {
   return (
-    <div className="card" style={{ marginTop: 14, background: "var(--surface-2)", boxShadow: "none" }}>
+    <div className="card detail">
       <div className="spread">
         <h3 style={{ margin: 0 }}>{c.title}</h3>
         <span className="small"><span className={`status-dot st-${c.status}`} />{STATUS_LABEL[c.status]}</span>
@@ -150,7 +236,7 @@ function Sparkline({ points }: { points: number[] }) {
       <div className="small muted">Mastery over your last {points.length} answers</div>
       <svg viewBox={`0 0 ${w} ${h}`} width="100%" height={h} preserveAspectRatio="none" style={{ maxWidth: 420 }}>
         <line x1={0} x2={w} y1={mastery} y2={mastery} stroke="var(--good)" strokeDasharray="3 4" strokeWidth={1} />
-        <path d={d} fill="none" stroke="var(--accent)" strokeWidth={2} vectorEffect="non-scaling-stroke" />
+        <path d={d} fill="none" stroke="var(--neuron-b)" strokeWidth={2} vectorEffect="non-scaling-stroke" />
       </svg>
     </div>
   );

@@ -5,6 +5,8 @@ import type { Activity, CourseGraph, Item, LearnerCourseState, Lesson } from "..
 
 export interface CourseRecord {
   id: string;
+  /** Learner who created it. Courses are unlisted: only the owner sees them in their list. */
+  ownerId: string;
   title: string;
   description: string;
   topic: string;
@@ -67,14 +69,18 @@ export class Store {
     this.db = new DatabaseSync(path);
     this.db.exec("PRAGMA journal_mode = WAL;");
     this.db.exec(SCHEMA);
+    const cols = (this.db.prepare("PRAGMA table_info(courses)").all() as Row[]).map((r) => r.name);
+    if (!cols.includes("owner_id")) this.db.exec("ALTER TABLE courses ADD COLUMN owner_id TEXT NOT NULL DEFAULT ''");
   }
 
   // ---- courses
 
   saveCourse(c: CourseRecord) {
     this.db
-      .prepare("INSERT OR REPLACE INTO courses VALUES (?, ?, ?, ?, ?, ?, ?)")
-      .run(c.id, c.title, c.description, c.topic, c.goal, JSON.stringify(c.graph), c.createdAt);
+      .prepare(
+        "INSERT OR REPLACE INTO courses (id, title, description, topic, goal, graph, created_at, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      )
+      .run(c.id, c.title, c.description, c.topic, c.goal, JSON.stringify(c.graph), c.createdAt, c.ownerId);
   }
 
   getCourse(id: string): CourseRecord | null {
@@ -82,8 +88,17 @@ export class Store {
     return r ? toCourse(r) : null;
   }
 
-  listCourses(): CourseRecord[] {
-    return (this.db.prepare("SELECT * FROM courses ORDER BY created_at DESC").all() as Row[]).map(toCourse);
+  /** Courses this learner created or has studied. Never other people's courses. */
+  coursesFor(learnerId: string): CourseRecord[] {
+    return (
+      this.db
+        .prepare(
+          `SELECT * FROM courses WHERE owner_id = ?
+           OR id IN (SELECT course_id FROM learner_state WHERE learner_id = ?)
+           ORDER BY created_at DESC LIMIT 200`,
+        )
+        .all(learnerId, learnerId) as Row[]
+    ).map(toCourse);
   }
 
   // ---- material
@@ -194,6 +209,7 @@ export class Store {
 function toCourse(r: Row): CourseRecord {
   return {
     id: r.id as string,
+    ownerId: (r.owner_id as string) ?? "",
     title: r.title as string,
     description: r.description as string,
     topic: r.topic as string,
