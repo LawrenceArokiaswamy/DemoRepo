@@ -1260,6 +1260,92 @@
    "publication_url": null,
    "performance": null,
    "notes": null
+  },
+  {
+   "id": "PSY03",
+   "working_title": "Napoleon Was Short",
+   "category": "Psychology",
+   "premise": "A fact everyone knows is false; repetition (the illusory truth effect) made it feel true.",
+   "hooks": [
+    "Napoleon was short. Everyone knows that."
+   ],
+   "target_duration_s": "55-60",
+   "emotional_arc": null,
+   "key_visual_moments": null,
+   "characters": [
+    "Napoleon (generic cartoon print)",
+    "The viewer's brain"
+   ],
+   "environments": [
+    "Halftone Dossier case file"
+   ],
+   "props_and_effects": null,
+   "reusable_assets": [
+    "Lemo-Opuscar Halftone Dossier style"
+   ],
+   "research_sources": [
+    "Hasher, Goldstein & Toppino (1977)",
+    "Fazio et al. (2015) JEP:General"
+   ],
+   "factual_caveats": null,
+   "estimated_credits": 0,
+   "estimated_production_days": 1,
+   "editorial_score": null,
+   "research_status": null,
+   "production_status": "delivered for owner review (renders/psy03_napoleon_was_short.mp4)",
+   "publication_url": null,
+   "performance": null,
+   "notes": null
+  },
+  {
+   "id": "PSY04",
+   "working_title": "The Spotlight Effect",
+   "category": "Psychology",
+   "premise": "You feel everyone noticed your embarrassing moment; in reality far fewer people noticed than you think.",
+   "hooks": [
+    "You walk in, and you're sure everyone noticed.",
+    "The students guessed half. The real answer: 1 in 4."
+   ],
+   "target_duration_s": "40-46",
+   "emotional_arc": [
+    "CRINGE",
+    "RELIEF",
+    "SURPRISE (1 in 4)",
+    "EMPOWERMENT"
+   ],
+   "key_visual_moments": [
+    "Doorway spotlight",
+    "Stain / wave / voice-crack inserts",
+    "1 in 4 circled",
+    "Alone on stage",
+    "Everyone under their own spotlight"
+   ],
+   "characters": [
+    "B1 fine-line stick figures"
+   ],
+   "environments": [
+    "B1 minimal grid paper"
+   ],
+   "props_and_effects": null,
+   "reusable_assets": [
+    "stickman-video-director B1 native portrait runtime",
+    "studio/films/psy04-spotlight/art (11 B1 drawings)"
+   ],
+   "research_sources": [
+    "Gilovich, Medvec & Savitsky (2000) J. Personality & Social Psychology 78(2):211-222"
+   ],
+   "factual_caveats": [
+    "Students estimated ~50% would notice the shirt; ~23-25% actually did. Script says \"about one in four\"",
+    "Pop star unnamed in script and art (real study used a Barry Manilow shirt)"
+   ],
+   "estimated_credits": 13.75,
+   "estimated_production_days": 1,
+   "editorial_score": null,
+   "research_status": null,
+   "production_status": "delivered for owner review (renders/psy04_spotlight_effect.mp4)",
+   "publication_url": null,
+   "performance": null,
+   "notes": null
   }
  ],
  "content_categories": [

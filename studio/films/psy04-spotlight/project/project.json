@@ -1,0 +1,2344 @@
+{
+ "version": 1,
+ "style": "B1",
+ "width": 720,
+ "height": 1280,
+ "fps": 30,
+ "voice": {
+  "path": "narration.wav",
+  "lead": 0.15,
+  "tail": 1.3
+ },
+ "captions": [
+  {
+   "start": 0.15,
+   "end": 1.484,
+   "text": "You walk in, and you're"
+  },
+  {
+   "start": 1.484,
+   "end": 2.76,
+   "text": "sure everyone noticed."
+  },
+  {
+   "start": 3.21,
+   "end": 4.092,
+   "text": "The stain."
+  },
+  {
+   "start": 4.342,
+   "end": 5.521,
+   "text": "The awkward wave."
+  },
+  {
+   "start": 5.771,
+   "end": 6.849,
+   "text": "The voice crack."
+  },
+  {
+   "start": 7.449,
+   "end": 8.6,
+   "text": "But here's the thing:"
+  },
+  {
+   "start": 8.75,
+   "end": 10.189,
+   "text": "they almost certainly didn't."
+  },
+  {
+   "start": 10.889,
+   "end": 13.126,
+   "text": "In 2000, Cornell psychologists"
+  },
+  {
+   "start": 13.126,
+   "end": 14.99,
+   "text": "sent students into a room"
+  },
+  {
+   "start": 15.14,
+   "end": 17.001,
+   "text": "wearing a T-shirt with a cheesy"
+  },
+  {
+   "start": 17.001,
+   "end": 18.321,
+   "text": "pop star's face on it."
+  },
+  {
+   "start": 18.821,
+   "end": 20.027,
+   "text": "Then they asked: how"
+  },
+  {
+   "start": 20.027,
+   "end": 21.234,
+   "text": "many people noticed?"
+  },
+  {
+   "start": 21.834,
+   "end": 22.913,
+   "text": "The students guessed"
+  },
+  {
+   "start": 22.913,
+   "end": 23.993,
+   "text": "about half the room."
+  },
+  {
+   "start": 24.393,
+   "end": 26.839,
+   "text": "The real answer? About 1 in 4."
+  },
+  {
+   "start": 27.639,
+   "end": 28.48,
+   "text": "It's called the"
+  },
+  {
+   "start": 28.48,
+   "end": 29.433,
+   "text": "spotlight effect."
+  },
+  {
+   "start": 29.883,
+   "end": 31.306,
+   "text": "You feel like you're on"
+  },
+  {
+   "start": 31.306,
+   "end": 32.976,
+   "text": "stage, under a giant light."
+  },
+  {
+   "start": 33.226,
+   "end": 34.287,
+   "text": "But everyone else is"
+  },
+  {
+   "start": 34.287,
+   "end": 35.72,
+   "text": "starring in their own show,"
+  },
+  {
+   "start": 35.87,
+   "end": 36.645,
+   "text": "worrying about"
+  },
+  {
+   "start": 36.645,
+   "end": 37.531,
+   "text": "their own stain."
+  },
+  {
+   "start": 38.231,
+   "end": 40.032,
+   "text": "So next time you feel watched,"
+  },
+  {
+   "start": 40.232,
+   "end": 41.849,
+   "text": "remember: you're the only one"
+  },
+  {
+   "start": 41.849,
+   "end": 43.076,
+   "text": "holding the spotlight."
+  }
+ ],
+ "shots": [
+  {
+   "start": 0,
+   "end": 3.11,
+   "layers": [
+    {
+     "id": "s1_img",
+     "type": "image",
+     "path": "media/a01_door.png",
+     "x": 223.1,
+     "y": 600.0,
+     "w": 757.8,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 682.02,
+       "x": 260.99,
+       "y": 649.5,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 780.54,
+       "x": 211.73,
+       "y": 585.15,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 757.8,
+       "x": 223.1,
+       "y": 600.0
+      },
+      {
+       "t": 1.44,
+       "w": 765.38,
+       "x": 219.31,
+       "y": 588.05
+      },
+      {
+       "t": 2.54,
+       "w": 772.96,
+       "x": 215.52,
+       "y": 590.1
+      },
+      {
+       "t": 3.109,
+       "w": 780.54,
+       "x": 211.73,
+       "y": 578.15
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s1_t",
+     "type": "text",
+     "text": "EVERYONE",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s1_t2",
+     "type": "text",
+     "text": "NOTICED.",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 1.6,
+     "keys": [
+      {
+       "t": 1.6,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 1.78,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "He freezes in the doorway, sure every eye is on him",
+    "regions": [
+     {
+      "id": "r0_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s1_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r0_info",
+      "role": "information",
+      "layer_ids": [
+       "s1_t",
+       "s1_t2"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 3.11,
+   "end": 4.242,
+   "layers": [
+    {
+     "id": "s2_img",
+     "type": "image",
+     "path": "media/a02_stain.png",
+     "x": 313.64,
+     "y": 600.0,
+     "w": 576.73,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 519.06,
+       "x": 342.47,
+       "y": 649.5,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 594.03,
+       "x": 304.98,
+       "y": 585.15,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 576.73,
+       "x": 313.64,
+       "y": 600.0
+      },
+      {
+       "t": 1.131,
+       "w": 582.5,
+       "x": 310.75,
+       "y": 588.05
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s2_t",
+     "type": "text",
+     "text": "THE STAIN.",
+     "x": 95,
+     "y": 290,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 316
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 290
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "Insert one: a coffee stain he thinks everyone sees",
+    "regions": [
+     {
+      "id": "r1_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s2_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r1_info",
+      "role": "information",
+      "layer_ids": [
+       "s2_t"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 4.242,
+   "end": 5.671,
+   "layers": [
+    {
+     "id": "s3_img",
+     "type": "image",
+     "path": "media/a03_wave.png",
+     "x": 122.0,
+     "y": 774.82,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 806.84,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 765.22,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 774.82
+      },
+      {
+       "t": 1.428,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 764.62
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s3_t",
+     "type": "text",
+     "text": "THE WAVE.",
+     "x": 95,
+     "y": 290,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 316
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 290
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "Insert two: an awkward wave nobody returns",
+    "regions": [
+     {
+      "id": "r2_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s3_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r2_info",
+      "role": "information",
+      "layer_ids": [
+       "s3_t"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 5.671,
+   "end": 7.349,
+   "layers": [
+    {
+     "id": "s4_img",
+     "type": "image",
+     "path": "media/a04_crack.png",
+     "x": 221.69,
+     "y": 600.0,
+     "w": 760.62,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 684.56,
+       "x": 259.72,
+       "y": 649.5,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 783.44,
+       "x": 210.28,
+       "y": 585.15,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 760.62,
+       "x": 221.69,
+       "y": 600.0
+      },
+      {
+       "t": 1.44,
+       "w": 768.23,
+       "x": 217.88,
+       "y": 588.05
+      },
+      {
+       "t": 1.677,
+       "w": 775.84,
+       "x": 214.08,
+       "y": 590.1
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s4_t",
+     "type": "text",
+     "text": "THE VOICE CRACK.",
+     "x": 95,
+     "y": 290,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 316
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 290
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "Insert three: the voice crack, hand on throat",
+    "regions": [
+     {
+      "id": "r3_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s4_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r3_info",
+      "role": "information",
+      "layer_ids": [
+       "s4_t"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 7.349,
+   "end": 10.789,
+   "layers": [
+    {
+     "id": "s5_img",
+     "type": "image",
+     "path": "media/a05_phones.png",
+     "x": 122.0,
+     "y": 824.05,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 851.14,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 815.92,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 824.05
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 814.34
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 818.63
+      },
+      {
+       "t": 3.439,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 808.92
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s5_t",
+     "type": "text",
+     "text": "BUT...",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 236
+      }
+     ],
+     "to": 1.401
+    },
+    {
+     "id": "s5_t2",
+     "type": "text",
+     "text": "THEY DIDN'T",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 2.301,
+     "keys": [
+      {
+       "t": 2.301,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 2.481,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s5_t3",
+     "type": "text",
+     "text": "EVEN LOOK.",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 2.551,
+     "keys": [
+      {
+       "t": 2.551,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 2.731,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "Everyone else is buried in their phones and never looked",
+    "regions": [
+     {
+      "id": "r4_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s5_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r4_info",
+      "role": "information",
+      "layer_ids": [
+       "s5_t",
+       "s5_t2",
+       "s5_t3"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 10.789,
+   "end": 15.04,
+   "layers": [
+    {
+     "id": "s6_img",
+     "type": "image",
+     "path": "media/a07_class.png",
+     "x": 122.0,
+     "y": 821.07,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 848.46,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 812.85,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 821.07
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 811.33
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 815.59
+      },
+      {
+       "t": 3.64,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 805.85
+      },
+      {
+       "t": 4.25,
+       "w": 998.4,
+       "x": 102.8,
+       "y": 810.11
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s6_t",
+     "type": "text",
+     "text": "CORNELL, 2000",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.2,
+     "keys": [
+      {
+       "t": 0.2,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.38,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s6_u",
+     "type": "underline",
+     "x": 100,
+     "y": 372,
+     "w": 820,
+     "color": "#E8B500",
+     "lineWidth": 9,
+     "from": 0.5,
+     "keys": [
+      {
+       "t": 0.5,
+       "progress": 0
+      },
+      {
+       "t": 0.8,
+       "progress": 1
+      }
+     ],
+     "motion": {
+      "role": "information",
+      "reason": "marker stroke underlines the number being stressed"
+     }
+    }
+   ],
+   "portrait": {
+    "intent": "The real study: students sent into a room",
+    "regions": [
+     {
+      "id": "r5_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s6_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r5_info",
+      "role": "information",
+      "layer_ids": [
+       "s6_t",
+       "s6_u"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 15.04,
+   "end": 18.721,
+   "layers": [
+    {
+     "id": "s7_img",
+     "type": "image",
+     "path": "media/a06_shirt.png",
+     "x": 399.59,
+     "y": 600.0,
+     "w": 404.81,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 364.33,
+       "x": 419.83,
+       "y": 649.5,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 416.96,
+       "x": 393.52,
+       "y": 585.15,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 404.81,
+       "x": 399.59,
+       "y": 600.0
+      },
+      {
+       "t": 1.44,
+       "w": 408.86,
+       "x": 397.57,
+       "y": 588.05
+      },
+      {
+       "t": 2.54,
+       "w": 412.91,
+       "x": 395.55,
+       "y": 590.1
+      },
+      {
+       "t": 3.64,
+       "w": 416.96,
+       "x": 393.52,
+       "y": 578.15
+      },
+      {
+       "t": 3.68,
+       "w": 421.01,
+       "x": 391.5,
+       "y": 580.2
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s7_t",
+     "type": "text",
+     "text": "THE CRINGE",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s7_t2",
+     "type": "text",
+     "text": "T-SHIRT.",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 1.7,
+     "keys": [
+      {
+       "t": 1.7,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 1.88,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "One student wears an embarrassing pop-star shirt",
+    "regions": [
+     {
+      "id": "r6_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s7_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r6_info",
+      "role": "information",
+      "layer_ids": [
+       "s7_t",
+       "s7_t2"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 18.721,
+   "end": 21.734,
+   "layers": [
+    {
+     "id": "s8_img",
+     "type": "image",
+     "path": "media/a07_class.png",
+     "x": 122.0,
+     "y": 821.07,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 848.46,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 812.85,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 821.07
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 811.33
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 815.59
+      },
+      {
+       "t": 3.012,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 805.85
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s8_t",
+     "type": "text",
+     "text": "HOW MANY",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s8_t2",
+     "type": "text",
+     "text": "NOTICED?",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 1.5,
+     "keys": [
+      {
+       "t": 1.5,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 1.68,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "The question to the room: who noticed the shirt?",
+    "regions": [
+     {
+      "id": "r7_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s8_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r7_info",
+      "role": "information",
+      "layer_ids": [
+       "s8_t",
+       "s8_t2"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 21.734,
+   "end": 24.293,
+   "layers": [
+    {
+     "id": "s9_img",
+     "type": "image",
+     "path": "media/a08_bubble.png",
+     "x": 153.04,
+     "y": 600.0,
+     "w": 897.93,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 808.14,
+       "x": 197.93,
+       "y": 649.5,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 924.87,
+       "x": 139.57,
+       "y": 585.15,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 897.93,
+       "x": 153.04,
+       "y": 600.0
+      },
+      {
+       "t": 1.44,
+       "w": 906.91,
+       "x": 148.55,
+       "y": 588.05
+      },
+      {
+       "t": 2.54,
+       "w": 915.89,
+       "x": 144.06,
+       "y": 590.1
+      },
+      {
+       "t": 2.558,
+       "w": 924.87,
+       "x": 139.57,
+       "y": 578.15
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s9_t",
+     "type": "text",
+     "text": "THEIR GUESS:",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s9_t2",
+     "type": "text",
+     "text": "HALF THE ROOM",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 1.45,
+     "keys": [
+      {
+       "t": 1.45,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 1.63,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "He imagines a whole crowd staring at him",
+    "regions": [
+     {
+      "id": "r8_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s9_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r8_info",
+      "role": "information",
+      "layer_ids": [
+       "s9_t",
+       "s9_t2"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 24.293,
+   "end": 27.539,
+   "layers": [
+    {
+     "id": "s10_img",
+     "type": "image",
+     "path": "media/a09_onein4.png",
+     "x": 122.0,
+     "y": 883.97,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 905.08,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 877.64,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 883.97
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 874.86
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 879.75
+      },
+      {
+       "t": 3.245,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 870.64
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s10_t",
+     "type": "text",
+     "text": "REALITY:",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.05,
+     "keys": [
+      {
+       "t": 0.05,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.23,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s10_t2",
+     "type": "text",
+     "text": "1 IN 4.",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 140,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 2.05,
+     "keys": [
+      {
+       "t": 2.05,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 2.23,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    },
+    {
+     "id": "s10_u",
+     "type": "underline",
+     "x": 100,
+     "y": 530,
+     "w": 420,
+     "color": "#EC4338",
+     "lineWidth": 9,
+     "from": 2.25,
+     "keys": [
+      {
+       "t": 2.25,
+       "progress": 0
+      },
+      {
+       "t": 2.55,
+       "progress": 1
+      }
+     ],
+     "motion": {
+      "role": "information",
+      "reason": "marker stroke underlines the number being stressed"
+     }
+    }
+   ],
+   "portrait": {
+    "intent": "Only one student in four actually looked up",
+    "regions": [
+     {
+      "id": "r9_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s10_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r9_info",
+      "role": "information",
+      "layer_ids": [
+       "s10_t",
+       "s10_t2",
+       "s10_u"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 27.539,
+   "end": 33.126,
+   "layers": [
+    {
+     "id": "s11_img",
+     "type": "image",
+     "path": "media/a10_stage.png",
+     "x": 122.0,
+     "y": 649.78,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 694.3,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 636.42,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 649.78
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 638.32
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 640.87
+      },
+      {
+       "t": 3.64,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 629.42
+      },
+      {
+       "t": 4.74,
+       "w": 998.4,
+       "x": 102.8,
+       "y": 631.97
+      },
+      {
+       "t": 5.586,
+       "w": 1008.0,
+       "x": 98.0,
+       "y": 620.51
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s11_t",
+     "type": "text",
+     "text": "THE SPOTLIGHT",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.15,
+     "keys": [
+      {
+       "t": 0.15,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.33,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s11_t2",
+     "type": "text",
+     "text": "EFFECT",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 0.45,
+     "keys": [
+      {
+       "t": 0.45,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 0.63,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    },
+    {
+     "id": "s11_u",
+     "type": "underline",
+     "x": 100,
+     "y": 518,
+     "w": 420,
+     "color": "#E8B500",
+     "lineWidth": 9,
+     "from": 0.8,
+     "keys": [
+      {
+       "t": 0.8,
+       "progress": 0
+      },
+      {
+       "t": 1.1,
+       "progress": 1
+      }
+     ],
+     "motion": {
+      "role": "information",
+      "reason": "marker stroke underlines the number being stressed"
+     }
+    }
+   ],
+   "portrait": {
+    "intent": "Named: he feels alone on stage under a giant light",
+    "regions": [
+     {
+      "id": "r10_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s11_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r10_info",
+      "role": "information",
+      "layer_ids": [
+       "s11_t",
+       "s11_t2",
+       "s11_u"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 33.126,
+   "end": 38.131,
+   "layers": [
+    {
+     "id": "s12_img",
+     "type": "image",
+     "path": "media/a11_everyone.png",
+     "x": 122.0,
+     "y": 807.29,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 836.06,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 798.66,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 807.29
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 797.42
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 801.54
+      },
+      {
+       "t": 3.64,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 791.66
+      },
+      {
+       "t": 4.74,
+       "w": 998.4,
+       "x": 102.8,
+       "y": 795.78
+      },
+      {
+       "t": 5.004,
+       "w": 1008.0,
+       "x": 98.0,
+       "y": 785.91
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s12_t",
+     "type": "text",
+     "text": "EVERYONE'S IN",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.1,
+     "keys": [
+      {
+       "t": 0.1,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.28,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s12_t2",
+     "type": "text",
+     "text": "THEIR OWN SHOW.",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 2.844,
+     "keys": [
+      {
+       "t": 2.844,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 3.024,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "Everyone stands under their own light, worried about themselves",
+    "regions": [
+     {
+      "id": "r11_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s12_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r11_info",
+      "role": "information",
+      "layer_ids": [
+       "s12_t",
+       "s12_t2"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 38.131,
+   "end": 40.132,
+   "layers": [
+    {
+     "id": "s13_img",
+     "type": "image",
+     "path": "media/a08_bubble.png",
+     "x": 153.04,
+     "y": 600.0,
+     "w": 897.93,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 808.14,
+       "x": 197.93,
+       "y": 649.5,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 924.87,
+       "x": 139.57,
+       "y": 585.15,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 897.93,
+       "x": 153.04,
+       "y": 600.0
+      },
+      {
+       "t": 1.44,
+       "w": 906.91,
+       "x": 148.55,
+       "y": 588.05
+      },
+      {
+       "t": 2.0,
+       "w": 915.89,
+       "x": 144.06,
+       "y": 590.1
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s13_t",
+     "type": "text",
+     "text": "FEEL WATCHED?",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 0.1,
+     "keys": [
+      {
+       "t": 0.1,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 0.28,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "The viewer feels watched again",
+    "regions": [
+     {
+      "id": "r12_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s13_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r12_info",
+      "role": "information",
+      "layer_ids": [
+       "s13_t"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  },
+  {
+   "start": 40.132,
+   "end": 44.37504199999999,
+   "layers": [
+    {
+     "id": "s14_img",
+     "type": "image",
+     "path": "media/a10_stage.png",
+     "x": 122.0,
+     "y": 649.78,
+     "w": 960.0,
+     "from": 0,
+     "keys": [
+      {
+       "t": 0,
+       "w": 864.0,
+       "x": 170.0,
+       "y": 694.3,
+       "alpha": 0
+      },
+      {
+       "t": 0.2,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 636.42,
+       "alpha": 1
+      },
+      {
+       "t": 0.34,
+       "w": 960.0,
+       "x": 122.0,
+       "y": 649.78
+      },
+      {
+       "t": 1.44,
+       "w": 969.6,
+       "x": 117.2,
+       "y": 638.32
+      },
+      {
+       "t": 2.54,
+       "w": 979.2,
+       "x": 112.4,
+       "y": 640.87
+      },
+      {
+       "t": 3.64,
+       "w": 988.8,
+       "x": 107.6,
+       "y": 629.42
+      },
+      {
+       "t": 4.242,
+       "w": 998.4,
+       "x": 102.8,
+       "y": 631.97
+      }
+     ],
+     "motion": {
+      "role": "actor",
+      "reason": "figure pops in and keeps breathing so the beat never freezes"
+     }
+    },
+    {
+     "id": "s14_t",
+     "type": "text",
+     "text": "YOU'RE HOLDING",
+     "x": 95,
+     "y": 236,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#191916",
+     "from": 1.0,
+     "keys": [
+      {
+       "t": 1.0,
+       "alpha": 0,
+       "y": 262
+      },
+      {
+       "t": 1.18,
+       "alpha": 1,
+       "y": 236
+      }
+     ]
+    },
+    {
+     "id": "s14_t2",
+     "type": "text",
+     "text": "THE SPOTLIGHT.",
+     "x": 95,
+     "y": 382,
+     "w": 1020,
+     "size": 124,
+     "bold": true,
+     "color": "#EC4338",
+     "from": 1.8,
+     "keys": [
+      {
+       "t": 1.8,
+       "alpha": 0,
+       "y": 408
+      },
+      {
+       "t": 1.98,
+       "alpha": 1,
+       "y": 382
+      }
+     ]
+    }
+   ],
+   "portrait": {
+    "intent": "Payoff: the only one holding the light is you",
+    "regions": [
+     {
+      "id": "r13_actor",
+      "role": "actor",
+      "layer_ids": [
+       "s14_img"
+      ],
+      "region": {
+       "x": 80,
+       "y": 550,
+       "w": 1044,
+       "h": 1125
+      },
+      "intent": "the drawn figure acting out the beat"
+     },
+     {
+      "id": "r13_info",
+      "role": "information",
+      "layer_ids": [
+       "s14_t",
+       "s14_t2"
+      ],
+      "region": {
+       "x": 85,
+       "y": 220,
+       "w": 1039,
+       "h": 325
+      },
+      "intent": "handwritten headline with the key idea"
+     }
+    ]
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "time": 0.05,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 1.6,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 3.08,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 3.16,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 4.212,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 4.292,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 5.641,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 5.721,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 7.319,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 7.329,
+   "kind": "file",
+   "path": "audio/scratch.wav",
+   "gain": 0.45
+  },
+  {
+   "time": 7.399,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 9.65,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 9.9,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 10.759,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 10.989,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 15.01,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 15.09,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 16.74,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 18.691,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 18.771,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 20.221,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 21.704,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 21.784,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 23.184,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 24.263,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 24.343,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 26.343,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 26.343,
+   "kind": "chime",
+   "gain": 0.22
+  },
+  {
+   "time": 27.509,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 27.689,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 27.739,
+   "kind": "pop",
+   "gain": 0.2
+  },
+  {
+   "time": 27.989,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 33.096,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 33.226,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 35.97,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 38.101,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 38.231,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 40.102,
+   "kind": "file",
+   "path": "audio/swish.wav",
+   "gain": 0.35
+  },
+  {
+   "time": 41.132,
+   "kind": "tap",
+   "gain": 0.16
+  },
+  {
+   "time": 41.932,
+   "kind": "tap",
+   "gain": 0.16
+  }
+ ],
+ "reference_review": {
+  "author_id": "",
+  "capability": {
+   "mode": "sample_target",
+   "environment": "",
+   "limitations": []
+  }
+ },
+ "music": {
+  "path": "audio/bgm-investigations.mp3",
+  "gain": 0.07
+ },
+ "ambience": [
+  {
+   "path": "audio/roomtone.wav",
+   "start": 0,
+   "end": 44.37504199999999,
+   "gain": 0.03,
+   "loop": true
+  }
+ ]
+}

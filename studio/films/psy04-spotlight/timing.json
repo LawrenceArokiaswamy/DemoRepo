@@ -1,0 +1,280 @@
+{
+ "segments": [
+  {
+   "id": "P01",
+   "text": "You walk in, and you're sure everyone noticed.",
+   "start": 0,
+   "end": 2.61
+  },
+  {
+   "id": "P02",
+   "text": "The stain.",
+   "start": 3.06,
+   "end": 3.942
+  },
+  {
+   "id": "P03",
+   "text": "The awkward wave.",
+   "start": 4.192,
+   "end": 5.371
+  },
+  {
+   "id": "P04",
+   "text": "The voice crack.",
+   "start": 5.621,
+   "end": 6.699
+  },
+  {
+   "id": "P05",
+   "text": "But here's the thing:",
+   "start": 7.299,
+   "end": 8.45
+  },
+  {
+   "id": "P06",
+   "text": "they almost certainly didn't.",
+   "start": 8.6,
+   "end": 10.039
+  },
+  {
+   "id": "P07",
+   "text": "In two thousand, Cornell psychologists sent students into a room",
+   "start": 10.739,
+   "end": 14.84
+  },
+  {
+   "id": "P08",
+   "text": "wearing a T-shirt with a cheesy pop star's face on it.",
+   "start": 14.99,
+   "end": 18.171
+  },
+  {
+   "id": "P09",
+   "text": "Then they asked: how many people noticed?",
+   "start": 18.671,
+   "end": 21.084
+  },
+  {
+   "id": "P10",
+   "text": "The students guessed about half the room.",
+   "start": 21.684,
+   "end": 23.843
+  },
+  {
+   "id": "P11",
+   "text": "The real answer? About one in four.",
+   "start": 24.243,
+   "end": 26.689
+  },
+  {
+   "id": "P12",
+   "text": "It's called the spotlight effect.",
+   "start": 27.489,
+   "end": 29.283
+  },
+  {
+   "id": "P13",
+   "text": "You feel like you're on stage, under a giant light.",
+   "start": 29.733,
+   "end": 32.826
+  },
+  {
+   "id": "P14",
+   "text": "But everyone else is starring in their own show,",
+   "start": 33.076,
+   "end": 35.57
+  },
+  {
+   "id": "P15",
+   "text": "worrying about their own stain.",
+   "start": 35.72,
+   "end": 37.381
+  },
+  {
+   "id": "P16",
+   "text": "So next time you feel watched,",
+   "start": 38.081,
+   "end": 39.882
+  },
+  {
+   "id": "P17",
+   "text": "remember: you're the only one holding the spotlight.",
+   "start": 40.082,
+   "end": 42.926
+  }
+ ],
+ "captions": [
+  {
+   "start": 0.15,
+   "end": 1.484,
+   "text": "You walk in, and you're"
+  },
+  {
+   "start": 1.484,
+   "end": 2.76,
+   "text": "sure everyone noticed."
+  },
+  {
+   "start": 3.21,
+   "end": 4.092,
+   "text": "The stain."
+  },
+  {
+   "start": 4.342,
+   "end": 5.521,
+   "text": "The awkward wave."
+  },
+  {
+   "start": 5.771,
+   "end": 6.849,
+   "text": "The voice crack."
+  },
+  {
+   "start": 7.449,
+   "end": 8.6,
+   "text": "But here's the thing:"
+  },
+  {
+   "start": 8.75,
+   "end": 9.829,
+   "text": "they almost certainly"
+  },
+  {
+   "start": 9.829,
+   "end": 10.189,
+   "text": "didn't."
+  },
+  {
+   "start": 10.889,
+   "end": 12.104,
+   "text": "In 2000, Cornell"
+  },
+  {
+   "start": 12.104,
+   "end": 13.471,
+   "text": "psychologists sent"
+  },
+  {
+   "start": 13.471,
+   "end": 14.99,
+   "text": "students into a room"
+  },
+  {
+   "start": 15.14,
+   "end": 16.608,
+   "text": "wearing a T-shirt with a"
+  },
+  {
+   "start": 16.608,
+   "end": 18.137,
+   "text": "cheesy pop star's face on"
+  },
+  {
+   "start": 18.137,
+   "end": 18.321,
+   "text": "it."
+  },
+  {
+   "start": 18.821,
+   "end": 20.329,
+   "text": "Then they asked: how many"
+  },
+  {
+   "start": 20.329,
+   "end": 21.234,
+   "text": "people noticed?"
+  },
+  {
+   "start": 21.834,
+   "end": 23.237,
+   "text": "The students guessed about"
+  },
+  {
+   "start": 23.237,
+   "end": 23.993,
+   "text": "half the room."
+  },
+  {
+   "start": 24.393,
+   "end": 26.417,
+   "text": "The real answer? About 1"
+  },
+  {
+   "start": 26.417,
+   "end": 26.839,
+   "text": "in 4."
+  },
+  {
+   "start": 27.639,
+   "end": 29.041,
+   "text": "It's called the spotlight"
+  },
+  {
+   "start": 29.041,
+   "end": 29.433,
+   "text": "effect."
+  },
+  {
+   "start": 29.883,
+   "end": 31.335,
+   "text": "You feel like you're on"
+  },
+  {
+   "start": 31.335,
+   "end": 32.597,
+   "text": "stage, under a giant"
+  },
+  {
+   "start": 32.597,
+   "end": 32.976,
+   "text": "light."
+  },
+  {
+   "start": 33.226,
+   "end": 34.31,
+   "text": "But everyone else is"
+  },
+  {
+   "start": 34.31,
+   "end": 35.449,
+   "text": "starring in their own"
+  },
+  {
+   "start": 35.449,
+   "end": 35.72,
+   "text": "show,"
+  },
+  {
+   "start": 35.87,
+   "end": 37.199,
+   "text": "worrying about their own"
+  },
+  {
+   "start": 37.199,
+   "end": 37.531,
+   "text": "stain."
+  },
+  {
+   "start": 38.231,
+   "end": 39.535,
+   "text": "So next time you feel"
+  },
+  {
+   "start": 39.535,
+   "end": 40.032,
+   "text": "watched,"
+  },
+  {
+   "start": 40.232,
+   "end": 41.626,
+   "text": "remember: you're the only"
+  },
+  {
+   "start": 41.626,
+   "end": 43.076,
+   "text": "one holding the spotlight."
+  }
+ ],
+ "duration": 42.926,
+ "lead": 0.15
+}
