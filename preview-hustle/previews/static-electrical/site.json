@@ -1,0 +1,50 @@
+{
+  "name": "Static Electrical Services",
+  "legal_name": "Static Electrical Services Inc",
+  "short": "Static Electrical",
+  "town": "Milton",
+  "province": "Ontario",
+  "tagline": "Milton Ontario's Premier Electrical Contractor",
+  "subtag": "Residential & Commercial Electrical Services",
+  "licence": "7011530",
+  "years": "15",
+  "phone": "416.346.5359",
+  "phone_tel": "+14163465359",
+  "email": "info@staticelectricalcanada.com",
+  "address": "883 Laurier Ave, Milton, Ontario",
+  "instagram": "staticelectricalcanada",
+  "facebook": "staticelectricalcanada",
+  "services": [
+    {
+      "id": "residential",
+      "title": "Residential",
+      "icon": "home",
+      "blurb": "From pot lights to plugs, renovations to retrofits, we do it all.",
+      "body": "Whether you are updating your kitchen or need help getting a plug working again, Static Electrical is ready to serve you today.",
+      "tags": ["Pot lights", "Plugs & outlets", "Renovations", "Retrofits", "Kitchen updates"]
+    },
+    {
+      "id": "commercial",
+      "title": "Commercial",
+      "icon": "building",
+      "blurb": "Is your business expanding? Let Static Electrical Services be your electrical partner.",
+      "body": "Is your business expanding? Let Static Electrical Services be your electrical partner for all your plans. With over 15 years experience, our professionalism and expertise will ensure every project is done to perfection.",
+      "tags": ["Business expansions", "Commercial projects"]
+    },
+    {
+      "id": "basements",
+      "title": "Basements",
+      "icon": "stairs",
+      "blurb": "Is it time to finally finish your basement? We help with every stage.",
+      "body": "Is it time to finally finish your basement? Let Static Electrical help with every stage of your project. From planning to final touches, we want to help bring your ideas to life.",
+      "tags": ["Planning", "Rough-in to final touches", "Basement finishing"]
+    }
+  ],
+  "why_licensed": [
+    "Whether building a new home or business, or renovating an existing one, there are many areas where you can save money. But when it comes to the safety of the people you love or jeopardizing your investment, do you really want to cut costs?",
+    "There are plenty of non-licensed trades people who will work for cash. While you may save money on taxes etc., you are also left unprotected. Unfortunately, you will have no guarantees on either the quality of the work or the materials that are used.",
+    "Hiring a professional, licensed electrician gives you the confidence of knowing you have a business that stands behind its work and its workers. Static Electrical Services gives you that peace of mind."
+  ],
+  "preview_by": "[Your name]",
+  "preview_contact": "[your phone / email]"
+}

@@ -1,21 +1,21 @@
 business,website,town,source_note,skip_reason,https,copyright_year,mobile_ok(1-10),speed(1-10),clear_cta(1-10),booking_or_quote_form(Y/N),looks_dated(1-10),google_reviews_count,last_review_date,TOTAL_outdated_score,preview_url,date_contacted,channel,followup_1,followup_2,status,price_quoted,notes
-J.E Electrical Services Inc.,https://jeelectrical.ca/,Milton,"32 Steeles Ave E; (905) 699-5389 per search snippet",,,,,,,,,,,,,,,,,,,
-Norris Electrical,https://www.norriselectrical.ca/,Milton,"Locally owned, since 1997 per snippet",,,,,,,,,,,,,,,,,,,
-Kennedy Electric & Cabling,https://kelectric.ca/,Burlington/Milton,"Family owned 20+ yrs; ESA #7004721 per snippet",,,,,,,,,,,,,,,,,,,
-Georgetown Electric,https://georgetownelectric.ca/,Georgetown,"Owner John Murray, Master Electrician; est. 1973 per snippet",,,,,,,,,,,,,,,,,,,
-Kronos Electrical,https://kronoselectrical.ca/,Milton,"Family business since 2004 per snippet",,,,,,,,,,,,,,,,,,,
-Lorion Electric,https://www.lorionelectric.com/,Milton,"Milton office; family owned per directory",,,,,,,,,,,,,,,,,,,
-Static Electrical Services,https://www.staticelectricalcanada.com/,Milton area,"Listed on ThreeBestRated",,,,,,,,,,,,,,,,,,,
-Antech Electric,https://www.antechelectric.com/,Milton,"(905) 660-1384 per snippet",,,,,,,,,,,,,,,,,,,
-Urban Grid Contractors,https://urbangridcontractors.ca/,Milton,"Ranks #1 for 'electrician Milton' - may already have a good site",,,,,,,,,,,,,,,,,,,
-Brant Electric Limited,https://brantelectriclimited.ca/,Burlington/Milton,"Since 1946; has service-area pages - likely agency SEO",likely skip,,,,,,,,,,,,,,,,,,
-Deker Electric Ltd,(find on Google Maps),Georgetown,"BBB listing",,,,,,,,,,,,,,,,,,,
-Zeus Electrical Systems Ltd.,(find on Google Maps),Georgetown,"16 HomeStars reviews 10/10",,,,,,,,,,,,,,,,,,,
-Agena Electric Ltd,(find on Google Maps),Acton,"BBB A rating",,,,,,,,,,,,,,,,,,,
-Avers Electric,(find on Google Maps),Milton,"HomeStars review mentions Tesla charger install in Milton",,,,,,,,,,,,,,,,,,,
-Sparks Lighting and Electrical,(find on Google Maps),Milton area,"HomeStars review re panel upgrade",,,,,,,,,,,,,,,,,,,
+J.E Electrical Services Inc.,https://jeelectrical.ca/,Milton,32 Steeles Ave E; (905) 699-5389 per search snippet,,Y,auto 2026,3,4,3,N,3,,,13,,,,,,,,Modern agency build (VOHRTECH); ESA #7011852; low priority
+Norris Electrical,https://www.norriselectrical.ca/,Milton,"Locally owned, since 1997 per snippet",,Y,auto 2025,5,5,6,N,5,,,21,,,,,,,,"Wix by BANG! creative; good copy but CTA is just ""Learn More"", no quote form on home; ESA #7009106; 647-273-3825; owner email justasktom@ - Tom?. Second-tier target"
+Kennedy Electric & Cabling,https://kelectric.ca/,Burlington/Milton,Family owned 20+ yrs; ESA #7004721 per snippet,out of area,Y,auto 2026,6,3,6,Y,9,,,24,,,,,,,,"GoDaddy template, 208 words, stock-lake alt text on owner photo. BUT moved: now 2900 Front Rd LaSalle, serves Windsor/Essex. Out of area"
+Georgetown Electric,https://georgetownelectric.ca/,Georgetown,"Owner John Murray, Master Electrician; est. 1973 per snippet",already modern,Y,auto 2026,3,4,3,N,3,,,13,,,,,,,,"Recently rebuilt, 12 service-area pages, ESA #7003287"
+Kronos Electrical,https://kronoselectrical.ca/,Milton,Family business since 2004 per snippet,,Y,auto 2026,6,6,7,Y,6,,,25,,,,,,,,"WordPress by Design4Them; only 182 words, hero says ""Licensed Electrician Toronto"" (not Milton); gmail address; ESA #7003040. Good 2nd/3rd target"
+Lorion Electric,https://www.lorionelectric.com/,Milton,Milton office; family owned per directory,,Y,auto 2026,4,5,4,Y,4,,,17,,,,,,,,"WordPress, decent; no licence # shown"
+Static Electrical Services,https://www.staticelectricalcanada.com/,Milton area,Listed on ThreeBestRated,,Y,none,7,4,8,N,9,,,28,,,,,,preview built,,"Squarespace, images uploaded June 2016, one page, phone not tappable, no real form; ESA #7011530; 883 Laurier Ave Milton; 416.346.5359. TOP TARGET - preview built"
+Antech Electric,https://www.antechelectric.com/,Milton,(905) 660-1384 per snippet,already has agency site,Y,auto 2026,3,7,3,Y,3,,,16,,,,,,,,"Wix, Toronto/GTA focus, 11 area pages"
+Urban Grid Contractors,https://urbangridcontractors.ca/,Milton,Ranks #1 for 'electrician Milton' - may already have a good site,,Y,none,5,4,5,Y,4,,,18,,,,,,,,"Modern-ish WordPress, ranks #1, phone not tappable (quick fix pitch only)"
+Brant Electric Limited,https://brantelectriclimited.ca/,Burlington/Milton,Since 1946; has service-area pages - likely agency SEO,already has agency site,Y,auto 2026,3,5,3,Y,2,,,13,,,,,,,,52 service-area links - agency SEO
+Deker Electric Ltd,(find on Google Maps),Georgetown,BBB listing,,,,,,,,,,,,,,,,,,,
+Zeus Electrical Systems Ltd.,(find on Google Maps),Georgetown,16 HomeStars reviews 10/10,,,,,,,,,,,,,,,,,,,
+Agena Electric Ltd,(find on Google Maps),Acton,BBB A rating,,,,,,,,,,,,,,,,,,,
+Avers Electric,(find on Google Maps),Milton,HomeStars review mentions Tesla charger install in Milton,,,,,,,,,,,,,,,,,,,
+Sparks Lighting and Electrical,(find on Google Maps),Milton area,HomeStars review re panel upgrade,,,,,,,,,,,,,,,,,,,
 RN Tech Electrical Inc.,(find on Google Maps),Milton,"Google Business listing, 24h emergency",,,,,,,,,,,,,,,,,,,
 6ix Electric Company Ltd.,(find on Google Maps),Georgetown/Milton,"Google listing, 10 reviews",,,,,,,,,,,,,,,,,,,
-Azan Electric,https://azanelectric.com/,Milton,"Has /service-areas/ SEO pages",already has agency site,,,,,,,,,,,,,,,,,,
-Circuit Savvy Electric,https://circuitsavvy.ca/,Milton,"Has city landing pages",already has agency site,,,,,,,,,,,,,,,,,,
-Tron Electrical & Automation,https://tronelectrical.com/,GTA,"GTA-wide city pages",already has agency site,,,,,,,,,,,,,,,,,,
+Azan Electric,https://azanelectric.com/,Milton,Has /service-areas/ SEO pages,already has agency site,,,,,,,,,,,,,,,,,,
+Circuit Savvy Electric,https://circuitsavvy.ca/,Milton,Has city landing pages,already has agency site,,,,,,,,,,,,,,,,,,
+Tron Electrical & Automation,https://tronelectrical.com/,GTA,GTA-wide city pages,already has agency site,,,,,,,,,,,,,,,,,,
